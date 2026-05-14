@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Variables ───────────────────────────────────────────── */
+:root {
+  --font-inter: 'Inter', system-ui, sans-serif;
+  --nav-height: 64px;
+}
+
+/* ── Base Reset ──────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-text-primary font-sans antialiased;
+    background-image: radial-gradient(ellipse at top, #1a0a3a 0%, #0a0a1a 60%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  /* Custom scrollbar — space theme */
+  ::-webkit-scrollbar        { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track  { background: #0a0a1a; }
+  ::-webkit-scrollbar-thumb  { background: #6d28d9; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #7c3aed; }
+
+  ::selection {
+    background-color: rgba(109, 40, 217, 0.4);
+    color: #f0f0ff;
+  }
+
+  /* Focus ring */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+}
+
+/* ── Component Utilities ─────────────────────────────────────── */
+@layer components {
+
+  /* Glass card */
+  .card-glass {
+    @apply bg-surface/80 border border-border rounded-xl backdrop-blur-md shadow-glass;
+  }
+
+  /* Glowing primary button */
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-hover text-white font-semibold px-5 py-2.5
+           rounded-lg transition-all duration-200 hover:shadow-glow active:scale-95;
+  }
+
+  /* Outlined ghost button */
+  .btn-ghost {
+    @apply border border-border text-text-secondary hover:border-primary
+           hover:text-text-primary font-medium px-5 py-2.5
+           rounded-lg transition-all duration-200 active:scale-95;
+  }
+
+  /* Input field */
+  .input-field {
+    @apply w-full bg-surface-2 border border-border rounded-lg px-4 py-2.5
+           text-text-primary placeholder-text-muted
+           focus:border-primary focus:ring-1 focus:ring-primary
+           transition-all duration-200 outline-none;
+  }
+
+  /* Stat pill (coins / streak) */
+  .stat-pill {
+    @apply flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-2
+           border border-border text-sm font-medium text-text-secondary;
+  }
+
+  /* Badge chip */
+  .badge-chip {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold;
+  }
+
+  /* Page container */
+  .page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* ── Animations ──────────────────────────────────────────────── */
+@layer utilities {
+  .animate-in {
+    animation: fadeIn 0.4s ease-out both;
+  }
+
+  @keyframes shimmer {
+    from { background-position: -400px 0; }
+    to   { background-position:  400px 0; }
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, #0f0f2a 25%, #1e1e4a 50%, #0f0f2a 75%);
+    background-size: 800px 100%;
+    animation: shimmer 1.5s infinite linear;
+  }
+
+  .shadow-glow-accent {
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.35);
+  }
+}

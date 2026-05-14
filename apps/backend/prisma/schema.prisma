@@ -1,0 +1,264 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum League {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+  DIAMOND
+}
+
+enum BadgeType {
+  STREAK
+  WORDS_SAVED
+  GAMES_PLAYED
+  PERFECT_GAME
+  MASTER_WORDS
+  COINS_EARNED
+  WORDS_REVIEWED
+}
+
+enum GameType {
+  TEST
+  MATCH
+  WRITE
+  SHOOTER
+}
+
+// ─── Core Auth ────────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         Role     @default(USER)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  profile      Profile?
+  words        Word[]           @relation("AuthorWords")
+  savedWords   SavedWord[]
+  savedBooks   SavedBook[]
+  wordProgress UserWordProgress[]
+  weeklyStats  WeeklyStat[]
+  badges       UserBadge[]
+  gameSessions GameSession[]
+
+  @@map("users")
+}
+
+model Profile {
+  id              String    @id @default(cuid())
+  userId          String    @unique @map("user_id")
+  streak          Int       @default(0)
+  lastLoginDate   DateTime? @map("last_login_date")
+  coins           Int       @default(0)
+  xp              Int       @default(0)
+  league          League    @default(BRONZE)
+  dailyTestCount  Int       @default(0) @map("daily_test_count")
+  dailyMatchCount Int       @default(0) @map("daily_match_count")
+  dailyWriteCount Int       @default(0) @map("daily_write_count")
+  lastGameDate    DateTime? @map("last_game_date")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+// ─── Vocabulary Content ────────────────────────────────────────────────────────
+
+model Book {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  imageUrl    String?  @map("image_url")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  topics     Topic[]
+  savedBooks SavedBook[]
+
+  @@map("books")
+}
+
+model Topic {
+  id     String  @id @default(cuid())
+  name   String
+  bookId String? @map("book_id")
+
+  book       Book?       @relation(fields: [bookId], references: [id], onDelete: SetNull)
+  wordTopics WordTopic[]
+
+  @@map("topics")
+}
+
+model Word {
+  id                 String   @id @default(cuid())
+  japaneseWord       String   @map("japanese_word")
+  hiragana           String?
+  meaning            String
+  exampleSentence    String?  @map("example_sentence")
+  exampleTranslation String?  @map("example_translation")
+  authorId           String?  @map("author_id")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  author       User?             @relation("AuthorWords", fields: [authorId], references: [id], onDelete: SetNull)
+  wordTopics   WordTopic[]
+  savedWords   SavedWord[]
+  userProgress UserWordProgress[]
+
+  @@map("words")
+}
+
+model WordTopic {
+  wordId  String @map("word_id")
+  topicId String @map("topic_id")
+
+  word  Word  @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@id([wordId, topicId])
+  @@map("word_topics")
+}
+
+// ─── User ↔ Content Junctions ─────────────────────────────────────────────────
+
+model SavedWord {
+  userId  String   @map("user_id")
+  wordId  String   @map("word_id")
+  savedAt DateTime @default(now()) @map("saved_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  word Word @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@id([userId, wordId])
+  @@map("saved_words")
+}
+
+model SavedBook {
+  userId  String   @map("user_id")
+  bookId  String   @map("book_id")
+  savedAt DateTime @default(now()) @map("saved_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@id([userId, bookId])
+  @@map("saved_books")
+}
+
+// ─── SRS Engine ───────────────────────────────────────────────────────────────
+
+model UserWordProgress {
+  userId         String    @map("user_id")
+  wordId         String    @map("word_id")
+  xp             Int       @default(0)   // 0–3 within current level
+  level          Int       @default(1)   // 1=New 2=Easy 3=Good 4=Great 5=Master
+  nextReviewDate DateTime  @default(now()) @map("next_review_date")
+  lastReviewedAt DateTime? @map("last_reviewed_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  word Word @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@id([userId, wordId])
+  @@map("user_word_progress")
+}
+
+// ─── Gamification & Leagues ───────────────────────────────────────────────────
+
+model WeeklyStat {
+  id             String   @id @default(cuid())
+  userId         String   @map("user_id")
+  startDate      DateTime @map("start_date")
+  endDate        DateTime @map("end_date")
+  wordsLearned   Int      @default(0) @map("words_learned")
+  gamesPlayed    Int      @default(0) @map("games_played")
+  correctAnswers Int      @default(0) @map("correct_answers")
+  totalQuestions Int      @default(0) @map("total_questions")
+  coinsEarned    Int      @default(0) @map("coins_earned")
+  xpEarned       Int      @default(0) @map("xp_earned")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("weekly_stats")
+}
+
+model Badge {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String
+  icon        String    // emoji or icon identifier
+  color       String    // hex color for badge display
+  badgeType   BadgeType @map("badge_type")
+  threshold   Int
+
+  userBadges UserBadge[]
+
+  @@map("badges")
+}
+
+model UserBadge {
+  userId   String   @map("user_id")
+  badgeId  String   @map("badge_id")
+  earnedAt DateTime @default(now()) @map("earned_at")
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, badgeId])
+  @@map("user_badges")
+}
+
+// ─── Anti-Cheat Game Sessions ─────────────────────────────────────────────────
+
+model GameSession {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  wordIds   String[] @map("word_ids")
+  gameType  GameType @map("game_type")
+  completed Boolean  @default(false)
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("game_sessions")
+}
+
+// ─── League & System Logs ─────────────────────────────────────────────────────
+
+model LeagueLog {
+  id              String   @id @default(cuid())
+  processedAt     DateTime @default(now()) @map("processed_at")
+  weekStart       DateTime @map("week_start")
+  promotionsCount Int      @default(0) @map("promotions_count")
+  demotionsCount  Int      @default(0) @map("demotions_count")
+  detailsJson     Json?    @map("details_json")
+
+  @@map("league_logs")
+}
+
+model SiteConfiguration {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+
+  @@map("site_configurations")
+}

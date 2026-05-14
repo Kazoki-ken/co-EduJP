@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "EasyNihongo",
+    "slug": "easynihongo",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0a0a1a"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kazoki.easynihongo",
+      "buildNumber": "1"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0a0a1a"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.kazoki.easynihongo",
+      "versionCode": 1,
+      "permissions": []
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "17dd2e79-a363-4c82-9d7d-0791c2537588"
+      }
+    },
+    "plugins": [
+      "expo-secure-store"
+    ],
+    "owner": "kazoki_ken"
+  }
+}
