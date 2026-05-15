@@ -56,3 +56,30 @@ export function useBookTopics(bookId: string) {
 export function useTopicWords(topicId: string, page = 1, limit = 30) {
   return useFetch<PaginatedResponse<Word>>('/words', { topicId, page, limit });
 }
+
+// ─── Save toggles ────────────────────────────────────────────────
+
+export async function toggleSaveWord(wordId: string): Promise<{ saved: boolean }> {
+  const { data } = await apiClient.post<{ saved: boolean }>(`/words/${wordId}/save`);
+  return data;
+}
+
+export async function toggleSaveBook(bookId: string): Promise<{ saved: boolean }> {
+  const { data } = await apiClient.post<{ saved: boolean }>(`/books/${bookId}/save`);
+  return data;
+}
+
+export async function toggleSaveTopic(topicId: string): Promise<{ saved: boolean }> {
+  const { data } = await apiClient.post<{ saved: boolean }>(`/topics/${topicId}/save`);
+  return data;
+}
+
+// ─── Saved items hooks ───────────────────────────────────────────
+
+export function useSavedWords(limit = 100) {
+  return useFetch<PaginatedResponse<Word>>('/users/me/saved-words', { limit });
+}
+
+export function useSavedBooks(limit = 100) {
+  return useFetch<PaginatedResponse<Book & { savedAt: string }>>('/users/me/saved-books', { limit });
+}

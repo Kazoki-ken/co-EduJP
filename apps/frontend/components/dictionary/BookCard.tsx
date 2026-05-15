@@ -1,8 +1,10 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import Link from 'next/link';
-import { BookOpen, Users, ChevronRight } from 'lucide-react';
+import { BookOpen, Bookmark, BookmarkCheck, ChevronRight, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import api from '@/lib/api';
 import type { Book } from '@/lib/types';
 
 // Deterministic gradient cycle based on index
@@ -27,11 +29,31 @@ const ACCENT_COLORS = [
 interface BookCardProps {
   book: Book;
   index: number;
+  isAuthenticated?: boolean;
 }
 
-export function BookCard({ book, index }: BookCardProps) {
+export function BookCard({ book, index, isAuthenticated }: BookCardProps) {
   const gradient = GRADIENTS[index % GRADIENTS.length];
   const accent   = ACCENT_COLORS[index % ACCENT_COLORS.length];
+
+  const [isSaved, setIsSaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = useCallback(async (e: React.MouseEvent) => {
+    e.preventDefault();  // prevent Link navigation
+    e.stopPropagation();
+    if (isSaving || !isAuthenticated) return;
+    setIsSaving(true);
+    setIsSaved(prev => !prev); // optimistic
+    try {
+      const { data } = await api.post<{ saved: boolean }>(`/books/${book.id}/save`);
+      setIsSaved(data.saved);
+    } catch {
+      setIsSaved(prev => !prev); // revert
+    } finally {
+      setIsSaving(false);
+    }
+  }, [isSaving, isAuthenticated, book.id]);
 
   return (
     <Link
@@ -51,13 +73,41 @@ export function BookCard({ book, index }: BookCardProps) {
 
       {/* Content */}
       <div className="relative">
-        {/* Icon */}
-        <div className={cn(
-          'w-12 h-12 rounded-xl flex items-center justify-center mb-4',
-          'bg-gradient-to-br from-surface-2 to-surface',
-          'border border-border group-hover:border-primary/40 transition-colors',
-        )}>
-          <BookOpen size={22} className={cn(accent, 'transition-colors')} />
+        {/* Top row: icon + save button */}
+        <div className="flex items-start justify-between mb-4">
+          <div className={cn(
+            'w-12 h-12 rounded-xl flex items-center justify-center',
+            'bg-gradient-to-br from-surface-2 to-surface',
+            'border border-border group-hover:border-primary/40 transition-colors',
+          )}>
+            <BookOpen size={22} className={cn(accent, 'transition-colors')} />
+          </div>
+
+          {/* Save button */}
+          {isAuthenticated && (
+            <button
+              onClick={handleSave}
+              disabled={isSaving}
+              title={isSaved ? 'Unsave book' : 'Save book'}
+              className={cn(
+                'w-9 h-9 rounded-lg flex items-center justify-center transition-all z-10',
+                'opacity-0 group-hover:opacity-100',
+                isSaved && 'opacity-100',
+                isSaving && 'opacity-50 cursor-wait',
+                isSaved
+                  ? 'bg-accent/15 text-accent hover:bg-danger/15 hover:text-danger'
+                  : 'hover:bg-surface-2 text-text-muted hover:text-accent',
+              )}
+            >
+              {isSaving ? (
+                <Loader2 size={15} className="animate-spin" />
+              ) : isSaved ? (
+                <BookmarkCheck size={16} className="fill-accent" />
+              ) : (
+                <Bookmark size={16} />
+              )}
+            </button>
+          )}
         </div>
 
         {/* Title */}

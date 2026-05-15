@@ -6,9 +6,11 @@ import Link from 'next/link';
 import { BookCard, BookCardSkeleton } from '@/components/dictionary/BookCard';
 import { Pagination } from '@/components/ui/Pagination';
 import { useBooks } from '@/hooks/useBooks';
+import { useAuth } from '@/context/AuthContext';
 
 export default function DictionaryPage() {
   const { books, meta, isLoading, error, page, setPage } = useBooks(18);
+  const { isAuthenticated } = useAuth();
 
   return (
     <div className="page-container py-10 animate-fade-in">
@@ -55,7 +57,7 @@ export default function DictionaryPage() {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {books.map((book, i) => (
-              <BookCard key={book.id} book={book} index={i} />
+              <BookCard key={book.id} book={book} index={i} isAuthenticated={isAuthenticated} />
             ))}
           </div>
 

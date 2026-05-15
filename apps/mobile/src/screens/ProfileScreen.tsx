@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../api/client';
-import type { UserBadge, Badge, LevelCount } from '@vocabjp/shared';
+import type { UserBadge, Badge, LevelCount, Word, Book, PaginatedResponse } from '@vocabjp/shared';
 
 const { width: SCREEN_W } = Dimensions.get('window');
 
@@ -161,6 +161,59 @@ function SrsBreakdown({ levels, total }: { levels: LevelCount[]; total: number }
   );
 }
 
+// ── Saved word row ────────────────────────────────────────────────
+function SavedWordRow({ word }: { word: Word }) {
+  return (
+    <View style={{
+      flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+      paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.05)',
+    }}>
+      <View style={{ flex: 1, marginRight: 12 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6 }}>
+          <Text style={{ color: '#f9fafb', fontSize: 18, fontWeight: '700' }}>{word.japaneseWord}</Text>
+          {word.hiragana && word.hiragana !== word.japaneseWord && (
+            <Text style={{ color: '#7c3aed', fontSize: 12 }}>({word.hiragana})</Text>
+          )}
+        </View>
+        <Text style={{ color: '#9ca3af', fontSize: 13, marginTop: 2 }} numberOfLines={1}>
+          {word.meaning}
+        </Text>
+      </View>
+      <Ionicons name="bookmark" size={16} color="#f59e0b" />
+    </View>
+  );
+}
+
+// ── Saved book row ────────────────────────────────────────────────
+function SavedBookRow({ book }: { book: Book }) {
+  return (
+    <View style={{
+      flexDirection: 'row', alignItems: 'center',
+      paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.05)',
+      gap: 12,
+    }}>
+      <LinearGradient
+        colors={['#7c3aed', '#4c1d95']}
+        style={{
+          width: 40, height: 40, borderRadius: 12,
+          alignItems: 'center', justifyContent: 'center',
+        }}
+      >
+        <Text style={{ fontSize: 18 }}>📚</Text>
+      </LinearGradient>
+      <View style={{ flex: 1 }}>
+        <Text style={{ color: '#f3f4f6', fontSize: 14, fontWeight: '600' }} numberOfLines={1}>
+          {book.title}
+        </Text>
+        <Text style={{ color: '#6b7280', fontSize: 11, marginTop: 2 }}>
+          {book._count.topics} topic{book._count.topics !== 1 ? 's' : ''}
+        </Text>
+      </View>
+      <Ionicons name="bookmark" size={16} color="#f59e0b" />
+    </View>
+  );
+}
+
 // ── All-badges panel (placeholder list for locked) ────────────────
 const BADGE_SHOWCASE: Badge[] = [
   { id: 'b1', name: 'First Step',   description: '', icon: '👣', color: '#10b981', badgeType: 'STREAK',  threshold: 1  },
@@ -169,6 +222,9 @@ const BADGE_SHOWCASE: Badge[] = [
   { id: 'b4', name: 'Perfectionist',description: '', icon: '✨', color: '#7c3aed', badgeType: 'SCORE',   threshold: 100 },
   { id: 'b5', name: 'Diamond',      description: '', icon: '💠', color: '#b9f2ff', badgeType: 'LEAGUE',  threshold: 5  },
 ];
+
+// ── Tab type ──────────────────────────────────────────────────────
+type SavedTab = 'words' | 'books';
 
 // ── Profile Screen ────────────────────────────────────────────────
 export default function ProfileScreen() {
@@ -179,6 +235,13 @@ export default function ProfileScreen() {
   const [badges,   setBadges]     = useState<UserBadge[] | null>(null);
   const [loading,  setLoading]    = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+
+  // Saved content state
+  const [savedTab, setSavedTab] = useState<SavedTab>('words');
+  const [savedWords, setSavedWords] = useState<Word[]>([]);
+  const [savedBooks, setSavedBooks] = useState<Book[]>([]);
+  const [savedWordsLoaded, setSavedWordsLoaded] = useState(false);
+  const [savedBooksLoaded, setSavedBooksLoaded] = useState(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -193,15 +256,41 @@ export default function ProfileScreen() {
     }
   }, []);
 
+  const fetchSavedWords = useCallback(async () => {
+    try {
+      const { data } = await apiClient.get<PaginatedResponse<Word>>('/users/me/saved-words', {
+        params: { limit: 100 },
+      });
+      setSavedWords(data.data);
+      setSavedWordsLoaded(true);
+    } catch {}
+  }, []);
+
+  const fetchSavedBooks = useCallback(async () => {
+    try {
+      const { data } = await apiClient.get<PaginatedResponse<Book>>('/users/me/saved-books', {
+        params: { limit: 100 },
+      });
+      setSavedBooks(data.data);
+      setSavedBooksLoaded(true);
+    } catch {}
+  }, []);
+
   useEffect(() => {
     fetchData().finally(() => setLoading(false));
+    fetchSavedWords();
   }, []);
+
+  // Lazy-load saved books when tab switches
+  useEffect(() => {
+    if (savedTab === 'books' && !savedBooksLoaded) fetchSavedBooks();
+  }, [savedTab]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await fetchData();
+    await Promise.all([fetchData(), fetchSavedWords(), fetchSavedBooks()]);
     setRefreshing(false);
-  }, [fetchData]);
+  }, [fetchData, fetchSavedWords, fetchSavedBooks]);
 
   const handleLogout = () => {
     Alert.alert('Sign Out', 'Are you sure?', [
@@ -321,6 +410,86 @@ export default function ProfileScreen() {
               <StatCard emoji="⏰" value={progress?.dueTodayCount  ?? 0} label="Due today"    color="#ef4444" />
               <StatCard emoji="🎯" value={totalSrs}                       label="In SRS"       color="#06b6d4" />
             </View>
+
+            {/* ── Saved Words / Books tabs ──────────────────────── */}
+            <Text style={{ color: '#9ca3af', fontSize: 12, fontWeight: '700',
+              letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 }}>
+              My Saved Content
+            </Text>
+
+            {/* Tab buttons */}
+            <View style={{ flexDirection: 'row', gap: 10, marginBottom: 14 }}>
+              <TouchableOpacity
+                onPress={() => setSavedTab('words')}
+                style={{
+                  flexDirection: 'row', alignItems: 'center', gap: 6,
+                  backgroundColor: savedTab === 'words' ? 'rgba(124,58,237,0.15)' : 'rgba(31,41,55,0.5)',
+                  borderRadius: 14, paddingHorizontal: 16, paddingVertical: 10,
+                  borderWidth: 1,
+                  borderColor: savedTab === 'words' ? 'rgba(124,58,237,0.4)' : 'rgba(255,255,255,0.06)',
+                }}
+              >
+                <Ionicons name="bookmark" size={14} color={savedTab === 'words' ? '#7c3aed' : '#6b7280'} />
+                <Text style={{
+                  color: savedTab === 'words' ? '#7c3aed' : '#6b7280',
+                  fontWeight: '600', fontSize: 13,
+                }}>
+                  Words ({savedWords.length})
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => setSavedTab('books')}
+                style={{
+                  flexDirection: 'row', alignItems: 'center', gap: 6,
+                  backgroundColor: savedTab === 'books' ? 'rgba(249,115,22,0.15)' : 'rgba(31,41,55,0.5)',
+                  borderRadius: 14, paddingHorizontal: 16, paddingVertical: 10,
+                  borderWidth: 1,
+                  borderColor: savedTab === 'books' ? 'rgba(249,115,22,0.4)' : 'rgba(255,255,255,0.06)',
+                }}
+              >
+                <Ionicons name="library" size={14} color={savedTab === 'books' ? '#f97316' : '#6b7280'} />
+                <Text style={{
+                  color: savedTab === 'books' ? '#f97316' : '#6b7280',
+                  fontWeight: '600', fontSize: 13,
+                }}>
+                  Books ({savedBooks.length})
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Tab content */}
+            <BlurView intensity={18} tint="dark" style={{
+              borderRadius: 20, overflow: 'hidden',
+              borderWidth: 1, borderColor: 'rgba(255,255,255,0.07)',
+              marginBottom: 20,
+            }}>
+              <View style={{ backgroundColor: 'rgba(10,10,26,0.85)', padding: 16 }}>
+                {savedTab === 'words' ? (
+                  savedWords.length === 0 ? (
+                    <View style={{ alignItems: 'center', paddingVertical: 28, gap: 8 }}>
+                      <Text style={{ fontSize: 36 }}>📝</Text>
+                      <Text style={{ color: '#6b7280', fontSize: 14, textAlign: 'center' }}>
+                        No saved words yet — browse the dictionary and tap the bookmark icon!
+                      </Text>
+                    </View>
+                  ) : (
+                    savedWords.slice(0, 20).map(w => <SavedWordRow key={w.id} word={w} />)
+                  )
+                ) : (
+                  savedBooks.length === 0 ? (
+                    <View style={{ alignItems: 'center', paddingVertical: 28, gap: 8 }}>
+                      <Text style={{ fontSize: 36 }}>📚</Text>
+                      <Text style={{ color: '#6b7280', fontSize: 14, textAlign: 'center' }}>
+                        No saved books yet — go to the dictionary and bookmark your favorites!
+                      </Text>
+                    </View>
+                  ) : (
+                    savedBooks.map(b => <SavedBookRow key={b.id} book={b} />)
+                  )
+                )}
+              </View>
+            </BlurView>
 
             {/* ── SRS breakdown ────────────────────────────────── */}
             {progress && (

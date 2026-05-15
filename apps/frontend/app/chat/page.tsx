@@ -202,7 +202,7 @@ export default function ChatPage() {
         for (const line of lines) {
           // Handle SSE error event (multi-line block: "event: error\ndata: {...}")
           if (line.includes('event: error')) {
-            const dataMatch = line.match(/data:\s*(\{.+\})/s);
+            const dataMatch = line.match(/data:\s*(\{[\s\S]+\})/);
             if (dataMatch) {
               try {
                 const errData = JSON.parse(dataMatch[1]);

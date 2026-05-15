@@ -369,6 +369,15 @@ export default function HomeScreen() {
             onPress={() => goToQuiz({ mode: 'MATCH' })}
           />
           <ActionCard
+            title="My Saved Books"
+            subtitle="Quick access to bookmarks"
+            icon="bookmarks"
+            gradientColors={['#f97316', '#c2410c']}
+            glowColor="#f97316"
+            badge="NEW"
+            onPress={() => (navigation as any).navigate('Profile')}
+          />
+          <ActionCard
             title="Browse Dictionary"
             subtitle="Explore all vocabulary books"
             icon="library"

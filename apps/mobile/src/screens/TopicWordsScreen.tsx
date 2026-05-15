@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
-  TextInput, RefreshControl, Animated,
+  TextInput, RefreshControl, ActivityIndicator,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,22 +9,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { DictionaryStackParamList } from '../navigation/DictionaryStack';
-import { useTopicWords } from '../hooks/useVocabulary';
+import { useTopicWords, toggleSaveWord } from '../hooks/useVocabulary';
 import { WordRowSkeleton } from '../components/Skeletons';
 import type { Word } from '@vocabjp/shared';
 
 type Props = NativeStackScreenProps<DictionaryStackParamList, 'TopicWords'>;
 
 // ─── SRS level helpers ────────────────────────────────────────────
-// The backend doesn't return a numeric SRS level directly on the word list,
-// but "isSaved" tells us the user has interacted with it.
-// We use this as a proxy: saved = learning, unsaved = new.
-// When a full SRS endpoint is available, swap in the real level.
 type SrsLevel = 'new' | 'learning' | 'review' | 'mastered';
 
 function getSrsLabel(word: Word): { level: SrsLevel; label: string; color: string; bg: string } {
   if (!word.isSaved)  return { level: 'new',      label: 'New',      color: '#6b7280', bg: 'rgba(107,114,128,0.15)' };
-  // Placeholder tiers — swap for real SRS interval when available
   return              { level: 'learning', label: 'Learning', color: '#f59e0b', bg: 'rgba(245,158,11,0.15)' };
 }
 
@@ -59,10 +54,23 @@ function SrsBar({ level }: { level: SrsLevel }) {
   );
 }
 
-// ─── Word card ────────────────────────────────────────────────────
-function WordCard({ word }: { word: Word }) {
+// ─── Word card with save button ───────────────────────────────────
+function WordCard({ word, onToggleSave }: { word: Word; onToggleSave: (id: string) => void }) {
   const [expanded, setExpanded] = useState(false);
+  const [saving, setSaving] = useState(false);
   const srs = getSrsLabel(word);
+
+  const handleSave = useCallback(async () => {
+    if (saving) return;
+    setSaving(true);
+    onToggleSave(word.id);
+    try {
+      await toggleSaveWord(word.id);
+    } catch {
+      onToggleSave(word.id); // revert
+    }
+    setSaving(false);
+  }, [saving, word.id, onToggleSave]);
 
   return (
     <TouchableOpacity onPress={() => setExpanded(e => !e)} activeOpacity={0.88}>
@@ -92,20 +100,41 @@ function WordCard({ word }: { word: Word }) {
               </Text>
             </View>
 
-            {/* SRS badge */}
-            <View style={{
-              backgroundColor: srs.bg, borderRadius: 10,
-              paddingHorizontal: 8, paddingVertical: 4,
-              borderWidth: 1, borderColor: srs.color + '44',
-              flexDirection: 'row', alignItems: 'center', gap: 4,
-            }}>
-              <Ionicons
-                name={word.isSaved ? 'bookmark' : 'bookmark-outline'}
-                size={11} color={srs.color}
-              />
-              <Text style={{ color: srs.color, fontSize: 11, fontWeight: '600' }}>
-                {srs.label}
-              </Text>
+            {/* Save button */}
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <TouchableOpacity
+                onPress={handleSave}
+                disabled={saving}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                style={{
+                  width: 36, height: 36, borderRadius: 12,
+                  backgroundColor: word.isSaved ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.06)',
+                  alignItems: 'center', justifyContent: 'center',
+                  borderWidth: 1,
+                  borderColor: word.isSaved ? 'rgba(245,158,11,0.3)' : 'rgba(255,255,255,0.08)',
+                }}
+              >
+                {saving ? (
+                  <ActivityIndicator size="small" color={word.isSaved ? '#f59e0b' : '#6b7280'} />
+                ) : (
+                  <Ionicons
+                    name={word.isSaved ? 'bookmark' : 'bookmark-outline'}
+                    size={18}
+                    color={word.isSaved ? '#f59e0b' : '#6b7280'}
+                  />
+                )}
+              </TouchableOpacity>
+
+              {/* SRS badge */}
+              <View style={{
+                backgroundColor: srs.bg, borderRadius: 10,
+                paddingHorizontal: 8, paddingVertical: 4,
+                borderWidth: 1, borderColor: srs.color + '44',
+              }}>
+                <Text style={{ color: srs.color, fontSize: 11, fontWeight: '600' }}>
+                  {srs.label}
+                </Text>
+              </View>
             </View>
           </View>
 
@@ -156,7 +185,15 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
   const [search, setSearch] = useState('');
   const { data, loading, error, refetch } = useTopicWords(topic.id, 1, 100);
 
-  const words = data?.data ?? [];
+  // Local word list for optimistic updates
+  const [localWords, setLocalWords] = useState<Word[] | null>(null);
+
+  // Sync server data to local state
+  React.useEffect(() => {
+    if (data?.data) setLocalWords(data.data);
+  }, [data]);
+
+  const words = localWords ?? data?.data ?? [];
   const filtered = search.trim()
     ? words.filter(w =>
         w.japaneseWord.includes(search) ||
@@ -166,6 +203,12 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
     : words;
 
   const savedCount = words.filter(w => w.isSaved).length;
+
+  const handleToggleSave = useCallback((wordId: string) => {
+    setLocalWords(prev =>
+      (prev ?? []).map(w => w.id === wordId ? { ...w, isSaved: !w.isSaved } : w),
+    );
+  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: '#0a0a1a' }}>
@@ -229,7 +272,7 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
             }}>
               <Ionicons name="bookmark" size={12} color="#f59e0b" />
               <Text style={{ color: '#f59e0b', fontSize: 12, fontWeight: '600' }}>
-                {savedCount} learning
+                {savedCount} saved
               </Text>
             </View>
           </View>
@@ -294,7 +337,9 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
         )}
 
         {/* ── Word cards ──────────────────────────────────────── */}
-        {filtered.map(word => <WordCard key={word.id} word={word} />)}
+        {filtered.map(word => (
+          <WordCard key={word.id} word={word} onToggleSave={handleToggleSave} />
+        ))}
       </ScrollView>
     </View>
   );

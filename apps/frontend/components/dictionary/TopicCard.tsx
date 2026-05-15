@@ -1,33 +1,55 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import Link from 'next/link';
-import { Tag, ChevronRight } from 'lucide-react';
+import { Tag, ChevronRight, Bookmark, BookmarkCheck, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import api from '@/lib/api';
 import type { Topic } from '@/lib/types';
 
 interface TopicCardProps {
   topic: Topic;
   bookId: string;
+  isAuthenticated?: boolean;
 }
 
-export function TopicCard({ topic, bookId }: TopicCardProps) {
+export function TopicCard({ topic, bookId, isAuthenticated }: TopicCardProps) {
   const count = topic._count.wordTopics;
 
+  const [isSaved, setIsSaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = useCallback(async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isSaving || !isAuthenticated) return;
+    setIsSaving(true);
+    setIsSaved(prev => !prev);
+    try {
+      const { data } = await api.post<{ saved: boolean }>(`/topics/${topic.id}/save`);
+      setIsSaved(data.saved);
+    } catch {
+      setIsSaved(prev => !prev);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [isSaving, isAuthenticated, topic.id]);
+
   return (
-    <Link
-      href={`/dictionary/words?bookId=${bookId}&topicId=${topic.id}`}
-      className={cn(
-        'group card-glass px-5 py-4 flex items-center justify-between gap-4',
-        'hover:border-primary/50 hover:bg-surface-2/60 hover:shadow-glow-sm',
-        'transition-all duration-150',
-      )}
-    >
-      <div className="flex items-center gap-3 min-w-0">
+    <div className={cn(
+      'group card-glass flex items-center justify-between gap-2',
+      'hover:border-primary/50 hover:bg-surface-2/60 hover:shadow-glow-sm',
+      'transition-all duration-150',
+    )}>
+      <Link
+        href={`/dictionary/words?bookId=${bookId}&topicId=${topic.id}`}
+        className="flex-1 flex items-center gap-3 min-w-0 px-5 py-4"
+      >
         <div className="w-9 h-9 shrink-0 rounded-lg bg-primary/10 border border-primary/20
                         flex items-center justify-center group-hover:border-primary/50 transition-colors">
           <Tag size={15} className="text-primary" />
         </div>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="font-semibold text-text-primary group-hover:text-primary
                         transition-colors truncate">
             {topic.name}
@@ -36,13 +58,43 @@ export function TopicCard({ topic, bookId }: TopicCardProps) {
             {count} {count === 1 ? 'word' : 'words'}
           </p>
         </div>
-      </div>
+      </Link>
 
-      <ChevronRight
-        size={16}
-        className="text-text-muted group-hover:text-primary shrink-0 transition-colors"
-      />
-    </Link>
+      {/* Save button */}
+      <div className="flex items-center gap-1 pr-4">
+        {isAuthenticated && (
+          <button
+            onClick={handleSave}
+            disabled={isSaving}
+            title={isSaved ? 'Unsave topic' : 'Save topic'}
+            className={cn(
+              'w-8 h-8 rounded-lg flex items-center justify-center transition-all',
+              'opacity-0 group-hover:opacity-100',
+              isSaved && 'opacity-100',
+              isSaving && 'opacity-50 cursor-wait',
+              isSaved
+                ? 'bg-accent/10 text-accent hover:bg-danger/10 hover:text-danger'
+                : 'hover:bg-surface-2 text-text-muted hover:text-accent',
+            )}
+          >
+            {isSaving ? (
+              <Loader2 size={14} className="animate-spin" />
+            ) : isSaved ? (
+              <BookmarkCheck size={14} className="fill-accent" />
+            ) : (
+              <Bookmark size={14} />
+            )}
+          </button>
+        )}
+
+        <Link href={`/dictionary/words?bookId=${bookId}&topicId=${topic.id}`}>
+          <ChevronRight
+            size={16}
+            className="text-text-muted group-hover:text-primary shrink-0 transition-colors"
+          />
+        </Link>
+      </div>
+    </div>
   );
 }
 

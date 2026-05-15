@@ -6,6 +6,7 @@ import Link from 'next/link';
 import api from '@/lib/api';
 import { useTopics } from '@/hooks/useTopics';
 import { TopicCard, TopicCardSkeleton } from '@/components/dictionary/TopicCard';
+import { useAuth } from '@/context/AuthContext';
 import type { Book } from '@/lib/types';
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
 export default function BookTopicsPage({ params }: Props) {
   const { bookId } = params;
   const { topics, isLoading, error } = useTopics(bookId);
+  const { isAuthenticated } = useAuth();
   const [book, setBook] = useState<Book | null>(null);
   const [bookLoading, setBookLoading] = useState(true);
 
@@ -93,7 +95,7 @@ export default function BookTopicsPage({ params }: Props) {
             {topics.length} {topics.length === 1 ? 'topic' : 'topics'} in this book
           </p>
           {topics.map((topic) => (
-            <TopicCard key={topic.id} topic={topic} bookId={bookId} />
+            <TopicCard key={topic.id} topic={topic} bookId={bookId} isAuthenticated={isAuthenticated} />
           ))}
         </div>
       )}

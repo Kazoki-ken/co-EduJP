@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
-  TextInput, RefreshControl, FlatList,
+  TextInput, RefreshControl, ActivityIndicator,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { DictionaryStackParamList } from '../navigation/DictionaryStack';
-import { useBooks } from '../hooks/useVocabulary';
+import { useBooks, toggleSaveBook } from '../hooks/useVocabulary';
 import { BookCardSkeleton } from '../components/Skeletons';
 import type { Book } from '@vocabjp/shared';
 
@@ -51,6 +51,21 @@ interface BookCardProps { book: Book; index: number; onPress: () => void }
 
 function BookCard({ book, index, onPress }: BookCardProps) {
   const palette = CARD_PALETTES[index % CARD_PALETTES.length];
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = useCallback(async () => {
+    if (saving) return;
+    setSaving(true);
+    setSaved(prev => !prev); // optimistic
+    try {
+      const result = await toggleSaveBook(book.id);
+      setSaved(result.saved);
+    } catch {
+      setSaved(prev => !prev); // revert
+    }
+    setSaving(false);
+  }, [saving, book.id]);
 
   return (
     <TouchableOpacity
@@ -60,27 +75,53 @@ function BookCard({ book, index, onPress }: BookCardProps) {
     >
       <BlurView intensity={18} tint="dark" style={{
         borderRadius: 20, overflow: 'hidden',
-        borderWidth: 1, borderColor: 'rgba(255,255,255,0.07)',
+        borderWidth: 1,
+        borderColor: saved ? 'rgba(245,158,11,0.25)' : 'rgba(255,255,255,0.07)',
         minHeight: 150,
       }}>
         <LinearGradient
           colors={['rgba(14,14,32,0.96)', 'rgba(8,8,20,0.99)']}
           style={{ flex: 1, padding: 16 }}
         >
-          {/* Icon bubble */}
-          <LinearGradient
-            colors={palette.colors}
-            style={{
-              width: 48, height: 48, borderRadius: 14,
-              alignItems: 'center', justifyContent: 'center',
-              marginBottom: 12,
-              shadowColor: palette.glow,
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.5, shadowRadius: 10, elevation: 6,
-            }}
-          >
-            <Text style={{ fontSize: 22 }}>{palette.icon}</Text>
-          </LinearGradient>
+          {/* Top row: Icon + save */}
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+            <LinearGradient
+              colors={palette.colors}
+              style={{
+                width: 48, height: 48, borderRadius: 14,
+                alignItems: 'center', justifyContent: 'center',
+                shadowColor: palette.glow,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.5, shadowRadius: 10, elevation: 6,
+              }}
+            >
+              <Text style={{ fontSize: 22 }}>{palette.icon}</Text>
+            </LinearGradient>
+
+            {/* Save button */}
+            <TouchableOpacity
+              onPress={handleSave}
+              disabled={saving}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              style={{
+                width: 32, height: 32, borderRadius: 10,
+                backgroundColor: saved ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.06)',
+                alignItems: 'center', justifyContent: 'center',
+                borderWidth: 1,
+                borderColor: saved ? 'rgba(245,158,11,0.3)' : 'rgba(255,255,255,0.08)',
+              }}
+            >
+              {saving ? (
+                <ActivityIndicator size="small" color="#f59e0b" />
+              ) : (
+                <Ionicons
+                  name={saved ? 'bookmark' : 'bookmark-outline'}
+                  size={16}
+                  color={saved ? '#f59e0b' : '#6b7280'}
+                />
+              )}
+            </TouchableOpacity>
+          </View>
 
           <Text
             numberOfLines={2}

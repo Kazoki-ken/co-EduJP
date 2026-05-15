@@ -1,12 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, Zap, BookOpen, Trophy, Star, Target, TrendingUp } from 'lucide-react';
+import {
+  Flame, Zap, BookOpen, Trophy, TrendingUp,
+  Bookmark, BookmarkCheck, Library,
+} from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import { cn, leagueColor, leagueIcon } from '@/lib/utils';
-import type { EarnedBadge, SrsUpdate } from '@/lib/types';
+import type { EarnedBadge, Word, Book, PaginatedResponse } from '@/lib/types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -20,6 +23,8 @@ interface ProgressData {
   dueTodayCount: number;
   levelBreakdown: { level: number; count: number }[];
 }
+
+type SavedTab = 'words' | 'books';
 
 const SRS_LEVELS: Record<number, { label: string; color: string; bg: string }> = {
   1: { label: 'Beginner',  color: 'text-red-400',    bg: 'bg-red-500'     },
@@ -35,6 +40,13 @@ export default function ProfilePage() {
   const [progress, setProgress] = useState<ProgressData | null>(null);
   const [loading,  setLoading]  = useState(true);
 
+  // Saved content
+  const [savedTab, setSavedTab] = useState<SavedTab>('words');
+  const [savedWords, setSavedWords] = useState<Word[]>([]);
+  const [savedBooks, setSavedBooks] = useState<(Book & { savedAt: string })[]>([]);
+  const [savedWordsLoading, setSavedWordsLoading] = useState(false);
+  const [savedBooksLoading, setSavedBooksLoading] = useState(false);
+
   useEffect(() => {
     if (!user) return;
     Promise.all([
@@ -45,6 +57,38 @@ export default function ProfilePage() {
       setProgress(p.data);
     }).catch(() => {}).finally(() => setLoading(false));
   }, [user]);
+
+  // Fetch saved words
+  const fetchSavedWords = useCallback(async () => {
+    setSavedWordsLoading(true);
+    try {
+      const { data } = await api.get<PaginatedResponse<Word>>('/users/me/saved-words', {
+        params: { limit: 100 },
+      });
+      setSavedWords(data.data);
+    } catch {}
+    setSavedWordsLoading(false);
+  }, []);
+
+  // Fetch saved books
+  const fetchSavedBooks = useCallback(async () => {
+    setSavedBooksLoading(true);
+    try {
+      const { data } = await api.get<PaginatedResponse<Book & { savedAt: string }>>('/users/me/saved-books', {
+        params: { limit: 100 },
+      });
+      setSavedBooks(data.data);
+    } catch {}
+    setSavedBooksLoading(false);
+  }, []);
+
+  // Load data when tab changes
+  useEffect(() => {
+    if (!user) return;
+    if (savedTab === 'words' && savedWords.length === 0) fetchSavedWords();
+    if (savedTab === 'books' && savedBooks.length === 0) fetchSavedBooks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [savedTab, user]);
 
   if (authLoading || loading) {
     return (
@@ -121,6 +165,134 @@ export default function ProfilePage() {
           ))}
         </div>
       </motion.div>
+
+      {/* ── Saved Words / Saved Books Tabs ──────────────────────────── */}
+      <section>
+        <div className="flex items-center gap-4 mb-5">
+          <button
+            onClick={() => setSavedTab('words')}
+            className={cn(
+              'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all',
+              savedTab === 'words'
+                ? 'bg-primary/15 text-primary border border-primary/30'
+                : 'bg-surface-2 text-text-muted border border-border hover:border-primary/30 hover:text-text-secondary',
+            )}
+          >
+            <Bookmark size={15} />
+            Saved Words
+            {savedWords.length > 0 && (
+              <span className="bg-primary/20 text-primary text-xs px-2 py-0.5 rounded-full font-bold">
+                {savedWords.length}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => setSavedTab('books')}
+            className={cn(
+              'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all',
+              savedTab === 'books'
+                ? 'bg-accent/15 text-accent border border-accent/30'
+                : 'bg-surface-2 text-text-muted border border-border hover:border-accent/30 hover:text-text-secondary',
+            )}
+          >
+            <Library size={15} />
+            Saved Books
+            {savedBooks.length > 0 && (
+              <span className="bg-accent/20 text-accent text-xs px-2 py-0.5 rounded-full font-bold">
+                {savedBooks.length}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Saved Words */}
+        {savedTab === 'words' && (
+          <div className="card-glass p-5 space-y-3">
+            {savedWordsLoading ? (
+              <div className="space-y-3">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="h-6 w-20 skeleton rounded" />
+                    <div className="h-4 w-32 skeleton rounded" />
+                  </div>
+                ))}
+              </div>
+            ) : savedWords.length === 0 ? (
+              <div className="py-12 text-center">
+                <p className="text-3xl mb-3">📝</p>
+                <p className="text-text-muted">
+                  No saved words yet. Browse the dictionary and tap the bookmark icon to save words!
+                </p>
+              </div>
+            ) : (
+              <div className="divide-y divide-border/50">
+                {savedWords.map((w) => (
+                  <div key={w.id} className="py-3 flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-lg font-bold text-text-primary">{w.japaneseWord}</span>
+                        {w.hiragana && w.hiragana !== w.japaneseWord && (
+                          <span className="text-sm text-primary/80">({w.hiragana})</span>
+                        )}
+                      </div>
+                      <p className="text-sm text-text-secondary truncate">{w.meaning}</p>
+                    </div>
+                    <BookmarkCheck size={14} className="text-accent fill-accent shrink-0 mt-1" />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Saved Books */}
+        {savedTab === 'books' && (
+          <div className="card-glass p-5">
+            {savedBooksLoading ? (
+              <div className="space-y-3">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="h-16 skeleton rounded-xl" />
+                ))}
+              </div>
+            ) : savedBooks.length === 0 ? (
+              <div className="py-12 text-center">
+                <p className="text-3xl mb-3">📚</p>
+                <p className="text-text-muted">
+                  No saved books yet. Go to the Dictionary and bookmark your favorite books!
+                </p>
+              </div>
+            ) : (
+              <div className="divide-y divide-border/50">
+                {savedBooks.map((b) => (
+                  <a
+                    key={b.id}
+                    href={`/dictionary/${b.id}`}
+                    className="py-3 flex items-center justify-between gap-3 hover:bg-surface-2/50
+                               rounded-lg px-2 -mx-2 transition-colors"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20
+                                      flex items-center justify-center shrink-0">
+                        <BookOpen size={18} className="text-primary" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-text-primary truncate">{b.title}</p>
+                        {b.description && (
+                          <p className="text-xs text-text-muted truncate">{b.description}</p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-text-muted shrink-0">
+                      <span>{b._count.topics} topics</span>
+                      <BookmarkCheck size={14} className="text-accent fill-accent" />
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </section>
 
       {/* ── SRS Progress ───────────────────────────────────────────── */}
       <section>
