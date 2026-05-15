@@ -336,6 +336,101 @@ export const getSavedWords = async (userId: string, page = 1, limit = 20) => {
   };
 };
 
+// ─── Save / Unsave Book ───────────────────────────────────────────────────────
+
+export const toggleSaveBook = async (userId: string, bookId: string) => {
+  const book = await prisma.book.findUnique({ where: { id: bookId } });
+  if (!book) throw createError('Book not found', 404);
+
+  const existing = await prisma.savedBook.findUnique({
+    where: { userId_bookId: { userId, bookId } },
+  });
+
+  if (existing) {
+    await prisma.savedBook.delete({
+      where: { userId_bookId: { userId, bookId } },
+    });
+    return { saved: false };
+  } else {
+    await prisma.savedBook.create({ data: { userId, bookId } });
+    return { saved: true };
+  }
+};
+
+export const getSavedBooks = async (userId: string, page = 1, limit = 20) => {
+  const skip = (page - 1) * limit;
+
+  const [savedBooks, total] = await Promise.all([
+    prisma.savedBook.findMany({
+      where: { userId },
+      skip,
+      take: limit,
+      orderBy: { savedAt: 'desc' },
+      include: {
+        book: {
+          include: {
+            _count: { select: { topics: true } },
+          },
+        },
+      },
+    }),
+    prisma.savedBook.count({ where: { userId } }),
+  ]);
+
+  return {
+    data: savedBooks.map((sb) => ({ ...sb.book, isSaved: true, savedAt: sb.savedAt })),
+    meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
+  };
+};
+
+// ─── Save / Unsave Topic ──────────────────────────────────────────────────────
+
+export const toggleSaveTopic = async (userId: string, topicId: string) => {
+  const topic = await prisma.topic.findUnique({ where: { id: topicId } });
+  if (!topic) throw createError('Topic not found', 404);
+
+  const existing = await prisma.savedTopic.findUnique({
+    where: { userId_topicId: { userId, topicId } },
+  });
+
+  if (existing) {
+    await prisma.savedTopic.delete({
+      where: { userId_topicId: { userId, topicId } },
+    });
+    return { saved: false };
+  } else {
+    await prisma.savedTopic.create({ data: { userId, topicId } });
+    return { saved: true };
+  }
+};
+
+export const getSavedTopics = async (userId: string, page = 1, limit = 20) => {
+  const skip = (page - 1) * limit;
+
+  const [savedTopics, total] = await Promise.all([
+    prisma.savedTopic.findMany({
+      where: { userId },
+      skip,
+      take: limit,
+      orderBy: { savedAt: 'desc' },
+      include: {
+        topic: {
+          include: {
+            book: { select: { id: true, title: true } },
+            _count: { select: { wordTopics: true } },
+          },
+        },
+      },
+    }),
+    prisma.savedTopic.count({ where: { userId } }),
+  ]);
+
+  return {
+    data: savedTopics.map((st) => ({ ...st.topic, isSaved: true, savedAt: st.savedAt })),
+    meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
+  };
+};
+
 // ─── User Progress ────────────────────────────────────────────────────────────
 
 export const getUserProgress = async (userId: string) => {

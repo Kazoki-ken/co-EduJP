@@ -56,6 +56,7 @@ model User {
   words        Word[]           @relation("AuthorWords")
   savedWords   SavedWord[]
   savedBooks   SavedBook[]
+  savedTopics  SavedTopic[]
   wordProgress UserWordProgress[]
   weeklyStats  WeeklyStat[]
   badges       UserBadge[]
@@ -102,8 +103,9 @@ model Topic {
   name   String
   bookId String? @map("book_id")
 
-  book       Book?       @relation(fields: [bookId], references: [id], onDelete: SetNull)
-  wordTopics WordTopic[]
+  book        Book?        @relation(fields: [bookId], references: [id], onDelete: SetNull)
+  wordTopics  WordTopic[]
+  savedTopics SavedTopic[]
 
   @@map("topics")
 }
@@ -161,6 +163,18 @@ model SavedBook {
 
   @@id([userId, bookId])
   @@map("saved_books")
+}
+
+model SavedTopic {
+  userId  String   @map("user_id")
+  topicId String   @map("topic_id")
+  savedAt DateTime @default(now()) @map("saved_at")
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@id([userId, topicId])
+  @@map("saved_topics")
 }
 
 // ─── SRS Engine ───────────────────────────────────────────────────────────────

@@ -7,43 +7,45 @@ const monorepoRoot = path.resolve(projectRoot, '../..');
 
 const config = getDefaultConfig(projectRoot);
 
-// ── Watch the monorepo root so Metro can see packages/shared ─────────────────
-// NOTE: We only watch — we do NOT add the monorepo root to nodeModulesPaths,
-//       because that causes Metro to find the frontend's react@18 alongside
-//       mobile's react@19, triggering the "multiple copies of React" error.
+// ── Watch the monorepo root so Metro can see packages/shared ──────────────────
 config.watchFolders = [monorepoRoot];
 
-// ── Resolve modules from the mobile project ONLY ──────────────────────────────
-// Intentionally NOT including monorepoRoot/node_modules here.
+// ── Module resolution paths ───────────────────────────────────────────────────
+// Mobile's node_modules first (has React 19), then root (has everything else).
 config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
+  path.resolve(monorepoRoot, 'node_modules'),
 ];
 
-// ── Singleton packages — always resolve to mobile's own copy ──────────────────
-// This is the critical fix: any import of these packages (even from files
-// inside packages/shared or the monorepo root) is redirected to the single
-// copy inside apps/mobile/node_modules.
-const SINGLETONS = [
-  'react',
-  'react-native',
-  'react-native/Libraries/Renderer/shims/ReactNative',
-  '@react-navigation/core',
-  '@react-navigation/native',
-  '@react-navigation/bottom-tabs',
-  'react-native-safe-area-context',
-  'react-native-screens',
-];
+// ── Follow symlinks for pnpm hoisted layout ───────────────────────────────────
+config.resolver.unstable_enableSymlinks = true;
 
+// ── Force React 19 for ALL imports ────────────────────────────────────────────
+// Problem: pnpm hoists React 18 (from frontend) to root/node_modules/react.
+// When expo or any root-hoisted package imports "react", standard Node
+// resolution finds React 18 at the root. extraNodeModules can't override
+// a successful resolution — it's only a fallback.
+//
+// Solution: intercept all "react" and "react/*" imports via resolveRequest
+// and return mobile's React 19 directly.  Everything else resolves normally.
+const mobileNodeModules = path.resolve(projectRoot, 'node_modules');
+
+config.resolver.resolveRequest = (context, moduleName, platform) => {
+  // Intercept react core imports → always use mobile's React 19
+  if (moduleName === 'react' || moduleName.startsWith('react/')) {
+    return {
+      type: 'sourceFile',
+      filePath: require.resolve(moduleName, { paths: [mobileNodeModules] }),
+    };
+  }
+
+  // Everything else: default Metro resolution
+  return context.resolveRequest(context, moduleName, platform);
+};
+
+// ── Extra node modules (fallback aliases) ─────────────────────────────────────
 config.resolver.extraNodeModules = {
-  // @vocabjp/shared path alias
   '@vocabjp/shared': path.resolve(monorepoRoot, 'packages/shared/src'),
-  // Pin every singleton to mobile's node_modules
-  ...Object.fromEntries(
-    SINGLETONS.map((pkg) => [
-      pkg,
-      path.resolve(projectRoot, 'node_modules', pkg),
-    ]),
-  ),
 };
 
 module.exports = withNativeWind(config, { input: './global.css' });

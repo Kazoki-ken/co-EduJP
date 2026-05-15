@@ -19,6 +19,10 @@ import {
   deleteWord,
   toggleSaveWord,
   getSavedWords,
+  toggleSaveBook,
+  getSavedBooks,
+  toggleSaveTopic,
+  getSavedTopics,
   getUserProgress,
   getUserBadges,
 } from '../services/vocabulary.service';
@@ -184,6 +188,32 @@ export const saveWord = async (req: AuthenticatedRequest, res: Response): Promis
 export const getMySavedWords = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const { page, limit } = PaginationSchema.parse(req.query);
   const result = await getSavedWords(req.user!.id, page, limit);
+  res.json(result);
+};
+
+// ─── Saved Books Controllers ─────────────────────────────────────────────────
+
+export const saveBook = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const result = await toggleSaveBook(req.user!.id, req.params.id);
+  res.json(result);
+};
+
+export const getMySavedBooks = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const { page, limit } = PaginationSchema.parse(req.query);
+  const result = await getSavedBooks(req.user!.id, page, limit);
+  res.json(result);
+};
+
+// ─── Saved Topics Controllers ─────────────────────────────────────────────────
+
+export const saveTopic = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const result = await toggleSaveTopic(req.user!.id, req.params.id);
+  res.json(result);
+};
+
+export const getMySavedTopics = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const { page, limit } = PaginationSchema.parse(req.query);
+  const result = await getSavedTopics(req.user!.id, page, limit);
   res.json(result);
 };
 

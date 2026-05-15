@@ -76,34 +76,38 @@ export const getCurrentWeekBounds = (): { start: Date; end: Date } => {
   return { start, end };
 };
 
-// ─── 1. Generate Game Session ─────────────────────────────────────────────────
-
 /**
- * Picks up to `limit` words for the given filters, stores an anti-cheat
- * GameSession record, and returns the session + words (without answers).
+ * Picks up to `limit` words EXCLUSIVELY from the user's SavedWords list.
+ * SRS-due saved words come first; remaining slots are filled randomly
+ * from the rest of their saved vocabulary.
  *
- * Priority: words due for SRS review are returned first; remaining slots are
- * filled with saved or random words from the requested scope.
+ * If the user has fewer than 4 saved words, a friendly error is thrown.
  */
 export const generateSession = async (opts: GenerateSessionOptions) => {
   const limit = Math.min(opts.limit ?? 20, 50);
   const now = new Date();
+  const MIN_WORDS = 4; // minimum for multiple-choice options
 
-  // ── Build word filter ─────────────────────────────────────────────────────
-  const wordWhere: Record<string, unknown> = {};
+  // ── Get all of the user's saved word IDs ──────────────────────────────────
+  const savedWordRecords = await prisma.savedWord.findMany({
+    where: { userId: opts.userId },
+    select: { wordId: true },
+  });
+  const savedWordIds = savedWordRecords.map((sw) => sw.wordId);
 
-  if (opts.topicId) {
-    wordWhere.wordTopics = { some: { topicId: opts.topicId } };
-  } else if (opts.bookId) {
-    wordWhere.wordTopics = { some: { topic: { bookId: opts.bookId } } };
+  if (savedWordIds.length < MIN_WORDS) {
+    throw createError(
+      `You need at least ${MIN_WORDS} saved words to play. You have ${savedWordIds.length}. Go to the Dictionary and save some words first!`,
+      400,
+    );
   }
 
-  // ── Pull SRS-due words first ─────────────────────────────────────────────
+  // ── Pull SRS-due words that are also saved ────────────────────────────────
   const dueProgress = await prisma.userWordProgress.findMany({
     where: {
       userId: opts.userId,
       nextReviewDate: { lte: now },
-      word: Object.keys(wordWhere).length ? wordWhere : undefined,
+      wordId: { in: savedWordIds },
     },
     orderBy: { nextReviewDate: 'asc' },
     take: limit,
@@ -127,17 +131,16 @@ export const generateSession = async (opts: GenerateSessionOptions) => {
   const dueWords = dueProgress.map((p) => p.word);
   const dueWordIds = new Set(dueWords.map((w) => w.id));
 
-  // ── Fill remaining slots ──────────────────────────────────────────────────
+  // ── Fill remaining slots from saved words (not already due) ───────────────
   let additionalWords: typeof dueWords = [];
   const remaining = limit - dueWords.length;
 
   if (remaining > 0 && !opts.dueOnly) {
     const candidates = await prisma.word.findMany({
       where: {
-        ...wordWhere,
-        id: { notIn: [...dueWordIds] },
+        id: { in: savedWordIds.filter((id) => !dueWordIds.has(id)) },
       },
-      take: remaining * 3, // oversample, then shuffle
+      take: remaining * 3,
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,
@@ -152,7 +155,6 @@ export const generateSession = async (opts: GenerateSessionOptions) => {
       },
     });
 
-    // Shuffle and pick remaining
     additionalWords = candidates
       .sort(() => Math.random() - 0.5)
       .slice(0, remaining);
@@ -162,7 +164,7 @@ export const generateSession = async (opts: GenerateSessionOptions) => {
 
   if (selectedWords.length === 0) {
     throw createError(
-      'No words available for the selected filters. Try a different topic or book.',
+      'No saved words available for practice. Save some words in the Dictionary first!',
       404,
     );
   }
