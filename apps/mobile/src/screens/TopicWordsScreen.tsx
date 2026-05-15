@@ -1,12 +1,14 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
   TextInput, RefreshControl, ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useIsFocused } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { DictionaryStackParamList } from '../navigation/DictionaryStack';
 import { useTopicWords, toggleSaveWord } from '../hooks/useVocabulary';
@@ -14,6 +16,8 @@ import { WordRowSkeleton } from '../components/Skeletons';
 import type { Word } from '@vocabjp/shared';
 
 type Props = NativeStackScreenProps<DictionaryStackParamList, 'TopicWords'>;
+
+const WORDS_PER_PAGE = 20;
 
 // ─── SRS level helpers ────────────────────────────────────────────
 type SrsLevel = 'new' | 'learning' | 'review' | 'mastered';
@@ -87,14 +91,12 @@ function WordCard({ word, onToggleSave }: { word: Word; onToggleSave: (id: strin
           {/* ── Top row ─────────────────────────────────────── */}
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <View style={{ flex: 1, marginRight: 10 }}>
-              {/* Japanese word */}
               <Text style={{
                 color: '#f9fafb', fontSize: 22, fontWeight: '700',
                 letterSpacing: 1, marginBottom: 2,
               }}>
                 {word.japaneseWord}
               </Text>
-              {/* Hiragana */}
               <Text style={{ color: '#9ca3af', fontSize: 13, letterSpacing: 0.5 }}>
                 {word.hiragana}
               </Text>
@@ -178,20 +180,111 @@ function WordCard({ word, onToggleSave }: { word: Word; onToggleSave: (id: strin
   );
 }
 
+// ─── Pagination controls ──────────────────────────────────────────
+function PaginationBar({
+  page, totalPages, onPageChange,
+}: {
+  page: number; totalPages: number; onPageChange: (p: number) => void;
+}) {
+  if (totalPages <= 1) return null;
+
+  // Build page numbers to show: 1 ... current-1 current current+1 ... last
+  const pages: (number | '...')[] = [];
+  const addPage = (p: number) => { if (!pages.includes(p)) pages.push(p); };
+  addPage(1);
+  if (page > 3) pages.push('...');
+  for (let p = Math.max(2, page - 1); p <= Math.min(totalPages - 1, page + 1); p++) addPage(p);
+  if (page < totalPages - 2) pages.push('...');
+  if (totalPages > 1) addPage(totalPages);
+
+  return (
+    <View style={{
+      flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+      gap: 6, marginTop: 20, marginBottom: 10,
+    }}>
+      {/* Prev */}
+      <TouchableOpacity
+        disabled={page <= 1}
+        onPress={() => onPageChange(page - 1)}
+        style={{
+          width: 36, height: 36, borderRadius: 10,
+          backgroundColor: page > 1 ? 'rgba(124,58,237,0.15)' : 'rgba(31,41,55,0.3)',
+          alignItems: 'center', justifyContent: 'center',
+          borderWidth: 1,
+          borderColor: page > 1 ? 'rgba(124,58,237,0.3)' : 'rgba(255,255,255,0.05)',
+        }}
+      >
+        <Ionicons name="chevron-back" size={16} color={page > 1 ? '#7c3aed' : '#374151'} />
+      </TouchableOpacity>
+
+      {pages.map((p, i) =>
+        p === '...' ? (
+          <Text key={`dots-${i}`} style={{ color: '#4b5563', fontSize: 14, marginHorizontal: 2 }}>…</Text>
+        ) : (
+          <TouchableOpacity
+            key={p}
+            onPress={() => onPageChange(p)}
+            style={{
+              minWidth: 36, height: 36, borderRadius: 10,
+              backgroundColor: p === page ? 'rgba(124,58,237,0.25)' : 'rgba(31,41,55,0.3)',
+              alignItems: 'center', justifyContent: 'center',
+              paddingHorizontal: 6,
+              borderWidth: 1,
+              borderColor: p === page ? 'rgba(124,58,237,0.5)' : 'rgba(255,255,255,0.05)',
+            }}
+          >
+            <Text style={{
+              color: p === page ? '#7c3aed' : '#6b7280',
+              fontSize: 13, fontWeight: p === page ? '700' : '400',
+            }}>
+              {p}
+            </Text>
+          </TouchableOpacity>
+        )
+      )}
+
+      {/* Next */}
+      <TouchableOpacity
+        disabled={page >= totalPages}
+        onPress={() => onPageChange(page + 1)}
+        style={{
+          width: 36, height: 36, borderRadius: 10,
+          backgroundColor: page < totalPages ? 'rgba(124,58,237,0.15)' : 'rgba(31,41,55,0.3)',
+          alignItems: 'center', justifyContent: 'center',
+          borderWidth: 1,
+          borderColor: page < totalPages ? 'rgba(124,58,237,0.3)' : 'rgba(255,255,255,0.05)',
+        }}
+      >
+        <Ionicons name="chevron-forward" size={16} color={page < totalPages ? '#7c3aed' : '#374151'} />
+      </TouchableOpacity>
+    </View>
+  );
+}
+
 // ─── Topic Words Screen ───────────────────────────────────────────
 export default function TopicWordsScreen({ route, navigation }: Props) {
   const { topic, book } = route.params;
   const insets = useSafeAreaInsets();
+  const isFocused = useIsFocused();
   const [search, setSearch] = useState('');
-  const { data, loading, error, refetch } = useTopicWords(topic.id, 1, 100);
+  const [page, setPage] = useState(1);
 
-  // Local word list for optimistic updates
+  // Paginated fetch — 20 words per page
+  const { data, loading, error, refetch } = useTopicWords(topic.id, page, WORDS_PER_PAGE);
+
+  // Local word list for optimistic save updates
   const [localWords, setLocalWords] = useState<Word[] | null>(null);
 
-  // Sync server data to local state
-  React.useEffect(() => {
+  // Re-sync from server whenever data changes OR screen re-focuses
+  useEffect(() => {
     if (data?.data) setLocalWords(data.data);
   }, [data]);
+
+  // Re-fetch when screen comes back into focus (fixes bug #2: stale isSaved)
+  useEffect(() => {
+    if (isFocused) refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused]);
 
   const words = localWords ?? data?.data ?? [];
   const filtered = search.trim()
@@ -203,11 +296,17 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
     : words;
 
   const savedCount = words.filter(w => w.isSaved).length;
+  const totalPages = data?.meta ? Math.ceil(data.meta.total / WORDS_PER_PAGE) : 1;
 
   const handleToggleSave = useCallback((wordId: string) => {
     setLocalWords(prev =>
       (prev ?? []).map(w => w.id === wordId ? { ...w, isSaved: !w.isSaved } : w),
     );
+  }, []);
+
+  const handlePageChange = useCallback((p: number) => {
+    setPage(p);
+    setLocalWords(null); // clear local to show skeletons
   }, []);
 
   return (
@@ -275,6 +374,20 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
                 {savedCount} saved
               </Text>
             </View>
+            {/* Page indicator */}
+            {totalPages > 1 && (
+              <View style={{
+                flexDirection: 'row', alignItems: 'center', gap: 4,
+                backgroundColor: 'rgba(59,130,246,0.12)', borderRadius: 10,
+                paddingHorizontal: 10, paddingVertical: 5,
+                borderWidth: 1, borderColor: 'rgba(59,130,246,0.3)',
+              }}>
+                <Ionicons name="document-text-outline" size={12} color="#3b82f6" />
+                <Text style={{ color: '#3b82f6', fontSize: 12, fontWeight: '600' }}>
+                  Page {page}/{totalPages}
+                </Text>
+              </View>
+            )}
           </View>
         </View>
 
@@ -322,8 +435,8 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
         )}
 
         {/* ── Skeletons ───────────────────────────────────────── */}
-        {loading && !data && (
-          [0,1,2,3,4,5,6].map(i => <WordRowSkeleton key={i} />)
+        {loading && !localWords && (
+          [0,1,2,3,4,5].map(i => <WordRowSkeleton key={i} />)
         )}
 
         {/* ── Empty ───────────────────────────────────────────── */}
@@ -340,6 +453,13 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
         {filtered.map(word => (
           <WordCard key={word.id} word={word} onToggleSave={handleToggleSave} />
         ))}
+
+        {/* ── Pagination ──────────────────────────────────────── */}
+        <PaginationBar
+          page={page}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </ScrollView>
     </View>
   );

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
-  RefreshControl,
+  RefreshControl, ActivityIndicator,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { DictionaryStackParamList } from '../navigation/DictionaryStack';
-import { useBookTopics } from '../hooks/useVocabulary';
+import { useBookTopics, toggleSaveTopic } from '../hooks/useVocabulary';
 import { TopicRowSkeleton } from '../components/Skeletons';
 import type { Topic } from '@vocabjp/shared';
 
@@ -21,20 +21,35 @@ const TOPIC_COLORS = [
   '#f59e0b', '#06b6d4', '#ef4444', '#8b5cf6',
 ];
 
-// ─── Topic row card ───────────────────────────────────────────────
+// ─── Topic row card (with save button) ────────────────────────────
 function TopicRow({
-  topic, index, onPress,
+  topic, index, onPress, saved, onToggleSave,
 }: {
   topic: Topic; index: number; onPress: () => void;
+  saved: boolean; onToggleSave: () => void;
 }) {
   const color = TOPIC_COLORS[index % TOPIC_COLORS.length];
   const wordCount = topic._count.wordTopics;
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = useCallback(async () => {
+    if (saving) return;
+    setSaving(true);
+    onToggleSave(); // optimistic
+    try {
+      await toggleSaveTopic(topic.id);
+    } catch {
+      onToggleSave(); // revert
+    }
+    setSaving(false);
+  }, [saving, topic.id, onToggleSave]);
 
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.82} style={{ marginBottom: 10 }}>
       <BlurView intensity={18} tint="dark" style={{
         borderRadius: 18, overflow: 'hidden',
-        borderWidth: 1, borderColor: 'rgba(255,255,255,0.07)',
+        borderWidth: 1,
+        borderColor: saved ? 'rgba(245,158,11,0.2)' : 'rgba(255,255,255,0.07)',
       }}>
         <LinearGradient
           colors={['rgba(14,14,32,0.96)', 'rgba(8,8,20,0.99)']}
@@ -64,6 +79,31 @@ function TopicRow({
             </View>
           </View>
 
+          {/* Save button */}
+          <TouchableOpacity
+            onPress={(e) => { e.stopPropagation?.(); handleSave(); }}
+            disabled={saving}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            style={{
+              width: 36, height: 36, borderRadius: 12,
+              backgroundColor: saved ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.06)',
+              alignItems: 'center', justifyContent: 'center',
+              borderWidth: 1,
+              borderColor: saved ? 'rgba(245,158,11,0.3)' : 'rgba(255,255,255,0.08)',
+              marginRight: 8,
+            }}
+          >
+            {saving ? (
+              <ActivityIndicator size="small" color="#f59e0b" />
+            ) : (
+              <Ionicons
+                name={saved ? 'heart' : 'heart-outline'}
+                size={18}
+                color={saved ? '#f59e0b' : '#6b7280'}
+              />
+            )}
+          </TouchableOpacity>
+
           <Ionicons name="chevron-forward" size={18} color="#374151" />
         </LinearGradient>
       </BlurView>
@@ -76,6 +116,18 @@ export default function TopicListScreen({ route, navigation }: Props) {
   const { book } = route.params;
   const insets = useSafeAreaInsets();
   const { data: topics, loading, error, refetch } = useBookTopics(book.id);
+
+  // Track saved state locally for optimistic updates
+  const [savedSet, setSavedSet] = useState<Set<string>>(new Set());
+
+  const handleToggleSave = useCallback((topicId: string) => {
+    setSavedSet(prev => {
+      const next = new Set(prev);
+      if (next.has(topicId)) next.delete(topicId);
+      else next.add(topicId);
+      return next;
+    });
+  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: '#0a0a1a' }}>
@@ -153,6 +205,8 @@ export default function TopicListScreen({ route, navigation }: Props) {
             key={topic.id}
             topic={topic}
             index={i}
+            saved={savedSet.has(topic.id)}
+            onToggleSave={() => handleToggleSave(topic.id)}
             onPress={() => navigation.navigate('TopicWords', { topic, book })}
           />
         ))}

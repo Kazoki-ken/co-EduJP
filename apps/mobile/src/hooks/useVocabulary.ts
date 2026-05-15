@@ -20,6 +20,9 @@ function useFetch<T>(url: string, params?: Record<string, unknown>): FetchState<
   const [error, setError]     = useState<string | null>(null);
   const [tick, setTick]       = useState(0);
 
+  // Stable serialization of params for dependency tracking
+  const paramsKey = params ? JSON.stringify(params) : '';
+
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
@@ -36,7 +39,7 @@ function useFetch<T>(url: string, params?: Record<string, unknown>): FetchState<
 
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, tick]);
+  }, [url, paramsKey, tick]);
 
   const refetch = useCallback(() => setTick(t => t + 1), []);
   return { data, loading, error, refetch };

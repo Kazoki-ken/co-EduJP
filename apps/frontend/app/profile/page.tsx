@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { motion } from 'framer-motion';
 import {
   Flame, Zap, BookOpen, Trophy, TrendingUp,
   Bookmark, BookmarkCheck, Library,
@@ -118,10 +117,8 @@ export default function ProfilePage() {
   return (
     <div className="page-container py-10 animate-fade-in space-y-8">
       {/* ── Profile Header ─────────────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: -16 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="card-glass p-7 flex flex-col sm:flex-row items-center sm:items-start gap-6"
+      <div
+        className="card-glass p-7 flex flex-col sm:flex-row items-center sm:items-start gap-6 animate-fade-in"
       >
         {/* Avatar */}
         <div className="relative">
@@ -164,7 +161,7 @@ export default function ProfilePage() {
             </div>
           ))}
         </div>
-      </motion.div>
+      </div>
 
       {/* ── Saved Words / Saved Books Tabs ──────────────────────────── */}
       <section>
@@ -225,22 +222,30 @@ export default function ProfilePage() {
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-border/50">
-                {savedWords.map((w) => (
-                  <div key={w.id} className="py-3 flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-lg font-bold text-text-primary">{w.japaneseWord}</span>
-                        {w.hiragana && w.hiragana !== w.japaneseWord && (
-                          <span className="text-sm text-primary/80">({w.hiragana})</span>
-                        )}
+              <>
+                <div className="divide-y divide-border/50 max-h-[340px] overflow-y-auto
+                                scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent pr-1">
+                  {savedWords.map((w) => (
+                    <div key={w.id} className="py-3 flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-lg font-bold text-text-primary">{w.japaneseWord}</span>
+                          {w.hiragana && w.hiragana !== w.japaneseWord && (
+                            <span className="text-sm text-primary/80">({w.hiragana})</span>
+                          )}
+                        </div>
+                        <p className="text-sm text-text-secondary truncate">{w.meaning}</p>
                       </div>
-                      <p className="text-sm text-text-secondary truncate">{w.meaning}</p>
+                      <BookmarkCheck size={14} className="text-accent fill-accent shrink-0 mt-1" />
                     </div>
-                    <BookmarkCheck size={14} className="text-accent fill-accent shrink-0 mt-1" />
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+                {savedWords.length > 5 && (
+                  <p className="text-xs text-text-muted text-center mt-2">
+                    Scroll to see all {savedWords.length} saved words
+                  </p>
+                )}
+              </>
             )}
           </div>
         )}
@@ -262,33 +267,41 @@ export default function ProfilePage() {
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-border/50">
-                {savedBooks.map((b) => (
-                  <a
-                    key={b.id}
-                    href={`/dictionary/${b.id}`}
-                    className="py-3 flex items-center justify-between gap-3 hover:bg-surface-2/50
-                               rounded-lg px-2 -mx-2 transition-colors"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20
-                                      flex items-center justify-center shrink-0">
-                        <BookOpen size={18} className="text-primary" />
+              <>
+                <div className="divide-y divide-border/50 max-h-[340px] overflow-y-auto
+                                scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent pr-1">
+                  {savedBooks.map((b) => (
+                    <a
+                      key={b.id}
+                      href={`/dictionary/${b.id}`}
+                      className="py-3 flex items-center justify-between gap-3 hover:bg-surface-2/50
+                                 rounded-lg px-2 -mx-2 transition-colors"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20
+                                        flex items-center justify-center shrink-0">
+                          <BookOpen size={18} className="text-primary" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-semibold text-text-primary truncate">{b.title}</p>
+                          {b.description && (
+                            <p className="text-xs text-text-muted truncate">{b.description}</p>
+                          )}
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <p className="font-semibold text-text-primary truncate">{b.title}</p>
-                        {b.description && (
-                          <p className="text-xs text-text-muted truncate">{b.description}</p>
-                        )}
+                      <div className="flex items-center gap-2 text-xs text-text-muted shrink-0">
+                        <span>{b._count.topics} topics</span>
+                        <BookmarkCheck size={14} className="text-accent fill-accent" />
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-text-muted shrink-0">
-                      <span>{b._count.topics} topics</span>
-                      <BookmarkCheck size={14} className="text-accent fill-accent" />
-                    </div>
-                  </a>
-                ))}
-              </div>
+                    </a>
+                  ))}
+                </div>
+                {savedBooks.length > 5 && (
+                  <p className="text-xs text-text-muted text-center mt-2">
+                    Scroll to see all {savedBooks.length} saved books
+                  </p>
+                )}
+              </>
             )}
           </div>
         )}
@@ -329,10 +342,8 @@ export default function ProfilePage() {
                   <span className="text-text-muted">{count} words</span>
                 </div>
                 <div className="h-2.5 bg-surface-2 rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${pct}%` }}
-                    transition={{ duration: 0.8, delay: lvl * 0.08, ease: 'easeOut' }}
+                  <div
+                    style={{ width: `${pct}%`, transition: `width 0.8s ease-out ${lvl * 0.08}s` }}
                     className={cn('h-full rounded-full', meta.bg)}
                   />
                 </div>
@@ -363,13 +374,11 @@ export default function ProfilePage() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {badges.map(({ badge, earnedAt }, i) => (
-              <motion.div
+              <div
                 key={badge.id}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.05, type: 'spring', stiffness: 200, damping: 20 }}
                 className="card-glass p-5 flex flex-col items-center text-center gap-3
-                           hover:border-accent/50 hover:shadow-glow-accent transition-all"
+                           hover:border-accent/50 hover:shadow-glow-accent transition-all animate-fade-in"
+                style={{ animationDelay: `${i * 50}ms` }}
               >
                 <span className="text-4xl">{badge.icon ?? '🏅'}</span>
                 <div>
@@ -379,7 +388,7 @@ export default function ProfilePage() {
                 <p className="text-xs text-text-muted/60 border-t border-border/50 pt-2 w-full">
                   {new Date(earnedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                 </p>
-              </motion.div>
+              </div>
             ))}
           </div>
         )}

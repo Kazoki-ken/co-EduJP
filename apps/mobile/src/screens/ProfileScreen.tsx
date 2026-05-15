@@ -474,7 +474,21 @@ export default function ProfileScreen() {
                       </Text>
                     </View>
                   ) : (
-                    savedWords.slice(0, 20).map(w => <SavedWordRow key={w.id} word={w} />)
+                    <>
+                      <ScrollView
+                        nestedScrollEnabled
+                        showsVerticalScrollIndicator
+                        style={{ maxHeight: 320 }}
+                        contentContainerStyle={{ paddingBottom: 4 }}
+                      >
+                        {savedWords.map(w => <SavedWordRow key={w.id} word={w} />)}
+                      </ScrollView>
+                      {savedWords.length > 4 && (
+                        <Text style={{ color: '#4b5563', fontSize: 11, textAlign: 'center', marginTop: 8 }}>
+                          ↕ Scroll to see all {savedWords.length} saved words
+                        </Text>
+                      )}
+                    </>
                   )
                 ) : (
                   savedBooks.length === 0 ? (
@@ -485,7 +499,21 @@ export default function ProfileScreen() {
                       </Text>
                     </View>
                   ) : (
-                    savedBooks.map(b => <SavedBookRow key={b.id} book={b} />)
+                    <>
+                      <ScrollView
+                        nestedScrollEnabled
+                        showsVerticalScrollIndicator
+                        style={{ maxHeight: 320 }}
+                        contentContainerStyle={{ paddingBottom: 4 }}
+                      >
+                        {savedBooks.map(b => <SavedBookRow key={b.id} book={b} />)}
+                      </ScrollView>
+                      {savedBooks.length > 4 && (
+                        <Text style={{ color: '#4b5563', fontSize: 11, textAlign: 'center', marginTop: 8 }}>
+                          ↕ Scroll to see all {savedBooks.length} saved books
+                        </Text>
+                      )}
+                    </>
                   )
                 )}
               </View>
