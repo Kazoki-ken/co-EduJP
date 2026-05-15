@@ -24,7 +24,7 @@ import {
   getMyProgress,
   getMyBadges,
 } from '../controllers/vocabulary.controller';
-import { authenticate } from '../middleware/auth.middleware';
+import { authenticate, optionalAuth } from '../middleware/auth.middleware';
 import { requireAdmin } from '../middleware/admin.middleware';
 
 const router = Router();
@@ -35,7 +35,7 @@ const router = Router();
  * GET  /api/books          — Paginated list of all books
  * POST /api/books          — [ADMIN] Create a new book
  */
-router.get('/books', getBooks);
+router.get('/books', optionalAuth, getBooks);
 router.post('/books', authenticate, requireAdmin, postBook);
 
 /**
@@ -43,7 +43,7 @@ router.post('/books', authenticate, requireAdmin, postBook);
  * PUT    /api/books/:id          — [ADMIN] Update book
  * DELETE /api/books/:id          — [ADMIN] Delete book
  */
-router.get('/books/:id', getBook);
+router.get('/books/:id', optionalAuth, getBook);
 router.put('/books/:id', authenticate, requireAdmin, putBook);
 router.delete('/books/:id', authenticate, requireAdmin, removeBook);
 
@@ -55,7 +55,7 @@ router.post('/books/:id/save', authenticate, saveBook);
 /**
  * GET /api/books/:bookId/topics  — Topics belonging to a specific book
  */
-router.get('/books/:bookId/topics', getBookTopics);
+router.get('/books/:bookId/topics', optionalAuth, getBookTopics);
 
 // ─── Topics ───────────────────────────────────────────────────────────────────
 
@@ -63,7 +63,7 @@ router.get('/books/:bookId/topics', getBookTopics);
  * GET  /api/topics         — All topics (optionally filter by ?bookId=)
  * POST /api/topics         — [ADMIN] Create a topic
  */
-router.get('/topics', getTopics);
+router.get('/topics', optionalAuth, getTopics);
 router.post('/topics', authenticate, requireAdmin, postTopic);
 
 /**
@@ -85,7 +85,7 @@ router.post('/topics/:id/save', authenticate, saveTopic);
  *                            Query: ?search=&topicId=&bookId=&page=&limit=
  * POST /api/words          — [ADMIN] Create a word
  */
-router.get('/words', getWords);
+router.get('/words', optionalAuth, getWords);
 router.post('/words', authenticate, requireAdmin, postWord);
 
 /**
@@ -93,7 +93,7 @@ router.post('/words', authenticate, requireAdmin, postWord);
  * PUT    /api/words/:id    — [ADMIN] Update word
  * DELETE /api/words/:id    — [ADMIN] Delete word
  */
-router.get('/words/:id', getWord);
+router.get('/words/:id', optionalAuth, getWord);
 router.put('/words/:id', authenticate, requireAdmin, putWord);
 router.delete('/words/:id', authenticate, requireAdmin, removeWord);
 

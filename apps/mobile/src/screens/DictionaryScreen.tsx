@@ -51,7 +51,7 @@ interface BookCardProps { book: Book; index: number; onPress: () => void }
 
 function BookCard({ book, index, onPress }: BookCardProps) {
   const palette = CARD_PALETTES[index % CARD_PALETTES.length];
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState(!!(book as any).isSaved);
   const [saving, setSaving] = useState(false);
 
   const handleSave = useCallback(async () => {

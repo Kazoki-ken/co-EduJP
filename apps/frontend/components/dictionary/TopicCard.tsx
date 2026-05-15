@@ -16,18 +16,25 @@ interface TopicCardProps {
 export function TopicCard({ topic, bookId, isAuthenticated }: TopicCardProps) {
   const count = topic._count.wordTopics;
 
-  const [isSaved, setIsSaved] = useState(false);
+  const [isSaved, setIsSaved] = useState(!!(topic as any).isSaved);
   const [isSaving, setIsSaving] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
   const handleSave = useCallback(async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (isSaving || !isAuthenticated) return;
     setIsSaving(true);
-    setIsSaved(prev => !prev);
     try {
-      const { data } = await api.post<{ saved: boolean }>(`/topics/${topic.id}/save`);
+      const { data } = await api.post<{
+        saved: boolean;
+        savedCount?: number;
+        message?: string;
+      }>(`/topics/${topic.id}/save`);
       setIsSaved(data.saved);
+      // Show brief inline success message
+      setMessage(data.message ?? (data.saved ? 'All words saved!' : 'Words unsaved'));
+      setTimeout(() => setMessage(null), 3000);
     } catch {
       setIsSaved(prev => !prev);
     } finally {
@@ -94,6 +101,20 @@ export function TopicCard({ topic, bookId, isAuthenticated }: TopicCardProps) {
           />
         </Link>
       </div>
+
+      {/* Inline batch-save success toast */}
+      {message && (
+        <div className="px-5 pb-3 -mt-1 animate-fade-in">
+          <p className={cn(
+            'text-xs font-medium px-3 py-1.5 rounded-lg inline-block',
+            isSaved
+              ? 'bg-accent/10 text-accent border border-accent/20'
+              : 'bg-surface-2 text-text-muted border border-border',
+          )}>
+            {message}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

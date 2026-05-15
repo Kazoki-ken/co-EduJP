@@ -62,12 +62,12 @@ const userId = (req: AuthenticatedRequest) => req.user?.id;
 
 export const getBooks = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const { page, limit } = PaginationSchema.parse(req.query);
-  const result = await listBooks(page, limit);
+  const result = await listBooks(page, limit, userId(req));
   res.json(result);
 };
 
 export const getBook = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  const book = await getBookById(req.params.id);
+  const book = await getBookById(req.params.id, userId(req));
   res.json(book);
 };
 
@@ -100,12 +100,12 @@ export const removeBook = async (req: AuthenticatedRequest, res: Response): Prom
 
 export const getTopics = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const bookId = req.query.bookId as string | undefined;
-  const topics = await listTopics(bookId);
+  const topics = await listTopics(bookId, userId(req));
   res.json(topics);
 };
 
 export const getBookTopics = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  const topics = await getTopicsByBook(req.params.bookId);
+  const topics = await getTopicsByBook(req.params.bookId, userId(req));
   res.json(topics);
 };
 

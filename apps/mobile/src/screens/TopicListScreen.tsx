@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
-  RefreshControl, ActivityIndicator,
+  RefreshControl, ActivityIndicator, Alert,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -35,11 +35,18 @@ function TopicRow({
   const handleSave = useCallback(async () => {
     if (saving) return;
     setSaving(true);
-    onToggleSave(); // optimistic
     try {
-      await toggleSaveTopic(topic.id);
+      const result = await toggleSaveTopic(topic.id);
+      onToggleSave(); // update local visual state
+      // Show success feedback with the batch result message
+      Alert.alert(
+        result.saved ? 'Topic Saved!' : 'Topic Unsaved',
+        result.message || (result.saved
+          ? `All ${result.savedCount ?? 0} words in this topic have been saved!`
+          : 'All topic words removed from your saved list.'),
+      );
     } catch {
-      onToggleSave(); // revert
+      Alert.alert('Error', 'Failed to save topic. Please try again.');
     }
     setSaving(false);
   }, [saving, topic.id, onToggleSave]);

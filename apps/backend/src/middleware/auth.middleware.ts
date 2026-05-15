@@ -61,3 +61,45 @@ export const authenticate = async (
     next(err);
   }
 };
+
+/**
+ * Optional auth — extracts user from JWT if a valid Bearer token is present,
+ * but does NOT reject the request when there is no token or the token is invalid.
+ * `req.user` will simply be undefined for unauthenticated callers.
+ */
+export const optionalAuth = async (
+  req: AuthenticatedRequest,
+  _res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const authHeader = req.headers.authorization;
+    const token =
+      authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+
+    if (token) {
+      const secret = process.env.JWT_ACCESS_SECRET;
+      if (secret) {
+        const decoded = jwt.verify(token, secret) as {
+          id: string;
+          email: string;
+          username: string;
+          role: string;
+        };
+
+        const user = await prisma.user.findUnique({
+          where: { id: decoded.id },
+          select: { id: true, email: true, username: true, role: true },
+        });
+
+        if (user) {
+          req.user = user;
+        }
+      }
+    }
+  } catch {
+    // Silently ignore — user stays undefined
+  }
+  next();
+};
+

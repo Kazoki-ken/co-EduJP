@@ -33,7 +33,7 @@ export interface WordListQuery {
 
 // ─── Books ────────────────────────────────────────────────────────────────────
 
-export const listBooks = async (page = 1, limit = 20) => {
+export const listBooks = async (page = 1, limit = 20, userId?: string) => {
   const skip = (page - 1) * limit;
 
   const [books, total] = await Promise.all([
@@ -43,13 +43,24 @@ export const listBooks = async (page = 1, limit = 20) => {
       orderBy: { createdAt: 'desc' },
       include: {
         _count: { select: { topics: true, savedBooks: true } },
+        ...(userId && {
+          savedBooks: { where: { userId }, select: { userId: true } },
+        }),
       },
     }),
     prisma.book.count(),
   ]);
 
+  const data = books.map((b) => {
+    const { savedBooks, ...rest } = b as typeof b & { savedBooks?: { userId: string }[] };
+    return {
+      ...rest,
+      isSaved: userId ? (savedBooks?.length ?? 0) > 0 : false,
+    };
+  });
+
   return {
-    data: books,
+    data,
     meta: {
       total,
       page,
@@ -59,15 +70,23 @@ export const listBooks = async (page = 1, limit = 20) => {
   };
 };
 
-export const getBookById = async (id: string) => {
+export const getBookById = async (id: string, userId?: string) => {
   const book = await prisma.book.findUnique({
     where: { id },
     include: {
       _count: { select: { topics: true, savedBooks: true } },
+      ...(userId && {
+        savedBooks: { where: { userId }, select: { userId: true } },
+      }),
     },
   });
   if (!book) throw createError('Book not found', 404);
-  return book;
+
+  const { savedBooks, ...rest } = book as typeof book & { savedBooks?: { userId: string }[] };
+  return {
+    ...rest,
+    isSaved: userId ? (savedBooks?.length ?? 0) > 0 : false,
+  };
 };
 
 export const createBook = async (dto: CreateBookDto) => {
@@ -98,28 +117,67 @@ export const deleteBook = async (id: string) => {
 
 // ─── Topics ───────────────────────────────────────────────────────────────────
 
-export const listTopics = async (bookId?: string) => {
-  return prisma.topic.findMany({
+export const listTopics = async (bookId?: string, userId?: string) => {
+  const topics = await prisma.topic.findMany({
     where: bookId ? { bookId } : {},
     orderBy: { name: 'asc' },
     include: {
       _count: { select: { wordTopics: true } },
       book: { select: { id: true, title: true } },
+      wordTopics: { select: { wordId: true } },
     },
   });
+
+  if (!userId) {
+    return topics.map(({ wordTopics: _wt, ...t }) => ({ ...t, isSaved: false }));
+  }
+
+  // Fetch all saved word IDs for this user in one query
+  const allWordIds = topics.flatMap(t => t.wordTopics.map(wt => wt.wordId));
+  const savedWords = allWordIds.length > 0
+    ? await prisma.savedWord.findMany({
+        where: { userId, wordId: { in: allWordIds } },
+        select: { wordId: true },
+      })
+    : [];
+  const savedSet = new Set(savedWords.map(sw => sw.wordId));
+
+  return topics.map(({ wordTopics, ...t }) => ({
+    ...t,
+    isSaved: wordTopics.length > 0 && wordTopics.every(wt => savedSet.has(wt.wordId)),
+  }));
 };
 
-export const getTopicsByBook = async (bookId: string) => {
+export const getTopicsByBook = async (bookId: string, userId?: string) => {
   const book = await prisma.book.findUnique({ where: { id: bookId } });
   if (!book) throw createError('Book not found', 404);
 
-  return prisma.topic.findMany({
+  const topics = await prisma.topic.findMany({
     where: { bookId },
     orderBy: { name: 'asc' },
     include: {
       _count: { select: { wordTopics: true } },
+      wordTopics: { select: { wordId: true } },
     },
   });
+
+  if (!userId) {
+    return topics.map(({ wordTopics: _wt, ...t }) => ({ ...t, isSaved: false }));
+  }
+
+  const allWordIds = topics.flatMap(t => t.wordTopics.map(wt => wt.wordId));
+  const savedWords = allWordIds.length > 0
+    ? await prisma.savedWord.findMany({
+        where: { userId, wordId: { in: allWordIds } },
+        select: { wordId: true },
+      })
+    : [];
+  const savedSet = new Set(savedWords.map(sw => sw.wordId));
+
+  return topics.map(({ wordTopics, ...t }) => ({
+    ...t,
+    isSaved: wordTopics.length > 0 && wordTopics.every(wt => savedSet.has(wt.wordId)),
+  }));
 };
 
 export const createTopic = async (dto: CreateTopicDto) => {
@@ -385,22 +443,50 @@ export const getSavedBooks = async (userId: string, page = 1, limit = 20) => {
 
 // ─── Save / Unsave Topic ──────────────────────────────────────────────────────
 
+/**
+ * "Save Topic" = Batch-save ALL words belonging to that topic.
+ * If called again (unsave), removes all topic-words from SavedWords.
+ */
 export const toggleSaveTopic = async (userId: string, topicId: string) => {
-  const topic = await prisma.topic.findUnique({ where: { id: topicId } });
+  const topic = await prisma.topic.findUnique({
+    where: { id: topicId },
+    include: {
+      wordTopics: { select: { wordId: true } },
+    },
+  });
   if (!topic) throw createError('Topic not found', 404);
 
-  const existing = await prisma.savedTopic.findUnique({
-    where: { userId_topicId: { userId, topicId } },
+  const wordIds = topic.wordTopics.map((wt) => wt.wordId);
+
+  if (wordIds.length === 0) {
+    return { saved: true, savedCount: 0, message: 'No words in this topic' };
+  }
+
+  // Check if the topic was previously "saved" (all words already saved)
+  const existingSavedCount = await prisma.savedWord.count({
+    where: { userId, wordId: { in: wordIds } },
   });
 
-  if (existing) {
-    await prisma.savedTopic.delete({
-      where: { userId_topicId: { userId, topicId } },
+  const allAlreadySaved = existingSavedCount === wordIds.length;
+
+  if (allAlreadySaved) {
+    // Unsave: remove all words belonging to this topic from user's saved
+    await prisma.savedWord.deleteMany({
+      where: { userId, wordId: { in: wordIds } },
     });
-    return { saved: false };
+    return { saved: false, savedCount: 0, message: `Removed ${wordIds.length} words from saved` };
   } else {
-    await prisma.savedTopic.create({ data: { userId, topicId } });
-    return { saved: true };
+    // Save: batch-insert all words (skip any already-saved duplicates)
+    await prisma.savedWord.createMany({
+      data: wordIds.map((wordId) => ({ userId, wordId })),
+      skipDuplicates: true,
+    });
+    const newlySaved = wordIds.length - existingSavedCount;
+    return {
+      saved: true,
+      savedCount: wordIds.length,
+      message: `Saved ${newlySaved} new word${newlySaved !== 1 ? 's' : ''} (${wordIds.length} total in topic)`,
+    };
   }
 };
 

@@ -36,7 +36,7 @@ export function BookCard({ book, index, isAuthenticated }: BookCardProps) {
   const gradient = GRADIENTS[index % GRADIENTS.length];
   const accent   = ACCENT_COLORS[index % ACCENT_COLORS.length];
 
-  const [isSaved, setIsSaved] = useState(false);
+  const [isSaved, setIsSaved] = useState(!!(book as any).isSaved);
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = useCallback(async (e: React.MouseEvent) => {

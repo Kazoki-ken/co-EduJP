@@ -72,8 +72,16 @@ export async function toggleSaveBook(bookId: string): Promise<{ saved: boolean }
   return data;
 }
 
-export async function toggleSaveTopic(topicId: string): Promise<{ saved: boolean }> {
-  const { data } = await apiClient.post<{ saved: boolean }>(`/topics/${topicId}/save`);
+export async function toggleSaveTopic(topicId: string): Promise<{
+  saved: boolean;
+  savedCount?: number;
+  message?: string;
+}> {
+  const { data } = await apiClient.post<{
+    saved: boolean;
+    savedCount?: number;
+    message?: string;
+  }>(`/topics/${topicId}/save`);
   return data;
 }
 
