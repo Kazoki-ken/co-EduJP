@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
   RefreshControl, ActivityIndicator, Alert,
@@ -7,6 +7,7 @@ import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useIsFocused } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { DictionaryStackParamList } from '../navigation/DictionaryStack';
 import { useBookTopics, toggleSaveTopic } from '../hooks/useVocabulary';
@@ -122,10 +123,28 @@ function TopicRow({
 export default function TopicListScreen({ route, navigation }: Props) {
   const { book } = route.params;
   const insets = useSafeAreaInsets();
+  const isFocused = useIsFocused();
   const { data: topics, loading, error, refetch } = useBookTopics(book.id);
 
   // Track saved state locally for optimistic updates
   const [savedSet, setSavedSet] = useState<Set<string>>(new Set());
+
+  // ── Initialize savedSet from backend isSaved whenever topics arrive ──
+  useEffect(() => {
+    if (topics) {
+      const initialSaved = new Set<string>();
+      for (const t of topics) {
+        if ((t as any).isSaved) initialSaved.add(t.id);
+      }
+      setSavedSet(initialSaved);
+    }
+  }, [topics]);
+
+  // ── Refetch from backend when screen regains focus ──────────────────
+  useEffect(() => {
+    if (isFocused) refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused]);
 
   const handleToggleSave = useCallback((topicId: string) => {
     setSavedSet(prev => {

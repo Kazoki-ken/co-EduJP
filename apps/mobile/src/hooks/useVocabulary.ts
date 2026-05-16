@@ -62,8 +62,18 @@ export function useTopicWords(topicId: string, page = 1, limit = 30) {
 
 // ─── Save toggles ────────────────────────────────────────────────
 
-export async function toggleSaveWord(wordId: string): Promise<{ saved: boolean }> {
-  const { data } = await apiClient.post<{ saved: boolean }>(`/words/${wordId}/save`);
+export interface TopicCompletion {
+  topicId: string;
+  allSaved: boolean;
+}
+
+export interface ToggleSaveWordResult {
+  saved: boolean;
+  topicCompletions: TopicCompletion[];
+}
+
+export async function toggleSaveWord(wordId: string): Promise<ToggleSaveWordResult> {
+  const { data } = await apiClient.post<ToggleSaveWordResult>(`/words/${wordId}/save`);
   return data;
 }
 

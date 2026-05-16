@@ -4,6 +4,11 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import api from '@/lib/api';
 import type { PaginatedResponse, Word, WordListParams } from '@/lib/types';
 
+interface TopicCompletion {
+  topicId: string;
+  allSaved: boolean;
+}
+
 interface UseWordsResult {
   words: Word[];
   meta: PaginatedResponse<Word>['meta'] | null;
@@ -11,6 +16,8 @@ interface UseWordsResult {
   error: string | null;
   toggleSave: (wordId: string) => Promise<void>;
   refresh: () => void;
+  /** Latest topic completion status from the most recent toggleSave call */
+  lastTopicCompletions: TopicCompletion[];
 }
 
 export function useWords(params: WordListParams): UseWordsResult {
@@ -18,6 +25,7 @@ export function useWords(params: WordListParams): UseWordsResult {
   const [meta, setMeta] = useState<PaginatedResponse<Word>['meta'] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastTopicCompletions, setLastTopicCompletions] = useState<TopicCompletion[]>([]);
   const abortRef = useRef<AbortController | null>(null);
 
   const fetchWords = useCallback(async () => {
@@ -59,7 +67,12 @@ export function useWords(params: WordListParams): UseWordsResult {
       prev.map((w) => (w.id === wordId ? { ...w, isSaved: !w.isSaved } : w)),
     );
     try {
-      await api.post(`/words/${wordId}/save`);
+      const { data } = await api.post<{
+        saved: boolean;
+        topicCompletions: TopicCompletion[];
+      }>(`/words/${wordId}/save`);
+      // Expose topic completions so parent components can sync topic-level icons
+      setLastTopicCompletions(data.topicCompletions ?? []);
     } catch {
       // Revert on failure
       setWords((prev) =>
@@ -68,5 +81,5 @@ export function useWords(params: WordListParams): UseWordsResult {
     }
   }, []);
 
-  return { words, meta, isLoading, error, toggleSave, refresh: fetchWords };
+  return { words, meta, isLoading, error, toggleSave, refresh: fetchWords, lastTopicCompletions };
 }

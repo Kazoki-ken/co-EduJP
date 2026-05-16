@@ -67,14 +67,19 @@ function WordCard({ word, onToggleSave }: { word: Word; onToggleSave: (id: strin
   const handleSave = useCallback(async () => {
     if (saving) return;
     setSaving(true);
-    onToggleSave(word.id);
+    onToggleSave(word.id); // optimistic flip
     try {
-      await toggleSaveWord(word.id);
+      const result = await toggleSaveWord(word.id);
+      // If the server says the saved state differs from our optimistic flip, correct it
+      // (This shouldn't happen in normal flow but keeps things consistent)
+      if (result.saved !== !word.isSaved) {
+        onToggleSave(word.id); // revert the optimistic flip
+      }
     } catch {
-      onToggleSave(word.id); // revert
+      onToggleSave(word.id); // revert on error
     }
     setSaving(false);
-  }, [saving, word.id, onToggleSave]);
+  }, [saving, word.id, word.isSaved, onToggleSave]);
 
   return (
     <TouchableOpacity onPress={() => setExpanded(e => !e)} activeOpacity={0.88}>
