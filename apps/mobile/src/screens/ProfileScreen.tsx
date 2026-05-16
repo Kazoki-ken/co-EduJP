@@ -7,6 +7,7 @@ import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../api/client';
 import type { UserBadge, Badge, LevelCount, Word, Book, PaginatedResponse } from '@vocabjp/shared';
@@ -186,12 +187,26 @@ function SavedWordRow({ word }: { word: Word }) {
 
 // ── Saved book row ────────────────────────────────────────────────
 function SavedBookRow({ book }: { book: Book }) {
+  const navigation = useNavigation<any>();
+
+  const handlePress = useCallback(() => {
+    // Navigate to Dictionary tab, then push to that book's topic list
+    navigation.navigate('Dictionary', {
+      screen: 'TopicList',
+      params: { book },
+    });
+  }, [navigation, book]);
+
   return (
-    <View style={{
-      flexDirection: 'row', alignItems: 'center',
-      paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.05)',
-      gap: 12,
-    }}>
+    <TouchableOpacity
+      onPress={handlePress}
+      activeOpacity={0.75}
+      style={{
+        flexDirection: 'row', alignItems: 'center',
+        paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.05)',
+        gap: 12,
+      }}
+    >
       <LinearGradient
         colors={['#7c3aed', '#4c1d95']}
         style={{
@@ -209,8 +224,9 @@ function SavedBookRow({ book }: { book: Book }) {
           {book._count.topics} topic{book._count.topics !== 1 ? 's' : ''}
         </Text>
       </View>
+      <Ionicons name="chevron-forward" size={14} color="#374151" style={{ marginRight: 4 }} />
       <Ionicons name="bookmark" size={16} color="#f59e0b" />
-    </View>
+    </TouchableOpacity>
   );
 }
 

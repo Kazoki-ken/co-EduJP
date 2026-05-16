@@ -346,22 +346,44 @@ export const deleteWord = async (id: string) => {
 // ─── Save / Unsave Word ───────────────────────────────────────────────────────
 
 export const toggleSaveWord = async (userId: string, wordId: string) => {
-  const word = await prisma.word.findUnique({ where: { id: wordId } });
+  const word = await prisma.word.findUnique({
+    where: { id: wordId },
+    include: { wordTopics: { select: { topicId: true } } },
+  });
   if (!word) throw createError('Word not found', 404);
 
   const existing = await prisma.savedWord.findUnique({
     where: { userId_wordId: { userId, wordId } },
   });
 
+  let saved: boolean;
   if (existing) {
     await prisma.savedWord.delete({
       where: { userId_wordId: { userId, wordId } },
     });
-    return { saved: false };
+    saved = false;
   } else {
     await prisma.savedWord.create({ data: { userId, wordId } });
-    return { saved: true };
+    saved = true;
   }
+
+  // For each topic this word belongs to, compute whether ALL words
+  // in that topic are now saved — enables auto-sync on the frontend.
+  const topicIds = word.wordTopics.map((wt) => wt.topicId);
+  const topicCompletions: { topicId: string; allSaved: boolean }[] = [];
+
+  for (const topicId of topicIds) {
+    const totalInTopic = await prisma.wordTopic.count({ where: { topicId } });
+    const savedInTopic = await prisma.savedWord.count({
+      where: {
+        userId,
+        word: { wordTopics: { some: { topicId } } },
+      },
+    });
+    topicCompletions.push({ topicId, allSaved: savedInTopic >= totalInTopic });
+  }
+
+  return { saved, topicCompletions };
 };
 
 export const getSavedWords = async (userId: string, page = 1, limit = 20) => {
@@ -445,7 +467,11 @@ export const getSavedBooks = async (userId: string, page = 1, limit = 20) => {
 
 /**
  * "Save Topic" = Batch-save ALL words belonging to that topic.
- * If called again (unsave), removes all topic-words from SavedWords.
+ *
+ * Logic:
+ *  - If the user has saved < 100% of the topic's words → INSERT the missing
+ *    ones so it reaches 100%.  (skipDuplicates keeps already-saved words.)
+ *  - ONLY when the user has already saved 100% → UNSAVE all of them.
  */
 export const toggleSaveTopic = async (userId: string, topicId: string) => {
   const topic = await prisma.topic.findUnique({
@@ -462,21 +488,23 @@ export const toggleSaveTopic = async (userId: string, topicId: string) => {
     return { saved: true, savedCount: 0, message: 'No words in this topic' };
   }
 
-  // Check if the topic was previously "saved" (all words already saved)
+  // How many of this topic's words has the user already saved?
   const existingSavedCount = await prisma.savedWord.count({
     where: { userId, wordId: { in: wordIds } },
   });
 
-  const allAlreadySaved = existingSavedCount === wordIds.length;
-
-  if (allAlreadySaved) {
-    // Unsave: remove all words belonging to this topic from user's saved
+  if (existingSavedCount === wordIds.length) {
+    // ── 100% saved → UNSAVE all ──────────────────────────────────
     await prisma.savedWord.deleteMany({
       where: { userId, wordId: { in: wordIds } },
     });
-    return { saved: false, savedCount: 0, message: `Removed ${wordIds.length} words from saved` };
+    return {
+      saved: false,
+      savedCount: 0,
+      message: `Removed ${wordIds.length} words from saved`,
+    };
   } else {
-    // Save: batch-insert all words (skip any already-saved duplicates)
+    // ── < 100% saved → FILL the missing words ────────────────────
     await prisma.savedWord.createMany({
       data: wordIds.map((wordId) => ({ userId, wordId })),
       skipDuplicates: true,
