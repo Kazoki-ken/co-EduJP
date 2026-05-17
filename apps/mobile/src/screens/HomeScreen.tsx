@@ -256,7 +256,7 @@ export default function HomeScreen() {
         overScrollMode="never"
         contentContainerStyle={{
           paddingTop: insets.top + 16,
-          paddingBottom: insets.bottom + 90, // clear tab bar
+          paddingBottom: insets.bottom + 110, // clear floating tab bar
           paddingHorizontal: 20,
         }}
       >

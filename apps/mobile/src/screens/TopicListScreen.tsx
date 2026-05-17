@@ -169,7 +169,7 @@ export default function TopicListScreen({ route, navigation }: Props) {
         overScrollMode="never"
         contentContainerStyle={{
           paddingTop: insets.top + 16,
-          paddingBottom: insets.bottom + 90,
+          paddingBottom: insets.bottom + 110,
           paddingHorizontal: 20,
         }}
         refreshControl={

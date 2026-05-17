@@ -328,7 +328,7 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
         overScrollMode="never"
         contentContainerStyle={{
           paddingTop: insets.top + 16,
-          paddingBottom: insets.bottom + 90,
+          paddingBottom: insets.bottom + 110,
           paddingHorizontal: 20,
         }}
         refreshControl={
