@@ -187,6 +187,8 @@ export default function ResultScreen({ route, navigation }: Props) {
       {/* FIX 3: paddingBottom 120 ensures buttons clear the tab bar */}
       <ScrollView
         showsVerticalScrollIndicator={false}
+        bounces={false}
+        overScrollMode="never"
         contentContainerStyle={{
           paddingTop: insets.top + 20,
           paddingBottom: 120,

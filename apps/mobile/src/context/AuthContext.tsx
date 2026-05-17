@@ -22,6 +22,8 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  /** Silently refetch /auth/me to refresh XP, coins, streak, etc. */
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -57,25 +59,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    const { data } = await apiClient.post<AuthResponse>('/auth/login', {
+    const { data } = await apiClient.post<AuthResponse & { refreshToken?: string }>('/auth/login', {
       email,
       password,
     });
     setAccessToken(data.accessToken);
-    // Note: backend sets refreshToken as httpOnly cookie on web;
-    // for mobile we receive it in the body if the backend supports it,
-    // otherwise we keep only the access token for now.
+    if (data.refreshToken) await storeRefreshToken(data.refreshToken);
     setUser(data.user);
   }, []);
 
   const register = useCallback(
     async (username: string, email: string, password: string) => {
-      const { data } = await apiClient.post<AuthResponse>('/auth/register', {
+      const { data } = await apiClient.post<AuthResponse & { refreshToken?: string }>('/auth/register', {
         username,
         email,
         password,
       });
       setAccessToken(data.accessToken);
+      if (data.refreshToken) await storeRefreshToken(data.refreshToken);
       setUser(data.user);
     },
     [],
@@ -93,6 +94,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  /** Silently pull fresh user data from the server */
+  const refreshUser = useCallback(async () => {
+    try {
+      const me = await apiClient.get<{ user: User }>('/auth/me');
+      setUser(me.data.user);
+    } catch {
+      // silent — keep stale data
+    }
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -102,6 +113,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
+        refreshUser,
       }}
     >
       {children}

@@ -7,7 +7,7 @@ import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../api/client';
 import type { UserBadge, Badge, LevelCount, Word, Book, PaginatedResponse } from '@vocabjp/shared';
@@ -244,7 +244,7 @@ type SavedTab = 'words' | 'books';
 
 // ── Profile Screen ────────────────────────────────────────────────
 export default function ProfileScreen() {
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
   const insets = useSafeAreaInsets();
 
   const [progress, setProgress]   = useState<ProgressResponse | null>(null);
@@ -292,10 +292,15 @@ export default function ProfileScreen() {
     } catch {}
   }, []);
 
-  useEffect(() => {
-    fetchData().finally(() => setLoading(false));
-    fetchSavedWords();
-  }, []);
+  // ── Refetch data every time the Profile tab is focused ───────────
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+      fetchData().finally(() => setLoading(false));
+      fetchSavedWords();
+      refreshUser();
+    }, [fetchData, fetchSavedWords, refreshUser]),
+  );
 
   // Lazy-load saved books when tab switches
   useEffect(() => {
@@ -333,6 +338,8 @@ export default function ProfileScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
+        bounces={false}
+        overScrollMode="never"
         contentContainerStyle={{
           paddingTop: insets.top + 16,
           paddingBottom: insets.bottom + 90,

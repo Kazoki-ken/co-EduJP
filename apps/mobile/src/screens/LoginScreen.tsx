@@ -122,6 +122,8 @@ export default function LoginScreen({ navigation }: Props) {
 
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
         <ScrollView
+          bounces={false}
+          overScrollMode="never"
           contentContainerStyle={{
             flexGrow: 1, justifyContent: 'center',
             paddingTop: insets.top + 16, paddingBottom: insets.bottom + 24,

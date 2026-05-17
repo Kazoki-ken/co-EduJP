@@ -56,6 +56,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   res.status(201).json({
     message: 'Registration successful',
     accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
     user,
   });
 };
@@ -73,12 +74,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   res.json({
     message: 'Login successful',
     accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
     user,
   });
 };
 
 export const refresh = async (req: Request, res: Response): Promise<void> => {
-  const token = req.cookies?.refreshToken as string | undefined;
+  // Accept refresh token from cookies (web) or request body (mobile)
+  const token = (req.cookies?.refreshToken as string | undefined)
+    ?? (req.body?.refreshToken as string | undefined);
   if (!token) {
     throw createError('Refresh token not found', 401);
   }

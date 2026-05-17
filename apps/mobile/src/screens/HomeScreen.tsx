@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
   Animated, Dimensions,
@@ -7,9 +7,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useAuth } from '../context/AuthContext';
+import apiClient from '../api/client';
 import type { AppTabsParamList } from '../navigation/AppTabs';
 
 const { width: SCREEN_W } = Dimensions.get('window');
@@ -192,7 +193,7 @@ function StreakFlame({ streak }: { streak: number }) {
 
 // ── Home Screen ───────────────────────────────────────────────────
 export default function HomeScreen() {
-  const { user } = useAuth();
+  const { user, refreshUser, isAuthenticated } = useAuth();
   const insets   = useSafeAreaInsets();
   const navigation = useNavigation<BottomTabNavigationProp<AppTabsParamList>>();
 
@@ -200,6 +201,13 @@ export default function HomeScreen() {
   const statsAnim   = useEntrance(120);
   const sectionAnim = useEntrance(220);
   const actionsAnim = useEntrance(300);
+
+  // ── Auto-refresh user data (XP, coins, streak) on screen focus ──
+  useFocusEffect(
+    useCallback(() => {
+      if (isAuthenticated) refreshUser();
+    }, [isAuthenticated, refreshUser]),
+  );
 
   const profile = user?.profile;
   const streak  = profile?.streak  ?? 0;
@@ -244,6 +252,8 @@ export default function HomeScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
+        bounces={false}
+        overScrollMode="never"
         contentContainerStyle={{
           paddingTop: insets.top + 16,
           paddingBottom: insets.bottom + 90, // clear tab bar

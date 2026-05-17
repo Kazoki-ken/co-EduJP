@@ -186,6 +186,8 @@ export default function DictionaryScreen({ navigation }: Props) {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
+        bounces={false}
+        overScrollMode="never"
         contentContainerStyle={{
           paddingTop: insets.top + 16,
           paddingBottom: insets.bottom + 90,

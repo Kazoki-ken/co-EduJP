@@ -115,7 +115,7 @@ export default function MatchScreen({ route, navigation }: Props) {
           <Text style={{color:'#6b7280',fontSize:13,fontWeight:'600'}}>{matched}/{session.words.length}</Text>
         </View>
         <Text style={{color:'#9ca3af',fontSize:13,textAlign:'center',marginBottom:16}}>Tap a Japanese word, then its English meaning</Text>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView showsVerticalScrollIndicator={false} bounces={false} overScrollMode="never">
           <View style={{flexDirection:'row',gap:10}}>
             <View style={{flex:1}}>{jpTiles.map(t=><MatchTile key={t.id} tile={t} selected={selectedA?.id===t.id} wrong={wrongPair?.includes(t.id)??false} onPress={()=>handleSelect(t)}/>)}</View>
             <View style={{flex:1}}>{enTiles.map(t=><MatchTile key={t.id} tile={t} selected={selectedA?.id===t.id} wrong={wrongPair?.includes(t.id)??false} onPress={()=>handleSelect(t)}/>)}</View>
