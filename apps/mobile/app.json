@@ -27,11 +27,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0a0a1a"
       },
-      "edgeToEdgeEnabled": true,
       "package": "com.kazoki.easynihongo",
       "versionCode": 1,
       "permissions": [],
-      "usesCleartextTraffic": true,
       "googleServicesFile": "./google-services.json"
     },
     "web": {
