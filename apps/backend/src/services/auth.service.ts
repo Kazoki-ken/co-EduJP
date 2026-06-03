@@ -362,3 +362,88 @@ export const setUsernameService = async (userId: string, username: string) => {
   return user;
 };
 
+// ─── Google Login Only (yangi hisob yaratilmaydi) ────────────────────────────
+// Card game kabi ikkilamchi ilovalar uchun: faqat mavjud foydalanuvchilar kira oladi
+
+export const googleLoginOnlyService = async (idToken?: string, accessToken?: string) => {
+  let googleId: string;
+  let email: string | undefined;
+  let picture: string | undefined;
+
+  if (idToken) {
+    // idToken orqali (native mobile)
+    let ticket;
+    try {
+      ticket = await googleClient.verifyIdToken({
+        idToken,
+        audience: process.env.GOOGLE_WEB_CLIENT_ID,
+      });
+    } catch {
+      throw createError('Invalid Google token', 401);
+    }
+    const payload = ticket.getPayload();
+    if (!payload) throw createError('Google token payload is empty', 401);
+    googleId = payload.sub;
+    email = payload.email;
+    picture = payload.picture;
+  } else if (accessToken) {
+    // accessToken orqali (web/expo)
+    try {
+      const res = await fetch(
+        `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`,
+      );
+      if (!res.ok) throw new Error('Failed to fetch user info');
+      const info = await res.json() as { sub: string; email: string; picture?: string };
+      googleId = info.sub;
+      email = info.email;
+      picture = info.picture;
+    } catch {
+      throw createError('Invalid Google access token', 401);
+    }
+  } else {
+    throw createError('Google token required', 400);
+  }
+
+  if (!email) throw createError('Google account has no email', 400);
+
+  // ⚠️ Faqat mavjud foydalanuvchini qidirish — yangi yaratilmaydi!
+  const user = await prisma.user.findFirst({
+    where: { OR: [{ googleId }, { email: email.toLowerCase() }] },
+    include: {
+      profile: true,
+      _count: { select: { savedWords: true, badges: true } },
+    },
+  });
+
+  if (!user) {
+    // Foydalanuvchi bazada yo'q — kirish taqiqlanadi
+    throw createError(
+      "Siz VocabJP ilovasida ro'yxatdan o'tmagansiz. Iltimos, avval edujp.uz saytida ro'yxatdan o'ting.",
+      403,
+    );
+  }
+
+  // Google ID ni bog'lash (agar email orqali topilgan bo'lsa)
+  if (!user.googleId) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { googleId, avatarUrl: picture ?? user.avatarUrl },
+    });
+  }
+
+  // Streak yangilash
+  if (user.profile) {
+    await updateStreakOnLogin(user.id, user.profile, 0);
+  }
+
+  const tokens = signTokens({
+    id: user.id,
+    email: user.email,
+    username: user.username,
+    role: user.role,
+  });
+
+  const { passwordHash: _, ...safeUser } = user as typeof user & { passwordHash?: string };
+  return { user: safeUser, tokens };
+};
+

@@ -8,6 +8,7 @@ import {
   googleAuth,
   setUsernameService,
   setPasswordService,
+  googleLoginOnlyService,
 } from '../services/auth.service';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { createError } from '../middleware/error.middleware';
@@ -200,4 +201,33 @@ export const setPassword = async (
 
   const user = await setPasswordService(req.user.id, parsed.data.password);
   res.json({ message: 'Password set successfully', user });
+};
+
+// ─── Google Login Only (card game uchun — yangi hisob yaratilmaydi) ──────────
+
+const GoogleLoginOnlySchema = z.object({
+  idToken: z.string().optional(),
+  accessToken: z.string().optional(),
+}).refine(data => data.idToken || data.accessToken, {
+  message: 'idToken or accessToken is required',
+});
+
+export const googleLoginOnly = async (req: Request, res: Response): Promise<void> => {
+  const parsed = GoogleLoginOnlySchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.errors[0]?.message });
+    return;
+  }
+
+  const { user, tokens } = await googleLoginOnlyService(
+    parsed.data.idToken,
+    parsed.data.accessToken,
+  );
+
+  res.json({
+    message: 'Login successful',
+    accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
+    user,
+  });
 };

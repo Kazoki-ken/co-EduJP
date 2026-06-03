@@ -11,6 +11,7 @@ import {
   ScrollView,
   SafeAreaView,
   Alert,
+  Linking,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -18,9 +19,15 @@ import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
+
+// Google OAuth sessiyasini yakunlash (redirect callback)
+WebBrowser.maybeCompleteAuthSession();
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
-const API_URL = 'http://37.60.242.217:4000';
+const API_URL = 'https://edujp.uz';
+const GOOGLE_WEB_CLIENT_ID = '156336295197-pjb6ocbui8t994dhdg4nv827a22f8e84.apps.googleusercontent.com';
 
 interface Word {
   id: string;
@@ -40,6 +47,7 @@ const CARD_MIDDLE_ZONE_H = 64;
 export default function IndexScreen() {
   const [screen, setScreen] = useState<Screen>('INITIAL_CHECK');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -48,6 +56,12 @@ export default function IndexScreen() {
   const [passwordInput, setPasswordInput] = useState('');
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<{ id: string; username: string; email: string } | null>(null);
+
+  // Google OAuth hook (expo-auth-session)
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    webClientId: GOOGLE_WEB_CLIENT_ID,
+    scopes: ['profile', 'email'],
+  });
 
   // Words / game
   const [savedWords, setSavedWords] = useState<Word[]>([]);
@@ -93,6 +107,18 @@ export default function IndexScreen() {
 
   // ── Auto-login ───────────────────────────────────────────────────────
   useEffect(() => { checkAuthentication(); }, []);
+
+  // ── Google OAuth response handler ─────────────────────────────────────
+  useEffect(() => {
+    if (response?.type === 'success' && response.authentication?.accessToken) {
+      handleGoogleLoginOnly(response.authentication.accessToken);
+    } else if (response?.type === 'error' || response?.type === 'dismiss') {
+      setGoogleLoading(false);
+      if (response?.type === 'error') {
+        setError('Google orqali kirish muvaffaqiyatsiz tugadi.');
+      }
+    }
+  }, [response]);
 
   // ── Pulse on dashboard ───────────────────────────────────────────────
   useEffect(() => {
@@ -166,6 +192,43 @@ export default function IndexScreen() {
     await SecureStore.deleteItemAsync('auth_token').catch(() => {});
     setToken(null); setUser(null); setSavedWords([]); setUsernameInput(''); setPasswordInput('');
     setScreen('LOGIN');
+  };
+
+  // Google login — faqat VocabJP da ro'yxatdan o'tgan foydalanuvchilar uchun
+  const handleGoogleLoginOnly = async (accessToken: string) => {
+    setGoogleLoading(true);
+    setError(null);
+    try {
+      const { data } = await axios.post(`${API_URL}/api/auth/google-login-only`, { accessToken });
+      setToken(data.accessToken);
+      setUser(data.user);
+      if (data.refreshToken) await SecureStore.setItemAsync('auth_token', data.refreshToken);
+      const h = { Authorization: `Bearer ${data.accessToken}` };
+      const { data: wData } = await axios.get(`${API_URL}/api/users/me/saved-words?limit=1`, { headers: h });
+      setTotalSavedCount(wData.meta?.total || 0);
+      const cached = await AsyncStorage.getItem('cached_words');
+      if (cached) setSavedWords(JSON.parse(cached)); else setSavedWords([]);
+      setIsOfflineMode(false);
+      setScreen('DASHBOARD');
+    } catch (err: any) {
+      const status = err.response?.status;
+      const msg = err.response?.data?.error || 'Xatolik yuz berdi.';
+      if (status === 403) {
+        // Foydalanuvchi bazada yo'q — edujp.uz ga yo'naltirish
+        Alert.alert(
+          "Ruxsat yo'q",
+          "Siz VocabJP ilovasida ro'yxatdan o'tmagansiz.\n\nIltimos, avval edujp.uz saytida ro'yxatdan o'ting.",
+          [
+            { text: 'Bekor qilish', style: 'cancel' },
+            { text: "edujp.uz ga o'tish", onPress: () => Linking.openURL('https://edujp.uz') },
+          ]
+        );
+      } else {
+        setError(msg);
+      }
+    } finally {
+      setGoogleLoading(false);
+    }
   };
 
   const downloadOfflineWords = async () => {
@@ -342,9 +405,52 @@ export default function IndexScreen() {
                   placeholderTextColor="#4b5563" secureTextEntry style={styles.textInput} autoCapitalize="none" />
               </View>
               {error && <Text style={styles.errorText}>{error}</Text>}
-              <TouchableOpacity onPress={handleLogin} disabled={loading} style={styles.authBtn}>
+              <TouchableOpacity onPress={handleLogin} disabled={loading || googleLoading} style={styles.authBtn}>
                 {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.authBtnText}>Kirish</Text>}
               </TouchableOpacity>
+
+              {/* Divider */}
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 16 }}>
+                <View style={{ flex: 1, height: 1, backgroundColor: 'rgba(255,255,255,0.1)' }} />
+                <Text style={{ color: '#6b7280', fontSize: 12, marginHorizontal: 10 }}>yoki</Text>
+                <View style={{ flex: 1, height: 1, backgroundColor: 'rgba(255,255,255,0.1)' }} />
+              </View>
+
+              {/* Google Sign-In Button */}
+              <TouchableOpacity
+                onPress={() => { setGoogleLoading(true); promptAsync(); }}
+                disabled={googleLoading || loading || !request}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 10,
+                  paddingVertical: 14,
+                  paddingHorizontal: 20,
+                  borderRadius: 14,
+                  borderWidth: 1,
+                  borderColor: 'rgba(255,255,255,0.12)',
+                  backgroundColor: 'rgba(255,255,255,0.05)',
+                  opacity: (googleLoading || loading || !request) ? 0.6 : 1,
+                }}
+              >
+                {googleLoading ? (
+                  <ActivityIndicator size="small" color="#a78bfa" />
+                ) : (
+                  /* Google G icon */
+                  <View style={{ width: 20, height: 20 }}>
+                    <Ionicons name="logo-google" size={20} color="#fff" />
+                  </View>
+                )}
+                <Text style={{ color: '#d1d5db', fontSize: 14, fontWeight: '600' }}>
+                  {googleLoading ? 'Yuklanmoqda...' : 'Google bilan kirish'}
+                </Text>
+              </TouchableOpacity>
+
+              {/* Hint */}
+              <Text style={{ color: '#6b7280', fontSize: 11, textAlign: 'center', marginTop: 12, lineHeight: 16 }}>
+                Faqat edujp.uz da ro'yxatdan o'tgan foydalanuvchilar kira oladi
+              </Text>
             </BlurView>
           </ScrollView>
         </SafeAreaView>

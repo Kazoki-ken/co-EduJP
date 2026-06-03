@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, refresh, logout, me, googleLogin, setUsername, setPassword } from '../controllers/auth.controller';
+import { register, login, refresh, logout, me, googleLogin, setUsername, setPassword, googleLoginOnly } from '../controllers/auth.controller';
 import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
@@ -36,9 +36,16 @@ router.get('/me', authenticate, me);
 
 /**
  * POST /api/auth/google
- * Sign in or register with Google OAuth idToken
+ * Sign in or register with Google OAuth (main app)
  */
 router.post('/google', googleLogin);
+
+/**
+ * POST /api/auth/google-login-only
+ * Sign in with Google — ONLY for existing VocabJP users (no registration)
+ * Used by secondary apps like VocabCards
+ */
+router.post('/google-login-only', googleLoginOnly);
 
 /**
  * PATCH /api/auth/set-username
