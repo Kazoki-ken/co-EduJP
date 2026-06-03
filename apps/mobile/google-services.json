@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "156336295197",
+    "project_id": "easynihongo",
+    "storage_bucket": "easynihongo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156336295197:android:ea4a5f2b621fa8e3bd5f93",
+        "android_client_info": {
+          "package_name": "com.kazoki.easynihongo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "156336295197-3nr5ok7licu4khaogmf51ea2m877ea4a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kazoki.easynihongo",
+            "certificate_hash": "30FDF4AD9A64B46A85DB9BEC9ECA80FAB03F14C6"
+          }
+        },
+        {
+          "client_id": "156336295197-pjb6ocbui8t994dhdg4nv827a22f8e84.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "PLACEHOLDER_REPLACE_WITH_REAL_API_KEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "156336295197-pjb6ocbui8t994dhdg4nv827a22f8e84.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
