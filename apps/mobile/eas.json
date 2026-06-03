@@ -19,7 +19,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://hylozoistically-dozy-deann.ngrok-free.dev",
+        "EXPO_PUBLIC_API_URL": "http://37.60.242.217:4000",
         "EAS_PACKAGE_MANAGER": "pnpm"
       }
     },
