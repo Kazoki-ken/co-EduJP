@@ -40,6 +40,7 @@ interface AuthContextValue {
   register: (username: string, email: string, password: string) => Promise<void>;
   googleLogin: (idToken: string) => Promise<void>;
   setUsername: (username: string) => Promise<void>;
+  setPassword: (password: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -149,6 +150,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setPendingGoogleToken(null);
   }, []);
 
+  // ── Set Password (after Google login, optional) ──────────────────────
+  const setPassword = useCallback(async (password: string): Promise<void> => {
+    await api.patch('/auth/set-password', { password });
+  }, []);
+
   // ── Logout ───────────────────────────────────────────────────────────────
   const logout = useCallback(async (): Promise<void> => {
     try {
@@ -178,6 +184,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         register,
         googleLogin,
         setUsername,
+        setPassword,
         logout,
         refreshUser,
       }}

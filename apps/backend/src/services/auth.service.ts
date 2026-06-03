@@ -293,6 +293,25 @@ export const googleAuth = async (idToken: string) => {
 
 // ─── Set Username (social login yangi foydalanuvchilar uchun) ─────────────────
 
+export const setPasswordService = async (userId: string, password: string) => {
+  const passwordHash = await bcrypt.hash(password, 12);
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { passwordHash },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      avatarUrl: true,
+      profile: true,
+      _count: { select: { savedWords: true, badges: true } },
+    },
+  });
+  return user;
+};
+
 export const setUsernameService = async (userId: string, username: string) => {
   // Username mavjudligini tekshirish
   const existing = await prisma.user.findUnique({ where: { username } });

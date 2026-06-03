@@ -10,12 +10,14 @@ import AppTabs from './AppTabs';
 import LoginScreen    from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import UsernameSetupScreen from '../screens/UsernameSetupScreen';
+import PasswordSetupScreen from '../screens/PasswordSetupScreen';
 
 // ── Route param types ─────────────────────────────────────────────
 export type RootStackParamList = {
   Login:         undefined;
   Register:      undefined;
   UsernameSetup: undefined;
+  PasswordSetup: undefined;
   AppTabs:       undefined;
 };
 
@@ -35,16 +37,29 @@ export default function RootStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
       {isAuthenticated ? (
-        needsUsername ? (
-          // Google login — birinchi marta kirgan, username hali yo'q
+        <>
+          {needsUsername ? (
+            // Google login — birinchi marta kirgan, username kerak
+            <Stack.Screen
+              name="UsernameSetup"
+              component={UsernameSetupScreen}
+              options={{ animation: 'slide_from_bottom' }}
+            />
+          ) : (
+            <Stack.Screen name="AppTabs" component={AppTabs} />
+          )}
+          {/* PasswordSetup is always available for authenticated users (after UsernameSetup) */}
           <Stack.Screen
-            name="UsernameSetup"
-            component={UsernameSetupScreen}
-            options={{ animation: 'slide_from_bottom' }}
-          />
-        ) : (
-          <Stack.Screen name="AppTabs" component={AppTabs} />
-        )
+            name="PasswordSetup"
+            options={{ animation: 'slide_from_right' }}
+          >
+            {(props) => (
+              <PasswordSetupScreen
+                onDone={() => props.navigation.replace('AppTabs')}
+              />
+            )}
+          </Stack.Screen>
+        </>
       ) : (
         <>
           <Stack.Screen

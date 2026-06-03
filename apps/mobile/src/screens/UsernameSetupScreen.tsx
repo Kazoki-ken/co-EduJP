@@ -7,14 +7,18 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAuth } from '../context/AuthContext';
 import { GlowInput } from './LoginScreen';
+import { RootStackParamList } from '../navigation/RootStack';
 
 // ─── UsernameSetupScreen ──────────────────────────────────────────
 // Google orqali birinchi marta kirgan foydalanuvchi
 // bu ekranda o'z username ini tanlaydi.
 
-export default function UsernameSetupScreen() {
+type NavProp = NativeStackNavigationProp<RootStackParamList, 'UsernameSetup'>;
+
+export default function UsernameSetupScreen({ navigation }: { navigation: NavProp }) {
   const { setUsername, user } = useAuth();
   const insets = useSafeAreaInsets();
   const [username, setUsernameInput] = useState('');
@@ -32,7 +36,8 @@ export default function UsernameSetupScreen() {
     setLoading(true);
     try {
       await setUsername(username.trim());
-      // needsUsername = false bo'lgach RootStack avtomatik AppTabs ga o'tadi
+      // Navigate to password setup (user can skip if they want)
+      navigation.replace('PasswordSetup');
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { error?: string } } })
         ?.response?.data?.error ?? "Xatolik yuz berdi. Qaytadan urinib ko'ring.";

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, refresh, logout, me, googleLogin, setUsername } from '../controllers/auth.controller';
+import { register, login, refresh, logout, me, googleLogin, setUsername, setPassword } from '../controllers/auth.controller';
 import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
@@ -45,5 +45,11 @@ router.post('/google', googleLogin);
  * Set username for new social login users (first-time setup)
  */
 router.patch('/set-username', authenticate, setUsername);
+
+/**
+ * PATCH /api/auth/set-password
+ * Set password for social login users (optional, post-setup step)
+ */
+router.patch('/set-password', authenticate, setPassword);
 
 export default router;

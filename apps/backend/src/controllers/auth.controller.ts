@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import {
   registerUser,
@@ -7,6 +7,7 @@ import {
   getMe,
   googleAuth,
   setUsernameService,
+  setPasswordService,
 } from '../services/auth.service';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { createError } from '../middleware/error.middleware';
@@ -169,3 +170,28 @@ export const setUsername = async (
   res.json({ message: 'Username updated successfully', user });
 };
 
+// ─── Set Password Controller (Google login users) ────────────────────────
+
+const SetPasswordSchema = z.object({
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(100, 'Password too long'),
+});
+
+export const setPassword = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  if (!req.user) throw createError('Unauthorized', 401);
+
+  const parsed = SetPasswordSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.errors[0]?.message });
+    return;
+  }
+
+  const user = await setPasswordService(req.user.id, parsed.data.password);
+  res.json({ message: 'Password set successfully', user });
+};
