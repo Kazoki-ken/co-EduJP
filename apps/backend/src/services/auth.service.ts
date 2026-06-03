@@ -130,10 +130,15 @@ export const loginUser = async (dto: LoginDto, timezoneOffset: number = 0) => {
     throw createError('Invalid email or password', 401);
   }
 
+  if (!user.passwordHash) {
+    throw createError('Bu hisob Google orqali yaratilgan. Google bilan kiring.', 401);
+  }
+
   const isPasswordValid = await bcrypt.compare(dto.password, user.passwordHash);
   if (!isPasswordValid) {
     throw createError('Invalid email or password', 401);
   }
+
 
   // Update streak and daily reset
   const updatedProfile = await updateStreakOnLogin(user.id, user.profile, timezoneOffset);
