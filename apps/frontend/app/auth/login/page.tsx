@@ -47,9 +47,11 @@ export default function LoginPage() {
       setGoogleLoading(true);
       setError('');
       try {
-        await googleLogin(undefined, tokenResponse.access_token);
-        if (!needsUsername) {
-          router.push('/');
+        const isNewUser = await googleLogin(undefined, tokenResponse.access_token);
+        if (isNewUser) {
+          setShowModal(true); // Username + parol so'rash
+        } else {
+          router.push('/');  // Mavjud foydalanuvchi — bosh sahifaga
         }
       } catch (err: any) {
         setError(err.response?.data?.error || 'Google bilan kirishda xato yuz berdi.');

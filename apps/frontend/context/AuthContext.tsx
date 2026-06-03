@@ -38,7 +38,7 @@ interface AuthContextValue {
   pendingGoogleToken: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
-  googleLogin: (idToken?: string, accessToken?: string) => Promise<void>;
+  googleLogin: (idToken?: string, accessToken?: string) => Promise<boolean>;
   setUsername: (username: string) => Promise<void>;
   setPassword: (password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -121,7 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   // ── Google Login ─────────────────────────────────────────────────────────
-  const googleLogin = useCallback(async (idToken?: string, accessToken?: string): Promise<void> => {
+  const googleLogin = useCallback(async (idToken?: string, accessToken?: string): Promise<boolean> => {
     const { data } = await api.post<{
       accessToken?: string;
       user?: AuthUser;
@@ -129,26 +129,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }>('/auth/google', { idToken, accessToken });
 
     if (data.isNewUser) {
-      // New Google user — needs username setup
+      // Yangi foydalanuvchi — username setup kerak
       if (data.accessToken) setAccessToken(data.accessToken);
       if (data.user) setUser(data.user);
       setNeedsUsername(true);
+      return true; // caller modal ko'rsatadi
     } else if (data.accessToken && data.user) {
       setAccessToken(data.accessToken);
       setUser(data.user);
       setNeedsUsername(false);
+      return false; // caller redirect qiladi
     }
+    return false;
   }, []);
 
   // ── Set Username (after Google login) ────────────────────────────────────
   const setUsername = useCallback(async (username: string): Promise<void> => {
     const { data } = await api.patch<{
-      accessToken: string;
+      message: string;
       user: AuthUser;
     }>('/auth/set-username', { username });
-    setAccessToken(data.accessToken);
-    setUser(data.user);
-    setNeedsUsername(false);
+    setUser(data.user);        // username ni yangilash
+    setNeedsUsername(false);   // setup modal yopiladi
     setPendingGoogleToken(null);
   }, []);
 

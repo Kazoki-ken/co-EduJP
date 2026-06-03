@@ -44,9 +44,11 @@ export default function RegisterPage() {
       setGoogleLoading(true);
       setError('');
       try {
-        await googleLogin(undefined, tokenResponse.access_token);
-        if (!needsUsername) {
-          router.push('/');
+        const isNewUser = await googleLogin(undefined, tokenResponse.access_token);
+        if (isNewUser) {
+          setShowModal(true); // Username + parol so'rash
+        } else {
+          router.push('/');  // Allaqachon ro'yxatdan o'tgan
         }
       } catch (err: any) {
         setError(err.response?.data?.error || 'Google bilan kirishda xato yuz berdi.');
