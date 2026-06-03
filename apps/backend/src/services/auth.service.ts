@@ -209,22 +209,47 @@ export const getMe = async (userId: string, timezoneOffset: number = 0) => {
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_WEB_CLIENT_ID);
 
-export const googleAuth = async (idToken: string) => {
-  // 1. Google serverlarida tokenni tekshirish
-  let ticket;
-  try {
-    ticket = await googleClient.verifyIdToken({
-      idToken,
-      audience: process.env.GOOGLE_WEB_CLIENT_ID,
-    });
-  } catch {
-    throw createError('Invalid Google token', 401);
+export const googleAuth = async (idToken?: string, accessToken?: string) => {
+  let googleId: string;
+  let email: string | undefined;
+  let name: string | undefined;
+  let picture: string | undefined;
+
+  if (idToken) {
+    // Mobile flow — verify idToken with google-auth-library
+    let ticket;
+    try {
+      ticket = await googleClient.verifyIdToken({
+        idToken,
+        audience: process.env.GOOGLE_WEB_CLIENT_ID,
+      });
+    } catch {
+      throw createError('Invalid Google token', 401);
+    }
+    const payload = ticket.getPayload();
+    if (!payload) throw createError('Google token payload is empty', 401);
+    googleId = payload.sub;
+    email = payload.email;
+    name = payload.name;
+    picture = payload.picture;
+  } else if (accessToken) {
+    // Web flow — fetch userinfo from Google API
+    try {
+      const res = await fetch(
+        `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`,
+      );
+      if (!res.ok) throw new Error('Failed to fetch user info');
+      const info = await res.json() as { sub: string; email: string; name?: string; picture?: string };
+      googleId = info.sub;
+      email = info.email;
+      name = info.name;
+      picture = info.picture;
+    } catch {
+      throw createError('Invalid Google access token', 401);
+    }
+  } else {
+    throw createError('Google token required', 400);
   }
-
-  const payload = ticket.getPayload();
-  if (!payload) throw createError('Google token payload is empty', 401);
-
-  const { sub: googleId, email, name, picture } = payload;
 
   if (!email) throw createError('Google account has no email', 400);
 

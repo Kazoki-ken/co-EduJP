@@ -38,7 +38,7 @@ interface AuthContextValue {
   pendingGoogleToken: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
-  googleLogin: (idToken: string) => Promise<void>;
+  googleLogin: (idToken?: string, accessToken?: string) => Promise<void>;
   setUsername: (username: string) => Promise<void>;
   setPassword: (password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -121,15 +121,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   // ── Google Login ─────────────────────────────────────────────────────────
-  const googleLogin = useCallback(async (idToken: string): Promise<void> => {
+  const googleLogin = useCallback(async (idToken?: string, accessToken?: string): Promise<void> => {
     const { data } = await api.post<{
       accessToken?: string;
       user?: AuthUser;
-      needsUsername?: boolean;
-    }>('/auth/google', { idToken });
+      isNewUser?: boolean;
+    }>('/auth/google', { idToken, accessToken });
 
-    if (data.needsUsername) {
-      setPendingGoogleToken(idToken);
+    if (data.isNewUser) {
+      // New Google user — needs username setup
+      if (data.accessToken) setAccessToken(data.accessToken);
+      if (data.user) setUser(data.user);
       setNeedsUsername(true);
     } else if (data.accessToken && data.user) {
       setAccessToken(data.accessToken);

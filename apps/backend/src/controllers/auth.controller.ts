@@ -122,7 +122,10 @@ export const me = async (
 // ─── Google OAuth Controller ───────────────────────────────────────────
 
 const GoogleLoginSchema = z.object({
-  idToken: z.string().min(1, 'idToken is required'),
+  idToken: z.string().optional(),
+  accessToken: z.string().optional(),
+}).refine(data => data.idToken || data.accessToken, {
+  message: 'idToken or accessToken is required',
 });
 
 export const googleLogin = async (req: Request, res: Response): Promise<void> => {
@@ -132,14 +135,17 @@ export const googleLogin = async (req: Request, res: Response): Promise<void> =>
     return;
   }
 
-  const { user, tokens, isNewUser } = await googleAuth(parsed.data.idToken);
+  const { user, tokens, isNewUser } = await googleAuth(
+    parsed.data.idToken,
+    parsed.data.accessToken,
+  );
   setRefreshCookie(res, tokens.refreshToken);
 
   res.status(isNewUser ? 201 : 200).json({
     message: isNewUser ? 'Account created via Google' : 'Login successful via Google',
     accessToken: tokens.accessToken,
     refreshToken: tokens.refreshToken,
-    isNewUser, // frontend bu flag orqali UsernameSetup ekraniga o'tadi
+    isNewUser,
     user,
   });
 };
