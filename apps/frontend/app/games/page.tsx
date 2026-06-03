@@ -10,19 +10,19 @@ const GAMES = [
   {
     href:  '/games/test',
     icon:  '🧠',
-    title: 'Multiple Choice',
-    desc:  'Four options per question. Pick the right meaning before time pressure gets you.',
+    title: 'Variantli test',
+    desc:  "Har bir savolda to'rtta variant. Vaqt tugashidan oldin to'g'ri ma'noni tanlang.",
     gradient: 'from-violet-600 to-purple-800',
     border:   'hover:border-violet-500/60',
     glow:     'hover:shadow-[0_0_24px_rgba(124,58,237,0.4)]',
-    tag:      'Most Popular',
+    tag:      'Eng mashhur',
     tagColor: 'bg-violet-500/20 text-violet-300',
   },
   {
     href:  '/games/match',
     icon:  '🔗',
-    title: 'Matching Pairs',
-    desc:  'Two columns — Japanese and English. Match every pair to clear the board.',
+    title: 'Mos juftliklar',
+    desc:  "Ikki ustun — yapon tili va o'zbek tili. Doskani tozalash uchun har bir juftlikni moslang.",
     gradient: 'from-emerald-600 to-teal-800',
     border:   'hover:border-emerald-500/60',
     glow:     'hover:shadow-[0_0_24px_rgba(16,185,129,0.4)]',
@@ -32,23 +32,23 @@ const GAMES = [
   {
     href:  '/games/write',
     icon:  '⌨️',
-    title: 'Typing Practice',
-    desc:  'See the Japanese word, type the meaning. Pure memory recall with instant feedback.',
+    title: 'Yozish amaliyoti',
+    desc:  "Yaponcha so'zni ko'ring, ma'nosini yozing. Tezkor teskari aloqa orqali to'liq xotirani sinash.",
     gradient: 'from-sky-600 to-blue-800',
     border:   'hover:border-sky-500/60',
     glow:     'hover:shadow-[0_0_24px_rgba(14,165,233,0.4)]',
-    tag:      'Best for SRS',
+    tag:      'SRS uchun eng yaxshisi',
     tagColor: 'bg-sky-500/20 text-sky-300',
   },
   {
     href:  '/games/shooter',
     icon:  '🚀',
-    title: 'Space Shooter',
-    desc:  'Words drift through space as asteroids. Click the right one before time runs out!',
+    title: 'Kosmik otishma',
+    desc:  "So'zlar kosmosda asteroidlar bo'lib suzib yuradi. Vaqt tugashidan oldin to'g'risini bosing!",
     gradient: 'from-amber-600 to-orange-800',
     border:   'hover:border-amber-500/60',
     glow:     'hover:shadow-[0_0_24px_rgba(245,158,11,0.4)]',
-    tag:      '🔥 Fan Favourite',
+    tag:      "🔥 Sevimli o'yin",
     tagColor: 'bg-amber-500/20 text-amber-300',
   },
 ];
@@ -71,18 +71,18 @@ export default function GamesPage() {
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20
                         border border-primary/30 text-primary text-sm font-medium mb-5">
-          🎮 Game Hub
+          {"🎮 O'yinlar markazi"}
         </div>
         <h1 className="text-4xl font-extrabold text-text-primary mb-3">
-          Choose Your Battle
+          {"O'yiningizni tanlang"}
         </h1>
         <p className="text-text-secondary max-w-md mx-auto">
-          Four ways to drill vocabulary. Each game rewards XP and coins — and updates your SRS progress automatically.
+          {"So'zlarni takrorlash uchun to'rtta usul. Har bir o'yin XP va tangalar bilan mukofotlaydi hamda SRS taraqqiyotingizni avtomatik yangilaydi."}
         </p>
         {!isAuthenticated && (
           <p className="mt-4 text-sm text-text-muted">
-            <Link href="/auth/login" className="text-primary hover:underline">Sign in</Link>
-            {' '}to save progress, earn XP, and climb the leaderboard.
+            <Link href="/auth/login" className="text-primary hover:underline">{"Tizimga kiring"}</Link>
+            {' '}{"taraqqiyotni saqlash, XP to'plash va reytingda ko'tarilish uchun."}
           </p>
         )}
       </div>
@@ -135,7 +135,7 @@ export default function GamesPage() {
 
               <div className="flex items-center gap-1.5 text-sm font-medium text-primary
                               group-hover:gap-2.5 transition-all">
-                {isAuthenticated ? 'Play Now' : 'Sign in to play'}
+                {isAuthenticated ? "Hozir o'ynash" : "O'ynash uchun tizimga kiring"}
                 <ArrowRight size={14} />
               </div>
             </Link>
@@ -147,11 +147,9 @@ export default function GamesPage() {
       <div className="mt-10 card-glass p-5 flex items-start gap-3 max-w-2xl mx-auto">
         <span className="text-2xl shrink-0">💡</span>
         <div>
-          <p className="text-sm font-semibold text-text-primary mb-1">How SRS works in games</p>
+          <p className="text-sm font-semibold text-text-primary mb-1">{"O'yinlarda SRS qanday ishlaydi"}</p>
           <p className="text-sm text-text-muted">
-            Each correct answer advances a word from Level 1 (1 min) up to Level 5 (14 days).
-            Wrong answers push words back so you see them sooner. The system ensures you review
-            exactly when your memory is fading.
+            {"Har bir to'g'ri javob so'zni 1-darajadan (1 daqiqa) 5-darajagacha (14 kun) ko'taradi. Noto'g'ri javoblar so'zlarni ortga qaytaradi, shunda siz ularni tezroq ko'rasiz. Tizim aynan esdan chiqish arafasida takrorlashingizni ta'minlaydi."}
           </p>
         </div>
       </div>

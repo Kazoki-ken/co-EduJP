@@ -83,7 +83,11 @@ export const postSubmitSession = async (
     return;
   }
 
-  const result = await submitSession(req.user!.id, parsed.data);
+  const timezoneOffset = req.headers['x-timezone-offset']
+    ? parseInt(req.headers['x-timezone-offset'] as string, 10)
+    : 0;
+
+  const result = await submitSession(req.user!.id, parsed.data, timezoneOffset);
   res.json(result);
 };
 

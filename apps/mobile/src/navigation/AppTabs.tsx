@@ -31,6 +31,13 @@ const ICONS: Record<keyof AppTabsParamList, { active: IconName; inactive: IconNa
   Profile:    { active: 'person-circle',    inactive: 'person-circle-outline' },
 };
 
+const ROUTE_LABELS: Record<string, string> = {
+  Home: 'Bosh sahifa',
+  Dictionary: "Lug'at",
+  Games: "O'yinlar",
+  Profile: 'Profil',
+};
+
 // ── Animated tab item ─────────────────────────────────────────────
 function TabItem({
   route,
@@ -81,7 +88,7 @@ function TabItem({
           styles.tabLabel,
           { color: isFocused ? '#c4b5fd' : '#4b5563', fontWeight: isFocused ? '600' : '400' },
         ]}>
-          {route.name}
+          {ROUTE_LABELS[route.name] ?? route.name}
         </Text>
       </Animated.View>
 

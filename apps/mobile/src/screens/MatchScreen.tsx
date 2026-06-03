@@ -57,7 +57,7 @@ export default function MatchScreen({ route, navigation }: Props) {
         const en: Tile[] = words.map(w=>({id:`en-${w.id}`,text:w.meaning,wordId:w.id,side:'en',matched:false}));
         setTiles([...jp.sort(()=>Math.random()-0.5),...en.sort(()=>Math.random()-0.5)]);
         setSession(res.data);
-      } catch(e:any) { setLoadError(e?.response?.data?.error ?? 'Failed to start game.'); }
+      } catch(e:any) { setLoadError(e?.response?.data?.error ?? "O'yinni boshlab bo'lmadi."); }
       finally { setLoading(false); }
     })();
   }, []);
@@ -96,9 +96,9 @@ export default function MatchScreen({ route, navigation }: Props) {
     }
   }, [selectedA, matched, answers, session, submitGame]);
 
-  if (loading) return <View style={{flex:1,backgroundColor:'#0a0a1a',alignItems:'center',justifyContent:'center',gap:14}}><ActivityIndicator size="large" color="#f59e0b"/><Text style={{color:'#6b7280'}}>Loading…</Text></View>;
-  if (loadError||!session) return <View style={{flex:1,backgroundColor:'#0a0a1a',alignItems:'center',justifyContent:'center',padding:32,gap:14}}><Text style={{fontSize:40}}>😵</Text><Text style={{color:'#f9fafb',fontSize:16,fontWeight:'700',textAlign:'center'}}>{loadError??'No words'}</Text><TouchableOpacity onPress={()=>navigation.goBack()} style={{backgroundColor:'rgba(245,158,11,0.15)',borderRadius:14,paddingHorizontal:24,paddingVertical:12,borderWidth:1,borderColor:'#f59e0b'}}><Text style={{color:'#f59e0b',fontWeight:'600'}}>Go Back</Text></TouchableOpacity></View>;
-  if (submitting) return <View style={{flex:1,backgroundColor:'#0a0a1a',alignItems:'center',justifyContent:'center',gap:14}}><ActivityIndicator size="large" color="#10b981"/><Text style={{color:'#6b7280'}}>Saving…</Text></View>;
+  if (loading) return <View style={{flex:1,backgroundColor:'#0a0a1a',alignItems:'center',justifyContent:'center',gap:14}}><ActivityIndicator size="large" color="#f59e0b"/><Text style={{color:'#6b7280'}}>Yuklanmoqda…</Text></View>;
+  if (loadError||!session) return <View style={{flex:1,backgroundColor:'#0a0a1a',alignItems:'center',justifyContent:'center',padding:32,gap:14}}><Text style={{fontSize:40}}>😵</Text><Text style={{color:'#f9fafb',fontSize:16,fontWeight:'700',textAlign:'center'}}>{loadError??"So'zlar mavjud emas"}</Text><TouchableOpacity onPress={()=>navigation.goBack()} style={{backgroundColor:'rgba(245,158,11,0.15)',borderRadius:14,paddingHorizontal:24,paddingVertical:12,borderWidth:1,borderColor:'#f59e0b'}}><Text style={{color:'#f59e0b',fontWeight:'600'}}>Orqaga qaytish</Text></TouchableOpacity></View>;
+  if (submitting) return <View style={{flex:1,backgroundColor:'#0a0a1a',alignItems:'center',justifyContent:'center',gap:14}}><ActivityIndicator size="large" color="#10b981"/><Text style={{color:'#6b7280'}}>Saqlanmoqda…</Text></View>;
 
   const progress = (matched/session.words.length)*100;
   const jpTiles = tiles.filter(t=>t.side==='jp');
@@ -114,7 +114,7 @@ export default function MatchScreen({ route, navigation }: Props) {
           </View>
           <Text style={{color:'#6b7280',fontSize:13,fontWeight:'600'}}>{matched}/{session.words.length}</Text>
         </View>
-        <Text style={{color:'#9ca3af',fontSize:13,textAlign:'center',marginBottom:16}}>Tap a Japanese word, then its English meaning</Text>
+        <Text style={{color:'#9ca3af',fontSize:13,textAlign:'center',marginBottom:16}}>Yaponcha so'zni bosing, so'ng uning tarjimasini tanlang</Text>
         <ScrollView showsVerticalScrollIndicator={false} bounces={false} overScrollMode="never">
           <View style={{flexDirection:'row',gap:10}}>
             <View style={{flex:1}}>{jpTiles.map(t=><MatchTile key={t.id} tile={t} selected={selectedA?.id===t.id} wrong={wrongPair?.includes(t.id)??false} onPress={()=>handleSelect(t)}/>)}</View>

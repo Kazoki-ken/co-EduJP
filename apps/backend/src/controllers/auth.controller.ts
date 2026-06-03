@@ -5,6 +5,8 @@ import {
   loginUser,
   refreshTokens,
   getMe,
+  googleAuth,
+  setUsernameService,
 } from '../services/auth.service';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { createError } from '../middleware/error.middleware';
@@ -68,7 +70,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  const { user, tokens } = await loginUser(parsed.data);
+  const timezoneOffset = req.headers['x-timezone-offset']
+    ? parseInt(req.headers['x-timezone-offset'] as string, 10)
+    : 0;
+
+  const { user, tokens } = await loginUser(parsed.data, timezoneOffset);
   setRefreshCookie(res, tokens.refreshToken);
 
   res.json({
@@ -105,6 +111,61 @@ export const me = async (
   if (!req.user) {
     throw createError('Unauthorized', 401);
   }
-  const user = await getMe(req.user.id);
+  const timezoneOffset = req.headers['x-timezone-offset']
+    ? parseInt(req.headers['x-timezone-offset'] as string, 10)
+    : 0;
+  const user = await getMe(req.user.id, timezoneOffset);
   res.json({ user });
 };
+
+// ─── Google OAuth Controller ───────────────────────────────────────────
+
+const GoogleLoginSchema = z.object({
+  idToken: z.string().min(1, 'idToken is required'),
+});
+
+export const googleLogin = async (req: Request, res: Response): Promise<void> => {
+  const parsed = GoogleLoginSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.errors[0]?.message });
+    return;
+  }
+
+  const { user, tokens, isNewUser } = await googleAuth(parsed.data.idToken);
+  setRefreshCookie(res, tokens.refreshToken);
+
+  res.status(isNewUser ? 201 : 200).json({
+    message: isNewUser ? 'Account created via Google' : 'Login successful via Google',
+    accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
+    isNewUser, // frontend bu flag orqali UsernameSetup ekraniga o'tadi
+    user,
+  });
+};
+
+// ─── Set Username Controller (social login, birinchi kirish) ─────────────
+
+const SetUsernameSchema = z.object({
+  username: z
+    .string()
+    .min(3, 'Username must be at least 3 characters')
+    .max(30, 'Username must be at most 30 characters')
+    .regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores'),
+});
+
+export const setUsername = async (
+  req: AuthenticatedRequest,
+  res: Response,
+): Promise<void> => {
+  if (!req.user) throw createError('Unauthorized', 401);
+
+  const parsed = SetUsernameSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.errors[0]?.message });
+    return;
+  }
+
+  const user = await setUsernameService(req.user.id, parsed.data.username);
+  res.json({ message: 'Username updated successfully', user });
+};
+

@@ -88,7 +88,7 @@ export function BookCard({ book, index, isAuthenticated }: BookCardProps) {
             <button
               onClick={handleSave}
               disabled={isSaving}
-              title={isSaved ? 'Unsave book' : 'Save book'}
+              title={isSaved ? "Kitobni saqlanganlardan o'chirish" : "Kitobni saqlash"}
               className={cn(
                 'w-9 h-9 rounded-lg flex items-center justify-center transition-all z-10',
                 'opacity-0 group-hover:opacity-100',
@@ -128,13 +128,13 @@ export function BookCard({ book, index, isAuthenticated }: BookCardProps) {
           <div className="flex items-center gap-3 text-xs text-text-muted">
             <span className="flex items-center gap-1">
               <BookOpen size={12} />
-              {book._count.topics} {book._count.topics === 1 ? 'topic' : 'topics'}
+              {book._count.topics} ta mavzu
             </span>
           </div>
 
           <span className="flex items-center gap-1 text-xs text-primary font-medium
                            opacity-0 group-hover:opacity-100 transition-opacity">
-            Browse <ChevronRight size={12} />
+            {"Ko'rish"} <ChevronRight size={12} />
           </span>
         </div>
       </div>

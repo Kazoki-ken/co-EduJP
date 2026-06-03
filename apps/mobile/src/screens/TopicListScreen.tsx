@@ -24,10 +24,11 @@ const TOPIC_COLORS = [
 
 // ─── Topic row card (with save button) ────────────────────────────
 function TopicRow({
-  topic, index, onPress, saved, onToggleSave,
+  topic, index, onPress, saved, onToggleSave, onShowToast,
 }: {
   topic: Topic; index: number; onPress: () => void;
   saved: boolean; onToggleSave: () => void;
+  onShowToast?: (msg: string) => void;
 }) {
   const color = TOPIC_COLORS[index % TOPIC_COLORS.length];
   const wordCount = topic._count.wordTopics;
@@ -39,18 +40,16 @@ function TopicRow({
     try {
       const result = await toggleSaveTopic(topic.id);
       onToggleSave(); // update local visual state
-      // Show success feedback with the batch result message
-      Alert.alert(
-        result.saved ? 'Topic Saved!' : 'Topic Unsaved',
-        result.message || (result.saved
-          ? `All ${result.savedCount ?? 0} words in this topic have been saved!`
-          : 'All topic words removed from your saved list.'),
-      );
+      if (onShowToast) {
+        onShowToast(result.saved ? "Mavzu saqlandi!" : "Mavzu o'chirildi");
+      }
     } catch {
-      Alert.alert('Error', 'Failed to save topic. Please try again.');
+      if (onShowToast) {
+        onShowToast("Mavzuni saqlab bo'lmadi. Iltimos, qayta urinib ko'ring.");
+      }
     }
     setSaving(false);
-  }, [saving, topic.id, onToggleSave]);
+  }, [saving, topic.id, onToggleSave, onShowToast]);
 
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.82} style={{ marginBottom: 10 }}>
@@ -82,7 +81,7 @@ function TopicRow({
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 }}>
               <Ionicons name="text-outline" size={12} color="#4b5563" />
               <Text style={{ color: '#6b7280', fontSize: 12 }}>
-                {wordCount} word{wordCount !== 1 ? 's' : ''}
+                {wordCount} ta so'z
               </Text>
             </View>
           </View>
@@ -128,6 +127,12 @@ export default function TopicListScreen({ route, navigation }: Props) {
 
   // Track saved state locally for optimistic updates
   const [savedSet, setSavedSet] = useState<Set<string>>(new Set());
+  const [toast, setToast] = useState<string | null>(null);
+
+  const showToast = useCallback((msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 1000); // 1 second duration
+  }, []);
 
   // ── Initialize savedSet from backend isSaved whenever topics arrive ──
   useEffect(() => {
@@ -183,17 +188,17 @@ export default function TopicListScreen({ route, navigation }: Props) {
           style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, alignSelf: 'flex-start' }}
         >
           <Ionicons name="arrow-back" size={20} color="#7c3aed" />
-          <Text style={{ color: '#7c3aed', marginLeft: 6, fontSize: 14, fontWeight: '500' }}>Books</Text>
+          <Text style={{ color: '#7c3aed', marginLeft: 6, fontSize: 14, fontWeight: '500' }}>Kitoblar</Text>
         </TouchableOpacity>
 
         <View style={{ marginBottom: 24 }}>
-          <Text style={{ color: '#6b7280', fontSize: 13, fontWeight: '500' }}>Topics in</Text>
+          <Text style={{ color: '#6b7280', fontSize: 13, fontWeight: '500' }}>Mavzular:</Text>
           <Text style={{ color: '#f9fafb', fontSize: 22, fontWeight: '700', letterSpacing: -0.5 }} numberOfLines={2}>
             {book.title}
           </Text>
           {topics && (
             <Text style={{ color: '#4b5563', fontSize: 12, marginTop: 4 }}>
-              {topics.length} topic{topics.length !== 1 ? 's' : ''}
+              {topics.length} ta mavzu
             </Text>
           )}
         </View>
@@ -209,7 +214,7 @@ export default function TopicListScreen({ route, navigation }: Props) {
             <Ionicons name="alert-circle" size={20} color="#ef4444" />
             <Text style={{ color: '#ef4444', fontSize: 13, flex: 1 }}>{error}</Text>
             <TouchableOpacity onPress={refetch}>
-              <Text style={{ color: '#ef4444', fontWeight: '600' }}>Retry</Text>
+              <Text style={{ color: '#ef4444', fontWeight: '600' }}>Qayta urinish</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -223,7 +228,7 @@ export default function TopicListScreen({ route, navigation }: Props) {
         {!loading && !error && topics?.length === 0 && (
           <View style={{ alignItems: 'center', paddingTop: 60, gap: 12 }}>
             <Text style={{ fontSize: 48 }}>🗂️</Text>
-            <Text style={{ color: '#6b7280', fontSize: 15 }}>No topics in this book yet</Text>
+            <Text style={{ color: '#6b7280', fontSize: 15 }}>Ushbu kitobda hozircha mavzular yo'q</Text>
           </View>
         )}
 
@@ -235,10 +240,44 @@ export default function TopicListScreen({ route, navigation }: Props) {
             index={i}
             saved={savedSet.has(topic.id)}
             onToggleSave={() => handleToggleSave(topic.id)}
+            onShowToast={showToast}
             onPress={() => navigation.navigate('TopicWords', { topic, book })}
           />
         ))}
       </ScrollView>
+
+      {/* Floating Top-Centered Toast Notification */}
+      {toast && (
+        <View style={{
+          position: 'absolute',
+          top: insets.top + 10,
+          left: 20,
+          right: 20,
+          zIndex: 9999,
+          alignItems: 'center',
+        }}>
+          <BlurView intensity={24} tint="dark" style={{
+            borderRadius: 24,
+            overflow: 'hidden',
+            borderWidth: 1,
+            borderColor: 'rgba(255,255,255,0.15)',
+          }}>
+            <View style={{
+              backgroundColor: 'rgba(124,58,237,0.85)',
+              paddingHorizontal: 20,
+              paddingVertical: 10,
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+            }}>
+              <Ionicons name="checkmark-circle-outline" size={16} color="#fff" />
+              <Text style={{ color: '#fff', fontSize: 13, fontWeight: '700' }}>
+                {toast}
+              </Text>
+            </View>
+          </BlurView>
+        </View>
+      )}
     </View>
   );
 }

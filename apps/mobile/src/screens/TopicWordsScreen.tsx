@@ -23,8 +23,8 @@ const WORDS_PER_PAGE = 20;
 type SrsLevel = 'new' | 'learning' | 'review' | 'mastered';
 
 function getSrsLabel(word: Word): { level: SrsLevel; label: string; color: string; bg: string } {
-  if (!word.isSaved)  return { level: 'new',      label: 'New',      color: '#6b7280', bg: 'rgba(107,114,128,0.15)' };
-  return              { level: 'learning', label: 'Learning', color: '#f59e0b', bg: 'rgba(245,158,11,0.15)' };
+  if (!word.isSaved)  return { level: 'new',      label: 'Yangi',    color: '#6b7280', bg: 'rgba(107,114,128,0.15)' };
+  return              { level: 'learning', label: "O'rganilmoqda", color: '#f59e0b', bg: 'rgba(245,158,11,0.15)' };
 }
 
 // ─── SRS indicator bar ────────────────────────────────────────────
@@ -174,7 +174,7 @@ function WordCard({ word, onToggleSave }: { word: Word; onToggleSave: (id: strin
                   style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}
                 >
                   <Ionicons name="chatbubble-outline" size={12} color="#4b5563" />
-                  <Text style={{ color: '#4b5563', fontSize: 12 }}>Show example sentence</Text>
+                  <Text style={{ color: '#4b5563', fontSize: 12 }}>Misol gapni ko'rish</Text>
                 </TouchableOpacity>
               )}
             </>
@@ -367,7 +367,7 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
             }}>
               <Ionicons name="text" size={12} color="#7c3aed" />
               <Text style={{ color: '#7c3aed', fontSize: 12, fontWeight: '600' }}>
-                {data?.meta.total ?? '…'} words
+                {data?.meta.total ?? '…'} ta so'z
               </Text>
             </View>
             <View style={{
@@ -378,7 +378,7 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
             }}>
               <Ionicons name="bookmark" size={12} color="#f59e0b" />
               <Text style={{ color: '#f59e0b', fontSize: 12, fontWeight: '600' }}>
-                {savedCount} saved
+                {savedCount} ta saqlangan
               </Text>
             </View>
             {/* Page indicator */}
@@ -391,7 +391,7 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
               }}>
                 <Ionicons name="document-text-outline" size={12} color="#3b82f6" />
                 <Text style={{ color: '#3b82f6', fontSize: 12, fontWeight: '600' }}>
-                  Page {page}/{totalPages}
+                  Sahifa {page}/{totalPages}
                 </Text>
               </View>
             )}
@@ -413,7 +413,7 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
             <TextInput
               value={search}
               onChangeText={setSearch}
-              placeholder="Search words, hiragana, meaning…"
+              placeholder="So'zlarni, xiraganani, ma'nolarini qidiring…"
               placeholderTextColor="#4b5563"
               style={{ flex: 1, color: '#f3f4f6', fontSize: 14 }}
             />
@@ -436,7 +436,7 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
             <Ionicons name="alert-circle" size={18} color="#ef4444" />
             <Text style={{ color: '#ef4444', fontSize: 13, flex: 1 }}>{error}</Text>
             <TouchableOpacity onPress={refetch}>
-              <Text style={{ color: '#ef4444', fontWeight: '600' }}>Retry</Text>
+              <Text style={{ color: '#ef4444', fontWeight: '600' }}>Qayta urinish</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -451,7 +451,7 @@ export default function TopicWordsScreen({ route, navigation }: Props) {
           <View style={{ alignItems: 'center', paddingTop: 60, gap: 12 }}>
             <Text style={{ fontSize: 48 }}>🔍</Text>
             <Text style={{ color: '#6b7280', fontSize: 15 }}>
-              {search ? 'No words match your search' : 'No words in this topic yet'}
+              {search ? "Qidiruvga mos so'z topilmadi" : "Ushbu mavzuda hozircha so'zlar yo'q"}
             </Text>
           </View>
         )}

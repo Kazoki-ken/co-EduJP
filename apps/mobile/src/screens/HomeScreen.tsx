@@ -186,7 +186,7 @@ function StreakFlame({ streak }: { streak: number }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
       <Animated.Text style={{ fontSize: 18, transform: [{ scale: flicker }] }}>🔥</Animated.Text>
-      <Text style={{ color: '#f59e0b', fontWeight: '700', fontSize: 15 }}>{streak} day streak</Text>
+      <Text style={{ color: '#f59e0b', fontWeight: '700', fontSize: 15 }}>{streak} kunlik faollik</Text>
     </View>
   );
 }
@@ -197,10 +197,15 @@ export default function HomeScreen() {
   const insets   = useSafeAreaInsets();
   const navigation = useNavigation<BottomTabNavigationProp<AppTabsParamList>>();
 
-  const headerAnim  = useEntrance(0);
-  const statsAnim   = useEntrance(120);
-  const sectionAnim = useEntrance(220);
-  const actionsAnim = useEntrance(300);
+  const pulse = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulse, { toValue: 1.15, duration: 1400, useNativeDriver: true }),
+        Animated.timing(pulse, { toValue: 1,    duration: 1400, useNativeDriver: true }),
+      ]),
+    ).start();
+  }, []);
 
   // ── Auto-refresh user data (XP, coins, streak) on screen focus ──
   useFocusEffect(
@@ -213,6 +218,9 @@ export default function HomeScreen() {
   const streak  = profile?.streak  ?? 0;
   const coins   = profile?.coins   ?? 0;
   const xp      = profile?.xp      ?? 0;
+
+  const headerAnim  = useEntrance(0);
+  const statsAnim   = useEntrance(100);
 
   // Navigate into the nested Games or Dictionary stacks
   const goToQuiz = (params: { mode: 'TEST'|'MATCH'|'WRITE'; dueOnly?: boolean }) => {
@@ -234,7 +242,14 @@ export default function HomeScreen() {
     PLATINUM: '#e5e4e2', DIAMOND: '#b9f2ff',
   };
   const leagueColor = LEAGUE_COLORS[profile?.league ?? 'BRONZE'];
-  const leagueLabel = (profile?.league ?? 'BRONZE').charAt(0) + (profile?.league ?? 'bronze').slice(1).toLowerCase();
+  const LEAGUE_LABELS: Record<string, string> = {
+    BRONZE: 'Bronza ligasi',
+    SILVER: 'Kumush ligasi',
+    GOLD: 'Oltin ligasi',
+    PLATINUM: 'Platina ligasi',
+    DIAMOND: 'Olmos ligasi',
+  };
+  const leagueLabel = LEAGUE_LABELS[profile?.league ?? 'BRONZE'] ?? 'Bronza ligasi';
 
   return (
     <View style={{ flex: 1, backgroundColor: '#0a0a1a' }}>
@@ -298,104 +313,116 @@ export default function HomeScreen() {
           </View>
         </Animated.View>
 
-        {/* ── Stat cards ─────────────────────────────────────── */}
-        <Animated.View style={[{ flexDirection: 'row', marginBottom: 28 }, statsAnim]}>
-          <StatCard emoji="🔥" value={streak}  label="Day Streak"  colors={['#f59e0b','#d97706']} glowColor="#f59e0b" />
-          <StatCard emoji="🪙" value={coins}   label="Coins"       colors={['#ffd700','#f59e0b']} glowColor="#ffd700" />
-          <StatCard emoji="⚡" value={xp}      label="Total XP"    colors={['#7c3aed','#5b21b6']} glowColor="#7c3aed" />
-        </Animated.View>
+        {/* ── Combined Streak & Daily Goal side-by-side ───────── */}
+        <Animated.View style={[{ flexDirection: 'row', gap: 10, marginBottom: 28 }, statsAnim]}>
+          
+          {/* Left: Streak/Faollik Card */}
+          <BlurView
+            intensity={22}
+            tint="dark"
+            style={{
+              flex: 0.38,
+              borderRadius: 20,
+              overflow: 'hidden',
+              borderWidth: 1,
+              borderColor: 'rgba(255,255,255,0.08)',
+            }}
+          >
+            <LinearGradient
+              colors={['rgba(18,18,42,0.9)', 'rgba(10,10,26,0.95)']}
+              style={{ paddingVertical: 16, paddingHorizontal: 12, alignItems: 'center', justifyContent: 'center', height: 110 }}
+            >
+              <View
+                style={{
+                  width: 38, height: 38, borderRadius: 19,
+                  backgroundColor: '#f59e0b22',
+                  alignItems: 'center', justifyContent: 'center',
+                  marginBottom: 6,
+                  shadowColor: '#f59e0b',
+                  shadowOffset: { width: 0, height: 0 },
+                  shadowOpacity: 0.6, shadowRadius: 10, elevation: 4,
+                }}
+              >
+                <Animated.Text style={{ fontSize: 18, transform: [{ scale: pulse }] }}>
+                  🔥
+                </Animated.Text>
+              </View>
+              <Text style={{ color: '#f9fafb', fontSize: 18, fontWeight: '700', letterSpacing: -0.5 }}>
+                {streak}
+              </Text>
+              <Text style={{ color: '#6b7280', fontSize: 10, marginTop: 2, fontWeight: '600' }}>
+                Faollik
+              </Text>
+            </LinearGradient>
+          </BlurView>
 
-        {/* ── Daily progress bar ──────────────────────────────── */}
-        <Animated.View style={[{ marginBottom: 28 }, statsAnim]}>
-          <BlurView intensity={18} tint="dark" style={{
-            borderRadius: 20, overflow: 'hidden',
-            borderWidth: 1, borderColor: 'rgba(109,40,217,0.2)',
-          }}>
-            <View style={{ backgroundColor: 'rgba(10,10,26,0.8)', padding: 18 }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
-                <Text style={{ color: '#f3f4f6', fontWeight: '600', fontSize: 14 }}>Daily Goal</Text>
-                <Text style={{ color: '#6b7280', fontSize: 13 }}>
-                  {(profile?.dailyTestCount ?? 0) + (profile?.dailyMatchCount ?? 0) + (profile?.dailyWriteCount ?? 0)}/5 sessions
+          {/* Right: Daily Goal Card with Progress Bar */}
+          <BlurView
+            intensity={22}
+            tint="dark"
+            style={{
+              flex: 0.62,
+              borderRadius: 20,
+              overflow: 'hidden',
+              borderWidth: 1,
+              borderColor: 'rgba(109,40,217,0.2)',
+            }}
+          >
+            <LinearGradient
+              colors={['rgba(18,18,42,0.9)', 'rgba(10,10,26,0.95)']}
+              style={{ padding: 16, justifyContent: 'center', height: 110 }}
+            >
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <Text style={{ color: '#f3f4f6', fontWeight: '700', fontSize: 14 }}>Kunlik maqsad</Text>
+                <Text style={{ color: '#10b981', fontWeight: '700', fontSize: 12 }}>
+                  {Math.min((profile?.dailyTestCount ?? 0) + (profile?.dailyMatchCount ?? 0) + (profile?.dailyWriteCount ?? 0), 5)}/5
                 </Text>
               </View>
+              
               {/* Progress track */}
-              <View style={{ height: 7, backgroundColor: '#1f2937', borderRadius: 4 }}>
+              <View style={{ height: 8, backgroundColor: '#1f2937', borderRadius: 4, overflow: 'hidden', marginBottom: 6 }}>
                 <LinearGradient
                   colors={['#7c3aed', '#10b981']}
                   start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
                   style={{
-                    height: 7, borderRadius: 4,
+                    height: '100%',
+                    borderRadius: 4,
                     width: `${Math.min(((profile?.dailyTestCount ?? 0) + (profile?.dailyMatchCount ?? 0) + (profile?.dailyWriteCount ?? 0)) / 5 * 100, 100)}%`,
                   }}
                 />
               </View>
-              <Text style={{ color: '#4b5563', fontSize: 11, marginTop: 8 }}>
-                Keep it up — consistency builds fluency! ✨
+              
+              <Text style={{ color: '#4b5563', fontSize: 10, fontWeight: '500' }}>
+                Muntazamlik ravonlikka olib keladi! ✨
               </Text>
-            </View>
+            </LinearGradient>
           </BlurView>
+
         </Animated.View>
 
-        {/* ── Quick Actions ───────────────────────────────────── */}
-        <Animated.View style={sectionAnim}>
-          <Text style={{ color: '#9ca3af', fontSize: 12, fontWeight: '700',
-            letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 }}>
-            Quick Actions
+        {/* ── Beautiful Upcoming Ideas Placeholder ───────────── */}
+        <BlurView
+          intensity={12}
+          tint="dark"
+          style={{
+            borderRadius: 20,
+            overflow: 'hidden',
+            borderWidth: 1,
+            borderColor: 'rgba(255,255,255,0.05)',
+            padding: 24,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 10,
+          }}
+        >
+          <Ionicons name="sparkles" size={32} color="rgba(124, 58, 237, 0.4)" style={{ marginBottom: 12 }} />
+          <Text style={{ color: '#9ca3af', fontSize: 15, fontWeight: '600', textAlign: 'center' }}>
+            Yangi g'oyalar kutilmoqda... ✨
           </Text>
-        </Animated.View>
-
-        <Animated.View style={actionsAnim}>
-          <ActionCard
-            title="Space Shooter"
-            subtitle="Blast through vocabulary"
-            icon="rocket"
-            gradientColors={['#7c3aed', '#4c1d95']}
-            glowColor="#7c3aed"
-            badge="HOT"
-            onPress={() => goToQuiz({ mode: 'TEST' })}
-          />
-          <ActionCard
-            title="Review Due Words"
-            subtitle="SRS cards waiting for you"
-            icon="refresh-circle"
-            gradientColors={['#10b981', '#047857']}
-            glowColor="#10b981"
-            onPress={() => goToQuiz({ mode: 'TEST', dueOnly: true })}
-          />
-          <ActionCard
-            title="Multiple Choice Test"
-            subtitle="Practice with 20 words"
-            icon="checkbox"
-            gradientColors={['#3b82f6', '#1d4ed8']}
-            glowColor="#3b82f6"
-            onPress={() => goToQuiz({ mode: 'TEST' })}
-          />
-          <ActionCard
-            title="Matching Pairs"
-            subtitle="Flip and match cards"
-            icon="copy"
-            gradientColors={['#f59e0b', '#d97706']}
-            glowColor="#f59e0b"
-            onPress={() => goToQuiz({ mode: 'MATCH' })}
-          />
-          <ActionCard
-            title="My Saved Books"
-            subtitle="Quick access to bookmarks"
-            icon="bookmarks"
-            gradientColors={['#f97316', '#c2410c']}
-            glowColor="#f97316"
-            badge="NEW"
-            onPress={() => (navigation as any).navigate('Profile')}
-          />
-          <ActionCard
-            title="Browse Dictionary"
-            subtitle="Explore all vocabulary books"
-            icon="library"
-            gradientColors={['#ec4899', '#9d174d']}
-            glowColor="#ec4899"
-            onPress={goToDictionary}
-          />
-        </Animated.View>
+          <Text style={{ color: '#4b5563', fontSize: 12, marginTop: 6, textAlign: 'center', lineHeight: 18 }}>
+            Tugmalar o'rniga boshqa ilovalardagi eng qulay va qiziqarli imkoniyatlarni bu yerda tez orada birgalikda joylashtiramiz!
+          </Text>
+        </BlurView>
       </ScrollView>
     </View>
   );

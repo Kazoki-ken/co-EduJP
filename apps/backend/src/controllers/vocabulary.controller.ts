@@ -31,27 +31,27 @@ import {
 
 const BookSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200),
-  description: z.string().max(1000).optional(),
-  imageUrl: z.string().url('Must be a valid URL').optional(),
+  description: z.string().max(1000).or(z.literal('')).nullable().optional(),
+  imageUrl: z.string().url('Must be a valid URL').or(z.literal('')).nullable().optional(),
 });
 
 const TopicSchema = z.object({
   name: z.string().min(1, 'Name is required').max(200),
-  bookId: z.string().cuid('Invalid book ID').optional(),
+  bookId: z.string().cuid('Invalid book ID').or(z.literal('')).nullable().optional(),
 });
 
 const WordSchema = z.object({
   japaneseWord: z.string().min(1, 'Japanese word is required').max(100),
   hiragana: z.string().min(1, 'Hiragana is required').max(200),
   meaning: z.string().min(1, 'Meaning is required').max(500),
-  exampleSentence: z.string().max(500).optional(),
-  exampleTranslation: z.string().max(500).optional(),
+  exampleSentence: z.string().max(500).or(z.literal('')).nullable().optional(),
+  exampleTranslation: z.string().max(500).or(z.literal('')).nullable().optional(),
   topicIds: z.array(z.string().cuid()).optional(),
 });
 
 const PaginationSchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
-  limit: z.coerce.number().int().min(1).max(100).default(20),
+  limit: z.coerce.number().int().min(1).max(500).default(20),
 });
 
 // ─── Helper ───────────────────────────────────────────────────────────────────

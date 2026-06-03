@@ -19,8 +19,11 @@ interface AuthContextValue {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  needsUsername: boolean; // birinchi Google login da true bo'ladi
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
+  googleLogin: (idToken: string) => Promise<{ isNewUser: boolean }>;
+  setUsername: (username: string) => Promise<void>;
   logout: () => Promise<void>;
   /** Silently refetch /auth/me to refresh XP, coins, streak, etc. */
   refreshUser: () => Promise<void>;
@@ -32,6 +35,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [needsUsername, setNeedsUsername] = useState(false);
 
   // Rehydrate session from stored refresh token on app launch
   useEffect(() => {
@@ -82,6 +86,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  // ─── Google OAuth login ──────────────────────────────────────────
+  const googleLogin = useCallback(async (idToken: string) => {
+    const { data } = await apiClient.post<AuthResponse & {
+      refreshToken?: string;
+      isNewUser: boolean;
+    }>('/auth/google', { idToken });
+
+    setAccessToken(data.accessToken);
+    if (data.refreshToken) await storeRefreshToken(data.refreshToken);
+    setUser(data.user);
+
+    if (data.isNewUser) {
+      setNeedsUsername(true); // UsernameSetupScreen ko'rsatiladi
+    }
+
+    return { isNewUser: data.isNewUser };
+  }, []);
+
+  // ─── Set Username (Google login dan keyin) ─────────────────────────
+  const setUsername = useCallback(async (username: string) => {
+    const { data } = await apiClient.patch<{ user: User }>('/auth/set-username', { username });
+    setUser(data.user);
+    setNeedsUsername(false);
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       await apiClient.post('/auth/logout');
@@ -110,8 +139,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         isLoading,
         isAuthenticated: !!user,
+        needsUsername,
         login,
         register,
+        googleLogin,
+        setUsername,
         logout,
         refreshUser,
       }}

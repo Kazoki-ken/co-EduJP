@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, Upload, Settings, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Users, Tag, Upload, Settings, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NAV = [
   { href: '/admin',         label: 'Dashboard',    icon: LayoutDashboard, exact: true },
   { href: '/admin/users',   label: 'Users',        icon: Users            },
+  { href: '/admin/topics',  label: 'Manage Topics', icon: Tag             },
   { href: '/admin/upload',  label: 'Bulk Upload',  icon: Upload           },
   { href: '/admin/config',  label: 'Site Config',  icon: Settings         },
 ];

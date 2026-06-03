@@ -4,7 +4,6 @@ import Link from 'next/link';
 import {
   BookOpen,
   Gamepad2,
-  Trophy,
   Flame,
   Star,
   ArrowRight,
@@ -14,12 +13,11 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { cn, leagueIcon } from '@/lib/utils';
-import type { Metadata } from 'next';
 
 // ─── Hero Section ─────────────────────────────────────────────────────────────
 
 function HeroSection() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return (
     <section className="relative overflow-hidden py-24 md:py-32">
@@ -33,40 +31,38 @@ function HeroSection() {
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20
                         border border-primary/30 text-primary text-sm font-medium mb-8 animate-in">
           <Star size={14} className="fill-primary" />
-          AI-Powered Japanese Vocabulary SRS
+          {"Sun'iy idrokka asoslangan yapon tili so'z boyligi SRS tizimi"}
         </div>
 
         <h1 className="text-4xl md:text-6xl font-extrabold text-text-primary mb-6 leading-tight animate-in">
-          Master Japanese Vocabulary{' '}
+          {"Yapon tili so'zlarini"}{' '}
           <span className="bg-gradient-to-r from-primary via-violet-400 to-diamond
                            bg-clip-text text-transparent">
-            Faster Than Ever
+            {"har qachongidan tezroq o'rganing"}
           </span>
         </h1>
 
         <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-10 animate-in">
-          Spaced-repetition games, AI chat practice, live leaderboards, and{' '}
-          <span className="text-accent font-semibold">streak rewards</span> — all in one
-          deep-space platform.
+          {"Interaktiv oraliqli takrorlash o'yinlari, AI chat amaliyoti, jonli reytinglar va faollik mukofotlari — hammasi bitta zamonaviy platformada."}
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-4 animate-in">
           {isAuthenticated ? (
             <>
               <Link href="/games" className="btn-primary flex items-center gap-2 text-base px-7 py-3">
-                <Gamepad2 size={18} /> Start Playing
+                <Gamepad2 size={18} /> {"O'yinni boshlash"}
               </Link>
               <Link href="/dictionary" className="btn-ghost flex items-center gap-2 text-base px-7 py-3">
-                <BookOpen size={18} /> Browse Dictionary
+                <BookOpen size={18} /> {"Lug'atni ko'rish"}
               </Link>
             </>
           ) : (
             <>
               <Link href="/auth/register" className="btn-primary flex items-center gap-2 text-base px-7 py-3">
-                Get Started Free <ArrowRight size={18} />
+                {"Bepul boshlash"} <ArrowRight size={18} />
               </Link>
               <Link href="/auth/login" className="btn-ghost flex items-center gap-2 text-base px-7 py-3">
-                Sign In
+                {"Kirish"}
               </Link>
             </>
           )}
@@ -75,9 +71,9 @@ function HeroSection() {
         {/* Live stats row */}
         <div className="flex flex-wrap justify-center gap-8 mt-16 text-center">
           {[
-            { label: 'Words Available', value: '10,000+' },
-            { label: 'Daily Players',   value: '500+'    },
-            { label: 'Games Played',    value: '50,000+' },
+            { label: 'Mavjud so\'zlar', value: '10,000+' },
+            { label: 'Kunlik o\'yinchilar',   value: '500+'    },
+            { label: 'O\'ynalgan o\'yinlar',    value: '50,000+' },
           ].map(({ label, value }) => (
             <div key={label}>
               <p className="text-2xl font-extrabold text-text-primary">{value}</p>
@@ -99,15 +95,15 @@ function UserStatsCards() {
   const stats = [
     {
       icon: Flame,
-      label: 'Day Streak',
+      label: 'Kunlik faollik',
       value: user.profile?.streak ?? 0,
-      unit: 'days',
+      unit: 'kun',
       color: 'text-orange-400',
       glow: 'shadow-[0_0_20px_rgba(251,146,60,0.3)]',
     },
     {
       icon: Zap,
-      label: 'Total XP',
+      label: 'Umumiy XP',
       value: (user.profile?.xp ?? 0).toLocaleString(),
       unit: 'xp',
       color: 'text-primary',
@@ -115,17 +111,17 @@ function UserStatsCards() {
     },
     {
       icon: Star,
-      label: 'Coins',
+      label: 'Tangalar',
       value: (user.profile?.coins ?? 0).toLocaleString(),
-      unit: '🪙',
+      unit: 'tangalar',
       color: 'text-accent',
       glow: 'shadow-glow-accent',
     },
     {
       icon: BookOpen,
-      label: 'Saved Words',
+      label: 'Saqlangan so\'zlar',
       value: user._count?.savedWords ?? 0,
-      unit: 'words',
+      unit: 'so\'z',
       color: 'text-success',
       glow: 'shadow-[0_0_20px_rgba(16,185,129,0.25)]',
     },
@@ -134,7 +130,7 @@ function UserStatsCards() {
   return (
     <section className="page-container py-12">
       <h2 className="text-xl font-bold text-text-primary mb-6">
-        Welcome back, <span className="text-primary">{user.username}</span>! 👋
+        {"Xush kelibsiz,"} <span className="text-primary">{user.username}</span>! 👋
       </h2>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -157,9 +153,15 @@ function UserStatsCards() {
         <div className="flex items-center gap-3">
           <span className="text-3xl">{leagueIcon(user.profile?.league ?? 'BRONZE')}</span>
           <div>
-            <p className="text-sm text-text-muted">Current League</p>
+            <p className="text-sm text-text-muted">{"Joriy liga"}</p>
             <p className="font-bold text-text-primary">
-              {user.profile?.league ?? 'BRONZE'} League
+              {{
+                BRONZE: 'Bronza',
+                SILVER: 'Kumush',
+                GOLD: 'Oltin',
+                PLATINUM: 'Platina',
+                DIAMOND: 'Olmos',
+              }[user.profile?.league ?? 'BRONZE'] ?? (user.profile?.league ?? 'BRONZE')}{" ligasi"}
             </p>
           </div>
         </div>
@@ -168,7 +170,7 @@ function UserStatsCards() {
           className="flex items-center gap-1.5 text-sm text-primary hover:text-primary-hover
                      transition-colors font-medium"
         >
-          View Rankings <ArrowRight size={14} />
+          {"Reytingni ko'rish"} <ArrowRight size={14} />
         </Link>
       </div>
     </section>
@@ -181,32 +183,32 @@ const QUICK_ACTIONS = [
   {
     href: '/games/test',
     icon: Brain,
-    title: 'Multiple Choice',
-    desc: 'Test your recall with 4-option questions',
+    title: 'Test savollari',
+    desc: '4 ta variantli savollar bilan eslab qolishni sinang',
     gradient: 'from-violet-600 to-purple-800',
-    badge: 'Popular',
+    badge: 'Ommabop',
   },
   {
     href: '/games/write',
     icon: Target,
-    title: 'Typing Practice',
-    desc: 'Type the meaning from memory',
+    title: 'Yozish amaliyoti',
+    desc: 'Tarjimani xotiradan klaviaturada yozing',
     gradient: 'from-emerald-600 to-teal-800',
     badge: null,
   },
   {
     href: '/games/match',
     icon: Zap,
-    title: 'Matching Pairs',
-    desc: 'Match words to their meanings',
+    title: 'Mos juftliklar',
+    desc: "So'zlarni o'z tarjimalariga moslashtiring",
     gradient: 'from-amber-600 to-orange-800',
     badge: null,
   },
   {
     href: '/dictionary',
     icon: BookOpen,
-    title: 'Dictionary',
-    desc: 'Browse and save vocabulary words',
+    title: "Lug'at",
+    desc: "So'zlarni ko'rib chiqing va saqlab boring",
     gradient: 'from-sky-600 to-blue-800',
     badge: null,
   },
@@ -216,13 +218,13 @@ function QuickActions() {
   return (
     <section className="page-container py-12">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-text-primary">Quick Start</h2>
+        <h2 className="text-xl font-bold text-text-primary">{"Tezkor boshlash"}</h2>
         <Link
           href="/games"
           className="text-sm text-primary hover:text-primary-hover transition-colors font-medium
                      flex items-center gap-1"
         >
-          All Games <ArrowRight size={14} />
+          {"Barcha o'yinlar"} <ArrowRight size={14} />
         </Link>
       </div>
 
@@ -259,12 +261,12 @@ function QuickActions() {
 // ─── Features (unauthenticated) ───────────────────────────────────────────────
 
 const FEATURES = [
-  { icon: '🧠', title: 'Smart SRS Engine', desc: 'Words resurface exactly when you\'re about to forget them — 5 mastery levels, scientifically spaced.' },
-  { icon: '🎮', title: '4 Game Modes', desc: 'Multiple choice, typing, matching pairs, and a Space Shooter — learning that feels like play.' },
-  { icon: '🤖', title: 'AI Chat Partner', desc: 'Practice any word with a Gemini-powered AI that\'s strictly focused on vocabulary.' },
-  { icon: '🏆', title: 'Weekly Leagues', desc: 'Compete in Bronze → Diamond leagues. Top 20% promote, keeping the pressure fun.' },
-  { icon: '📊', title: 'Progress Tracking', desc: 'See your SRS level breakdown, streak history, badge collection, and weekly XP charts.' },
-  { icon: '🎵', title: 'Native Pronunciation', desc: 'Every word reads aloud via Microsoft Edge\'s natural Japanese neural voices.' },
+  { icon: '🧠', title: 'Aqlli SRS tizimi', desc: "So'zlar siz ularni unutish arafasida bo'lganingizda chiqadi — 5 xil o'zlashtirish darajasi, ilmiy oraliqli takrorlash." },
+  { icon: '🎮', title: "4 xil o'yin rejimi", desc: "Test, yozish, juftliklarni moslashtirish va Space Shooter — o'yin orqali maroqli o'rganish." },
+  { icon: '🤖', title: 'AI Suhbatdosh', desc: "Gemini sun'iy idroki yordamida yaponcha so'zlarni jonli amaliyotda sinab ko'ring." },
+  { icon: '🏆', title: 'Haftalik ligalar', desc: "Bronza → Olmos ligasigacha raqobatlashing. Eng yaxshi 20% yuqori ligaga ko'tariladi." },
+  { icon: '📊', title: 'Natijalarni kuzatish', desc: "O'zlashtirish darajalari, kunlik faollik tarixi, nishonlar va haftalik XP grafiklarini kuzating." },
+  { icon: '🎵', title: 'Tabiiy talaffuz', desc: "Har bir so'z Microsoft Edge-ning tabiiy neyron ovozlari orqali eshittiriladi." },
 ];
 
 function FeaturesSection() {
@@ -273,10 +275,10 @@ function FeaturesSection() {
       <div className="page-container">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-extrabold text-text-primary mb-4">
-            Everything You Need to Actually Remember
+            {"Haqiqatdan ham eslab qolishingiz uchun barcha sharoitlar"}
           </h2>
           <p className="text-text-secondary max-w-xl mx-auto">
-            Not just flashcards. A full vocabulary-first learning ecosystem.
+            {"Shunchaki kartochkalar emas. So'z o'rganishga yo'naltirilgan to'liq ekotizim."}
           </p>
         </div>
 
@@ -304,7 +306,7 @@ export default function HomePage() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-          <p className="text-text-muted text-sm">Loading...</p>
+          <p className="text-text-muted text-sm">{"Yuklanmoqda..."}</p>
         </div>
       </div>
     );
@@ -328,16 +330,16 @@ export default function HomePage() {
               <div className="card-glass max-w-2xl mx-auto p-12 relative overflow-hidden">
                 <div className="absolute inset-0 bg-primary-gradient opacity-5 rounded-xl" />
                 <h2 className="text-3xl font-extrabold text-text-primary mb-4 relative">
-                  Ready to Start Your Journey?
+                  {"Sayohatni boshlashga tayyormisiz?"}
                 </h2>
                 <p className="text-text-secondary mb-8 relative">
-                  Join thousands of learners mastering Japanese vocabulary.
+                  {"Yapon tili so'zlarini o'rganayotgan minglab o'quvchilarga qo'shiling."}
                 </p>
                 <Link
                   href="/auth/register"
                   className="btn-primary text-base px-8 py-3 inline-flex items-center gap-2 relative"
                 >
-                  Create Free Account <ArrowRight size={18} />
+                  {"Bepul hisob yaratish"} <ArrowRight size={18} />
                 </Link>
               </div>
             </div>

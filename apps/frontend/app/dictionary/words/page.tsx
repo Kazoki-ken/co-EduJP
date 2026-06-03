@@ -72,7 +72,7 @@ function WordsPageInner() {
       {/* ── Breadcrumb ─────────────────────────────────────────────── */}
       <nav className="flex items-center gap-2 text-sm text-text-muted mb-6 flex-wrap">
         <Link href="/dictionary" className="hover:text-primary transition-colors">
-          Dictionary
+          {"Lug'at"}
         </Link>
         {selectedBook && (
           <>
@@ -86,23 +86,23 @@ function WordsPageInner() {
           </>
         )}
         <ChevronRight size={14} />
-        <span className="text-text-secondary">Words</span>
+        <span className="text-text-secondary">{"So'zlar"}</span>
       </nav>
 
       {/* ── Page Header ────────────────────────────────────────────── */}
       <div className="mb-6">
         <div className="flex items-center gap-2 text-primary text-sm font-medium mb-2">
           <BookOpen size={14} />
-          <span>Word List</span>
+          <span>{"So'zlar ro'yxati"}</span>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
           <div>
             <h1 className="text-3xl font-extrabold text-text-primary">
-              {selectedBook ? selectedBook.title : 'All Words'}
+              {selectedBook ? selectedBook.title : "Barcha so'zlar"}
             </h1>
             {meta && (
               <p className="text-text-muted mt-1 text-sm">
-                {meta.total.toLocaleString()} words found
+                {meta.total.toLocaleString()} {"ta so'z topildi"}
               </p>
             )}
           </div>
@@ -112,9 +112,9 @@ function WordsPageInner() {
                           rounded-lg px-3 py-2 max-w-xs">
               💡{' '}
               <Link href="/auth/login" className="text-primary hover:underline">
-                Sign in
+                {"Tizimga kiring"}
               </Link>{' '}
-              to save words to your personal list.
+              {"so'zlarni shaxsiy ro'yxatingizga saqlash uchun."}
             </p>
           )}
         </div>
@@ -198,9 +198,9 @@ function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-24 text-center">
       <div className="text-5xl mb-4">🔍</div>
-      <h3 className="text-xl font-bold text-text-primary mb-2">No words found</h3>
+      <h3 className="text-xl font-bold text-text-primary mb-2">{"So'zlar topilmadi"}</h3>
       <p className="text-text-muted max-w-xs">
-        Try adjusting your search or removing some filters.
+        {"Qidiruv matnini o'zgartiring yoki filtrlarni tozalang."}
       </p>
     </div>
   );

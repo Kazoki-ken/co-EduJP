@@ -122,7 +122,7 @@ export default function QuizScreen({ route, navigation }: Props) {
         });
         setSession(res.data);
       } catch (e: any) {
-        setLoadError(e?.response?.data?.error ?? 'Failed to start game. Please try again.');
+        setLoadError(e?.response?.data?.error ?? "O'yinni boshlab bo'lmadi. Iltimos, qayta urinib ko'ring.");
       } finally {
         setLoading(false);
       }
@@ -227,7 +227,7 @@ export default function QuizScreen({ route, navigation }: Props) {
       <View style={{ flex: 1, backgroundColor: '#0a0a1a',
         alignItems: 'center', justifyContent: 'center', gap: 16 }}>
         <ActivityIndicator size="large" color="#7c3aed" />
-        <Text style={{ color: '#6b7280', fontSize: 15 }}>Loading session…</Text>
+        <Text style={{ color: '#6b7280', fontSize: 15 }}>O'yin yuklanmoqda…</Text>
       </View>
     );
   }
@@ -238,17 +238,17 @@ export default function QuizScreen({ route, navigation }: Props) {
         alignItems: 'center', justifyContent: 'center', padding: 32, gap: 16 }}>
         <Text style={{ fontSize: 48 }}>{loadError ? '😵' : '📭'}</Text>
         <Text style={{ color: '#f9fafb', fontSize: 18, fontWeight: '700', textAlign: 'center' }}>
-          {loadError ?? 'No words available'}
+          {loadError ?? "So'zlar mavjud emas"}
         </Text>
         <Text style={{ color: '#6b7280', fontSize: 14, textAlign: 'center' }}>
-          {!loadError ? 'Add some vocabulary in the Dictionary tab first.' : loadError}
+          {!loadError ? "Avval Lug'at bo'limidan ba'zi so'zlarni qo'shing." : loadError}
         </Text>
         <TouchableOpacity onPress={() => navigation.goBack()} style={{
           backgroundColor: 'rgba(124,58,237,0.2)', borderRadius: 14,
           paddingHorizontal: 24, paddingVertical: 12,
           borderWidth: 1, borderColor: '#7c3aed',
         }}>
-          <Text style={{ color: '#7c3aed', fontWeight: '600', fontSize: 15 }}>Go Back</Text>
+          <Text style={{ color: '#7c3aed', fontWeight: '600', fontSize: 15 }}>Orqaga qaytish</Text>
         </TouchableOpacity>
       </View>
     );
@@ -259,7 +259,7 @@ export default function QuizScreen({ route, navigation }: Props) {
       <View style={{ flex: 1, backgroundColor: '#0a0a1a',
         alignItems: 'center', justifyContent: 'center', gap: 16 }}>
         <ActivityIndicator size="large" color="#10b981" />
-        <Text style={{ color: '#6b7280', fontSize: 15 }}>Saving results…</Text>
+        <Text style={{ color: '#6b7280', fontSize: 15 }}>Natijalar saqlanmoqda…</Text>
       </View>
     );
   }
@@ -356,7 +356,7 @@ export default function QuizScreen({ route, navigation }: Props) {
           color: '#9ca3af', fontSize: 12, fontWeight: '700',
           letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14, textAlign: 'center',
         }}>
-          What does this mean?
+          Bu nima degani?
         </Text>
 
         {/* ── Options ─────────────────────────────────────────── */}

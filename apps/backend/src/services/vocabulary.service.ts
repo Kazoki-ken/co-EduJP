@@ -5,21 +5,21 @@ import { createError } from '../middleware/error.middleware';
 
 export interface CreateBookDto {
   title: string;
-  description?: string;
-  imageUrl?: string;
+  description?: string | null;
+  imageUrl?: string | null;
 }
 
 export interface CreateTopicDto {
   name: string;
-  bookId?: string;
+  bookId?: string | null;
 }
 
 export interface CreateWordDto {
   japaneseWord: string;
   hiragana: string;
   meaning: string;
-  exampleSentence?: string;
-  exampleTranslation?: string;
+  exampleSentence?: string | null;
+  exampleTranslation?: string | null;
   topicIds?: string[];
 }
 

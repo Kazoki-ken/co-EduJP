@@ -26,11 +26,11 @@ interface ProgressData {
 type SavedTab = 'words' | 'books';
 
 const SRS_LEVELS: Record<number, { label: string; color: string; bg: string }> = {
-  1: { label: 'Beginner',  color: 'text-red-400',    bg: 'bg-red-500'     },
-  2: { label: 'Familiar',  color: 'text-orange-400', bg: 'bg-orange-500'  },
-  3: { label: 'Practiced', color: 'text-yellow-400', bg: 'bg-yellow-500'  },
-  4: { label: 'Advanced',  color: 'text-emerald-400',bg: 'bg-emerald-500' },
-  5: { label: 'Mastered',  color: 'text-violet-400', bg: 'bg-violet-500'  },
+  1: { label: 'Boshlovchi',  color: 'text-red-400',    bg: 'bg-red-500'     },
+  2: { label: 'Tanish',      color: 'text-orange-400', bg: 'bg-orange-500'  },
+  3: { label: 'Mashq qilingan', color: 'text-yellow-400', bg: 'bg-yellow-500'  },
+  4: { label: 'Ilg\'or',      color: 'text-emerald-400',bg: 'bg-emerald-500' },
+  5: { label: 'O\'zlashtirilgan', color: 'text-violet-400', bg: 'bg-violet-500'  },
 };
 
 export default function ProfilePage() {
@@ -106,7 +106,7 @@ export default function ProfilePage() {
   if (!user) {
     return (
       <div className="page-container py-24 text-center">
-        <p className="text-text-muted">Please sign in to view your profile.</p>
+        <p className="text-text-muted">{"Iltimos, profilingizni ko'rish uchun tizimga kiring."}</p>
       </div>
     );
   }
@@ -138,10 +138,17 @@ export default function ProfilePage() {
           <p className="text-text-muted text-sm">{user.email}</p>
           <div className="flex flex-wrap gap-3 mt-3 justify-center sm:justify-start">
             <span className={cn('badge-chip border', leagueColor(user.profile?.league ?? 'BRONZE'))}>
-              {leagueIcon(user.profile?.league ?? 'BRONZE')} {user.profile?.league ?? 'BRONZE'} League
+              {leagueIcon(user.profile?.league ?? 'BRONZE')}{' '}
+              {{
+                BRONZE: 'Bronza ligasi',
+                SILVER: 'Kumush ligasi',
+                GOLD: 'Oltin ligasi',
+                PLATINUM: 'Platina ligasi',
+                DIAMOND: 'Olmos ligasi',
+              }[user.profile?.league ?? 'BRONZE'] ?? (user.profile?.league ?? 'BRONZE')}
             </span>
             <span className="badge-chip bg-surface-2 text-text-muted border border-border">
-              Member since {new Date(user.createdAt).getFullYear()}
+              {new Date(user.createdAt).getFullYear()}{" yildan beri a'zo"}
             </span>
           </div>
         </div>
@@ -149,10 +156,10 @@ export default function ProfilePage() {
         {/* Quick stats */}
         <div className="grid grid-cols-2 gap-3 shrink-0">
           {[
-            { icon: <Flame size={16} className="text-orange-400" />, val: user.profile?.streak ?? 0,   label: 'Day streak'  },
-            { icon: <Zap   size={16} className="text-primary"     />, val: user.profile?.xp ?? 0,      label: 'Total XP'    },
-            { icon: <span className="text-base">🪙</span>,             val: user.profile?.coins ?? 0,   label: 'Coins'       },
-            { icon: <Trophy size={16} className="text-accent"     />, val: badges.length,               label: 'Badges'      },
+            { icon: <Flame size={16} className="text-orange-400" />, val: user.profile?.streak ?? 0,   label: 'Kunlik zanjir'  },
+            { icon: <Zap   size={16} className="text-primary"     />, val: user.profile?.xp ?? 0,      label: 'Umumiy XP'    },
+            { icon: <span className="text-base">🪙</span>,             val: user.profile?.coins ?? 0,   label: 'Tangalar'       },
+            { icon: <Trophy size={16} className="text-accent"     />, val: badges.length,               label: 'Nishonlar'      },
           ].map(({ icon, val, label }) => (
             <div key={label} className="bg-surface-2 border border-border rounded-xl p-3 text-center">
               <div className="flex justify-center mb-1">{icon}</div>
@@ -176,7 +183,7 @@ export default function ProfilePage() {
             )}
           >
             <Bookmark size={15} />
-            Saved Words
+            {"Saqlangan so'zlar"}
             {savedWords.length > 0 && (
               <span className="bg-primary/20 text-primary text-xs px-2 py-0.5 rounded-full font-bold">
                 {savedWords.length}
@@ -193,7 +200,7 @@ export default function ProfilePage() {
             )}
           >
             <Library size={15} />
-            Saved Books
+            {"Saqlangan kitoblar"}
             {savedBooks.length > 0 && (
               <span className="bg-accent/20 text-accent text-xs px-2 py-0.5 rounded-full font-bold">
                 {savedBooks.length}
@@ -218,7 +225,7 @@ export default function ProfilePage() {
               <div className="py-12 text-center">
                 <p className="text-3xl mb-3">📝</p>
                 <p className="text-text-muted">
-                  No saved words yet. Browse the dictionary and tap the bookmark icon to save words!
+                  {"Hozircha saqlangan so'zlar yo'q. Lug'atni ko'rib chiqing va so'zlarni saqlash uchun xatcho'p belgisini bosing!"}
                 </p>
               </div>
             ) : (
@@ -242,7 +249,7 @@ export default function ProfilePage() {
                 </div>
                 {savedWords.length > 5 && (
                   <p className="text-xs text-text-muted text-center mt-2">
-                    Scroll to see all {savedWords.length} saved words
+                    {"Barcha "}{savedWords.length}{" ta saqlangan so'zlarni ko'rish uchun pastga aylantiring"}
                   </p>
                 )}
               </>
@@ -263,7 +270,7 @@ export default function ProfilePage() {
               <div className="py-12 text-center">
                 <p className="text-3xl mb-3">📚</p>
                 <p className="text-text-muted">
-                  No saved books yet. Go to the Dictionary and bookmark your favorite books!
+                  {"Hozircha saqlangan kitoblar yo'q. Lug'atga o'ting va sevimli kitoblaringizni xatcho'plarga qo'shing!"}
                 </p>
               </div>
             ) : (
@@ -290,7 +297,7 @@ export default function ProfilePage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-text-muted shrink-0">
-                        <span>{b._count.topics} topics</span>
+                        <span>{b._count.topics} {"ta mavzu"}</span>
                         <BookmarkCheck size={14} className="text-accent fill-accent" />
                       </div>
                     </a>
@@ -298,7 +305,7 @@ export default function ProfilePage() {
                 </div>
                 {savedBooks.length > 5 && (
                   <p className="text-xs text-text-muted text-center mt-2">
-                    Scroll to see all {savedBooks.length} saved books
+                    {"Barcha "}{savedBooks.length}{" ta saqlangan kitoblarni ko'rish uchun pastga aylantiring"}
                   </p>
                 )}
               </>
@@ -310,19 +317,19 @@ export default function ProfilePage() {
       {/* ── SRS Progress ───────────────────────────────────────────── */}
       <section>
         <h2 className="text-lg font-bold text-text-primary mb-4 flex items-center gap-2">
-          <TrendingUp size={18} className="text-primary" /> SRS Progress
+          <TrendingUp size={18} className="text-primary" /> {"SRS taraqqiyoti"}
         </h2>
         <div className="card-glass p-6 space-y-4">
           {/* Overview */}
           <div className="flex flex-wrap gap-4 text-sm mb-2">
             <span className="text-text-muted">
-              Total tracked: <span className="text-text-primary font-semibold">{totalWords}</span>
+              {"Jami kuzatilmoqda: "} <span className="text-text-primary font-semibold">{totalWords}</span>
             </span>
             <span className="text-text-muted">
-              Mastered: <span className="text-violet-400 font-semibold">{masteredCount}</span>
+              {"O'zlashtirilgan: "} <span className="text-violet-400 font-semibold">{masteredCount}</span>
             </span>
             <span className="text-text-muted">
-              Due today: <span className="text-accent font-semibold">{progress?.dueTodayCount ?? 0}</span>
+              {"Bugun takrorlanadi: "} <span className="text-accent font-semibold">{progress?.dueTodayCount ?? 0}</span>
             </span>
           </div>
 
@@ -339,7 +346,7 @@ export default function ProfilePage() {
                   <span className={cn('font-medium', meta.color)}>
                     Lv {lvl} — {meta.label}
                   </span>
-                  <span className="text-text-muted">{count} words</span>
+                  <span className="text-text-muted">{count} {"ta so'z"}</span>
                 </div>
                 <div className="h-2.5 bg-surface-2 rounded-full overflow-hidden">
                   <div
@@ -353,7 +360,7 @@ export default function ProfilePage() {
 
           {totalWords === 0 && (
             <p className="text-center text-text-muted py-6">
-              No progress yet. Play a game to start tracking your SRS levels!
+              {"Hozircha taraqqiyot yo'q. SRS darajalarini kuzatishni boshlash uchun o'yin o'ynang!"}
             </p>
           )}
         </div>
@@ -362,14 +369,14 @@ export default function ProfilePage() {
       {/* ── Badge Showcase ──────────────────────────────────────────── */}
       <section>
         <h2 className="text-lg font-bold text-text-primary mb-4 flex items-center gap-2">
-          <Trophy size={18} className="text-accent" /> Badge Showcase
-          <span className="text-sm font-normal text-text-muted ml-1">({badges.length} earned)</span>
+          <Trophy size={18} className="text-accent" /> {"Nishonlar ko'rgazmasi"}
+          <span className="text-sm font-normal text-text-muted ml-1">({badges.length} {"ta qo'lga kiritilgan"})</span>
         </h2>
 
         {badges.length === 0 ? (
           <div className="card-glass p-10 text-center">
             <p className="text-4xl mb-3">🏅</p>
-            <p className="text-text-muted">No badges yet. Keep playing to unlock them!</p>
+            <p className="text-text-muted">{"Hozircha nishonlar yo'q. Ularni ochish uchun o'yin o'ynashda davom eting!"}</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -386,7 +393,7 @@ export default function ProfilePage() {
                   <p className="text-xs text-text-muted mt-0.5 leading-relaxed">{badge.description}</p>
                 </div>
                 <p className="text-xs text-text-muted/60 border-t border-border/50 pt-2 w-full">
-                  {new Date(earnedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  {new Date(earnedAt).toLocaleDateString('uz-UZ')}
                 </p>
               </div>
             ))}

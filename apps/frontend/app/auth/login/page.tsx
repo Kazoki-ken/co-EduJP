@@ -24,7 +24,7 @@ export default function LoginPage() {
       await login(email, password);
       router.push('/'); // Redirect to dashboard
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to login. Please check your credentials.');
+      setError(err.response?.data?.error || 'Kirish muvaffaqiyatsiz tugadi. Iltimos, ma\'lumotlaringizni tekshiring.');
     } finally {
       setIsLoading(false);
     }
@@ -52,8 +52,8 @@ export default function LoginPage() {
           >
             <span className="text-3xl">🎌</span>
           </motion.div>
-          <h1 className="text-2xl font-extrabold text-text-primary mb-2">Welcome Back</h1>
-          <p className="text-text-muted text-sm">Sign in to continue your vocabulary journey</p>
+          <h1 className="text-2xl font-extrabold text-text-primary mb-2">Xush kelibsiz</h1>
+          <p className="text-text-muted text-sm">{"Lug'at boyligingizni oshirishda davom etish uchun tizimga kiring"}</p>
         </div>
 
         {error && (
@@ -84,7 +84,7 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-text-secondary pl-1">Password</label>
+            <label className="text-sm font-medium text-text-secondary pl-1">Parol</label>
             <div className="relative group">
               <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" size={18} />
               <input
@@ -107,7 +107,7 @@ export default function LoginPage() {
               <Loader2 className="animate-spin" size={20} />
             ) : (
               <>
-                Sign In
+                Tizimga kirish
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </>
             )}
@@ -115,9 +115,9 @@ export default function LoginPage() {
         </form>
 
         <p className="text-center text-sm text-text-muted mt-8">
-          Don't have an account?{' '}
+          {"Hisobingiz yo'qmi?"}{' '}
           <Link href="/auth/register" className="text-primary font-semibold hover:text-primary-light transition-colors">
-            Get Started
+            {"Ro'yxatdan o'tish"}
           </Link>
         </p>
       </motion.div>

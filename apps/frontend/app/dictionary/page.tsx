@@ -1,7 +1,6 @@
 'use client';
 
 import { AlertCircle, BookOpen, Search } from 'lucide-react';
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BookCard, BookCardSkeleton } from '@/components/dictionary/BookCard';
 import { Pagination } from '@/components/ui/Pagination';
@@ -19,11 +18,11 @@ export default function DictionaryPage() {
         <div>
           <div className="flex items-center gap-2 text-primary text-sm font-medium mb-2">
             <BookOpen size={14} />
-            <span>Dictionary</span>
+            <span>{"Lug'at"}</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-text-primary">Book Library</h1>
+          <h1 className="text-3xl font-extrabold text-text-primary">Kitoblar kutubxonasi</h1>
           <p className="text-text-muted mt-1">
-            Choose a book to explore its topics and vocabulary words.
+            {"Mavzular va so'zlarni ko'rish uchun kitobni tanlang."}
           </p>
         </div>
 
@@ -31,7 +30,7 @@ export default function DictionaryPage() {
           href="/dictionary/words"
           className="btn-ghost flex items-center gap-2 text-sm self-start sm:self-auto"
         >
-          <Search size={14} /> Search all words
+          <Search size={14} /> {"Barcha so'zlarni qidirish"}
         </Link>
       </div>
 
@@ -80,9 +79,9 @@ function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-24 text-center">
       <div className="text-5xl mb-4">📚</div>
-      <h3 className="text-xl font-bold text-text-primary mb-2">No books yet</h3>
+      <h3 className="text-xl font-bold text-text-primary mb-2">Kitoblar mavjud emas</h3>
       <p className="text-text-muted max-w-xs">
-        An admin can upload books and vocabulary words via the admin panel.
+        {"Admin panel orqali kitoblar va so'zlarni yuklash mumkin."}
       </p>
     </div>
   );

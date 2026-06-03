@@ -30,7 +30,7 @@ function AccuracyRing({ accuracy }: { accuracy: number }) {
     accuracy > 1 ? Math.round(accuracy) : Math.round(accuracy * 100),
   ));
   const color = pct >= 80 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#ef4444';
-  const label = pct >= 80 ? 'Excellent!' : pct >= 50 ? 'Good job!' : 'Keep going!';
+  const label = pct >= 80 ? 'Ajoyib!' : pct >= 50 ? 'Yaxshi ish!' : 'Davom eting!';
   const emoji = pct >= 80 ? '🏆' : pct >= 50 ? '⭐' : '💪';
   return (
     <View style={{ alignItems: 'center', marginVertical: 8 }}>
@@ -152,11 +152,11 @@ function goPlayAgain(
 }
 
 const MODE_LABELS: Record<string, string> = {
-  TEST:    'Multiple Choice',
-  MATCH:   'Matching Pairs',
-  WRITE:   'Write Practice',
-  Mixed:   'Mixed Challenge',
-  Shooter: 'Space Shooter',
+  TEST:    'Variantli test',
+  MATCH:   'Mos juftliklar',
+  WRITE:   'Yozish amaliyoti',
+  Mixed:   'Aralash sinov',
+  Shooter: 'Kosmik otishma',
 };
 
 // ── Result Screen ─────────────────────────────────────────────────
@@ -203,7 +203,7 @@ export default function ResultScreen({ route, navigation }: Props) {
           </Text>
           <Text style={{ color: '#f9fafb', fontSize: 26, fontWeight: '800',
             textAlign: 'center', letterSpacing: -0.5, marginBottom: 24 }}>
-            Session Complete! 🎉
+            Mashg'ulot yakunlandi! 🎉
           </Text>
 
           {/* Accuracy ring */}
@@ -211,9 +211,9 @@ export default function ResultScreen({ route, navigation }: Props) {
 
           {/* Stat tiles */}
           <View style={{ flexDirection: 'row', gap: 10, marginTop: 24, marginBottom: 20 }}>
-            <StatTile emoji="✅" label="Correct"   value={result.totalCorrect} color="#10b981" />
-            <StatTile emoji="⚡" label="XP Earned" value={result.xpEarned}     color="#7c3aed" />
-            <StatTile emoji="🪙" label="Coins"     value={result.coinsEarned}  color="#f59e0b" />
+            <StatTile emoji="✅" label="To'g'ri"   value={result.totalCorrect} color="#10b981" />
+            <StatTile emoji="⚡" label="To'plangan XP" value={result.xpEarned}     color="#7c3aed" />
+            <StatTile emoji="🪙" label="Tangalar"     value={result.coinsEarned}  color="#f59e0b" />
           </View>
 
           {/* New badges */}
@@ -221,7 +221,7 @@ export default function ResultScreen({ route, navigation }: Props) {
             <>
               <Text style={{ color: '#9ca3af', fontSize: 12, fontWeight: '700',
                 letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 }}>
-                🏅 New Badges Earned
+                🏅 Yangi qo'lga kiritilgan nishonlar
               </Text>
               {result.badgesEarned.map(b => <BadgeCard key={b.id} badge={b} />)}
             </>
@@ -233,7 +233,7 @@ export default function ResultScreen({ route, navigation }: Props) {
               <Text style={{ color: '#9ca3af', fontSize: 12, fontWeight: '700',
                 letterSpacing: 1.5, textTransform: 'uppercase',
                 marginTop: 20, marginBottom: 8 }}>
-                SRS Progress
+                SRS taraqqiyoti
               </Text>
               <BlurView intensity={18} tint="dark" style={{
                 borderRadius: 18, overflow: 'hidden',
@@ -263,7 +263,7 @@ export default function ResultScreen({ route, navigation }: Props) {
             >
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                 <Ionicons name="refresh" size={18} color="#fff" />
-                <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>Play Again</Text>
+                <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>Yana o'ynash</Text>
               </View>
             </LinearGradient>
           </TouchableOpacity>
@@ -277,7 +277,7 @@ export default function ResultScreen({ route, navigation }: Props) {
               <View style={{ paddingVertical: 15, alignItems: 'center',
                 backgroundColor: 'rgba(10,10,26,0.8)' }}>
                 <Text style={{ color: '#7c3aed', fontSize: 16, fontWeight: '600' }}>
-                  Back to Games
+                  O'yinlarga qaytish
                 </Text>
               </View>
             </BlurView>

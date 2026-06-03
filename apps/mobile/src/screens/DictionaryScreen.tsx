@@ -40,7 +40,7 @@ function ErrorBanner({ message, onRetry }: { message: string; onRetry: () => voi
         backgroundColor: 'rgba(239,68,68,0.15)', borderRadius: 10,
         paddingHorizontal: 20, paddingVertical: 8,
       }}>
-        <Text style={{ color: '#ef4444', fontWeight: '600', fontSize: 13 }}>Retry</Text>
+        <Text style={{ color: '#ef4444', fontWeight: '600', fontSize: 13 }}>Qayta urinish</Text>
       </TouchableOpacity>
     </View>
   );
@@ -149,7 +149,7 @@ function BookCard({ book, index, onPress }: BookCardProps) {
           }}>
             <Ionicons name="layers-outline" size={11} color={palette.glow} />
             <Text style={{ color: palette.glow, fontSize: 11, fontWeight: '600' }}>
-              {book._count.topics} topic{book._count.topics !== 1 ? 's' : ''}
+              {book._count.topics} ta mavzu
             </Text>
           </View>
         </LinearGradient>
@@ -204,13 +204,13 @@ export default function DictionaryScreen({ navigation }: Props) {
       >
         {/* ── Header ─────────────────────────────────────────── */}
         <View style={{ paddingHorizontal: 6, marginBottom: 18 }}>
-          <Text style={{ color: '#6b7280', fontSize: 13, fontWeight: '500' }}>Vocabulary</Text>
+          <Text style={{ color: '#6b7280', fontSize: 13, fontWeight: '500' }}>So'z boyligi</Text>
           <Text style={{ color: '#f9fafb', fontSize: 24, fontWeight: '700', letterSpacing: -0.5 }}>
-            Dictionary 📖
+            Lug'at 📖
           </Text>
           {data && (
             <Text style={{ color: '#4b5563', fontSize: 12, marginTop: 4 }}>
-              {data.meta.total} book{data.meta.total !== 1 ? 's' : ''} available
+              Mavjud kitoblar: {data.meta.total} ta
             </Text>
           )}
         </View>
@@ -230,7 +230,7 @@ export default function DictionaryScreen({ navigation }: Props) {
             <TextInput
               value={search}
               onChangeText={setSearch}
-              placeholder="Search books…"
+              placeholder="Kitoblarni qidirish…"
               placeholderTextColor="#4b5563"
               style={{ flex: 1, color: '#f3f4f6', fontSize: 15 }}
               returnKeyType="search"
@@ -263,7 +263,7 @@ export default function DictionaryScreen({ navigation }: Props) {
           <View style={{ alignItems: 'center', paddingTop: 60, gap: 12 }}>
             <Text style={{ fontSize: 48 }}>📭</Text>
             <Text style={{ color: '#6b7280', fontSize: 15 }}>
-              {search ? 'No books match your search' : 'No vocabulary books yet'}
+              {search ? "Qidiruvga mos kitob topilmadi" : "Hozircha so'z boyligi kitoblari yo'q"}
             </Text>
           </View>
         )}

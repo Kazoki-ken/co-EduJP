@@ -15,7 +15,12 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.kazoki.easynihongo",
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -25,7 +30,8 @@
       "edgeToEdgeEnabled": true,
       "package": "com.kazoki.easynihongo",
       "versionCode": 1,
-      "permissions": []
+      "permissions": [],
+      "usesCleartextTraffic": true
     },
     "web": {
       "favicon": "./assets/favicon.png"

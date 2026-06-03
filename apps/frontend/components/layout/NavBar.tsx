@@ -23,12 +23,12 @@ import { cn, leagueIcon } from '@/lib/utils';
 // ─── Nav Items ────────────────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
-  { href: '/',             label: 'Home',        icon: BookOpen   },
-  { href: '/dictionary',   label: 'Dictionary',  icon: BookOpen   },
-  { href: '/games',        label: 'Games',       icon: Gamepad2   },
-  { href: '/leaderboard',  label: 'Leaderboard', icon: Trophy     },
-  { href: '/chat',         label: 'AI Chat',     icon: MessageCircle },
-  { href: '/tools',        label: 'Tools',       icon: Wrench     },
+  { href: '/',             label: 'Bosh sahifa', icon: BookOpen   },
+  { href: '/dictionary',   label: "Lug'at",      icon: BookOpen   },
+  { href: '/games',        label: "O'yinlar",    icon: Gamepad2   },
+  { href: '/leaderboard',  label: 'Reyting',     icon: Trophy     },
+  { href: '/chat',         label: "Sun'iy idrok", icon: MessageCircle },
+  { href: '/tools',        label: 'Uskunalar',   icon: Wrench     },
 ];
 
 // ─── NavBar ───────────────────────────────────────────────────────────────────
@@ -139,7 +139,13 @@ export function NavBar() {
                     </p>
                     <p className="text-xs text-text-muted mt-0.5">
                       {leagueIcon(user.profile?.league ?? 'BRONZE')}{' '}
-                      {user.profile?.league ?? 'BRONZE'}
+                      {{
+                        BRONZE: 'Bronza',
+                        SILVER: 'Kumush',
+                        GOLD: 'Oltin',
+                        PLATINUM: 'Platina',
+                        DIAMOND: 'Olmos',
+                      }[user.profile?.league ?? 'BRONZE'] ?? (user.profile?.league ?? 'BRONZE')} ligasi
                     </p>
                   </div>
                 </button>
@@ -164,7 +170,7 @@ export function NavBar() {
                           className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-text-secondary
                                      hover:text-text-primary hover:bg-surface-2 transition-colors"
                         >
-                          <User size={14} /> My Profile
+                          <User size={14} /> Mening profilim
                         </Link>
                         {user.role === 'ADMIN' && (
                           <Link
@@ -173,7 +179,7 @@ export function NavBar() {
                             className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-text-secondary
                                        hover:text-text-primary hover:bg-surface-2 transition-colors"
                           >
-                            <Settings size={14} /> Admin Panel
+                            <Settings size={14} /> Admin paneli
                           </Link>
                         )}
                         <button
@@ -181,7 +187,7 @@ export function NavBar() {
                           className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm
                                      text-danger hover:bg-danger/10 transition-colors"
                         >
-                          <LogOut size={14} /> Sign Out
+                          <LogOut size={14} /> Chiqish
                         </button>
                       </div>
                     </div>
@@ -192,10 +198,10 @@ export function NavBar() {
           ) : (
             <div className="flex items-center gap-2">
               <Link href="/auth/login" className="btn-ghost text-sm py-2 px-4">
-                Sign In
+                Kirish
               </Link>
               <Link href="/auth/register" className="btn-primary text-sm py-2 px-4">
-                Get Started
+                Boshlash
               </Link>
             </div>
           )}

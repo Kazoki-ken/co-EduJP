@@ -27,6 +27,9 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   if (_accessToken && config.headers) {
     config.headers.Authorization = `Bearer ${_accessToken}`;
   }
+  if (config.headers) {
+    config.headers['x-timezone-offset'] = String(new Date().getTimezoneOffset());
+  }
   return config;
 });
 

@@ -1,8 +1,9 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
 import prisma from '../lib/prisma';
 import { createError } from '../middleware/error.middleware';
-import { updateStreakOnLogin } from './streak.service';
+import { updateStreakOnLogin, syncStreakAndDailyCounts } from './streak.service';
 
 interface RegisterDto {
   username: string;
@@ -80,7 +81,7 @@ export const registerUser = async (dto: RegisterDto) => {
       passwordHash,
       profile: {
         create: {
-          streak: 1,
+          streak: 0,
           lastLoginDate: new Date(),
         },
       },
@@ -111,7 +112,7 @@ export const registerUser = async (dto: RegisterDto) => {
   return { user, tokens };
 };
 
-export const loginUser = async (dto: LoginDto) => {
+export const loginUser = async (dto: LoginDto, timezoneOffset: number = 0) => {
   const user = await prisma.user.findUnique({
     where: { email: dto.email.toLowerCase() },
     include: { 
@@ -135,7 +136,7 @@ export const loginUser = async (dto: LoginDto) => {
   }
 
   // Update streak and daily reset
-  const updatedProfile = await updateStreakOnLogin(user.id, user.profile);
+  const updatedProfile = await updateStreakOnLogin(user.id, user.profile, timezoneOffset);
 
   const tokens = signTokens({
     id: user.id,
@@ -172,7 +173,10 @@ export const refreshTokens = async (refreshToken: string): Promise<TokenPair> =>
   return signTokens(user);
 };
 
-export const getMe = async (userId: string) => {
+export const getMe = async (userId: string, timezoneOffset: number = 0) => {
+  // Sync streak and reset daily counts if needed
+  await syncStreakAndDailyCounts(userId, timezoneOffset);
+
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
@@ -182,6 +186,7 @@ export const getMe = async (userId: string) => {
       role: true,
       createdAt: true,
       profile: true,
+      avatarUrl: true,
       _count: {
         select: {
           savedWords: true,
@@ -194,3 +199,117 @@ export const getMe = async (userId: string) => {
   if (!user) throw createError('User not found', 404);
   return user;
 };
+
+// ─── Google OAuth ─────────────────────────────────────────────────────────────
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_WEB_CLIENT_ID);
+
+export const googleAuth = async (idToken: string) => {
+  // 1. Google serverlarida tokenni tekshirish
+  let ticket;
+  try {
+    ticket = await googleClient.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_WEB_CLIENT_ID,
+    });
+  } catch {
+    throw createError('Invalid Google token', 401);
+  }
+
+  const payload = ticket.getPayload();
+  if (!payload) throw createError('Google token payload is empty', 401);
+
+  const { sub: googleId, email, name, picture } = payload;
+
+  if (!email) throw createError('Google account has no email', 400);
+
+  // 2. Mavjud foydalanuvchini topish (google ID yoki email orqali)
+  let user = await prisma.user.findFirst({
+    where: { OR: [{ googleId }, { email: email.toLowerCase() }] },
+    include: {
+      profile: true,
+      _count: { select: { savedWords: true, badges: true } },
+    },
+  });
+
+  let isNewUser = false;
+
+  if (!user) {
+    // 3. Yangi foydalanuvchi yaratish (username keyinroq o'rnatiladi)
+    isNewUser = true;
+    const tempUsername = `user_${googleId.slice(0, 8)}`; // vaqtinchalik username
+
+    user = await prisma.user.create({
+      data: {
+        username: tempUsername,
+        email: email.toLowerCase(),
+        googleId,
+        avatarUrl: picture ?? null,
+        profile: {
+          create: {
+            streak: 0,
+            lastLoginDate: new Date(),
+          },
+        },
+      },
+      include: {
+        profile: true,
+        _count: { select: { savedWords: true, badges: true } },
+      },
+    });
+  } else if (!user.googleId) {
+    // 4. Email orqali topildi — Google ID ni bog'lash
+    user = await prisma.user.update({
+      where: { id: user.id },
+      data: { googleId, avatarUrl: picture ?? user.avatarUrl },
+      include: {
+        profile: true,
+        _count: { select: { savedWords: true, badges: true } },
+      },
+    });
+  }
+
+  // 5. Streak yangilash
+  if (user.profile) {
+    await updateStreakOnLogin(user.id, user.profile, 0);
+  }
+
+  const tokens = signTokens({
+    id: user.id,
+    email: user.email,
+    username: user.username,
+    role: user.role,
+  });
+
+  const { passwordHash: _, ...safeUser } = user as typeof user & { passwordHash?: string };
+
+  return { user: safeUser, tokens, isNewUser };
+};
+
+// ─── Set Username (social login yangi foydalanuvchilar uchun) ─────────────────
+
+export const setUsernameService = async (userId: string, username: string) => {
+  // Username mavjudligini tekshirish
+  const existing = await prisma.user.findUnique({ where: { username } });
+  if (existing && existing.id !== userId) {
+    throw createError('Username already taken', 409);
+  }
+
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { username },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      avatarUrl: true,
+      profile: true,
+      _count: { select: { savedWords: true, badges: true } },
+    },
+  });
+
+  return user;
+};
+

@@ -105,7 +105,7 @@ export function WordCard({ word, isAuthenticated, onToggleSave }: WordCardProps)
           <button
             onClick={handlePlay}
             disabled={isPlaying}
-            title="Hear pronunciation"
+            title="Talaffuzni eshitish"
             className={cn(
               'w-8 h-8 rounded-lg flex items-center justify-center transition-all',
               isPlaying
@@ -126,7 +126,7 @@ export function WordCard({ word, isAuthenticated, onToggleSave }: WordCardProps)
             <button
               onClick={handleSave}
               disabled={isSaving}
-              title={word.isSaved ? 'Unsave word' : 'Save word'}
+              title={word.isSaved ? "So'zni saqlanganlardan o'chirish" : "So'zni saqlash"}
               className={cn(
                 'w-8 h-8 rounded-lg flex items-center justify-center transition-all',
                 isSaving && 'opacity-50 cursor-wait',
@@ -146,7 +146,7 @@ export function WordCard({ word, isAuthenticated, onToggleSave }: WordCardProps)
           {(word.exampleSentence) && (
             <button
               onClick={() => setExpanded((v) => !v)}
-              title={expanded ? 'Collapse' : 'Show example'}
+              title={expanded ? 'Yopish' : "Misolni ko'rish"}
               className="w-8 h-8 rounded-lg flex items-center justify-center
                          hover:bg-surface-2 text-text-muted hover:text-text-primary transition-all"
             >

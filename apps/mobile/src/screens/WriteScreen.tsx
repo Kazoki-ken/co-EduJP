@@ -43,7 +43,7 @@ export default function WriteScreen({ route, navigation }: Props) {
           params: { type:'WRITE', topicId, bookId, limit:10, ...(dueOnly?{dueOnly:'true'}:{}) },
         });
         setSession(res.data);
-      } catch(e:any) { setLoadError(e?.response?.data?.error ?? 'Failed to start game.'); }
+      } catch(e:any) { setLoadError(e?.response?.data?.error ?? "O'yinni boshlab bo'lmadi."); }
       finally { setLoading(false); }
     })();
   }, []);
@@ -96,17 +96,17 @@ export default function WriteScreen({ route, navigation }: Props) {
     }, 1100);
   }, [session, state, input, index, answers, submitGame, shakeAnim]);
 
-  if (loading) return <View style={{flex:1,backgroundColor:'#0a0a1a',alignItems:'center',justifyContent:'center',gap:14}}><ActivityIndicator size="large" color="#10b981"/><Text style={{color:'#6b7280'}}>Loading…</Text></View>;
+  if (loading) return <View style={{flex:1,backgroundColor:'#0a0a1a',alignItems:'center',justifyContent:'center',gap:14}}><ActivityIndicator size="large" color="#10b981"/><Text style={{color:'#6b7280'}}>Yuklanmoqda…</Text></View>;
   if (loadError||!session) return (
     <View style={{flex:1,backgroundColor:'#0a0a1a',alignItems:'center',justifyContent:'center',padding:32,gap:14}}>
       <Text style={{fontSize:40}}>😵</Text>
-      <Text style={{color:'#f9fafb',fontSize:16,fontWeight:'700',textAlign:'center'}}>{loadError??'No words'}</Text>
+      <Text style={{color:'#f9fafb',fontSize:16,fontWeight:'700',textAlign:'center'}}>{loadError??"So'zlar mavjud emas"}</Text>
       <TouchableOpacity onPress={()=>navigation.goBack()} style={{backgroundColor:'rgba(16,185,129,0.15)',borderRadius:14,paddingHorizontal:24,paddingVertical:12,borderWidth:1,borderColor:'#10b981'}}>
-        <Text style={{color:'#10b981',fontWeight:'600'}}>Go Back</Text>
+        <Text style={{color:'#10b981',fontWeight:'600'}}>Orqaga qaytish</Text>
       </TouchableOpacity>
     </View>
   );
-  if (submitting) return <View style={{flex:1,backgroundColor:'#0a0a1a',alignItems:'center',justifyContent:'center',gap:14}}><ActivityIndicator size="large" color="#10b981"/><Text style={{color:'#6b7280'}}>Saving…</Text></View>;
+  if (submitting) return <View style={{flex:1,backgroundColor:'#0a0a1a',alignItems:'center',justifyContent:'center',gap:14}}><ActivityIndicator size="large" color="#10b981"/><Text style={{color:'#6b7280'}}>Saqlanmoqda…</Text></View>;
 
   const word = session.words[index];
   const total = session.words.length;
@@ -131,7 +131,7 @@ export default function WriteScreen({ route, navigation }: Props) {
         <BlurView intensity={22} tint="dark" style={{borderRadius:28,overflow:'hidden',borderWidth:1,borderColor:'rgba(16,185,129,0.22)',marginBottom:24}}>
           <LinearGradient colors={['rgba(18,18,48,0.95)','rgba(8,8,24,0.98)']} style={{paddingVertical:36,paddingHorizontal:28,alignItems:'center'}}>
             <Text style={{color:'#6b7280',fontSize:12,fontWeight:'700',letterSpacing:1.5,textTransform:'uppercase',marginBottom:14}}>
-              Type the meaning in English
+              Tarjimasini yozing
             </Text>
             <Text style={{color:'#f9fafb',fontSize:52,fontWeight:'700',letterSpacing:4,textShadowColor:'rgba(16,185,129,0.3)',textShadowOffset:{width:0,height:0},textShadowRadius:20}}>
               {word.japaneseWord}
@@ -154,7 +154,7 @@ export default function WriteScreen({ route, navigation }: Props) {
                 value={input}
                 onChangeText={t => { if(state==='idle') setInput(t); }}
                 onSubmitEditing={handleSubmit}
-                placeholder="Type the meaning…"
+                placeholder="Tarjimasini yozing…"
                 placeholderTextColor="#374151"
                 style={{flex:1,color:'#f3f4f6',fontSize:16,paddingVertical:14}}
                 returnKeyType="done"
@@ -178,11 +178,11 @@ export default function WriteScreen({ route, navigation }: Props) {
               <Ionicons name={state==='correct'?'checkmark-circle':'close-circle'} size={20} color={state==='correct'?'#10b981':'#ef4444'}/>
               <View style={{flex:1}}>
                 <Text style={{color:state==='correct'?'#10b981':'#ef4444',fontWeight:'700',fontSize:14}}>
-                  {state==='correct'?'Correct!':'Incorrect'}
+                  {state==='correct'?"To'g'ri!":"Noto'g'ri"}
                 </Text>
                 {state==='wrong' && (
                   <Text style={{color:'#9ca3af',fontSize:13,marginTop:2}}>
-                    Answer: <Text style={{color:'#f3f4f6',fontWeight:'600'}}>{word.meaning}</Text>
+                    Javob: <Text style={{color:'#f3f4f6',fontWeight:'600'}}>{word.meaning}</Text>
                   </Text>
                 )}
               </View>

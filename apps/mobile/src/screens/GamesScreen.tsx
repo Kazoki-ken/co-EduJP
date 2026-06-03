@@ -29,38 +29,38 @@ interface GameMode {
 const MODES: GameMode[] = [
   {
     screen: 'Quiz',  type: 'TEST',
-    title: 'Daily SRS Review', icon: 'refresh-circle',
-    subtitle: 'Review cards due today — the core of memorization',
-    colors: ['#10b981', '#047857'], glow: '#10b981', badge: 'DUE', dueOnly: true,
+    title: 'Kunlik SRS takrorlash', icon: 'refresh-circle',
+    subtitle: "Bugun takrorlash kerak bo'lgan kartochkalar — yodlash asosi",
+    colors: ['#10b981', '#047857'], glow: '#10b981', badge: 'KUTILYAPTI', dueOnly: true,
   },
   {
     screen: 'Mixed', type: 'TEST',
-    title: 'Mixed Challenge', icon: 'shuffle',
-    subtitle: '20–25 rounds — alternates multiple choice & write',
-    colors: ['#7c3aed', '#4c1d95'], glow: '#7c3aed', badge: 'MIX',
+    title: 'Aralash sinov', icon: 'shuffle',
+    subtitle: '20–25 raund — test va yozish amaliyoti almashib keladi',
+    colors: ['#7c3aed', '#4c1d95'], glow: '#7c3aed', badge: 'ARALASH',
   },
   {
     screen: 'Shooter', type: 'TEST',
-    title: 'Space Shooter', icon: 'rocket',
-    subtitle: 'Blast falling words before they hit the ground 🚀',
-    colors: ['#ec4899', '#9d174d'], glow: '#ec4899', badge: 'HOT',
+    title: 'Kosmik otishma', icon: 'rocket',
+    subtitle: "Yerga tushishidan oldin so'zlarni portlating 🚀",
+    colors: ['#ec4899', '#9d174d'], glow: '#ec4899', badge: 'MASHHUR',
   },
   {
     screen: 'Match', type: 'MATCH',
-    title: 'Matching Pairs', icon: 'copy',
-    subtitle: 'Match Japanese words to their meanings',
+    title: 'Mos juftliklar', icon: 'copy',
+    subtitle: "Yaponcha so'zlarni ularning ma'nolariga moslang",
     colors: ['#f59e0b', '#b45309'], glow: '#f59e0b',
   },
   {
     screen: 'Write', type: 'WRITE',
-    title: 'Write Practice', icon: 'create',
-    subtitle: 'Type the English meaning from memory',
+    title: 'Yozish amaliyoti', icon: 'create',
+    subtitle: "Ma'nosini yoddan klaviaturada yozing",
     colors: ['#3b82f6', '#1d4ed8'], glow: '#3b82f6',
   },
   {
     screen: 'Quiz',  type: 'TEST',
-    title: 'Quick Quiz', icon: 'flash',
-    subtitle: '10 rapid-fire questions — build speed',
+    title: 'Tezkor test', icon: 'flash',
+    subtitle: '10 ta tezkor savol — tezlikni oshiring',
     colors: ['#06b6d4', '#0e7490'], glow: '#06b6d4',
   },
 ];
@@ -94,12 +94,12 @@ function DueBanner({ count, onPress }: { count: number | null; onPress: () => vo
           </View>
           <View style={{ flex: 1 }}>
             <Text style={{ color: '#f9fafb', fontSize: 16, fontWeight: '700' }}>
-              {count === null ? 'Loading…' : isEmpty
-                ? 'All caught up!'
-                : `${count} word${count !== 1 ? 's' : ''} due today`}
+              {count === null ? 'Yuklanmoqda…' : isEmpty
+                ? 'Barchasi bajarildi!'
+                : `Bugun takrorlash uchun ${count} ta so'z bor`}
             </Text>
             <Text style={{ color: '#6b7280', fontSize: 13, marginTop: 2 }}>
-              {isEmpty ? 'Come back tomorrow for new reviews' : 'Tap to start your SRS review'}
+              {isEmpty ? 'Yangi takrorlashlar uchun ertaga qaytib keling' : 'SRS takrorlashni boshlash uchun bosing'}
             </Text>
           </View>
           {!isEmpty && count !== null && (
@@ -230,9 +230,9 @@ export default function GamesScreen({ navigation }: Props) {
       >
         {/* Header */}
         <View style={{ marginBottom: 22 }}>
-          <Text style={{ color: '#6b7280', fontSize: 13, fontWeight: '500' }}>Practice</Text>
+          <Text style={{ color: '#6b7280', fontSize: 13, fontWeight: '500' }}>Amaliyot</Text>
           <Text style={{ color: '#f9fafb', fontSize: 24, fontWeight: '700', letterSpacing: -0.5 }}>
-            Games 🎮
+            O'yinlar 🎮
           </Text>
         </View>
 
@@ -245,7 +245,7 @@ export default function GamesScreen({ navigation }: Props) {
         {/* Mode cards */}
         <Text style={{ color: '#9ca3af', fontSize: 12, fontWeight: '700',
           letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 }}>
-          Practice Modes
+          Mashq rejimlari
         </Text>
 
         {MODES.map((mode, i) => (

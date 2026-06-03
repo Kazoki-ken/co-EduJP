@@ -1,6 +1,7 @@
 import prisma from '../lib/prisma';
 import { createError } from '../middleware/error.middleware';
 import { BadgeType, GameType, League } from '@prisma/client';
+import { syncStreakAndDailyCounts } from './streak.service';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -196,7 +197,7 @@ export const generateSession = async (opts: GenerateSessionOptions) => {
  *
  * Returns a detailed result object including per-word SRS updates.
  */
-export const submitSession = async (userId: string, dto: SubmitSessionDto) => {
+export const submitSession = async (userId: string, dto: SubmitSessionDto, timezoneOffset: number = 0) => {
   const now = new Date();
 
   // ── Fetch & validate session ──────────────────────────────────────────────
@@ -208,6 +209,38 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto) => {
   if (session.userId !== userId) throw createError('Forbidden', 403);
   if (session.completed) throw createError('Session already submitted', 409);
   if (session.expiresAt < now) throw createError('Session expired', 410);
+
+  // Fetch profile to calculate streak and resets based on task completion
+  const profile = await prisma.profile.findUnique({
+    where: { userId },
+  });
+  if (!profile) throw createError('Profile not found', 404);
+
+  const currentLocalDay = Math.floor(
+    (now.getTime() - timezoneOffset * 60 * 1000) / (24 * 60 * 60 * 1000)
+  );
+
+  let newStreak = 1;
+  let shouldResetDaily = false;
+
+  if (profile.lastGameDate) {
+    const lastGameLocalDay = Math.floor(
+      (new Date(profile.lastGameDate).getTime() - timezoneOffset * 60 * 1000) / (24 * 60 * 60 * 1000)
+    );
+
+    if (currentLocalDay === lastGameLocalDay) {
+      newStreak = profile.streak;
+    } else if (currentLocalDay === lastGameLocalDay + 1) {
+      newStreak = profile.streak + 1;
+      shouldResetDaily = true;
+    } else {
+      newStreak = 1;
+      shouldResetDaily = true;
+    }
+  } else {
+    newStreak = 1;
+    shouldResetDaily = true;
+  }
 
   // ── Fetch reference words ─────────────────────────────────────────────────
   const sessionWordIds = session.wordIds;
@@ -345,19 +378,16 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto) => {
         xp:    { increment: totalXp },
         coins: { increment: totalCoins },
         lastGameDate: now,
-        ...(session.gameType === 'TEST'  && { dailyTestCount:  { increment: 1 } }),
-        ...(session.gameType === 'MATCH' && { dailyMatchCount: { increment: 1 } }),
-        ...(session.gameType === 'WRITE' && { dailyWriteCount: { increment: 1 } }),
+        streak: newStreak,
+        dailyTestCount:  shouldResetDaily ? (session.gameType === 'TEST'  ? 1 : 0) : (session.gameType === 'TEST'  ? { increment: 1 } : undefined),
+        dailyMatchCount: shouldResetDaily ? (session.gameType === 'MATCH' ? 1 : 0) : (session.gameType === 'MATCH' ? { increment: 1 } : undefined),
+        dailyWriteCount: shouldResetDaily ? (session.gameType === 'WRITE' ? 1 : 0) : (session.gameType === 'WRITE' ? { increment: 1 } : undefined),
       },
     }),
 
     // All SRS upserts
     ...progressUpserts,
   ]);
-
-  // ── Streak logic (goal = 5 tasks/day) ────────────────────────────────────
-  // Read the freshly-updated profile so daily counts include this session.
-  await updateStreak(userId, now);
 
   // ── Update (or create) WeeklyStats ───────────────────────────────────────
   await updateWeeklyStats(userId, {
@@ -387,76 +417,7 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto) => {
   };
 };
 
-// ─── Streak Updater ───────────────────────────────────────────────────────────
 
-/**
- * Daily goal threshold — user must complete this many practices in a calendar
- * day (UTC) for the streak to increment.
- */
-const DAILY_GOAL = 5;
-
-/**
- * Evaluates and updates the user's streak after every session submission.
- *
- * Rules:
- *  - Total daily tasks = dailyTestCount + dailyMatchCount + dailyWriteCount
- *  - If totalTasks === DAILY_GOAL exactly (i.e. this session just hit the goal),
- *    increment streak by 1 and record today as lastLoginDate.
- *  - If the user already hit the goal earlier today (totalTasks > DAILY_GOAL),
- *    do nothing — streak was already credited.
- *  - If lastLoginDate is more than 1 calendar day ago AND the goal was not met
- *    yesterday, reset streak to 0.
- */
-const updateStreak = async (userId: string, now: Date): Promise<void> => {
-  const profile = await prisma.profile.findUnique({ where: { userId } });
-  if (!profile) return;
-
-  const totalTasks =
-    profile.dailyTestCount + profile.dailyMatchCount + profile.dailyWriteCount;
-
-  /**
-   * Compare calendar days using whole-day UTC offsets.
-   * Truncate both dates to midnight UTC, then compute difference in days.
-   * This avoids string-slicing bugs where "2026-05-12T23:00:00Z" and
-   * "2026-05-13T00:00:00+05:00" would produce different YYYY-MM-DD strings
-   * depending on which side of midnight the server clock is on.
-   */
-  const floorDay = (d: Date): number =>
-    Math.floor(d.getTime() / (24 * 60 * 60 * 1000));
-
-  const todayDay = floorDay(now);
-  const lastDay  = profile.lastLoginDate ? floorDay(new Date(profile.lastLoginDate)) : null;
-  const dayDiff  = lastDay !== null ? todayDay - lastDay : null;
-
-  // ── Case 1: goal just reached for the first time today ────────────────────
-  if (totalTasks === DAILY_GOAL) {
-    // dayDiff === 1  → consecutive (yesterday they earned the streak)
-    // dayDiff === 0  → same day but somehow re-triggering (shouldn't happen, safety guard)
-    // dayDiff > 1    → gap — start fresh at 1
-    // dayDiff null   → first ever streak day — start at 1
-    const isConsecutive = dayDiff === 1;
-    const newStreak     = isConsecutive ? profile.streak + 1 : 1;
-
-    await prisma.profile.update({
-      where: { userId },
-      data:  { streak: newStreak, lastLoginDate: now },
-    });
-    return;
-  }
-
-  // ── Case 2: already past the goal today — streak credited, no-op ──────────
-  if (totalTasks > DAILY_GOAL) return;
-
-  // ── Case 3: goal not yet reached — reset streak if a full day was missed ──
-  // Only reset when more than 1 full day has passed since the last goal-day.
-  // dayDiff > 1 means they skipped at least one calendar day entirely.
-  if (dayDiff !== null && dayDiff > 1) {
-    await prisma.profile.update({
-      where: { userId },
-      data:  { streak: 0 },
-    });
-  }
-};
 
 // ─── 3. Weekly Stats Upsert ───────────────────────────────────────────────────
 

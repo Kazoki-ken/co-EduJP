@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { BookOpen } from 'lucide-react';
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -14,20 +13,20 @@ export function Footer() {
             <span className="text-xl">🎌</span>
             <span className="font-bold text-text-primary">VocabJP</span>
             <span className="text-text-muted text-sm ml-2">
-              — Japanese Vocabulary SRS Platform
+              {"— Yapon tili so'z boyligi SRS platformasi"}
             </span>
           </div>
 
           {/* Links */}
           <nav className="flex items-center gap-6 text-sm text-text-muted">
             <Link href="/dictionary" className="hover:text-text-primary transition-colors">
-              Dictionary
+              {"Lug'at"}
             </Link>
             <Link href="/games" className="hover:text-text-primary transition-colors">
-              Games
+              {"O'yinlar"}
             </Link>
             <Link href="/leaderboard" className="hover:text-text-primary transition-colors">
-              Leaderboard
+              Reyting
             </Link>
             <Link href="/tools/alifbo" className="hover:text-text-primary transition-colors">
               Alifbo
@@ -36,7 +35,7 @@ export function Footer() {
 
           {/* Copyright */}
           <p className="text-text-muted text-xs">
-            © {year} VocabJP. Built with ❤️ for Japanese learners.
+            {"© "}{year}{" VocabJP. Yapon tilini o'rganuvchilar uchun ❤️ bilan yaratildi."}
           </p>
         </div>
       </div>

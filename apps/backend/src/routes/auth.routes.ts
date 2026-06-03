@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, refresh, logout, me } from '../controllers/auth.controller';
+import { register, login, refresh, logout, me, googleLogin, setUsername } from '../controllers/auth.controller';
 import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
@@ -33,5 +33,17 @@ router.post('/logout', logout);
  * Get current authenticated user profile
  */
 router.get('/me', authenticate, me);
+
+/**
+ * POST /api/auth/google
+ * Sign in or register with Google OAuth idToken
+ */
+router.post('/google', googleLogin);
+
+/**
+ * PATCH /api/auth/set-username
+ * Set username for new social login users (first-time setup)
+ */
+router.patch('/set-username', authenticate, setUsername);
 
 export default router;

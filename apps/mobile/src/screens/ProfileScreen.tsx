@@ -32,12 +32,12 @@ const LEAGUE: Record<string, { color: string; icon: string; next?: string }> = {
 
 // ── SRS level labels ──────────────────────────────────────────────
 const SRS_LABELS: Record<number, { label: string; color: string }> = {
-  0: { label: 'New',      color: '#4b5563' },
-  1: { label: 'Beginner', color: '#ef4444' },
-  2: { label: 'Basic',    color: '#f59e0b' },
-  3: { label: 'Familiar', color: '#3b82f6' },
-  4: { label: 'Good',     color: '#8b5cf6' },
-  5: { label: 'Mastered', color: '#10b981' },
+  0: { label: 'Yangi',    color: '#4b5563' },
+  1: { label: 'Boshlovchi', color: '#ef4444' },
+  2: { label: 'Boshlang\'ich', color: '#f59e0b' },
+  3: { label: 'Tanish',   color: '#3b82f6' },
+  4: { label: 'Yaxshi',   color: '#8b5cf6' },
+  5: { label: 'O\'zlashtirilgan', color: '#10b981' },
 };
 
 // ── Skeleton bar ──────────────────────────────────────────────────
@@ -109,7 +109,7 @@ function BadgePill({ badge, earned }: { badge: Badge; earned: boolean }) {
             backgroundColor: col + '33', borderRadius: 6,
             paddingHorizontal: 6, paddingVertical: 2,
           }}>
-            <Text style={{ color: col, fontSize: 9, fontWeight: '700' }}>EARNED</Text>
+            <Text style={{ color: col, fontSize: 9, fontWeight: '700' }}>OLINDI</Text>
           </View>
         )}
       </View>
@@ -128,7 +128,7 @@ function SrsBreakdown({ levels, total }: { levels: LevelCount[]; total: number }
     }}>
       <View style={{ backgroundColor: 'rgba(10,10,26,0.85)', padding: 18 }}>
         <Text style={{ color: '#f3f4f6', fontWeight: '700', fontSize: 14, marginBottom: 12 }}>
-          SRS Progress
+          SRS taraqqiyoti
         </Text>
         {/* Stacked bar */}
         <View style={{ flexDirection: 'row', height: 8, borderRadius: 4,
@@ -221,7 +221,7 @@ function SavedBookRow({ book }: { book: Book }) {
           {book.title}
         </Text>
         <Text style={{ color: '#6b7280', fontSize: 11, marginTop: 2 }}>
-          {book._count.topics} topic{book._count.topics !== 1 ? 's' : ''}
+          {book._count.topics} ta mavzu
         </Text>
       </View>
       <Ionicons name="chevron-forward" size={14} color="#374151" style={{ marginRight: 4 }} />
@@ -314,16 +314,23 @@ export default function ProfileScreen() {
   }, [fetchData, fetchSavedWords, fetchSavedBooks]);
 
   const handleLogout = () => {
-    Alert.alert('Sign Out', 'Are you sure?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Sign Out', style: 'destructive', onPress: logout },
+    Alert.alert('Chiqish', 'Ishonchingiz komilmi?', [
+      { text: 'Bekor qilish', style: 'cancel' },
+      { text: 'Chiqish', style: 'destructive', onPress: logout },
     ]);
   };
 
   const profile    = user?.profile;
   const league     = profile?.league ?? 'BRONZE';
   const leagueCfg  = LEAGUE[league];
-  const leagueLbl  = league.charAt(0) + league.slice(1).toLowerCase();
+  const LEAGUE_LABELS: Record<string, string> = {
+    BRONZE: 'Bronza ligasi',
+    SILVER: 'Kumush ligasi',
+    GOLD: 'Oltin ligasi',
+    PLATINUM: 'Platina ligasi',
+    DIAMOND: 'Olmos ligasi',
+  };
+  const leagueLabel = LEAGUE_LABELS[league] ?? 'Bronza ligasi';
   const totalSrs   = progress?.levelBreakdown.reduce((s, l) => s + l.count, 0) ?? 0;
   const earnedIds  = new Set(badges?.map(b => b.badge.id) ?? []);
 
@@ -352,9 +359,9 @@ export default function ProfileScreen() {
       >
         {/* ── Header ───────────────────────────────────────────── */}
         <View style={{ marginBottom: 20 }}>
-          <Text style={{ color: '#6b7280', fontSize: 13, fontWeight: '500' }}>Your account</Text>
+          <Text style={{ color: '#6b7280', fontSize: 13, fontWeight: '500' }}>Shaxsiy hisobingiz</Text>
           <Text style={{ color: '#f9fafb', fontSize: 24, fontWeight: '700', letterSpacing: -0.5 }}>
-            Profile 👤
+            Profil 👤
           </Text>
         </View>
 
@@ -399,7 +406,7 @@ export default function ProfileScreen() {
                 }}>
                   <Text style={{ fontSize: 16 }}>{leagueCfg.icon}</Text>
                   <Text style={{ color: leagueCfg.color, fontWeight: '700', fontSize: 14 }}>
-                    {leagueLbl} League
+                    {leagueLabel}
                   </Text>
                   {leagueCfg.next && (
                     <Ionicons name="chevron-forward" size={14} color={leagueCfg.color} />
@@ -409,8 +416,7 @@ export default function ProfileScreen() {
                 {/* Member since */}
                 {user?.createdAt && (
                   <Text style={{ color: '#4b5563', fontSize: 11, marginTop: 10 }}>
-                    Member since {new Date(user.createdAt).toLocaleDateString('en-US',
-                      { month: 'long', year: 'numeric' })}
+                    {new Date(user.createdAt).getFullYear()}{" yildan beri a'zo"}
                   </Text>
                 )}
               </LinearGradient>
@@ -419,25 +425,25 @@ export default function ProfileScreen() {
             {/* ── Stats grid ───────────────────────────────────── */}
             <Text style={{ color: '#9ca3af', fontSize: 12, fontWeight: '700',
               letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 }}>
-              Statistics
+              Statistika
             </Text>
             <View style={{ flexDirection: 'row', gap: 8, marginBottom: 10 }}>
-              <StatCard emoji="🔥" value={profile?.streak   ?? 0} label="Streak"   color="#f59e0b" />
-              <StatCard emoji="⚡" value={profile?.xp        ?? 0} label="Total XP" color="#7c3aed" />
-              <StatCard emoji="🪙" value={profile?.coins     ?? 0} label="Coins"    color="#fbbf24" />
-              <StatCard emoji="📚" value={progress?.totalSaved ?? 0} label="Saved"  color="#10b981" />
+              <StatCard emoji="🔥" value={profile?.streak   ?? 0} label="Faollik"   color="#f59e0b" />
+              <StatCard emoji="⚡" value={profile?.xp        ?? 0} label="Umumiy XP" color="#7c3aed" />
+              <StatCard emoji="🪙" value={profile?.coins     ?? 0} label="Tangalar"  color="#fbbf24" />
+              <StatCard emoji="📚" value={progress?.totalSaved ?? 0} label="Saqlangan" color="#10b981" />
             </View>
             <View style={{ flexDirection: 'row', gap: 8, marginBottom: 20 }}>
-              <StatCard emoji="📝" value={profile?.dailyTestCount  ?? 0} label="Tests today"  color="#3b82f6" />
-              <StatCard emoji="🔁" value={profile?.dailyMatchCount ?? 0} label="Matches today" color="#ec4899" />
-              <StatCard emoji="⏰" value={progress?.dueTodayCount  ?? 0} label="Due today"    color="#ef4444" />
-              <StatCard emoji="🎯" value={totalSrs}                       label="In SRS"       color="#06b6d4" />
+              <StatCard emoji="📝" value={profile?.dailyTestCount  ?? 0} label="Bugungi test" color="#3b82f6" />
+              <StatCard emoji="🔁" value={profile?.dailyMatchCount ?? 0} label="Bugungi moslash" color="#ec4899" />
+              <StatCard emoji="⏰" value={progress?.dueTodayCount  ?? 0} label="Bugungi takrorlash" color="#ef4444" />
+              <StatCard emoji="🎯" value={totalSrs}                       label="SRSdagi"       color="#06b6d4" />
             </View>
 
             {/* ── Saved Words / Books tabs ──────────────────────── */}
             <Text style={{ color: '#9ca3af', fontSize: 12, fontWeight: '700',
               letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 }}>
-              My Saved Content
+              Mening saqlanganlarim
             </Text>
 
             {/* Tab buttons */}
@@ -457,7 +463,7 @@ export default function ProfileScreen() {
                   color: savedTab === 'words' ? '#7c3aed' : '#6b7280',
                   fontWeight: '600', fontSize: 13,
                 }}>
-                  Words ({savedWords.length})
+                  So'zlar ({savedWords.length})
                 </Text>
               </TouchableOpacity>
 
@@ -476,7 +482,7 @@ export default function ProfileScreen() {
                   color: savedTab === 'books' ? '#f97316' : '#6b7280',
                   fontWeight: '600', fontSize: 13,
                 }}>
-                  Books ({savedBooks.length})
+                  Kitoblar ({savedBooks.length})
                 </Text>
               </TouchableOpacity>
             </View>
@@ -493,7 +499,7 @@ export default function ProfileScreen() {
                     <View style={{ alignItems: 'center', paddingVertical: 28, gap: 8 }}>
                       <Text style={{ fontSize: 36 }}>📝</Text>
                       <Text style={{ color: '#6b7280', fontSize: 14, textAlign: 'center' }}>
-                        No saved words yet — browse the dictionary and tap the bookmark icon!
+                        Hozircha saqlangan so'zlar yo'q — lug'atni ko'rib chiqing va saqlash uchun xatcho'p belgisini bosing!
                       </Text>
                     </View>
                   ) : (
@@ -508,7 +514,7 @@ export default function ProfileScreen() {
                       </ScrollView>
                       {savedWords.length > 4 && (
                         <Text style={{ color: '#4b5563', fontSize: 11, textAlign: 'center', marginTop: 8 }}>
-                          ↕ Scroll to see all {savedWords.length} saved words
+                          ↕ Barcha {savedWords.length} ta saqlangan so'zni ko'rish uchun aylantiring
                         </Text>
                       )}
                     </>
@@ -518,7 +524,7 @@ export default function ProfileScreen() {
                     <View style={{ alignItems: 'center', paddingVertical: 28, gap: 8 }}>
                       <Text style={{ fontSize: 36 }}>📚</Text>
                       <Text style={{ color: '#6b7280', fontSize: 14, textAlign: 'center' }}>
-                        No saved books yet — go to the dictionary and bookmark your favorites!
+                        Hozircha saqlangan kitoblar yo'q — lug'atga o'ting va sevimli kitoblaringizni saqlang!
                       </Text>
                     </View>
                   ) : (
@@ -533,7 +539,7 @@ export default function ProfileScreen() {
                       </ScrollView>
                       {savedBooks.length > 4 && (
                         <Text style={{ color: '#4b5563', fontSize: 11, textAlign: 'center', marginTop: 8 }}>
-                          ↕ Scroll to see all {savedBooks.length} saved books
+                          ↕ Barcha {savedBooks.length} ta saqlangan kitobni ko'rish uchun aylantiring
                         </Text>
                       )}
                     </>
@@ -553,7 +559,7 @@ export default function ProfileScreen() {
             {/* ── Badges ───────────────────────────────────────── */}
             <Text style={{ color: '#9ca3af', fontSize: 12, fontWeight: '700',
               letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 }}>
-              Badges ({earnedIds.size}/{BADGE_SHOWCASE.length + (badges?.length ?? 0 > BADGE_SHOWCASE.length ? (badges?.length ?? 0) - BADGE_SHOWCASE.length : 0)})
+              Nishonlar ({earnedIds.size}/{BADGE_SHOWCASE.length + (badges?.length ?? 0 > BADGE_SHOWCASE.length ? (badges?.length ?? 0) - BADGE_SHOWCASE.length : 0)})
             </Text>
 
             {badges && badges.length === 0 && (
@@ -564,7 +570,7 @@ export default function ProfileScreen() {
                 <View style={{ backgroundColor: 'rgba(10,10,26,0.85)', padding: 24, alignItems: 'center', gap: 8 }}>
                   <Text style={{ fontSize: 36 }}>🏅</Text>
                   <Text style={{ color: '#6b7280', fontSize: 14, textAlign: 'center' }}>
-                    No badges yet — complete games and build streaks!
+                    Hozircha nishonlar yo'q — o'yinlarni yakunlang va zanjirlar hosil qiling!
                   </Text>
                 </View>
               </BlurView>
@@ -607,7 +613,7 @@ export default function ProfileScreen() {
                 }}>
                   <Ionicons name="log-out-outline" size={20} color="#ef4444" />
                   <Text style={{ color: '#ef4444', fontSize: 16, fontWeight: '700' }}>
-                    Sign Out
+                    Chiqish
                   </Text>
                 </View>
               </BlurView>

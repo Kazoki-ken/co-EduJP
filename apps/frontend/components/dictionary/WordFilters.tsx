@@ -59,7 +59,7 @@ export function WordFilters({ value, books, topics, onChange }: WordFiltersProps
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search words, hiragana, or meanings…"
+            placeholder="So'zlarni, xiraganani yoki ma'nolarini qidiring…"
             className="input-field pl-10 pr-9"
           />
           {searchInput && (
@@ -85,7 +85,7 @@ export function WordFilters({ value, books, topics, onChange }: WordFiltersProps
               !value.bookId && 'text-text-muted',
             )}
           >
-            <option value="">All Books</option>
+            <option value="">Barcha kitoblar</option>
             {books.map((b) => (
               <option key={b.id} value={b.id}>{b.title}</option>
             ))}
@@ -105,7 +105,7 @@ export function WordFilters({ value, books, topics, onChange }: WordFiltersProps
               visibleTopics.length === 0 && 'opacity-50 cursor-not-allowed',
             )}
           >
-            <option value="">All Topics</option>
+            <option value="">Barcha mavzular</option>
             {visibleTopics.map((t) => (
               <option key={t.id} value={t.id}>{t.name}</option>
             ))}
@@ -117,7 +117,7 @@ export function WordFilters({ value, books, topics, onChange }: WordFiltersProps
       {/* Active filter chips */}
       {hasFilters && (
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-text-muted">Active filters:</span>
+          <span className="text-xs text-text-muted">Faol filtrlar:</span>
 
           {value.search && (
             <FilterChip
@@ -142,7 +142,7 @@ export function WordFilters({ value, books, topics, onChange }: WordFiltersProps
             onClick={clearAll}
             className="text-xs text-danger hover:text-danger/80 transition-colors underline underline-offset-2"
           >
-            Clear all
+            Filtrlarni tozalash
           </button>
         </div>
       )}

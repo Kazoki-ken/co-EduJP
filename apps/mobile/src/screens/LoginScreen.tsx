@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, ActivityIndicator,
-  KeyboardAvoidingView, Platform, ScrollView, Animated,
+  KeyboardAvoidingView, Platform, ScrollView, Animated, Image,
   type TextInput as TextInputType,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,6 +11,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/RootStack';
 import { useAuth } from '../context/AuthContext';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+
+// Google Sign-In sozlamalari (bir marta chaqiriladi)
+GoogleSignin.configure({
+  webClientId: '156336295197-pjb6ocbui8t994dhdg4nv827a22f8e84.apps.googleusercontent.com',
+  offlineAccess: false,
+});
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -86,24 +96,49 @@ GlowInput.displayName = 'GlowInput';
 
 // ─── Login Screen ─────────────────────────────────────────────────
 export default function LoginScreen({ navigation }: Props) {
-  const { login } = useAuth();
+  const { login, googleLogin } = useAuth();
   const insets = useSafeAreaInsets();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const passwordRef = useRef<TextInputType>(null);
 
   const handleLogin = async () => {
-    if (!email.trim() || !password) { setError('Please fill in all fields.'); return; }
+    if (!email.trim() || !password) { setError("Iltimos, barcha maydonlarni to'ldiring."); return; }
     setError(null); setLoading(true);
     try {
       await login(email.trim().toLowerCase(), password);
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { error?: string } } })
-        ?.response?.data?.error ?? 'Login failed. Check your credentials.';
+        ?.response?.data?.error ?? "Kirish muvaffaqiyatsiz tugadi. Ma'lumotlaringizni tekshiring.";
       setError(msg);
     } finally { setLoading(false); }
+  };
+
+  const handleGoogleLogin = async () => {
+    setError(null);
+    setGoogleLoading(true);
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const idToken = userInfo.data?.idToken;
+      if (!idToken) throw new Error('Google token olinmadi');
+      await googleLogin(idToken);
+      // needsUsername = true bo'lsa, RootStack avtomatik UsernameSetup ga o'tadi
+    } catch (err: unknown) {
+      const e = err as { code?: string; message?: string };
+      if (e.code === statusCodes.SIGN_IN_CANCELLED) {
+        // foydalanuvchi bekor qildi — xato ko'rsatmaymiz
+      } else if (e.code === statusCodes.IN_PROGRESS) {
+        // allaqachon jarayonda
+      } else {
+        setError("Google orqali kirish muvaffaqiyatsiz tugadi. Qaytadan urinib ko'ring.");
+      }
+    } finally {
+      setGoogleLoading(false);
+    }
   };
 
   return (
@@ -144,10 +179,10 @@ export default function LoginScreen({ navigation }: Props) {
               <Text style={{ fontSize: 36 }}>語</Text>
             </LinearGradient>
             <Text style={{ fontSize: 26, fontWeight: '700', color: '#f9fafb', letterSpacing: -0.5 }}>
-              Welcome back
+              Xush kelibsiz
             </Text>
             <Text style={{ color: '#6b7280', marginTop: 6, fontSize: 14 }}>
-              Sign in to continue your streak 🔥
+              Faollikni davom ettirish uchun tizimga kiring 🔥
             </Text>
           </View>
 
@@ -161,7 +196,7 @@ export default function LoginScreen({ navigation }: Props) {
                 keyboardType="email-address" returnKeyType="next"
                 onSubmitEditing={() => passwordRef.current?.focus()} />
 
-              <GlowInput ref={passwordRef} label="Password" icon="lock-closed-outline"
+              <GlowInput ref={passwordRef} label="Parol" icon="lock-closed-outline"
                 value={password} onChangeText={setPassword}
                 placeholder="••••••••" secureTextEntry
                 returnKeyType="done" onSubmitEditing={handleLogin} />
@@ -191,19 +226,55 @@ export default function LoginScreen({ navigation }: Props) {
                   {loading
                     ? <ActivityIndicator color="#fff" />
                     : <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', letterSpacing: 0.3 }}>
-                        Sign In
+                        Tizimga kirish
                       </Text>
                   }
                 </LinearGradient>
+              </TouchableOpacity>
+
+              {/* ─── Divider ─── */}
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
+                <View style={{ flex: 1, height: 1, backgroundColor: 'rgba(109,40,217,0.2)' }} />
+                <Text style={{ color: '#4b5563', marginHorizontal: 12, fontSize: 13 }}>yoki</Text>
+                <View style={{ flex: 1, height: 1, backgroundColor: 'rgba(109,40,217,0.2)' }} />
+              </View>
+
+              {/* ─── Google Button ─── */}
+              <TouchableOpacity
+                onPress={handleGoogleLogin}
+                disabled={googleLoading}
+                activeOpacity={0.85}
+                style={{
+                  flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+                  backgroundColor: 'rgba(255,255,255,0.06)',
+                  borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)',
+                  borderRadius: 16, paddingVertical: 14, gap: 10,
+                }}
+              >
+                {googleLoading
+                  ? <ActivityIndicator color="#fff" size="small" />
+                  : <>
+                      {/* Google G icon */}
+                      <View style={{
+                        width: 22, height: 22, borderRadius: 11,
+                        backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        <Text style={{ fontSize: 13, fontWeight: '700', color: '#4285F4' }}>G</Text>
+                      </View>
+                      <Text style={{ color: '#e5e7eb', fontSize: 15, fontWeight: '600' }}>
+                        Google bilan kirish
+                      </Text>
+                    </>
+                }
               </TouchableOpacity>
             </View>
           </BlurView>
 
           {/* Footer */}
           <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 28, alignItems: 'center' }}>
-            <Text style={{ color: '#6b7280', fontSize: 14 }}>Don't have an account? </Text>
+            <Text style={{ color: '#6b7280', fontSize: 14 }}>Hisobingiz yo'qmi? </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-              <Text style={{ color: '#7c3aed', fontSize: 14, fontWeight: '600' }}>Sign Up</Text>
+              <Text style={{ color: '#7c3aed', fontSize: 14, fontWeight: '600' }}>Ro'yxatdan o'tish</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

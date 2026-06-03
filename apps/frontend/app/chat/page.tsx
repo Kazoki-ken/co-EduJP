@@ -28,11 +28,11 @@ interface Message {
 // ─── Suggestion chips ─────────────────────────────────────────────────────────
 
 const SUGGESTIONS = [
-  '🌸 How do I use 食べます in a sentence?',
-  '🔤 What\'s the difference between は and が?',
-  '🃏 Can you quiz me on common food words?',
-  '🈳 What does 大丈夫 mean and when is it used?',
-  '📚 Give me 5 beginner vocabulary words',
+  "🌸 Gapda 食べます so'zini qanday ishlataman?",
+  "🔤 は va が zarrachalari o'rtasidagi farq nima?",
+  "🃏 Ovqatga oid keng tarqalgan so'zlar bo'yicha test o'tkaza olasizmi?",
+  "🈳 大丈夫 nimani anglatadi va u qachon ishlatiladi?",
+  "📚 Menga 5 ta boshlang'ich darajadagi so'z bering",
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -106,7 +106,7 @@ function AssistantBubble({ msg }: { msg: Message }) {
             onClick={() => playTts(japanese)}
             className="mt-2 flex items-center gap-1 text-xs text-text-muted hover:text-primary transition-colors"
           >
-            <Volume2 size={11} /> Listen to Japanese
+            <Volume2 size={11} /> {"Yaponcha talaffuzni eshitish"}
           </button>
         )}
       </div>
@@ -241,7 +241,7 @@ export default function ChatPage() {
         prev.map((m) => m.id === assistantId ? { ...m, isStreaming: false } : m),
       );
     } catch (err: unknown) {
-      const errMsg = (err as Error)?.message ?? 'Something went wrong. Please try again.';
+      const errMsg = (err as Error)?.message ?? "Xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.";
       if (errMsg !== 'AbortError') {
         setMessages((prev) =>
           prev.map((m) =>
@@ -276,9 +276,9 @@ export default function ChatPage() {
     return (
       <div className="page-container py-24 text-center">
         <Bot size={48} className="text-primary mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-text-primary mb-2">Vocabulary AI Chat</h2>
-        <p className="text-text-muted mb-6">Please sign in to practice with the AI tutor.</p>
-        <Link href="/auth/login" className="btn-primary">Sign In</Link>
+        <h2 className="text-2xl font-bold text-text-primary mb-2">{"AI Repetitor bilan so'zlashuv"}</h2>
+        <p className="text-text-muted mb-6">{"Iltimos, AI repetitor bilan mashq qilish uchun tizimga kiring."}</p>
+        <Link href="/auth/login" className="btn-primary">{"Tizimga kirish"}</Link>
       </div>
     );
   }
@@ -294,8 +294,8 @@ export default function ChatPage() {
               <Sparkles size={16} className="text-primary" />
             </div>
             <div>
-              <h1 className="font-bold text-text-primary text-sm">{siteName} AI Tutor</h1>
-              <p className="text-xs text-text-muted">Powered by Gemini — vocabulary only</p>
+              <h1 className="font-bold text-text-primary text-sm">{siteName} {"AI Repetitor"}</h1>
+              <p className="text-xs text-text-muted">{"Gemini tomonidan taqdim etilgan — faqat lug'at ustida ishlash"}</p>
             </div>
           </div>
           {messages.length > 0 && (
@@ -303,7 +303,7 @@ export default function ChatPage() {
               onClick={clearChat}
               className="flex items-center gap-1.5 text-xs text-text-muted hover:text-danger transition-colors"
             >
-              <RotateCcw size={12} /> New chat
+              <RotateCcw size={12} /> {"Yangi suhbat"}
             </button>
           )}
         </div>
@@ -321,11 +321,10 @@ export default function ChatPage() {
             >
               <div className="text-5xl mb-4">🤖</div>
               <h2 className="text-xl font-bold text-text-primary mb-2">
-                こんにちは！Let's practice vocabulary.
+                {"こんにちは！ Keling, so'z boyligimizni oshiramiz."}
               </h2>
               <p className="text-text-muted text-sm max-w-sm mx-auto mb-7">
-                I'm your vocabulary practice partner. Ask me to explain words, quiz you,
-                or give examples. I won't help with general translation or grammar lessons.
+                {"Men sizning so'z boyligingizni oshirishdagi hamrohingizman. Mendan so'zlarni tushuntirishni, test o'tkazishni yoki misollar keltirishni so'rang. Men umumiy tarjima yoki grammatika darslarida yordam bera olmayman."}
               </p>
 
               {/* Suggestion chips */}
@@ -366,11 +365,11 @@ export default function ChatPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask about a word, request examples, or ask for a quiz… (Enter to send)"
+            placeholder="So'z haqida so'rang, misollar yoki test so'rang... (Yuborish uchun Enter)"
             rows={1}
             disabled={isBusy}
             className={cn(
-              'flex-1 input-field resize-none min-h-[44px] max-h-[120px] overflow-y-auto py-3',
+              'input-field resize-none min-h-[44px] max-h-[120px] overflow-y-auto py-3 flex-1',
               'leading-relaxed',
             )}
             style={{ height: 'auto' }}
@@ -397,7 +396,7 @@ export default function ChatPage() {
           </button>
         </div>
         <p className="text-center text-xs text-text-muted mt-2">
-          Shift+Enter for new line · Strictly vocabulary practice
+          {"Yangi qator uchun Shift+Enter · Faqatgina lug'at ustida ishlash"}
         </p>
       </div>
     </div>

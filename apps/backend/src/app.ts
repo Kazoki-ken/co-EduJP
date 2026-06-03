@@ -21,7 +21,30 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL ?? 'http://localhost:3000',
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        process.env.FRONTEND_URL ?? 'http://localhost:3000',
+        'http://localhost:8081', // Default React Native/Expo port
+        'http://localhost:5173', // Default Vite port
+        'http://localhost:4000', // Backend port itself
+      ];
+      
+      // Allow if no origin (e.g. mobile apps, curl, postman), if in development mode,
+      // or if it matches localhost or ngrok domains
+      if (
+        !origin || 
+        process.env.NODE_ENV === 'development' || 
+        allowedOrigins.includes(origin) ||
+        origin.startsWith('http://localhost:') || 
+        origin.includes('ngrok-free.app') || 
+        origin.includes('ngrok-free.dev') || 
+        origin.includes('ngrok.io')
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   }),
 );

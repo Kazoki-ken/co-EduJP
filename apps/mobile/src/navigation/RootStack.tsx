@@ -9,18 +9,20 @@ import AppTabs from './AppTabs';
 // Auth Screens
 import LoginScreen    from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import UsernameSetupScreen from '../screens/UsernameSetupScreen';
 
 // ── Route param types ─────────────────────────────────────────────
 export type RootStackParamList = {
-  Login:    undefined;
-  Register: undefined;
-  AppTabs:  undefined;   // replaces the old 'Home' screen
+  Login:         undefined;
+  Register:      undefined;
+  UsernameSetup: undefined;
+  AppTabs:       undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootStack() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, needsUsername } = useAuth();
 
   if (isLoading) {
     return (
@@ -33,7 +35,16 @@ export default function RootStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
       {isAuthenticated ? (
-        <Stack.Screen name="AppTabs" component={AppTabs} />
+        needsUsername ? (
+          // Google login — birinchi marta kirgan, username hali yo'q
+          <Stack.Screen
+            name="UsernameSetup"
+            component={UsernameSetupScreen}
+            options={{ animation: 'slide_from_bottom' }}
+          />
+        ) : (
+          <Stack.Screen name="AppTabs" component={AppTabs} />
+        )
       ) : (
         <>
           <Stack.Screen

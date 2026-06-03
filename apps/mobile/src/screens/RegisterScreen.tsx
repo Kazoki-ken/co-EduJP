@@ -12,6 +12,10 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/RootStack';
 import { useAuth } from '../context/AuthContext';
 import { GlowInput } from './LoginScreen';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
@@ -20,7 +24,7 @@ function PasswordStrength({ password }: { password: string }) {
   const score = [password.length >= 8, /[A-Z]/.test(password),
     /[0-9]/.test(password), /[^A-Za-z0-9]/.test(password)]
     .filter(Boolean).length;
-  const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+  const labels = ['', 'Zaif', 'O\'rtacha', 'Yaxshi', 'Kuchli'];
   const colors = ['#374151', '#ef4444', '#f59e0b', '#3b82f6', '#10b981'];
   if (!password) return null;
   return (
@@ -55,40 +59,41 @@ function classifyRegisterError(err: unknown): string {
   const payload = e?.response?.data?.error ?? e?.response?.data?.message ?? '';
 
   // ── HTTP-status based ────────────────────────────────────────────
-  if (status === 409) return 'That email or username is already in use.';
+  if (status === 409) return "Ushbu email yoki foydalanuvchi nomi allaqachon ro'yxatdan o'tgan.";
   if (status === 400) {
     // Forward specific backend validation messages
-    if (/email/i.test(payload))    return 'Email already in use.';
-    if (/username/i.test(payload)) return 'Username already taken.';
-    if (/password/i.test(payload)) return payload || 'Password does not meet requirements.';
-    return payload || 'Invalid details. Please check your input.';
+    if (/email/i.test(payload))    return "Ushbu email allaqachon ro'yxatdan o'tgan.";
+    if (/username/i.test(payload)) return "Foydalanuvchi nomi allaqachon band qilingan.";
+    if (/password/i.test(payload)) return payload || "Parol talablarga javob bermaydi.";
+    return payload || "Noto'g'ri ma'lumotlar. Iltimos, ma'lumotlaringizni tekshiring.";
   }
-  if (status === 429) return 'Too many attempts. Please wait a moment and try again.';
+  if (status === 429) return "Urinishlar soni juda ko'p. Iltimos, biroz kutib qaytadan urinib ko'ring.";
   if (status && status >= 500)
-    return 'Server error. Please try again in a moment.';
+    return "Server xatoligi. Iltimos, birozdan so'ng qaytadan urinib ko'ring.";
 
   // ── Network / no response ────────────────────────────────────────
   if (!e?.response && e?.request) {
     return (
-      'Cannot reach the server.\n' +
-      'Make sure your phone and computer are on the same Wi-Fi\n' +
-      'and the backend is running.'
+      "Serverga ulanib bo'lmadi.\n" +
+      "Telefoningiz va kompyuteringiz bir xil Wi-Fi tarmog'iga ulanganini\n" +
+      "va backend ishlayotganini tekshiring."
     );
   }
 
   // ── Fallback: use backend message if present ─────────────────────
-  return payload || 'Registration failed. Please try again.';
+  return payload || "Ro'yxatdan o'tish muvaffaqiyatsiz tugadi. Iltimos, qaytadan urinib ko'ring.";
 }
 
-// ─── Register Screen ──────────────────────────────────────────────
+// ─── Register Screen ─────────────────────────────────────────────────
 export default function RegisterScreen({ navigation }: Props) {
-  const { register } = useAuth();
+  const { register, googleLogin } = useAuth();
   const insets = useSafeAreaInsets();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const emailRef = useRef<TextInputType>(null);
   const passwordRef = useRef<TextInputType>(null);
@@ -96,13 +101,13 @@ export default function RegisterScreen({ navigation }: Props) {
 
   const handleRegister = async () => {
     if (!username.trim() || !email.trim() || !password || !confirm) {
-      setError('Please fill in all fields.'); return;
+      setError("Iltimos, barcha maydonlarni to'ldiring."); return;
     }
     if (password !== confirm) {
-      setError('Passwords do not match.'); return;
+      setError("Parollar mos kelmadi."); return;
     }
     if (password.length < 8) {
-      setError('Password must be at least 8 characters.'); return;
+      setError("Parol kamida 8 ta belgidan iborat bo'lishi kerak."); return;
     }
     setError(null); setLoading(true);
     try {
@@ -110,6 +115,25 @@ export default function RegisterScreen({ navigation }: Props) {
     } catch (err: unknown) {
       setError(classifyRegisterError(err));
     } finally { setLoading(false); }
+  };
+
+  const handleGoogleLogin = async () => {
+    setError(null);
+    setGoogleLoading(true);
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const idToken = userInfo.data?.idToken;
+      if (!idToken) throw new Error('Google token olinmadi');
+      await googleLogin(idToken);
+    } catch (err: unknown) {
+      const e = err as { code?: string };
+      if (e.code !== statusCodes.SIGN_IN_CANCELLED && e.code !== statusCodes.IN_PROGRESS) {
+        setError("Google orqali kirish muvaffaqiyatsiz tugadi.");
+      }
+    } finally {
+      setGoogleLoading(false);
+    }
   };
 
   const passwordsMatch = confirm.length > 0 && password === confirm;
@@ -144,16 +168,16 @@ export default function RegisterScreen({ navigation }: Props) {
           <TouchableOpacity onPress={() => navigation.goBack()}
             style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24, alignSelf: 'flex-start' }}>
             <Ionicons name="arrow-back" size={20} color="#7c3aed" />
-            <Text style={{ color: '#7c3aed', marginLeft: 6, fontSize: 14, fontWeight: '500' }}>Back</Text>
+            <Text style={{ color: '#7c3aed', marginLeft: 6, fontSize: 14, fontWeight: '500' }}>Orqaga</Text>
           </TouchableOpacity>
 
           {/* Header */}
           <View style={{ marginBottom: 28 }}>
             <Text style={{ fontSize: 26, fontWeight: '700', color: '#f9fafb', letterSpacing: -0.5 }}>
-              Create account
+              Hisob yaratish
             </Text>
             <Text style={{ color: '#6b7280', marginTop: 6, fontSize: 14 }}>
-              Join thousands mastering Japanese vocabulary ✨
+              Yapon tili so'zlarini o'zlashtirayotgan minglab o'quvchilarga qo'shiling ✨
             </Text>
           </View>
 
@@ -163,7 +187,7 @@ export default function RegisterScreen({ navigation }: Props) {
               borderWidth: 1, borderColor: 'rgba(109,40,217,0.22)' }}>
             <View style={{ backgroundColor: 'rgba(10,10,26,0.72)', padding: 24 }}>
 
-              <GlowInput label="Username" icon="person-outline" value={username}
+              <GlowInput label="Foydalanuvchi nomi" icon="person-outline" value={username}
                 onChangeText={setUsername} placeholder="cool_nihongo_fan"
                 autoCapitalize="none" returnKeyType="next"
                 onSubmitEditing={() => emailRef.current?.focus()} />
@@ -173,9 +197,9 @@ export default function RegisterScreen({ navigation }: Props) {
                 keyboardType="email-address" returnKeyType="next"
                 onSubmitEditing={() => passwordRef.current?.focus()} />
 
-              <GlowInput ref={passwordRef} label="Password" icon="lock-closed-outline"
+              <GlowInput ref={passwordRef} label="Parol" icon="lock-closed-outline"
                 value={password} onChangeText={setPassword}
-                placeholder="Min. 8 characters" secureTextEntry
+                placeholder="Kamida 8 ta belgi" secureTextEntry
                 returnKeyType="next" onSubmitEditing={() => confirmRef.current?.focus()} />
 
               <PasswordStrength password={password} />
@@ -185,24 +209,24 @@ export default function RegisterScreen({ navigation }: Props) {
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
                   <Text style={{ color: '#9ca3af', fontSize: 11, fontWeight: '600',
                     letterSpacing: 1.5, textTransform: 'uppercase', flex: 1 }}>
-                    Confirm Password
+                    Parolni tasdiqlash
                   </Text>
                   {passwordsMatch && (
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <Ionicons name="checkmark-circle" size={14} color="#10b981" />
-                      <Text style={{ color: '#10b981', fontSize: 11, marginLeft: 4 }}>Match</Text>
+                      <Text style={{ color: '#10b981', fontSize: 11, marginLeft: 4 }}>Mos keldi</Text>
                     </View>
                   )}
                   {passwordsMismatch && (
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <Ionicons name="close-circle" size={14} color="#ef4444" />
-                      <Text style={{ color: '#ef4444', fontSize: 11, marginLeft: 4 }}>No match</Text>
+                      <Text style={{ color: '#ef4444', fontSize: 11, marginLeft: 4 }}>Mos kelmadi</Text>
                     </View>
                   )}
                 </View>
                 <GlowInput ref={confirmRef} label="" icon="shield-checkmark-outline"
                   value={confirm} onChangeText={setConfirm}
-                  placeholder="Repeat your password" secureTextEntry
+                  placeholder="Parolni qayta kiriting" secureTextEntry
                   returnKeyType="done" onSubmitEditing={handleRegister} />
               </View>
 
@@ -234,7 +258,7 @@ export default function RegisterScreen({ navigation }: Props) {
                     ? <ActivityIndicator color="#fff" />
                     : <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                         <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', letterSpacing: 0.3 }}>
-                          Create Account
+                          Hisob yaratish
                         </Text>
                         <Ionicons name="rocket-outline" size={18} color="#fff" />
                       </View>
@@ -242,18 +266,53 @@ export default function RegisterScreen({ navigation }: Props) {
                 </LinearGradient>
               </TouchableOpacity>
 
+              {/* ─── Divider ─── */}
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
+                <View style={{ flex: 1, height: 1, backgroundColor: 'rgba(109,40,217,0.2)' }} />
+                <Text style={{ color: '#4b5563', marginHorizontal: 12, fontSize: 13 }}>yoki</Text>
+                <View style={{ flex: 1, height: 1, backgroundColor: 'rgba(109,40,217,0.2)' }} />
+              </View>
+
+              {/* ─── Google Button ─── */}
+              <TouchableOpacity
+                onPress={handleGoogleLogin}
+                disabled={googleLoading}
+                activeOpacity={0.85}
+                style={{
+                  flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+                  backgroundColor: 'rgba(255,255,255,0.06)',
+                  borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)',
+                  borderRadius: 16, paddingVertical: 14, gap: 10,
+                }}
+              >
+                {googleLoading
+                  ? <ActivityIndicator color="#fff" size="small" />
+                  : <>
+                      <View style={{
+                        width: 22, height: 22, borderRadius: 11,
+                        backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        <Text style={{ fontSize: 13, fontWeight: '700', color: '#4285F4' }}>G</Text>
+                      </View>
+                      <Text style={{ color: '#e5e7eb', fontSize: 15, fontWeight: '600' }}>
+                        Google bilan ro'yxatdan o'tish
+                      </Text>
+                    </>
+                }
+              </TouchableOpacity>
+
               {/* T&C note */}
               <Text style={{ color: '#4b5563', fontSize: 11, textAlign: 'center', marginTop: 16 }}>
-                By signing up you agree to practice Japanese every day 🇯🇵
+                Ro'yxatdan o'tish orqali siz har kuni yapon tilini o'rganishga va'da berasiz 🇯🇵
               </Text>
             </View>
           </BlurView>
 
           {/* Footer */}
           <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 24, alignItems: 'center' }}>
-            <Text style={{ color: '#6b7280', fontSize: 14 }}>Already have an account? </Text>
+            <Text style={{ color: '#6b7280', fontSize: 14 }}>Hisobingiz bormi? </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text style={{ color: '#7c3aed', fontSize: 14, fontWeight: '600' }}>Sign In</Text>
+              <Text style={{ color: '#7c3aed', fontSize: 14, fontWeight: '600' }}>Kirish</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

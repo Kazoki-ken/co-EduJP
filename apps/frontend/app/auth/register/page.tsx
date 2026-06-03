@@ -25,7 +25,7 @@ export default function RegisterPage() {
       await register(username, email, password);
       router.push('/'); // Redirect to dashboard
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to create account. Please try again.');
+      setError(err.response?.data?.error || "Hisob yaratib bo'lmadi. Iltimos, qaytadan urinib ko'ring.");
     } finally {
       setIsLoading(false);
     }
@@ -53,8 +53,8 @@ export default function RegisterPage() {
           >
             <span className="text-3xl">🚀</span>
           </motion.div>
-          <h1 className="text-2xl font-extrabold text-text-primary mb-2">Create Account</h1>
-          <p className="text-text-muted text-sm">Start mastering Japanese vocabulary today</p>
+          <h1 className="text-2xl font-extrabold text-text-primary mb-2">{"Hisob yaratish"}</h1>
+          <p className="text-text-muted text-sm">{"Bugundan boshlab yapon tili so'zlarini o'zlashtirishni boshlang"}</p>
         </div>
 
         {error && (
@@ -70,7 +70,7 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-text-secondary pl-1">Username</label>
+            <label className="text-sm font-medium text-text-secondary pl-1">{"Foydalanuvchi nomi"}</label>
             <div className="relative group">
               <User className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" size={18} />
               <input
@@ -100,7 +100,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-text-secondary pl-1">Password</label>
+            <label className="text-sm font-medium text-text-secondary pl-1">{"Parol"}</label>
             <div className="relative group">
               <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" size={18} />
               <input
@@ -124,7 +124,7 @@ export default function RegisterPage() {
               <Loader2 className="animate-spin" size={20} />
             ) : (
               <>
-                Create Account
+                {"Hisob yaratish"}
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </>
             )}
@@ -132,9 +132,9 @@ export default function RegisterPage() {
         </form>
 
         <p className="text-center text-sm text-text-muted mt-8">
-          Already have an account?{' '}
+          {"Hisobingiz bormi?"}{' '}
           <Link href="/auth/login" className="text-primary font-semibold hover:text-primary-light transition-colors">
-            Sign In
+            {"Kirish"}
           </Link>
         </p>
       </motion.div>

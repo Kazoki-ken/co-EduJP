@@ -52,7 +52,7 @@ function LeaderboardInner() {
     const params = league !== 'ALL' ? { league } : {};
     api.get<LeaderboardEntry[]>('/leaderboard', { params })
       .then(({ data }) => setEntries(data))
-      .catch(() => setError('Failed to load leaderboard.'))
+      .catch(() => setError("Reytingni yuklab bo'lmadi."))
       .finally(() => setIsLoading(false));
   }, [league]);
 
@@ -64,17 +64,26 @@ function LeaderboardInner() {
     router.replace(`/leaderboard${params.toString() ? `?${params}` : ''}`, { scroll: false });
   };
 
+  const LEAGUE_NAMES: Record<string, string> = {
+    ALL: 'Barcha ligalar',
+    BRONZE: 'Bronza',
+    SILVER: 'Kumush',
+    GOLD: 'Oltin',
+    PLATINUM: 'Platina',
+    DIAMOND: 'Olmos',
+  };
+
   return (
     <div className="page-container py-10 animate-fade-in">
       {/* Header */}
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10
                         border border-accent/30 text-accent text-sm font-medium mb-5">
-          <Trophy size={14} /> Weekly Leaderboard
+          <Trophy size={14} /> Haftalik reyting
         </div>
-        <h1 className="text-4xl font-extrabold text-text-primary mb-2">Hall of Fame</h1>
+        <h1 className="text-4xl font-extrabold text-text-primary mb-2">Shon-sharaf zali</h1>
         <p className="text-text-secondary max-w-md mx-auto">
-          Top learners by weekly score (coins + XP×2). Resets every Monday at 00:00 UTC.
+          {"Haftalik ball bo'yicha eng yaxshi o'quvchilar (tangalar + XP×2). Har dushanba 00:00 UTC da yangilanadi."}
         </p>
       </div>
 
@@ -91,7 +100,7 @@ function LeaderboardInner() {
                 : 'border-border text-text-muted hover:border-primary/50 hover:text-text-secondary',
             )}
           >
-            {l === 'ALL' ? '🌐 All Leagues' : `${leagueIcon(l)} ${l}`}
+            {l === 'ALL' ? '🌐 Barcha ligalar' : `${leagueIcon(l)} ${LEAGUE_NAMES[l] ?? l}`}
           </button>
         ))}
       </div>
@@ -108,7 +117,7 @@ function LeaderboardInner() {
       ) : entries.length === 0 ? (
         <div className="text-center py-20">
           <p className="text-5xl mb-4">📊</p>
-          <p className="text-text-muted">No entries yet for this league. Be the first!</p>
+          <p className="text-text-muted">{"Ushbu ligada hozircha o'yinchilar yo'q. Birinchisi bo'ling!"}</p>
         </div>
       ) : (
         <div className="max-w-2xl mx-auto space-y-2">
@@ -155,12 +164,19 @@ function LeaderboardInner() {
                   <div className="flex items-center gap-2">
                     <p className={cn('font-semibold truncate', isMe ? 'text-primary' : 'text-text-primary')}>
                       {entry.username}
-                      {isMe && <span className="text-xs text-primary/70 ml-1">(you)</span>}
+                      {isMe && <span className="text-xs text-primary/70 ml-1">(siz)</span>}
                     </p>
                     {entry.rank === 1 && <Crown size={14} className="text-yellow-400 shrink-0" />}
                   </div>
                   <p className={cn('text-xs', leagueColor(entry.league))}>
-                    {leagueIcon(entry.league)} {entry.league}
+                    {leagueIcon(entry.league)}{' '}
+                    {{
+                      BRONZE: 'Bronza ligasi',
+                      SILVER: 'Kumush ligasi',
+                      GOLD: 'Oltin ligasi',
+                      PLATINUM: 'Platina ligasi',
+                      DIAMOND: 'Olmos ligasi',
+                    }[entry.league] ?? entry.league}
                   </p>
                 </div>
 
