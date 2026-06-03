@@ -4,6 +4,7 @@ import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { NavBar } from '@/components/layout/NavBar';
 import { Footer } from '@/components/layout/Footer';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -35,14 +36,16 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased flex flex-col min-h-screen`}>
-        <AuthProvider>
-          <NavBar />
-          {/* Push content below the fixed NavBar */}
-          <main className="flex-1 pt-16">
-            {children}
-          </main>
-          <Footer />
-        </AuthProvider>
+        <GoogleOAuthProvider clientId="156336295197-pjb6ocbui8t994dhdg4nv827a22f8e84.apps.googleusercontent.com">
+          <AuthProvider>
+            <NavBar />
+            {/* Push content below the fixed NavBar */}
+            <main className="flex-1 pt-16">
+              {children}
+            </main>
+            <Footer />
+          </AuthProvider>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

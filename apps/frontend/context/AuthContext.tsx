@@ -34,8 +34,12 @@ interface AuthContextValue {
   user: AuthUser | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  needsUsername: boolean;
+  pendingGoogleToken: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
+  googleLogin: (idToken: string) => Promise<void>;
+  setUsername: (username: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -49,6 +53,8 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [needsUsername, setNeedsUsername] = useState(false);
+  const [pendingGoogleToken, setPendingGoogleToken] = useState<string | null>(null);
   // Prevent double-init in React StrictMode
   const initialised = useRef(false);
 
@@ -113,6 +119,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
+  // ── Google Login ─────────────────────────────────────────────────────────
+  const googleLogin = useCallback(async (idToken: string): Promise<void> => {
+    const { data } = await api.post<{
+      accessToken?: string;
+      user?: AuthUser;
+      needsUsername?: boolean;
+    }>('/auth/google', { idToken });
+
+    if (data.needsUsername) {
+      setPendingGoogleToken(idToken);
+      setNeedsUsername(true);
+    } else if (data.accessToken && data.user) {
+      setAccessToken(data.accessToken);
+      setUser(data.user);
+      setNeedsUsername(false);
+    }
+  }, []);
+
+  // ── Set Username (after Google login) ────────────────────────────────────
+  const setUsername = useCallback(async (username: string): Promise<void> => {
+    const { data } = await api.patch<{
+      accessToken: string;
+      user: AuthUser;
+    }>('/auth/set-username', { username });
+    setAccessToken(data.accessToken);
+    setUser(data.user);
+    setNeedsUsername(false);
+    setPendingGoogleToken(null);
+  }, []);
+
   // ── Logout ───────────────────────────────────────────────────────────────
   const logout = useCallback(async (): Promise<void> => {
     try {
@@ -120,6 +156,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setAccessToken(null);
       setUser(null);
+      setNeedsUsername(false);
+      setPendingGoogleToken(null);
     }
   }, []);
 
@@ -134,8 +172,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         isLoading,
         isAuthenticated: !!user,
+        needsUsername,
+        pendingGoogleToken,
         login,
         register,
+        googleLogin,
+        setUsername,
         logout,
         refreshUser,
       }}

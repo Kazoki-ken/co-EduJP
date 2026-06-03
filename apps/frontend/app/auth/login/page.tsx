@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
+import { GoogleLogin } from '@react-oauth/google';
 import { Mail, Lock, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
@@ -12,8 +13,24 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const { login, googleLogin, needsUsername } = useAuth();
   const router = useRouter();
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    if (!credentialResponse.credential) return;
+    setGoogleLoading(true);
+    setError('');
+    try {
+      await googleLogin(credentialResponse.credential);
+      // needsUsername ni context kuzatadi, redirect kerak emas
+      router.push('/');
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Google bilan kirishda xato yuz berdi.');
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,6 +130,33 @@ export default function LoginPage() {
             )}
           </button>
         </form>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 my-6">
+          <div className="flex-1 h-px bg-white/10" />
+          <span className="text-text-muted text-xs">yoki</span>
+          <div className="flex-1 h-px bg-white/10" />
+        </div>
+
+        {/* Google Login */}
+        <div className="flex justify-center">
+          {googleLoading ? (
+            <div className="flex items-center gap-2 text-text-muted text-sm">
+              <Loader2 className="animate-spin" size={18} />
+              Google bilan kirilmoqda...
+            </div>
+          ) : (
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Google bilan kirishda xato yuz berdi.')}
+              text="signin_with"
+              shape="rectangular"
+              theme="filled_black"
+              size="large"
+              width="360"
+            />
+          )}
+        </div>
 
         <p className="text-center text-sm text-text-muted mt-8">
           {"Hisobingiz yo'qmi?"}{' '}
