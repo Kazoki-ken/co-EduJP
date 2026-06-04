@@ -14,10 +14,16 @@ export default function App() {
   // ── Android: make system nav bar transparent & immersive ──────
   useEffect(() => {
     if (Platform.OS === 'android') {
-      NavigationBar.setBackgroundColorAsync('#0a0a1a');
-      NavigationBar.setButtonStyleAsync('light');
-      NavigationBar.setBehaviorAsync('overlay-swipe');
-      NavigationBar.setVisibilityAsync('hidden');
+      (async () => {
+        try {
+          await NavigationBar.setBackgroundColorAsync('#0a0a1a');
+          await NavigationBar.setButtonStyleAsync('light');
+          await NavigationBar.setBehaviorAsync('overlay-swipe');
+          await NavigationBar.setVisibilityAsync('hidden');
+        } catch (e) {
+          console.warn('System navigation bar customization failed:', e);
+        }
+      })();
     }
   }, []);
 

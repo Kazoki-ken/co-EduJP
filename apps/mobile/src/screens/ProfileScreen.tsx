@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
-  Alert, RefreshControl, Dimensions,
+  Alert, RefreshControl, Dimensions, Vibration,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import * as Speech from 'expo-speech';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../api/client';
 import type { UserBadge, Badge, LevelCount, Word, Book, PaginatedResponse } from '@vocabjp/shared';
@@ -29,6 +30,36 @@ const LEAGUE: Record<string, { color: string; icon: string; next?: string }> = {
   PLATINUM: { color: '#e5e4e2', icon: '💎', next: 'DIAMOND' },
   DIAMOND:  { color: '#b9f2ff', icon: '💠' },
 };
+
+// ── Emoji to Icon Mapping ─────────────────────────────────────────
+const EMOJI_TO_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
+  '👣': 'walk',
+  '🔥': 'flame',
+  '💯': 'ribbon',
+  '✨': 'sparkles',
+  '💠': 'trophy',
+  '🏅': 'medal',
+  '🔒': 'lock-closed',
+  '🥉': 'medal',
+  '🥈': 'medal',
+  '🥇': 'medal',
+  '💎': 'trophy',
+  '📚': 'book',
+  '📝': 'create',
+  '🔁': 'repeat',
+  '⏰': 'time',
+  '🎯': 'stats-chart',
+  '⚡': 'flash',
+  '🪙': 'star',
+  '👤': 'person-circle-outline',
+};
+
+function getIconForEmoji(emoji: string, defaultIcon: keyof typeof Ionicons.glyphMap = 'medal'): keyof typeof Ionicons.glyphMap {
+  if (emoji in EMOJI_TO_ICON) {
+    return EMOJI_TO_ICON[emoji];
+  }
+  return emoji as any;
+}
 
 // ── SRS level labels ──────────────────────────────────────────────
 const SRS_LABELS: Record<number, { label: string; color: string }> = {
@@ -68,18 +99,20 @@ function ProfileSkeleton() {
 }
 
 // ── Stat card ─────────────────────────────────────────────────────
-function StatCard({ emoji, value, label, color }: {
-  emoji: string; value: number | string; label: string; color: string;
+function StatCard({ icon, value, label, color }: {
+  icon: keyof typeof Ionicons.glyphMap; value: number | string; label: string; color: string;
 }) {
   return (
     <BlurView intensity={18} tint="dark" style={{
       flex: 1, borderRadius: 18, overflow: 'hidden',
       borderWidth: 1, borderColor: color + '30',
     }}>
-      <View style={{ backgroundColor: color + '0f', padding: 14, alignItems: 'center', gap: 4 }}>
-        <Text style={{ fontSize: 22 }}>{emoji}</Text>
-        <Text style={{ color: '#f9fafb', fontSize: 20, fontWeight: '800' }}>{value}</Text>
-        <Text style={{ color: '#6b7280', fontSize: 11 }}>{label}</Text>
+      <View style={{ backgroundColor: color + '0f', paddingVertical: 12, paddingHorizontal: 4, alignItems: 'center', gap: 4 }}>
+        <Ionicons name={icon} size={20} color={color} />
+        <Text style={{ color: '#f9fafb', fontSize: 18, fontWeight: '800', marginVertical: 2 }}>{value}</Text>
+        <Text style={{ color: '#9ca3af', fontSize: 10, fontWeight: '600', textAlign: 'center' }} numberOfLines={2}>
+          {label}
+        </Text>
       </View>
     </BlurView>
   );
@@ -88,6 +121,7 @@ function StatCard({ emoji, value, label, color }: {
 // ── Badge pill ────────────────────────────────────────────────────
 function BadgePill({ badge, earned }: { badge: Badge; earned: boolean }) {
   const col = earned ? (badge.color ?? '#7c3aed') : '#374151';
+  const iconName = getIconForEmoji(earned ? (badge.icon ?? '🏅') : '🔒', 'medal');
   return (
     <BlurView intensity={18} tint="dark" style={{
       borderRadius: 16, overflow: 'hidden', marginRight: 10,
@@ -99,7 +133,7 @@ function BadgePill({ badge, earned }: { badge: Badge; earned: boolean }) {
         backgroundColor: earned ? col + '18' : 'rgba(18,18,42,0.9)',
         padding: 14, alignItems: 'center', gap: 6,
       }}>
-        <Text style={{ fontSize: 28 }}>{earned ? (badge.icon ?? '🏅') : '🔒'}</Text>
+        <Ionicons name={iconName} size={28} color={earned ? col : '#4b5563'} />
         <Text style={{ color: earned ? col : '#4b5563', fontSize: 11, fontWeight: '700',
           textAlign: 'center' }} numberOfLines={2}>
           {badge.name}
@@ -163,30 +197,93 @@ function SrsBreakdown({ levels, total }: { levels: LevelCount[]; total: number }
 }
 
 // ── Saved word row ────────────────────────────────────────────────
-function SavedWordRow({ word }: { word: Word }) {
+export function SavedWordRow({ word }: { word: Word }) {
+  const [expanded, setExpanded] = useState(false);
+
+  const handleSpeak = async (e: any) => {
+    e.stopPropagation();
+    Vibration.vibrate(50);
+    await Speech.speak(word.japaneseWord, { language: 'ja-JP' });
+  };
+
   return (
-    <View style={{
-      flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-      paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.05)',
-    }}>
-      <View style={{ flex: 1, marginRight: 12 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6 }}>
-          <Text style={{ color: '#f9fafb', fontSize: 18, fontWeight: '700' }}>{word.japaneseWord}</Text>
-          {word.hiragana && word.hiragana !== word.japaneseWord && (
-            <Text style={{ color: '#7c3aed', fontSize: 12 }}>({word.hiragana})</Text>
+    <TouchableOpacity
+      activeOpacity={0.82}
+      onPress={() => setExpanded(!expanded)}
+      style={{
+        paddingVertical: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(255,255,255,0.05)',
+      }}
+    >
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginRight: 12, gap: 10 }}>
+          {/* Speaker button */}
+          <TouchableOpacity
+            onPress={handleSpeak}
+            activeOpacity={0.7}
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 16,
+              backgroundColor: 'rgba(124,58,237,0.15)',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderWidth: 1,
+              borderColor: 'rgba(124,58,237,0.25)',
+            }}
+          >
+            <Ionicons name="volume-high" size={16} color="#c084fc" />
+          </TouchableOpacity>
+
+          <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6 }}>
+              <Text style={{ color: '#f9fafb', fontSize: 18, fontWeight: '700' }}>{word.japaneseWord}</Text>
+              {word.hiragana && word.hiragana !== word.japaneseWord && (
+                <Text style={{ color: '#7c3aed', fontSize: 12 }}>({word.hiragana})</Text>
+              )}
+            </View>
+            <Text style={{ color: '#9ca3af', fontSize: 13, marginTop: 2 }} numberOfLines={expanded ? undefined : 1}>
+              {word.meaning}
+            </Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Ionicons name="bookmark" size={16} color="#f59e0b" />
+          <Ionicons name={expanded ? "chevron-up" : "chevron-down"} size={14} color="#4b5563" />
+        </View>
+      </View>
+
+      {/* Expanded example section */}
+      {expanded && (word.exampleSentence || word.exampleTranslation) && (
+        <View style={{
+          marginTop: 10,
+          marginLeft: 42,
+          padding: 10,
+          backgroundColor: 'rgba(255,255,255,0.02)',
+          borderRadius: 10,
+          borderLeftWidth: 2,
+          borderLeftColor: '#7c3aed',
+        }}>
+          {word.exampleSentence && (
+            <Text style={{ color: '#e5e7eb', fontSize: 13, fontWeight: '500' }}>
+              {word.exampleSentence}
+            </Text>
+          )}
+          {word.exampleTranslation && (
+            <Text style={{ color: '#9ca3af', fontSize: 12, marginTop: 4, fontStyle: 'italic' }}>
+              {word.exampleTranslation}
+            </Text>
           )}
         </View>
-        <Text style={{ color: '#9ca3af', fontSize: 13, marginTop: 2 }} numberOfLines={1}>
-          {word.meaning}
-        </Text>
-      </View>
-      <Ionicons name="bookmark" size={16} color="#f59e0b" />
-    </View>
+      )}
+    </TouchableOpacity>
   );
 }
 
 // ── Saved book row ────────────────────────────────────────────────
-function SavedBookRow({ book }: { book: Book }) {
+export function SavedBookRow({ book }: { book: Book }) {
   const navigation = useNavigation<any>();
 
   const handlePress = useCallback(() => {
@@ -214,7 +311,7 @@ function SavedBookRow({ book }: { book: Book }) {
           alignItems: 'center', justifyContent: 'center',
         }}
       >
-        <Text style={{ fontSize: 18 }}>📚</Text>
+        <Ionicons name="book" size={20} color="#fff" />
       </LinearGradient>
       <View style={{ flex: 1 }}>
         <Text style={{ color: '#f3f4f6', fontSize: 14, fontWeight: '600' }} numberOfLines={1}>
@@ -232,11 +329,11 @@ function SavedBookRow({ book }: { book: Book }) {
 
 // ── All-badges panel (placeholder list for locked) ────────────────
 const BADGE_SHOWCASE: Badge[] = [
-  { id: 'b1', name: 'First Step',   description: '', icon: '👣', color: '#10b981', badgeType: 'STREAK',  threshold: 1  },
-  { id: 'b2', name: 'Week Warrior', description: '', icon: '🔥', color: '#f59e0b', badgeType: 'STREAK',  threshold: 7  },
-  { id: 'b3', name: 'Centurion',    description: '', icon: '💯', color: '#3b82f6', badgeType: 'WORDS',   threshold: 100 },
-  { id: 'b4', name: 'Perfectionist',description: '', icon: '✨', color: '#7c3aed', badgeType: 'SCORE',   threshold: 100 },
-  { id: 'b5', name: 'Diamond',      description: '', icon: '💠', color: '#b9f2ff', badgeType: 'LEAGUE',  threshold: 5  },
+  { id: 'b1', name: 'First Step',   description: '', icon: 'walk', color: '#10b981', badgeType: 'STREAK',  threshold: 1  },
+  { id: 'b2', name: 'Week Warrior', description: '', icon: 'flame', color: '#f59e0b', badgeType: 'STREAK',  threshold: 7  },
+  { id: 'b3', name: 'Centurion',    description: '', icon: 'ribbon', color: '#3b82f6', badgeType: 'WORDS',   threshold: 100 },
+  { id: 'b4', name: 'Perfectionist',description: '', icon: 'sparkles', color: '#7c3aed', badgeType: 'SCORE',   threshold: 100 },
+  { id: 'b5', name: 'Diamond',      description: '', icon: 'trophy', color: '#b9f2ff', badgeType: 'LEAGUE',  threshold: 5  },
 ];
 
 // ── Tab type ──────────────────────────────────────────────────────
@@ -246,6 +343,7 @@ type SavedTab = 'words' | 'books';
 export default function ProfileScreen() {
   const { user, logout, refreshUser } = useAuth();
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation<any>();
 
   const [progress, setProgress]   = useState<ProgressResponse | null>(null);
   const [badges,   setBadges]     = useState<UserBadge[] | null>(null);
@@ -275,7 +373,7 @@ export default function ProfileScreen() {
   const fetchSavedWords = useCallback(async () => {
     try {
       const { data } = await apiClient.get<PaginatedResponse<Word>>('/users/me/saved-words', {
-        params: { limit: 100 },
+        params: { limit: 10 },
       });
       setSavedWords(data.data);
       setSavedWordsLoaded(true);
@@ -285,7 +383,7 @@ export default function ProfileScreen() {
   const fetchSavedBooks = useCallback(async () => {
     try {
       const { data } = await apiClient.get<PaginatedResponse<Book>>('/users/me/saved-books', {
-        params: { limit: 100 },
+        params: { limit: 10 },
       });
       setSavedBooks(data.data);
       setSavedBooksLoaded(true);
@@ -358,11 +456,14 @@ export default function ProfileScreen() {
         }
       >
         {/* ── Header ───────────────────────────────────────────── */}
-        <View style={{ marginBottom: 20 }}>
-          <Text style={{ color: '#6b7280', fontSize: 13, fontWeight: '500' }}>Shaxsiy hisobingiz</Text>
-          <Text style={{ color: '#f9fafb', fontSize: 24, fontWeight: '700', letterSpacing: -0.5 }}>
-            Profil 👤
-          </Text>
+        <View style={{ marginBottom: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View>
+            <Text style={{ color: '#6b7280', fontSize: 13, fontWeight: '500' }}>Shaxsiy hisobingiz</Text>
+            <Text style={{ color: '#f9fafb', fontSize: 24, fontWeight: '700', letterSpacing: -0.5 }}>
+              Profil
+            </Text>
+          </View>
+          <Ionicons name="person-circle-outline" size={28} color="#7c3aed" />
         </View>
 
         {/* ── Skeleton while loading ───────────────────────────── */}
@@ -404,7 +505,7 @@ export default function ProfileScreen() {
                   paddingHorizontal: 16, paddingVertical: 7,
                   borderWidth: 1, borderColor: leagueCfg.color + '50',
                 }}>
-                  <Text style={{ fontSize: 16 }}>{leagueCfg.icon}</Text>
+                  <Ionicons name={getIconForEmoji(leagueCfg.icon, 'trophy')} size={16} color={leagueCfg.color} />
                   <Text style={{ color: leagueCfg.color, fontWeight: '700', fontSize: 14 }}>
                     {leagueLabel}
                   </Text>
@@ -428,16 +529,16 @@ export default function ProfileScreen() {
               Statistika
             </Text>
             <View style={{ flexDirection: 'row', gap: 8, marginBottom: 10 }}>
-              <StatCard emoji="🔥" value={profile?.streak   ?? 0} label="Faollik"   color="#f59e0b" />
-              <StatCard emoji="⚡" value={profile?.xp        ?? 0} label="Umumiy XP" color="#7c3aed" />
-              <StatCard emoji="🪙" value={profile?.coins     ?? 0} label="Tangalar"  color="#fbbf24" />
-              <StatCard emoji="📚" value={progress?.totalSaved ?? 0} label="Saqlangan" color="#10b981" />
+              <StatCard icon="flame" value={profile?.streak   ?? 0} label="Faollik"   color="#f59e0b" />
+              <StatCard icon="flash" value={profile?.xp        ?? 0} label="XP"        color="#7c3aed" />
+              <StatCard icon="star" value={profile?.coins     ?? 0} label="Tangalar"  color="#fbbf24" />
+              <StatCard icon="bookmark" value={progress?.totalSaved ?? 0} label="Saqlangan" color="#10b981" />
             </View>
             <View style={{ flexDirection: 'row', gap: 8, marginBottom: 20 }}>
-              <StatCard emoji="📝" value={profile?.dailyTestCount  ?? 0} label="Bugungi test" color="#3b82f6" />
-              <StatCard emoji="🔁" value={profile?.dailyMatchCount ?? 0} label="Bugungi moslash" color="#ec4899" />
-              <StatCard emoji="⏰" value={progress?.dueTodayCount  ?? 0} label="Bugungi takrorlash" color="#ef4444" />
-              <StatCard emoji="🎯" value={totalSrs}                       label="SRSdagi"       color="#06b6d4" />
+              <StatCard icon="create" value={profile?.dailyTestCount  ?? 0} label="Test"        color="#3b82f6" />
+              <StatCard icon="repeat" value={profile?.dailyMatchCount ?? 0} label="Moslash"     color="#ec4899" />
+              <StatCard icon="time" value={progress?.dueTodayCount  ?? 0} label="Takrorlash"  color="#ef4444" />
+              <StatCard icon="stats-chart" value={totalSrs}                       label="SRS"           color="#06b6d4" />
             </View>
 
             {/* ── Saved Words / Books tabs ──────────────────────── */}
@@ -496,9 +597,9 @@ export default function ProfileScreen() {
               <View style={{ backgroundColor: 'rgba(10,10,26,0.85)', padding: 16 }}>
                 {savedTab === 'words' ? (
                   savedWords.length === 0 ? (
-                    <View style={{ alignItems: 'center', paddingVertical: 28, gap: 8 }}>
-                      <Text style={{ fontSize: 36 }}>📝</Text>
-                      <Text style={{ color: '#6b7280', fontSize: 14, textAlign: 'center' }}>
+                    <View style={{ alignItems: 'center', paddingVertical: 28, gap: 12 }}>
+                      <Ionicons name="document-text-outline" size={44} color="rgba(255,255,255,0.15)" />
+                      <Text style={{ color: '#6b7280', fontSize: 14, textAlign: 'center', paddingHorizontal: 12 }}>
                         Hozircha saqlangan so'zlar yo'q — lug'atni ko'rib chiqing va saqlash uchun xatcho'p belgisini bosing!
                       </Text>
                     </View>
@@ -514,16 +615,32 @@ export default function ProfileScreen() {
                       </ScrollView>
                       {savedWords.length > 4 && (
                         <Text style={{ color: '#4b5563', fontSize: 11, textAlign: 'center', marginTop: 8 }}>
-                          ↕ Barcha {savedWords.length} ta saqlangan so'zni ko'rish uchun aylantiring
+                          Barcha {savedWords.length} ta saqlangan so'zni ko'rish uchun pastga aylantiring
                         </Text>
                       )}
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate('SavedItems', { type: 'words' })}
+                        style={{
+                          marginTop: 10,
+                          paddingVertical: 12,
+                          backgroundColor: 'rgba(124,58,237,0.15)',
+                          borderRadius: 14,
+                          alignItems: 'center',
+                          borderWidth: 1,
+                          borderColor: 'rgba(124,58,237,0.3)',
+                        }}
+                      >
+                        <Text style={{ color: '#c084fc', fontSize: 13, fontWeight: '700' }}>
+                          Barcha saqlangan so'zlar
+                        </Text>
+                      </TouchableOpacity>
                     </>
                   )
                 ) : (
                   savedBooks.length === 0 ? (
-                    <View style={{ alignItems: 'center', paddingVertical: 28, gap: 8 }}>
-                      <Text style={{ fontSize: 36 }}>📚</Text>
-                      <Text style={{ color: '#6b7280', fontSize: 14, textAlign: 'center' }}>
+                    <View style={{ alignItems: 'center', paddingVertical: 28, gap: 12 }}>
+                      <Ionicons name="library-outline" size={44} color="rgba(255,255,255,0.15)" />
+                      <Text style={{ color: '#6b7280', fontSize: 14, textAlign: 'center', paddingHorizontal: 12 }}>
                         Hozircha saqlangan kitoblar yo'q — lug'atga o'ting va sevimli kitoblaringizni saqlang!
                       </Text>
                     </View>
@@ -539,9 +656,25 @@ export default function ProfileScreen() {
                       </ScrollView>
                       {savedBooks.length > 4 && (
                         <Text style={{ color: '#4b5563', fontSize: 11, textAlign: 'center', marginTop: 8 }}>
-                          ↕ Barcha {savedBooks.length} ta saqlangan kitobni ko'rish uchun aylantiring
+                          Barcha {savedBooks.length} ta saqlangan kitobni ko'rish uchun pastga aylantiring
                         </Text>
                       )}
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate('SavedItems', { type: 'books' })}
+                        style={{
+                          marginTop: 10,
+                          paddingVertical: 12,
+                          backgroundColor: 'rgba(249,115,22,0.15)',
+                          borderRadius: 14,
+                          alignItems: 'center',
+                          borderWidth: 1,
+                          borderColor: 'rgba(249,115,22,0.3)',
+                        }}
+                      >
+                        <Text style={{ color: '#f97316', fontSize: 13, fontWeight: '700' }}>
+                          Barcha saqlangan kitoblar
+                        </Text>
+                      </TouchableOpacity>
                     </>
                   )
                 )}
@@ -567,9 +700,9 @@ export default function ProfileScreen() {
                 borderRadius: 18, overflow: 'hidden',
                 borderWidth: 1, borderColor: 'rgba(255,255,255,0.07)', marginBottom: 20,
               }}>
-                <View style={{ backgroundColor: 'rgba(10,10,26,0.85)', padding: 24, alignItems: 'center', gap: 8 }}>
-                  <Text style={{ fontSize: 36 }}>🏅</Text>
-                  <Text style={{ color: '#6b7280', fontSize: 14, textAlign: 'center' }}>
+                <View style={{ backgroundColor: 'rgba(10,10,26,0.85)', padding: 24, alignItems: 'center', gap: 12 }}>
+                  <Ionicons name="medal-outline" size={44} color="rgba(255,255,255,0.15)" />
+                  <Text style={{ color: '#6b7280', fontSize: 14, textAlign: 'center', paddingHorizontal: 12 }}>
                     Hozircha nishonlar yo'q — o'yinlarni yakunlang va zanjirlar hosil qiling!
                   </Text>
                 </View>

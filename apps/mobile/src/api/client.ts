@@ -42,17 +42,44 @@ const apiClient = axios.create({
   },
 });
 
-// ─── Secure token helpers ─────────────────────────────────────────
-const REFRESH_KEY = 'vocabjp_refresh_token';
+const isWeb = Platform.OS === 'web';
+const REFRESH_KEY = 'refresh_token';
 
-export const storeRefreshToken = (token: string) =>
-  SecureStore.setItemAsync(REFRESH_KEY, token);
+export const storeRefreshToken = (token: string) => {
+  if (isWeb) {
+    try {
+      localStorage.setItem(REFRESH_KEY, token);
+    } catch (e) {
+      console.warn('localStorage is not available:', e);
+    }
+    return Promise.resolve();
+  }
+  return SecureStore.setItemAsync(REFRESH_KEY, token);
+};
 
-export const loadRefreshToken = () =>
-  SecureStore.getItemAsync(REFRESH_KEY);
+export const loadRefreshToken = () => {
+  if (isWeb) {
+    try {
+      return Promise.resolve(localStorage.getItem(REFRESH_KEY));
+    } catch (e) {
+      console.warn('localStorage is not available:', e);
+      return Promise.resolve(null);
+    }
+  }
+  return SecureStore.getItemAsync(REFRESH_KEY);
+};
 
-export const clearRefreshToken = () =>
-  SecureStore.deleteItemAsync(REFRESH_KEY);
+export const clearRefreshToken = () => {
+  if (isWeb) {
+    try {
+      localStorage.removeItem(REFRESH_KEY);
+    } catch (e) {
+      console.warn('localStorage is not available:', e);
+    }
+    return Promise.resolve();
+  }
+  return SecureStore.deleteItemAsync(REFRESH_KEY);
+};
 
 // ─── In-memory access token ───────────────────────────────────────
 let _accessToken: string | null = null;

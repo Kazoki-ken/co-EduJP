@@ -17,10 +17,14 @@ import {
 } from '@react-native-google-signin/google-signin';
 
 // Google Sign-In sozlamalari (bir marta chaqiriladi)
-GoogleSignin.configure({
-  webClientId: '156336295197-pjb6ocbui8t994dhdg4nv827a22f8e84.apps.googleusercontent.com',
-  offlineAccess: false,
-});
+try {
+  GoogleSignin.configure({
+    webClientId: '156336295197-pjb6ocbui8t994dhdg4nv827a22f8e84.apps.googleusercontent.com',
+    offlineAccess: false,
+  });
+} catch (e) {
+  console.warn('Google Sign-In configuration error:', e);
+}
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 

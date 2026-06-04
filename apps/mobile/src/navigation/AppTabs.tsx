@@ -9,7 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import HomeScreen       from '../screens/HomeScreen';
 import DictionaryStack  from './DictionaryStack';
 import GamesStack       from './GamesStack';
-import ProfileScreen    from '../screens/ProfileScreen';
+import ProfileStack     from './ProfileStack';
 
 // ── Route param types ─────────────────────────────────────────────
 export type AppTabsParamList = {
@@ -247,7 +247,7 @@ export default function AppTabs() {
       <Tab.Screen name="Home"       component={HomeScreen} />
       <Tab.Screen name="Dictionary" component={DictionaryStack} />
       <Tab.Screen name="Games"      component={GamesStack} />
-      <Tab.Screen name="Profile"    component={ProfileScreen} />
+      <Tab.Screen name="Profile"    component={ProfileStack} />
     </Tab.Navigator>
   );
 }
