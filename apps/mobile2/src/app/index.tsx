@@ -60,7 +60,7 @@ export default function IndexScreen() {
   // Google OAuth hook (expo-auth-session)
   const [request, response, promptAsync] = Google.useAuthRequest({
     webClientId: GOOGLE_WEB_CLIENT_ID,
-    androidClientId: '156336295197-3nr5ok7licu4khaogmf51ea2m877ea4a.apps.googleusercontent.com',
+    androidClientId: '156336295197-3i7sjs5vl3ekpsfm0gp1ht9qectj8te2.apps.googleusercontent.com',
     iosClientId: GOOGLE_WEB_CLIENT_ID,
     scopes: ['profile', 'email'],
   });

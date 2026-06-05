@@ -37,13 +37,12 @@
     },
     "extra": {
       "eas": {
-        "projectId": "17dd2e79-a363-4c82-9d7d-0791c2537588"
+        "projectId": "596aca1e-9300-4d8b-8c9a-7a71ff202257"
       }
     },
     "plugins": [
       "expo-secure-store",
       "@react-native-google-signin/google-signin"
-    ],
-    "owner": "kazoki_ken"
+    ]
   }
 }
