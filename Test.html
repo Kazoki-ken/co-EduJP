@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bosh Menu - Premium Dizayn</title>
+  <!-- Plus Jakarta Sans Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #07080d;
+      --card-bg: rgba(18, 18, 32, 0.65);
+      --border-color: rgba(255, 255, 255, 0.06);
+      --text-main: #f3f4f6;
+      --text-muted: #8e9aa8;
+      
+      --purple: #8b5cf6;
+      --purple-light: #a78bfa;
+      --purple-glow: rgba(139, 92, 246, 0.15);
+      
+      --emerald: #10b981;
+      --emerald-light: #34d399;
+      --emerald-glow: rgba(16, 185, 129, 0.15);
+      
+      --amber: #f59e0b;
+      --amber-light: #fbbf24;
+      --amber-glow: rgba(245, 158, 11, 0.15);
+      
+      --rose: #f43f5e;
+      --cyan: #06b6d4;
+      --primary: #7c3aed;
+      --success: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    body {
+      background-color: #030306;
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    /* Top text panel outside the device */
+    .info-panel {
+      text-align: center;
+      margin-bottom: 24px;
+      max-width: 500px;
+    }
+
+    .info-panel h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #a78bfa, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .info-panel p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .hint-pills {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .hint {
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 4px 12px;
+      border-radius: 20px;
+      color: #cbd5e1;
+    }
+
+    /* Simulated Phone Container */
+    .phone-container {
+      width: 380px;
+      height: 800px;
+      background-color: var(--bg-dark);
+      border: 11px solid #1c1d29;
+      border-radius: 46px;
+      position: relative;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.85), 
+                  0 0 0 1px rgba(255, 255, 255, 0.03);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Screen Notch */
+    .phone-notch {
+      width: 130px;
+      height: 26px;
+      background-color: #1c1d29;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .notch-camera {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #08080f;
+      margin-right: 18px;
+    }
+
+    .notch-speaker {
+      width: 40px;
+      height: 3px;
+      border-radius: 2px;
+      background-color: #2b2b3d;
+    }
+
+    /* Phone Status Bar */
+    .phone-status-bar {
+      height: 46px;
+      padding: 12px 24px 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      z-index: 190;
+      background-color: var(--bg-dark);
+    }
+
+    .status-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-right svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    /* Ambient background glows */
+    .ambient-glow {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(80px);
+      opacity: 0.5;
+    }
+
+    .orb-top {
+      top: -50px;
+      left: -60px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+    }
+
+    .orb-mid {
+      top: 320px;
+      right: -100px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
+    }
+
+    /* Scrollable Container */
+    .phone-content {
+      flex: 1;
+      overflow-y: scroll;
+      padding: 12px 16px 110px 16px; /* space for tab bar */
+      scrollbar-width: none;
+    }
+
+    .phone-content::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Premium glass card */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:active {
+      transform: scale(0.97);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Section titles */
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin: 22px 0 10px 4px;
+    }
+
+    /* --- HEADER SECTION --- */
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 4px 18px 4px;
+    }
+
+    .welcome-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .user-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .mini-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .mini-badge.xp { 
+      color: var(--purple-light); 
+      background: rgba(139, 92, 246, 0.08);
+      border-color: rgba(139, 92, 246, 0.2);
+    }
+    .mini-badge.coins { 
+      color: var(--amber-light); 
+      background: rgba(245, 158, 11, 0.08);
+      border-color: rgba(245, 158, 11, 0.2);
+    }
+
+    .header-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar-wrapper {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #4c1d95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 18px;
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    }
+
+    .league-pill {
+      background: rgba(192, 192, 192, 0.08);
+      border: 1px solid rgba(192, 192, 192, 0.2);
+      border-radius: 10px;
+      padding: 3px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #e2e8f0;
+      text-align: center;
+    }
+
+    /* --- STREAK & GOALS (STRICT SYMMETRY & EQUAL HEIGHTS) --- */
+    .row-split {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      align-items: stretch; /* crucial for equal heights */
+    }
+
+    .streak-card {
+      flex: 1;
+      padding: 16px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: flex-start;
+    }
+
+    .streak-icon {
+      font-size: 24px;
+      animation: bounce-soft 2s infinite ease-in-out;
+    }
+
+    @keyframes bounce-soft {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .streak-data {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .streak-val {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #ffffff;
+    }
+
+    .streak-txt {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .goal-card {
+      flex: 1.3;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .goal-text-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      padding-right: 8px;
+    }
+
+    .goal-lbl {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f3f4f6;
+    }
+
+    .goal-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    /* Premium SVG Goal Circle */
+    .goal-circle-wrap {
+      width: 44px;
+      height: 44px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .goal-circle-svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    .circle-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.05);
+      stroke-width: 4.5px;
+    }
+
+    .circle-progress {
+      fill: none;
+      stroke: var(--emerald-light);
+      stroke-width: 4.5px;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 40; /* 60% dynamic value */
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .goal-number {
+      position: absolute;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--emerald-light);
+    }
+
+    /* --- PREMIUM COMPACT UTILITIES DOCK --- */
+    .dock-container {
+      background: rgba(18, 18, 30, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 12px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.02), 0 10px 30px rgba(0,0,0,0.4);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .dock-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      position: relative;
+      flex: 1;
+    }
+
+    .dock-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+    }
+
+    .dock-icon svg {
+      width: 22px;
+      height: 22px;
+      color: #9ca3af;
+      transition: all 0.2s;
+    }
+
+    .dock-item:hover .dock-icon {
+      transform: translateY(-4px) scale(1.05);
+      border-color: rgba(255,255,255,0.15);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    }
+
+    .dock-item:hover svg {
+      color: white;
+    }
+
+    .dock-item:active .dock-icon {
+      transform: scale(0.92);
+    }
+
+    .dock-lbl {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1px;
+      text-align: center;
+    }
+
+    .dock-item:hover .dock-lbl {
+      color: #e5e7eb;
+    }
+
+    .dock-badge {
+      position: absolute;
+      top: -4px;
+      right: 4px;
+      background: var(--rose);
+      color: white;
+      font-size: 8px;
+      font-weight: 800;
+      min-width: 15px;
+      height: 15px;
+      border-radius: 7.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid var(--bg-dark);
+      padding: 0 2px;
+    }
+
+    /* --- LAUNCHPAD: AI, SRS, BOOK (SINGLE ROW EQUAL COLUMNS) --- */
+    .launchpad-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .launch-btn {
+      flex: 1;
+      padding: 14px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
+
+    .launch-btn.ai {
+      background: linear-gradient(180deg, rgba(139, 92, 246, 0.08) 0%, rgba(13, 13, 26, 0.8) 100%);
+      border-color: rgba(139, 92, 246, 0.18);
+    }
+
+    .launch-btn.srs {
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, rgba(13, 13, 26, 0.8) 100%);
+      border-color: rgba(16, 185, 129, 0.18);
+    }
+
+    .launch-btn.book {
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.08) 0%, rgba(13, 13, 26, 0.8) 100%);
+      border-color: rgba(245, 158, 11, 0.18);
+    }
+
+    .launch-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+
+    .launch-btn:hover .launch-icon {
+      transform: scale(1.1);
+    }
+
+    .launch-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .launch-lbl {
+      font-size: 12px;
+      font-weight: 700;
+      color: #f3f4f6;
+    }
+
+    .launch-badge {
+      position: absolute;
+      top: -5px;
+      right: 8px;
+      background: var(--success);
+      color: white;
+      font-size: 8.5px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+      border: 1px solid var(--bg-dark);
+    }
+
+    /* --- SWIPEABLE WORD OF THE DAY (NO COLLIDING TEXT, STACKED LAYOUT) --- */
+    .word-swipe-container {
+      position: relative;
+      width: 100%;
+      height: 210px;
+      overflow: hidden;
+      border-radius: 22px;
+    }
+
+    .word-day-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.06) 0%, rgba(10, 10, 24, 0.98) 100%);
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      border-radius: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .word-day-card.dragging {
+      cursor: grabbing;
+      transition: none !important;
+      border-color: rgba(139, 92, 246, 0.4);
+    }
+
+    .word-day-header {
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .word-tag {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #fbbf24;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .word-tag svg {
+      width: 11px;
+      height: 11px;
+      fill: #fbbf24;
+    }
+
+    .word-day-body {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+      flex: 1;
+    }
+
+    .word-jp-wrap {
+      display: flex;
+      flex-direction: column; /* stacked layout to prevent side-by-side collision */
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+
+    .word-kanji {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: 1px;
+    }
+
+    .word-kana {
+      font-size: 13px;
+      color: #a78bfa;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .word-romaji {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+
+    .word-line {
+      width: 40px;
+      height: 1px;
+      background: rgba(139, 92, 246, 0.2);
+      margin-bottom: 8px;
+    }
+
+    .word-meaning {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e5e7eb;
+      line-height: 1.4;
+      max-width: 280px;
+    }
+
+    .word-day-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      background: rgba(0,0,0,0.15);
+      font-size: 11px;
+      border-top: 1px solid rgba(255,255,255,0.02);
+    }
+
+    .speak-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #c4b5fd;
+      font-weight: 700;
+      cursor: pointer;
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      padding: 4px 10px;
+      border-radius: 10px;
+      transition: all 0.2s;
+    }
+
+    .speak-btn svg {
+      width: 12px;
+      height: 12px;
+      fill: none;
+      stroke: currentColor;
+    }
+
+    .speak-btn:hover {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: rgba(139, 92, 246, 0.3);
+    }
+
+    .save-btn {
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .save-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+    }
+
+    .save-btn.saved {
+      color: #fbbf24;
+    }
+    .save-btn.saved svg {
+      fill: #fbbf24;
+    }
+
+    /* Swipe indicators overlay */
+    .swipe-hint {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .swipe-hint svg { width: 12px; height: 12px; fill: currentColor; }
+    .swipe-hint.left { left: 10px; }
+    .swipe-hint.right { right: 10px; }
+
+    /* --- FIXED FLOATING GLASS TAB BAR (PIXEL PERFECT) --- */
+    .floating-nav-bar {
+      position: absolute;
+      bottom: 20px;
+      left: 14px;
+      right: 14px;
+      height: 62px;
+      z-index: 150;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    }
+
+    .nav-blur-wrap {
+      width: 100%;
+      height: 100%;
+      background: rgba(8, 8, 16, 0.88);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-accent-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.4), transparent);
+    }
+
+    .nav-tabs {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 4px 2px 4px;
+    }
+
+    .nav-tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 100%;
+      cursor: pointer;
+      color: #5d6480;
+      transition: all 0.25s;
+      position: relative;
+    }
+
+    .nav-tab-item.active {
+      color: #a78bfa;
+    }
+
+    .nav-tab-glow {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(139, 92, 246, 0.12);
+      top: 6px;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .nav-tab-item.active .nav-tab-glow {
+      opacity: 1;
+    }
+
+    .nav-tab-item svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      z-index: 5;
+    }
+
+    .nav-tab-label {
+      font-size: 10px;
+      margin-top: 3px;
+      font-weight: 600;
+      z-index: 5;
+    }
+
+    .nav-tab-item.active .nav-tab-label {
+      font-weight: 700;
+    }
+
+    .nav-tab-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      position: absolute;
+      bottom: 4px;
+      opacity: 0;
+      box-shadow: 0 0 6px var(--primary);
+      transition: opacity 0.25s;
+    }
+
+    .nav-tab-item.active .nav-tab-dot {
+      opacity: 1;
+    }
+
+    /* --- OVERLAY DRAWERS --- */
+    .drawer-overlay {
+      position: absolute;
+      bottom: -720px;
+      left: 0;
+      right: 0;
+      height: 580px;
+      background: rgba(8, 8, 18, 0.98);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      z-index: 250;
+      transition: bottom 0.35s cubic-bezier(0.1, 0.75, 0.5, 1);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.85);
+    }
+
+    .drawer-overlay.open {
+      bottom: 0;
+    }
+
+    .drawer-header {
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .drawer-header h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #f3f4f6;
+    }
+
+    .drawer-close {
+      cursor: pointer;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+    }
+    .drawer-close svg { width: 22px; height: 22px; stroke: currentColor; fill: none; }
+
+    /* Tools Hub Grid inside Drawer */
+    .tools-drawer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .tools-grid-tile {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 18px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tools-grid-tile:hover {
+      background: rgba(139, 92, 246, 0.08);
+      border-color: rgba(139, 92, 246, 0.3);
+    }
+
+    .tools-grid-icon-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .tools-grid-lbl {
+      font-size: 12px;
+      font-weight: 700;
+      color: #e5e7eb;
+    }
+
+    /* Pomodoro Timer specific styles inside Drawer */
+    .pomo-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      padding: 20px;
+    }
+
+    .pomo-clock {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      border: 4px solid rgba(244, 63, 94, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .pomo-clock.active {
+      border-color: rgba(244, 63, 94, 0.4);
+      box-shadow: 0 0 24px rgba(244, 63, 94, 0.2);
+    }
+
+    .pomo-time-val {
+      font-size: 38px;
+      font-weight: 800;
+      font-family: monospace;
+      color: white;
+    }
+
+    .pomo-status-lbl {
+      font-size: 11px;
+      color: #fda4af;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-top: 4px;
+    }
+
+    .pomo-action-btn {
+      width: 190px;
+      padding: 12px;
+      border-radius: 14px;
+      background: var(--rose);
+      color: white;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 4px 14px rgba(244, 63, 94, 0.3);
+      transition: all 0.2s;
+    }
+
+    .pomo-action-btn:active { transform: scale(0.96); }
+
+    .pomo-sec-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.06);
+      width: 190px;
+      padding: 11px;
+      border-radius: 14px;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* AI Chat specific styles */
+    .ai-chat-body {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      background: rgba(6,6,12,0.92);
+    }
+
+    .ai-chat-log {
+      flex: 1;
+      padding: 18px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .bubble {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+
+    .bubble.ai {
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      color: #e5e7eb;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .bubble.user {
+      background: var(--primary);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .ai-chat-chips {
+      display: flex;
+      gap: 8px;
+      padding: 10px 18px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .ai-chat-chips::-webkit-scrollbar { display: none; }
+
+    .chat-chip {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 14px;
+      font-size: 11px;
+      color: #d1d5db;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .ai-chat-input-row {
+      padding: 12px 18px 24px 18px;
+      display: flex;
+      gap: 8px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .ai-input {
+      flex: 1;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 12px 16px;
+      color: white;
+      font-family: inherit;
+      font-size: 13.5px;
+      outline: none;
+    }
+
+    .ai-send-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--primary);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* Kana chart grid */
+    .kana-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      padding: 18px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .kana-tile {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .kana-tile:hover {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .kana-jp-char {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .kana-ro-char {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Outside Info Panel -->
+  <div class="info-panel">
+    <h1>Bosh Menu Premium Re-Design</h1>
+    <p>O'lchamlar, shriftlar, paddinglar va visual ierarxiya Apple/iOS dizayn yo'riqnomalari asosida mukammal muvozanatga keltirildi. CDNsiz, 100% mustaqil inline SVG piktogrammalari bilan ishlaydi.</p>
+    <div class="hint-pills">
+      <div class="hint">🍅 Pomodoro va 🔤 Alifbo asboblarini oching, ular ishlaydi!</div>
+    </div>
+  </div>
+
+  <!-- Phone Container -->
+  <div class="phone-container">
+    <!-- Notch -->
+    <div class="phone-notch">
+      <div class="notch-camera"></div>
+      <div class="notch-speaker"></div>
+    </div>
+
+    <!-- Phone Status Bar -->
+    <div class="phone-status-bar">
+      <span id="time-display">15:46</span>
+      <div class="status-right">
+        <!-- Cellular Signal -->
+        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 20h20V2z"></path>
+        </svg>
+        <!-- Wifi -->
+        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+          <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+          <line x1="12" y1="20" x2="12.01" y2="20"></line>
+        </svg>
+        <!-- Battery -->
+        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="width: 15px; height: 15px;">
+          <rect x="2" y="7" width="16" height="10" rx="2" ry="2"></rect>
+          <line x1="22" y1="11" x2="22" y2="13"></line>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Orbs -->
+    <div class="ambient-glow orb-top"></div>
+    <div class="ambient-glow orb-mid"></div>
+
+    <!-- Phone Content Area -->
+    <div class="phone-content">
+
+      <!-- HEADER SECTION -->
+      <div class="header-section">
+        <div>
+          <div class="welcome-text">こんにちは 👋</div>
+          <div class="user-name">Ali Qodirov</div>
+          <div class="header-stats">
+            <div class="mini-badge xp">
+              ⚡ <span id="user-xp">340</span> XP
+            </div>
+            <div class="mini-badge coins">
+              🪙 <span id="user-coins">150</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-profile">
+          <div class="avatar-wrapper">A</div>
+          <div class="league-pill">🥈 Kumush</div>
+        </div>
+      </div>
+
+      <!-- STREAK & GOALS SIDE BY SIDE -->
+      <div class="row-split">
+        <!-- Streak widget -->
+        <div class="glass-card streak-card" onclick="playStreakEffect()">
+          <span class="streak-icon">🔥</span>
+          <div class="streak-data">
+            <span class="streak-val" id="user-streak">5</span>
+            <span class="streak-txt">kunlik faollik</span>
+          </div>
+        </div>
+
+        <!-- Goal progress widget with circular SVG progress -->
+        <div class="glass-card goal-card" onclick="incrementGoal()">
+          <div class="goal-text-col">
+            <span class="goal-lbl">Kunlik maqsad</span>
+            <span class="goal-sub">Muntazamlik ravonlikka eltar!</span>
+          </div>
+          <!-- Circular widget -->
+          <div class="goal-circle-wrap">
+            <svg class="goal-circle-svg" viewBox="0 0 36 36">
+              <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+              <path class="circle-progress" id="circle-stroke" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+            </svg>
+            <span class="goal-number" id="goal-current">3/5</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREMIUM iOS DOCK -->
+      <div class="section-title">Yordamchi Asboblar</div>
+      <div class="dock-container">
+        <!-- Dock Pomo -->
+        <div class="dock-item" onclick="togglePomoDrawer(true)">
+          <div class="dock-icon" style="background: linear-gradient(135deg, rgba(244,63,94,0.1) 0%, rgba(244,63,94,0.02) 100%); border-color: rgba(244,63,94,0.25);">
+            <!-- Tomato outline SVG -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <div class="dock-badge">25</div>
+          </div>
+          <span class="dock-lbl">Pomodoro</span>
+        </div>
+
+        <!-- Dock Alifbo -->
+        <div class="dock-item" onclick="toggleKanaDrawer(true)">
+          <div class="dock-icon" style="background: linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0.02) 100%); border-color: rgba(16,185,129,0.25);">
+            <!-- Grid SVG -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+          </div>
+          <span class="dock-lbl">Alifbo</span>
+        </div>
+
+        <!-- Dock Kanji -->
+        <div class="dock-item" onclick="alert('Kanji o\'rganish asbobi tez orada qo\'shiladi!')">
+          <div class="dock-icon" style="background: linear-gradient(135deg, rgba(245,158,11,0.1) 0%, rgba(245,158,11,0.02) 100%); border-color: rgba(245,158,11,0.25);">
+            <!-- Bookmark/Book SVG -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5z"></path>
+            </svg>
+          </div>
+          <span class="dock-lbl">Kanji</span>
+        </div>
+
+        <!-- Dock Ovoz -->
+        <div class="dock-item" onclick="alert('Talaffuz murabbiyi asbobi tez orada qo\'shiladi!')">
+          <div class="dock-icon" style="background: linear-gradient(135deg, rgba(6,182,212,0.1) 0%, rgba(6,182,212,0.02) 100%); border-color: rgba(6,182,212,0.25);">
+            <!-- Mic SVG -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </div>
+          <span class="dock-lbl">Ovoz</span>
+        </div>
+
+        <!-- Dock More -->
+        <div class="dock-item" onclick="toggleToolsDrawer(true)">
+          <div class="dock-icon" style="background: linear-gradient(135deg, rgba(139,92,246,0.1) 0%, rgba(139,92,246,0.02) 100%); border-color: rgba(139,92,246,0.25);">
+            <!-- Ellipsis SVG -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="19" cy="12" r="1"></circle>
+              <circle cx="5" cy="12" r="1"></circle>
+            </svg>
+          </div>
+          <span class="dock-lbl">Ko'proq</span>
+        </div>
+      </div>
+
+      <!-- LAUNCHPAD ROW (AI, SRS, LUG'AT) -->
+      <div class="section-title">Tezkor Amaliyot</div>
+      <div class="launchpad-row">
+        <!-- AI Sensei -->
+        <div class="glass-card launch-btn ai" onclick="toggleChatSheet(true)">
+          <div class="launch-icon" style="background: rgba(139, 92, 246, 0.15);">
+            <!-- Sparkles SVG -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path>
+            </svg>
+          </div>
+          <span class="launch-lbl">AI Sensei</span>
+        </div>
+
+        <!-- SRS Repeat -->
+        <div class="glass-card launch-btn srs" onclick="alert('Takrorlash testi boshlandi!')">
+          <div class="launch-badge">12</div>
+          <div class="launch-icon" style="background: rgba(16, 185, 129, 0.15);">
+            <!-- Refresh SVG -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6"></path>
+              <path d="M21.34 15.57a10 10 0 1 1-.57-8.38l.73-2.73"></path>
+            </svg>
+          </div>
+          <span class="launch-lbl">Takrorlash</span>
+        </div>
+
+        <!-- Book (Dictionary) -->
+        <div class="glass-card launch-btn book" onclick="alert('Lug\'at bo\'limiga o\'tildi!')">
+          <div class="launch-icon" style="background: rgba(245, 158, 11, 0.15);">
+            <!-- Book SVG -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5z"></path>
+            </svg>
+          </div>
+          <span class="launch-lbl">Lug'at</span>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE SWIPEABLE WORD OF THE DAY -->
+      <div class="section-title">Kun so'zi (Surib o'zgartiring ↔️)</div>
+      <div class="word-swipe-container" id="swipe-container">
+        <!-- Swipe hints inside container -->
+        <div class="swipe-hint left">
+          <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          Orqaga
+        </div>
+        <div class="swipe-hint right">
+          Keyingi
+          <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
+
+        <!-- Swipable card widget -->
+        <div class="word-day-card" id="word-card">
+          <div class="word-day-header">
+            <div class="word-tag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              LUG'AT BOYUTI
+            </div>
+            <div class="save-btn" id="save-word-btn" onclick="toggleSaveWord(); event.stopPropagation();">
+              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="save-word-svg">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
+          </div>
+
+          <div class="word-day-body">
+            <div class="word-jp-wrap">
+              <span class="word-kana" id="word-kana">いっしょうけんめい</span>
+              <span class="word-kanji" id="word-ja">一生懸命</span>
+            </div>
+            <div class="word-romaji" id="word-romaji">isshoukenmei</div>
+            <div class="word-line"></div>
+            <div class="word-meaning" id="word-uz">"Bor kuchi bilan, chin dildan harakat qilish"</div>
+          </div>
+
+          <div class="word-day-footer">
+            <span style="color: var(--text-muted);" id="word-level">Daraja: N3 so'zi</span>
+            <div class="speak-btn" onclick="speakWord(); event.stopPropagation();">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              </svg>
+              Tinglash
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FLOATING TAB BAR -->
+    <div class="floating-nav-bar">
+      <div class="nav-blur-wrap">
+        <div class="nav-accent-line"></div>
+        <div class="nav-tabs">
+          <!-- Home Tab -->
+          <div class="nav-tab-item active" onclick="switchTab(this, 'Home')">
+            <div class="nav-tab-glow"></div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span class="nav-tab-label">Home</span>
+            <div class="nav-tab-dot"></div>
+          </div>
+          <!-- Dictionary Tab -->
+          <div class="nav-tab-item" onclick="switchTab(this, 'Dictionary')">
+            <div class="nav-tab-glow"></div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5z"></path>
+            </svg>
+            <span class="nav-tab-label">Lug'at</span>
+            <div class="nav-tab-dot"></div>
+          </div>
+          <!-- Games Tab -->
+          <div class="nav-tab-item" onclick="switchTab(this, 'Games')">
+            <div class="nav-tab-glow"></div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="6" width="20" height="12" rx="3"></rect>
+              <line x1="6" y1="12" x2="10" y2="12"></line>
+              <line x1="8" y1="10" x2="8" y2="14"></line>
+              <line x1="15" y1="13" x2="15.01" y2="13"></line>
+              <line x1="18" y1="11" x2="18.01" y2="11"></line>
+            </svg>
+            <span class="nav-tab-label">O'yinlar</span>
+            <div class="nav-tab-dot"></div>
+          </div>
+          <!-- Profile Tab -->
+          <div class="nav-tab-item" onclick="switchTab(this, 'Profile')">
+            <div class="nav-tab-glow"></div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="nav-tab-label">Profil</span>
+            <div class="nav-tab-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN TOOLS DRAWER -->
+    <div class="drawer-overlay" id="tools-drawer">
+      <div class="drawer-header">
+        <h3>Barcha Asboblar (Tools Hub)</h3>
+        <div class="drawer-close" onclick="toggleToolsDrawer(false)">
+          <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </div>
+      </div>
+      <div class="tools-drawer-grid">
+        <div class="tools-grid-tile" onclick="toggleToolsDrawer(false); togglePomoDrawer(true);">
+          <div class="tools-grid-icon-circle" style="background: rgba(244,63,94,0.1); color: #f43f5e;">🍅</div>
+          <span class="tools-grid-lbl">Pomodoro</span>
+        </div>
+        <div class="tools-grid-tile" onclick="toggleToolsDrawer(false); toggleKanaDrawer(true);">
+          <div class="tools-grid-icon-circle" style="background: rgba(16,185,129,0.1); color: #10b981;">🔤</div>
+          <span class="tools-grid-lbl">Alifbo</span>
+        </div>
+        <div class="tools-grid-tile" onclick="alert('Tez orada...')">
+          <div class="tools-grid-icon-circle" style="background: rgba(245,158,11,0.1); color: #f59e0b;">📚</div>
+          <span class="tools-grid-lbl">Kanji Lug'at</span>
+        </div>
+        <div class="tools-grid-tile" onclick="alert('Tez orada...')">
+          <div class="tools-grid-icon-circle" style="background: rgba(6,182,212,0.1); color: #06b6d4;">🎙️</div>
+          <span class="tools-grid-lbl">Talaffuz</span>
+        </div>
+        <div class="tools-grid-tile" onclick="alert('Tez orada...')">
+          <div class="tools-grid-icon-circle" style="background: rgba(59,130,246,0.1); color: #3b82f6;">📖</div>
+          <span class="tools-grid-lbl">Grammatika</span>
+        </div>
+        <div class="tools-grid-tile" onclick="alert('Tez orada...')">
+          <div class="tools-grid-icon-circle" style="background: rgba(236,72,153,0.1); color: #ec4899;">✍️</div>
+          <span class="tools-grid-lbl">Yozish</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- POMODORO TIMER DRAWER -->
+    <div class="drawer-overlay" id="pomo-timer-drawer">
+      <div class="drawer-header">
+        <h3>Pomodoro Taymer</h3>
+        <div class="drawer-close" onclick="togglePomoDrawer(false)">
+          <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </div>
+      </div>
+      <div class="pomo-body">
+        <div class="pomo-clock" id="pomo-circle">
+          <span class="pomo-time-val" id="pomo-clock-display">25:00</span>
+          <span class="pomo-status-lbl" id="pomo-state-label">Fokus vaqti</span>
+        </div>
+        <button class="pomo-action-btn" id="pomo-drawer-start-btn" onclick="togglePomodoro()">Start</button>
+        <button class="pomo-sec-btn" onclick="resetPomodoro()">Reset Taymer</button>
+      </div>
+    </div>
+
+    <!-- AI SENSEI CHAT DRAWER -->
+    <div class="drawer-overlay" id="ai-chat-sheet">
+      <div class="drawer-header">
+        <h3>AI Sensei Yordamchi</h3>
+        <div class="drawer-close" onclick="toggleChatSheet(false)">
+          <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </div>
+      </div>
+      <div class="ai-chat-body">
+        <div class="ai-chat-log" id="chat-messages">
+          <div class="bubble ai">
+            Konnichiwa! Men Yapon tili bo'yicha sun'iy intellekt o'qituvchingizman. Grammatika, gap tuzish yoki so'z ma'nolari bo'yicha savollaringiz bo'lsa, bemalol so'rang!
+          </div>
+        </div>
+        <!-- Prompt chips -->
+        <div class="ai-chat-chips">
+          <div class="chat-chip" onclick="sendQuickMessage('Yapon tilida rahmat nima degani?')">"Rahmat" aytish usullari</div>
+          <div class="chat-chip" onclick="sendQuickMessage('Komorebi (木漏れ日) so\'zini tushuntirib bering')">Komorebi so'zi</div>
+          <div class="chat-chip" onclick="sendQuickMessage('JLPT N5 va N4 farqi nima?')">N5 vs N4 imtihonlari</div>
+        </div>
+        <!-- Input panel -->
+        <div class="ai-chat-input-row">
+          <input type="text" class="ai-input" id="chat-input-field" placeholder="Sensei'ga savol yozing..." onkeypress="handleChatKeyPress(event)">
+          <button class="ai-send-btn" onclick="sendCustomMessage()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px;">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- KANA ALIFBO DRAWER -->
+    <div class="drawer-overlay" id="kana-drawer">
+      <div class="drawer-header">
+        <h3>Hiragana Ovozli Jadval</h3>
+        <div class="drawer-close" onclick="toggleKanaDrawer(false)">
+          <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </div>
+      </div>
+      <div class="kana-grid" id="kana-grid-container">
+        <!-- Cells generated by JS -->
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Set time dynamically in status bar
+    function updateTime() {
+      const now = new Date();
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      hours = hours < 10 ? '0' + hours : hours;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      document.getElementById('time-display').innerText = hours + ':' + minutes;
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // Goal Increment Interaction (60% starting offset for stroke-dashoffset = 40)
+    let currentGoal = 3;
+    const maxGoal = 5;
+    
+    function updateGoalCircle() {
+      const percent = currentGoal / maxGoal;
+      const offset = 100 - (percent * 100);
+      document.getElementById('circle-stroke').style.strokeDashoffset = offset;
+      document.getElementById('goal-current').innerText = currentGoal + '/' + maxGoal;
+    }
+
+    function incrementGoal() {
+      if (currentGoal < maxGoal) {
+        currentGoal++;
+        updateGoalCircle();
+
+        if (currentGoal === maxGoal) {
+          setTimeout(() => {
+            alert('Tabriklaymiz! Kunlik maqsadga erishdingiz! +15 XP, +5 Tangalar! 🔥');
+            document.getElementById('user-xp').innerText = parseInt(document.getElementById('user-xp').innerText) + 15;
+            document.getElementById('user-coins').innerText = parseInt(document.getElementById('user-coins').innerText) + 5;
+          }, 300);
+        }
+      }
+    }
+    
+    updateGoalCircle();
+
+    // Word speech synthesis
+    function speakWord(text) {
+      const kanji = text || document.getElementById('word-ja').innerText;
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(kanji);
+        utterance.lang = 'ja-JP';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert('Matnni ovozlashtirish qo\'llab-quvvatlanmaydi.');
+      }
+    }
+
+    // Toggle save word of the day
+    let wordSaved = false;
+    function toggleSaveWord() {
+      wordSaved = !wordSaved;
+      const btn = document.getElementById('save-word-btn');
+      if (wordSaved) {
+        btn.classList.add('saved');
+      } else {
+        btn.classList.remove('saved');
+      }
+    }
+
+    // Bouncing/scaling streak effect
+    function playStreakEffect() {
+      const currentStreak = parseInt(document.getElementById('user-streak').innerText);
+      alert(`Faollik zanjiri: ${currentStreak} kun! Har kuni kamida 5 ta mashq bajaring.`);
+    }
+
+    // Tab Switch
+    function switchTab(el, tabName) {
+      const tabs = document.querySelectorAll('.nav-tab-item');
+      tabs.forEach(tab => {
+        tab.classList.remove('active');
+      });
+      el.classList.add('active');
+    }
+
+    // --- MAIN TOOLS DRAWER ---
+    function toggleToolsDrawer(open) {
+      const drawer = document.getElementById('tools-drawer');
+      if (open) {
+        drawer.classList.add('open');
+      } else {
+        drawer.classList.remove('open');
+      }
+    }
+
+    // --- POMODORO TIMER DRAWER LOGIC ---
+    let pomoInterval = null;
+    let pomoSeconds = 25 * 60;
+    let pomoIsRunning = false;
+
+    function togglePomoDrawer(open) {
+      const drawer = document.getElementById('pomo-timer-drawer');
+      if (open) {
+        drawer.classList.add('open');
+      } else {
+        drawer.classList.remove('open');
+      }
+    }
+
+    function togglePomodoro() {
+      const startBtn = document.getElementById('pomo-drawer-start-btn');
+      const circle = document.getElementById('pomo-circle');
+      if (pomoIsRunning) {
+        clearInterval(pomoInterval);
+        pomoIsRunning = false;
+        startBtn.innerText = 'Start';
+        circle.classList.remove('active');
+      } else {
+        pomoIsRunning = true;
+        startBtn.innerText = 'Pause';
+        circle.classList.add('active');
+        pomoInterval = setInterval(() => {
+          if (pomoSeconds > 0) {
+            pomoSeconds--;
+            updatePomoDisplay();
+          } else {
+            clearInterval(pomoInterval);
+            alert('Vaqt tugadi! Fokus mashg\'uloti muvaffaqiyatli yakunlandi. Dam oling! +5 XP 🍅');
+            document.getElementById('user-xp').innerText = parseInt(document.getElementById('user-xp').innerText) + 5;
+            resetPomodoro();
+          }
+        }, 1000);
+      }
+    }
+
+    function resetPomodoro() {
+      clearInterval(pomoInterval);
+      pomoSeconds = 25 * 60;
+      pomoIsRunning = false;
+      document.getElementById('pomo-drawer-start-btn').innerText = 'Start';
+      document.getElementById('pomo-circle').classList.remove('active');
+      updatePomoDisplay();
+    }
+
+    function updatePomoDisplay() {
+      const mins = Math.floor(pomoSeconds / 60);
+      const secs = pomoSeconds % 60;
+      const minsStr = mins < 10 ? '0' + mins : mins;
+      const secsStr = secs < 10 ? '0' + secs : secs;
+      document.getElementById('pomo-clock-display').innerText = minsStr + ':' + secsStr;
+    }
+
+    // --- AI SENSEI CHAT INTERACTIVE LOGIC ---
+    function toggleChatSheet(open) {
+      const sheet = document.getElementById('ai-chat-sheet');
+      if (open) {
+        sheet.classList.add('open');
+      } else {
+        sheet.classList.remove('open');
+      }
+    }
+
+    const AI_RESPONSES = {
+      'yapon tilida rahmat nima degani?': 'Yapon tilida rahmat aytishning turli darajalari bor:<br><br>1. **Arigatou gozaimasu (ありがとうございます)** - Rasmiy va hurmatli.<br>2. **Arigatou (ありがとう)** - Do\'stona, yaqinlarga.<br>3. **Doumo arigatou (どうもありがとう)** - Juda katta rahmat.<br>4. **Sankyuu (サンキュー)** - Yaponcha sleng.',
+      'komorebi (木漏れ日) so\'zini tushuntirib bering': '**Komorebi (木漏れ日)** - Daraxt shoxlari orasidan tushayotgan quyosh nuri. 🌳✨ Yapon tili tabiati va estetikasi uchun juda muhim so\'z.',
+      'jlpt n5 va n4 farqi nima?': '**JLPT N5 va N4 farqlari:**<br><br>1. **N5:** 800 ta so\'z, 100 kanji. Eng sodda iboralar.<br>2. **N4:** 1500 ta so\'z, 300 kanji. Kundalik suhbatlar.'
+    };
+
+    function sendQuickMessage(text) {
+      appendMessage(text, 'user');
+      showTypingIndicator();
+      setTimeout(() => {
+        removeTypingIndicator();
+        const response = AI_RESPONSES[text] || "Tushundim. Yapon tili bo'yicha boshqa savolingiz bormi?";
+        appendMessage(response, 'ai');
+      }, 1000);
+    }
+
+    function handleChatKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendCustomMessage();
+      }
+    }
+
+    function sendCustomMessage() {
+      const input = document.getElementById('chat-input-field');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMessage(text, 'user');
+      input.value = '';
+      showTypingIndicator();
+
+      setTimeout(() => {
+        removeTypingIndicator();
+        let reply = "Men bu savolni tushundim! Yozgan gapingiz juda qiziq. Lekin hozircha prototip rejimida bo'lganim sababli cheklangan tayyor savollarga javob bera olaman. Masalan, tepada ko'rsatilgan tayyor savollarni bosib ko'ring!";
+        if (text.toLowerCase().includes('salom') || text.toLowerCase().includes('konnichiwa')) {
+          reply = "Konnichiwa! 🌸 Qanday Yapon tili savolingiz bor?";
+        }
+        appendMessage(reply, 'ai');
+      }, 1200);
+    }
+
+    function appendMessage(text, sender) {
+      const messagesContainer = document.getElementById('chat-messages');
+      const msg = document.createElement('div');
+      msg.className = `bubble ${sender}`;
+      msg.innerHTML = text;
+      messagesContainer.appendChild(msg);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Typing indicators
+    function showTypingIndicator() {
+      const messagesContainer = document.getElementById('chat-messages');
+      const indicator = document.createElement('div');
+      indicator.className = 'bubble ai';
+      indicator.id = 'typing-indicator';
+      indicator.innerHTML = '<span style="opacity: 0.5;">Yozmoqda...</span>';
+      messagesContainer.appendChild(indicator);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const indicator = document.getElementById('typing-indicator');
+      if (indicator) indicator.remove();
+    }
+
+    // --- KANA EXPLORER LOGIC ---
+    function toggleKanaDrawer(open) {
+      const drawer = document.getElementById('kana-drawer');
+      if (open) {
+        drawer.classList.add('open');
+      } else {
+        drawer.classList.remove('open');
+      }
+    }
+
+    const KANA_LIST = [
+      { jp: 'あ', ro: 'a' }, { jp: 'い', ro: 'i' }, { jp: 'う', ro: 'u' }, { jp: 'え', ro: 'e' }, { jp: 'お', ro: 'o' },
+      { jp: 'か', ro: 'ka' }, { jp: 'き', ro: 'ki' }, { jp: 'く', ro: 'ku' }, { jp: 'け', ro: 'ke' }, { jp: 'こ', ro: 'ko' },
+      { jp: 'さ', ro: 'sa' }, { jp: 'し', ro: 'shi' }, { jp: 'す', ro: 'su' }, { jp: 'せ', ro: 'se' }, { jp: 'そ', ro: 'so' },
+      { jp: 'た', ro: 'ta' }, { jp: 'ち', ro: 'chi' }, { jp: 'つ', ro: 'tsu' }, { jp: 'て', ro: 'te' }, { jp: 'と', ro: 'to' },
+      { jp: 'な', ro: 'na' }, { jp: 'に', ro: 'ni' }, { jp: 'ぬ', ro: 'nu' }, { jp: 'ね', ro: 'ne' }, { jp: 'の', ro: 'no' }
+    ];
+
+    function initKanaGrid() {
+      const grid = document.getElementById('kana-grid-container');
+      grid.innerHTML = '';
+      KANA_LIST.forEach(item => {
+        const cell = document.createElement('div');
+        cell.className = 'kana-tile';
+        cell.onclick = () => speakWord(item.jp);
+        cell.innerHTML = `
+          <span class="kana-jp-char">${item.jp}</span>
+          <span class="kana-ro-char">${item.ro}</span>
+        `;
+        grid.appendChild(cell);
+      });
+    }
+    initKanaGrid();
+
+    // --- SWIPEABLE WORD OF THE DAY LOGIC ---
+    const WORDS_DATABASE = [
+      { ja: '一生懸命', kana: 'いっしょうけんめい', ro: 'isshoukenmei', uz: '"Bor kuchi bilan, chin dildan harakat qilish"', level: 'N3' },
+      { ja: '木漏れ日', kana: 'こもれび', ro: 'komorebi', uz: '"Daraxt shoxlari orasidan tushayotgan quyosh nuri"', level: 'N1' },
+      { ja: '改善', kana: 'かいぜん', ro: 'kaizen', uz: '"Yaxshilash, rivojlantirish (doimiy ravishda o\'sish)"', level: 'N3' },
+      { ja: '頑張ette', kana: 'がんばって', ro: 'ganbatte', uz: '"G\'ayrat qil, g\'alaba qozon (taslim bo\'lma!)"', level: 'N5' },
+      { ja: '一期一会', kana: 'いちごいちえ', ro: 'ichigo ichie', uz: '"Bir umrlik yagona uchrashuv (lahzani qadrlash)"', level: 'N1' },
+      { ja: '懐かしい', kana: 'なつかしい', ro: 'natsukashii', uz: '"Sog\'intiruvchi, shirin xotiralarni uyg\'otuvchi"', level: 'N3' },
+      { ja: '木枯らし', kana: 'こがらし', ro: 'kogarashi', uz: '"Kuz oxirida esadigan sovuq va quruq shamol"', level: 'N2' }
+    ];
+
+    let currentWordIndex = 0;
+    const card = document.getElementById('word-card');
+    const container = document.getElementById('swipe-container');
+
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+
+    card.addEventListener('mousedown', startDrag);
+    card.addEventListener('touchstart', startDrag, { passive: true });
+
+    window.addEventListener('mousemove', drag);
+    window.addEventListener('touchmove', drag, { passive: false });
+
+    window.addEventListener('mouseup', endDrag);
+    window.addEventListener('touchend', endDrag);
+
+    function startDrag(e) {
+      isDragging = true;
+      startX = e.clientX || e.touches[0].clientX;
+      card.classList.add('dragging');
+    }
+
+    function drag(e) {
+      if (!isDragging) return;
+      if (e.cancelable) e.preventDefault();
+
+      const x = e.clientX || (e.touches && e.touches[0].clientX);
+      currentX = x - startX;
+      
+      const rotate = currentX * 0.04;
+      card.style.transform = `translateX(${currentX}px) rotate(${rotate}deg)`;
+
+      if (currentX > 30) {
+        card.style.borderColor = 'rgba(16, 185, 129, 0.35)';
+      } else if (currentX < -30) {
+        card.style.borderColor = 'rgba(139, 92, 246, 0.35)';
+      } else {
+        card.style.borderColor = 'rgba(139, 92, 246, 0.15)';
+      }
+    }
+
+    function endDrag() {
+      if (!isDragging) return;
+      isDragging = false;
+      card.classList.remove('dragging');
+
+      const swipeThreshold = 75;
+
+      if (Math.abs(currentX) > swipeThreshold) {
+        const direction = currentX > 0 ? 1 : -1;
+        
+        card.style.transition = 'transform 0.3s ease-out';
+        card.style.transform = `translateX(${direction * 380}px) rotate(${direction * 15}deg)`;
+        
+        setTimeout(() => {
+          loadNewWord();
+          
+          card.style.transition = 'none';
+          card.style.transform = `translateX(${-direction * 380}px) rotate(${-direction * 15}deg)`;
+          
+          card.offsetHeight; // force reflow
+          
+          card.style.transition = 'transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.15)';
+          card.style.transform = 'translateX(0) rotate(0)';
+          card.style.borderColor = 'rgba(139, 92, 246, 0.15)';
+        }, 250);
+
+      } else {
+        card.style.transition = 'transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.12)';
+        card.style.transform = 'translateX(0) rotate(0)';
+        card.style.borderColor = 'rgba(139, 92, 246, 0.15)';
+      }
+      currentX = 0;
+    }
+
+    function loadNewWord() {
+      let newIndex = currentWordIndex;
+      while (newIndex === currentWordIndex) {
+        newIndex = Math.floor(Math.random() * WORDS_DATABASE.length);
+      }
+      currentWordIndex = newIndex;
+      const word = WORDS_DATABASE[currentWordIndex];
+
+      document.getElementById('word-ja').innerText = word.ja;
+      document.getElementById('word-kana').innerText = word.kana;
+      document.getElementById('word-romaji').innerText = word.ro;
+      document.getElementById('word-uz').innerText = word.uz;
+      document.getElementById('word-level').innerText = `Daraja: ${word.level} so'zi`;
+    }
+  </script>
+</body>
+</html>

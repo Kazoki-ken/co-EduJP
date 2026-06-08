@@ -1,0 +1,25 @@
+config:
+  target: "https://edujp.uz"
+  phases:
+    - duration: 30
+      arrivalRate: 2
+      rampTo: 20
+      name: "Load Test"
+scenarios:
+  - name: "Registration and Fetch"
+    flow:
+      - post:
+          url: "/api/auth/register"
+          json:
+            username: "testuser_{{ $randomNumber(1, 100000000) }}_{{ $timestamp }}"
+            email: "testuser_{{ $randomNumber(1, 100000000) }}_{{ $timestamp }}@test.com"
+            password: "password123"
+          capture:
+            - json: "$.accessToken"
+              as: "token"
+      - get:
+          url: "/api/words?limit=10"
+      - get:
+          url: "/api/users/me/progress"
+          headers:
+            Authorization: "Bearer {{ token }}"

@@ -47,15 +47,17 @@ enum GameType {
 model User {
   id           String   @id @default(cuid())
   username     String   @unique
-  email        String   @unique
-  passwordHash String?  @map("password_hash")           // Optional: social login users have no password
-  googleId     String?  @unique @map("google_id")        // Google OAuth ID
-  avatarUrl    String?  @map("avatar_url")               // Profile picture from Google
+  email        String?  @unique
+  phone        String?  @unique
+  telegramId   String?  @unique @map("telegram_id")
+  passwordHash String?  @map("password_hash") // Optional: social login users have no password
+  googleId     String?  @unique @map("google_id") // Google OAuth ID
+  avatarUrl    String?  @map("avatar_url") // Profile picture from Google
   role         Role     @default(USER)
   createdAt    DateTime @default(now()) @map("created_at")
 
   profile      Profile?
-  words        Word[]           @relation("AuthorWords")
+  words        Word[]             @relation("AuthorWords")
   savedWords   SavedWord[]
   savedBooks   SavedBook[]
   savedTopics  SavedTopic[]
@@ -63,6 +65,7 @@ model User {
   weeklyStats  WeeklyStat[]
   badges       UserBadge[]
   gameSessions GameSession[]
+  authSessions AuthSession[]
 
   @@map("users")
 }
@@ -122,7 +125,7 @@ model Word {
   authorId           String?  @map("author_id")
   createdAt          DateTime @default(now()) @map("created_at")
 
-  author       User?             @relation("AuthorWords", fields: [authorId], references: [id], onDelete: SetNull)
+  author       User?              @relation("AuthorWords", fields: [authorId], references: [id], onDelete: SetNull)
   wordTopics   WordTopic[]
   savedWords   SavedWord[]
   userProgress UserWordProgress[]
@@ -184,8 +187,8 @@ model SavedTopic {
 model UserWordProgress {
   userId         String    @map("user_id")
   wordId         String    @map("word_id")
-  xp             Int       @default(0)   // 0–3 within current level
-  level          Int       @default(1)   // 1=New 2=Easy 3=Good 4=Great 5=Master
+  xp             Int       @default(0) // 0–3 within current level
+  level          Int       @default(1) // 1=New 2=Easy 3=Good 4=Great 5=Master
   nextReviewDate DateTime  @default(now()) @map("next_review_date")
   lastReviewedAt DateTime? @map("last_reviewed_at")
 
@@ -220,8 +223,8 @@ model Badge {
   id          String    @id @default(cuid())
   name        String    @unique
   description String
-  icon        String    // emoji or icon identifier
-  color       String    // hex color for badge display
+  icon        String // emoji or icon identifier
+  color       String // hex color for badge display
   badgeType   BadgeType @map("badge_type")
   threshold   Int
 
@@ -277,4 +280,27 @@ model SiteConfiguration {
   value String
 
   @@map("site_configurations")
+}
+
+// ─── Telegram Phone Auth ──────────────────────────────────────────────────────
+
+enum AuthSessionStatus {
+  PENDING
+  VERIFIED
+  EXPIRED
+}
+
+model AuthSession {
+  id         String            @id @default(cuid())
+  token      String            @unique
+  phone      String
+  telegramId String?           @map("telegram_id")
+  status     AuthSessionStatus @default(PENDING)
+  expiresAt  DateTime          @map("expires_at")
+  createdAt  DateTime          @default(now()) @map("created_at")
+  userId     String?           @map("user_id") // If it matched/created a user
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("auth_sessions")
 }

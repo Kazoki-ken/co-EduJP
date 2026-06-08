@@ -11,6 +11,9 @@ const server = app.listen(PORT, () => {
 
   // Start background jobs
   registerLeagueResetJob();
+
+  // Start Telegram bot (agar token bo'lsa)
+  import('./services/bot.service').catch(console.error);
 });
 
 // Graceful shutdown

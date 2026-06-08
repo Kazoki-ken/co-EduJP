@@ -6,8 +6,9 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { useGoogleLogin } from '@react-oauth/google';
-import { Mail, Lock, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Loader2, AlertCircle, Phone, Send } from 'lucide-react';
 import SetupProfileModal from '@/components/auth/SetupProfileModal';
+import api from '@/lib/api';
 
 // ─── Custom Google Button using useGoogleLogin popup ──────────────────────────
 
@@ -23,17 +24,29 @@ const GoogleIcon = () => (
 // ─── Login Page ───────────────────────────────────────────────────────────────
 
 export default function LoginPage() {
+  const [authMode, setAuthMode] = useState<'PHONE' | 'EMAIL'>('PHONE');
+
+  // Email form
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  // Phone form
+  const [phone, setPhone] = useState('+998');
+  const [phoneToken, setPhoneToken] = useState<string | null>(null);
+  const [botUsername, setBotUsername] = useState<string>('');
+  const [isPolling, setIsPolling] = useState(false);
+
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const { login, googleLogin, needsUsername } = useAuth();
+  
+  const { login, googleLogin, needsUsername, setTokensAndUser } = useAuth();
   const router = useRouter();
   const prevNeedsUsername = useRef(needsUsername);
+  const pollingInterval = useRef<NodeJS.Timeout | null>(null);
 
-  // Watch for needsUsername: false → true after Google login
+  // Watch for needsUsername: false → true after Google/Phone login
   useEffect(() => {
     if (!prevNeedsUsername.current && needsUsername) {
       setShowModal(true);
@@ -41,31 +54,56 @@ export default function LoginPage() {
     prevNeedsUsername.current = needsUsername;
   }, [needsUsername]);
 
-  // useGoogleLogin opens a real OAuth popup — reliable on all browsers
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      setGoogleLoading(true);
-      setError('');
+  // Cleanup polling on unmount
+  useEffect(() => {
+    return () => {
+      if (pollingInterval.current) clearInterval(pollingInterval.current);
+    };
+  }, []);
+
+  const startPolling = (token: string) => {
+    setIsPolling(true);
+    pollingInterval.current = setInterval(async () => {
       try {
-        const isNewUser = await googleLogin(undefined, tokenResponse.access_token);
-        if (isNewUser) {
-          setShowModal(true); // Username + parol so'rash
-        } else {
-          router.push('/');  // Mavjud foydalanuvchi — bosh sahifaga
+        const res = await api.get(`/auth/phone/status/${token}`);
+        if (res.data.status === 'VERIFIED') {
+          if (pollingInterval.current) clearInterval(pollingInterval.current);
+          setIsPolling(false);
+          setTokensAndUser(res.data.accessToken, res.data.user, res.data.isNewUser);
+          if (!res.data.isNewUser) {
+            router.push('/');
+          } else {
+            setShowModal(true);
+          }
         }
       } catch (err: any) {
-        setError(err.response?.data?.error || 'Google bilan kirishda xato yuz berdi.');
-      } finally {
-        setGoogleLoading(false);
+        if (err.response?.status === 400 || err.response?.status === 404) {
+          if (pollingInterval.current) clearInterval(pollingInterval.current);
+          setIsPolling(false);
+          setError(err.response?.data?.error || "Xatolik yuz berdi");
+          setPhoneToken(null);
+        }
       }
-    },
-    onError: () => {
-      setError('Google bilan kirishda xato yuz berdi.');
-      setGoogleLoading(false);
-    },
-  });
+    }, 3000);
+  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handlePhoneSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+    try {
+      const { data } = await api.post('/auth/phone/start', { phone });
+      setPhoneToken(data.token);
+      setBotUsername(data.botUsername);
+      startPolling(data.token);
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Xatolik yuz berdi");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
@@ -78,6 +116,29 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setGoogleLoading(true);
+      setError('');
+      try {
+        const isNewUser = await googleLogin(undefined, tokenResponse.access_token);
+        if (isNewUser) {
+          setShowModal(true);
+        } else {
+          router.push('/');
+        }
+      } catch (err: any) {
+        setError(err.response?.data?.error || 'Google bilan kirishda xato yuz berdi.');
+      } finally {
+        setGoogleLoading(false);
+      }
+    },
+    onError: () => {
+      setError('Google bilan kirishda xato yuz berdi.');
+      setGoogleLoading(false);
+    },
+  });
 
   const handleModalClose = () => {
     setShowModal(false);
@@ -122,55 +183,127 @@ export default function LoginPage() {
             </motion.div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-text-secondary pl-1">Email</label>
-              <div className="relative group">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" size={18} />
-                <input
-                  id="login-email"
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="input-field pl-10 py-3"
-                  placeholder="you@example.com"
-                />
-              </div>
-            </div>
+          {authMode === 'PHONE' ? (
+            !phoneToken ? (
+              <form onSubmit={handlePhoneSubmit} className="space-y-5">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-text-secondary pl-1">Telefon raqam</label>
+                  <div className="relative group">
+                    <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" size={18} />
+                    <input
+                      id="login-phone"
+                      type="tel"
+                      required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="input-field pl-10 py-3"
+                      placeholder="+998 90 123 45 67"
+                    />
+                  </div>
+                </div>
 
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-text-secondary pl-1">Parol</label>
-              <div className="relative group">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" size={18} />
-                <input
-                  id="login-password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="input-field pl-10 py-3"
-                  placeholder="••••••••"
-                />
-              </div>
-            </div>
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="btn-primary w-full py-3.5 flex items-center justify-center gap-2 mt-2 group shadow-glow-md"
+                >
+                  {isLoading ? (
+                    <Loader2 className="animate-spin" size={20} />
+                  ) : (
+                    <>
+                      Davom etish
+                      <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </button>
+              </form>
+            ) : (
+              <div className="space-y-5 text-center">
+                <div className="p-4 bg-primary/10 rounded-xl border border-primary/20">
+                  <p className="text-sm text-text-secondary mb-2">Raqamingiz:</p>
+                  <p className="text-xl font-bold tracking-wider text-text-primary">{phone}</p>
+                </div>
+                
+                <p className="text-sm text-text-muted">
+                  Tizimga kirish uchun Telegram botimizga o'ting va raqamingizni tasdiqlang.
+                </p>
 
-            <button
-              type="submit"
-              id="login-submit-btn"
-              disabled={isLoading}
-              className="btn-primary w-full py-3.5 flex items-center justify-center gap-2 mt-2 group shadow-glow-md"
-            >
-              {isLoading ? (
-                <Loader2 className="animate-spin" size={20} />
-              ) : (
-                <>
-                  Tizimga kirish
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </>
-              )}
-            </button>
-          </form>
+                <a
+                  href={`https://t.me/${botUsername}?start=${phoneToken}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-primary w-full py-3.5 flex items-center justify-center gap-2 mt-2 group shadow-glow-md"
+                >
+                  <Send size={18} />
+                  Telegramga o'tish
+                </a>
+
+                {isPolling && (
+                  <div className="flex items-center justify-center gap-2 text-sm text-text-muted mt-4">
+                    <Loader2 className="animate-spin" size={16} />
+                    Botdagi tasdiq kutilmoqda...
+                  </div>
+                )}
+                
+                <button
+                  onClick={() => setPhoneToken(null)}
+                  className="text-xs text-text-muted hover:text-primary transition-colors mt-4 block mx-auto"
+                >
+                  Raqamni o'zgartirish
+                </button>
+              </div>
+            )
+          ) : (
+            <form onSubmit={handleEmailSubmit} className="space-y-5">
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-text-secondary pl-1">Email</label>
+                <div className="relative group">
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" size={18} />
+                  <input
+                    id="login-email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="input-field pl-10 py-3"
+                    placeholder="you@example.com"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-text-secondary pl-1">Parol</label>
+                <div className="relative group">
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" size={18} />
+                  <input
+                    id="login-password"
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="input-field pl-10 py-3"
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                id="login-submit-btn"
+                disabled={isLoading}
+                className="btn-primary w-full py-3.5 flex items-center justify-center gap-2 mt-2 group shadow-glow-md"
+              >
+                {isLoading ? (
+                  <Loader2 className="animate-spin" size={20} />
+                ) : (
+                  <>
+                    Tizimga kirish
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </button>
+            </form>
+          )}
 
           {/* Divider */}
           <div className="flex items-center gap-3 my-6">
@@ -179,41 +312,60 @@ export default function LoginPage() {
             <div className="flex-1 h-px bg-white/10" />
           </div>
 
-          {/* Custom Glass Google Button */}
-          <motion.button
-            type="button"
-            id="google-signin-btn"
-            onClick={() => { setGoogleLoading(true); handleGoogleLogin(); }}
-            disabled={googleLoading}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full flex items-center justify-center gap-3 py-3.5 px-5 rounded-xl border transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed relative overflow-hidden group"
-            style={{
-              background: 'rgba(255,255,255,0.05)',
-              borderColor: 'rgba(255,255,255,0.12)',
-              backdropFilter: 'blur(8px)',
-            }}
-          >
-            <motion.div
-              className="absolute inset-0 pointer-events-none"
-              initial={{ opacity: 0 }}
-              whileHover={{ opacity: 1 }}
-              style={{ background: 'radial-gradient(ellipse at center, rgba(124,58,237,0.12) 0%, transparent 70%)' }}
-            />
-            <motion.div
-              className="absolute inset-0 rounded-xl pointer-events-none"
-              whileHover={{ boxShadow: '0 0 0 1px rgba(124,58,237,0.5), 0 0 24px rgba(124,58,237,0.15)' }}
-              transition={{ duration: 0.2 }}
-            />
-            {googleLoading ? (
-              <Loader2 className="animate-spin text-text-muted relative z-10" size={20} />
-            ) : (
-              <span className="relative z-10"><GoogleIcon /></span>
-            )}
-            <span className="text-sm font-semibold text-text-secondary group-hover:text-text-primary transition-colors relative z-10">
-              {googleLoading ? 'Yuklanmoqda...' : 'Google bilan kirish'}
-            </span>
-          </motion.button>
+          <div className="space-y-3">
+            {/* Toggle Mode Button */}
+            <button
+              type="button"
+              onClick={() => {
+                setAuthMode(authMode === 'PHONE' ? 'EMAIL' : 'PHONE');
+                setError('');
+              }}
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-5 rounded-xl border transition-all duration-200 text-sm font-semibold text-text-secondary hover:text-text-primary"
+              style={{
+                background: 'rgba(255,255,255,0.05)',
+                borderColor: 'rgba(255,255,255,0.12)',
+              }}
+            >
+              {authMode === 'PHONE' ? <Mail size={18} /> : <Phone size={18} />}
+              {authMode === 'PHONE' ? 'Email va Parol orqali kirish' : 'Telefon raqam orqali kirish'}
+            </button>
+
+            {/* Custom Glass Google Button */}
+            <motion.button
+              type="button"
+              id="google-signin-btn"
+              onClick={() => { setGoogleLoading(true); handleGoogleLogin(); }}
+              disabled={googleLoading}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full flex items-center justify-center gap-3 py-3.5 px-5 rounded-xl border transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed relative overflow-hidden group"
+              style={{
+                background: 'rgba(255,255,255,0.05)',
+                borderColor: 'rgba(255,255,255,0.12)',
+                backdropFilter: 'blur(8px)',
+              }}
+            >
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+                style={{ background: 'radial-gradient(ellipse at center, rgba(124,58,237,0.12) 0%, transparent 70%)' }}
+              />
+              <motion.div
+                className="absolute inset-0 rounded-xl pointer-events-none"
+                whileHover={{ boxShadow: '0 0 0 1px rgba(124,58,237,0.5), 0 0 24px rgba(124,58,237,0.15)' }}
+                transition={{ duration: 0.2 }}
+              />
+              {googleLoading ? (
+                <Loader2 className="animate-spin text-text-muted relative z-10" size={20} />
+              ) : (
+                <span className="relative z-10"><GoogleIcon /></span>
+              )}
+              <span className="text-sm font-semibold text-text-secondary group-hover:text-text-primary transition-colors relative z-10">
+                {googleLoading ? 'Yuklanmoqda...' : 'Google bilan kirish'}
+              </span>
+            </motion.button>
+          </div>
 
           <p className="text-center text-sm text-text-muted mt-8">
             {"Hisobingiz yo'qmi?"}{' '}

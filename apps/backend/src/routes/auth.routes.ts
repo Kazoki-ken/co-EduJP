@@ -60,4 +60,17 @@ router.patch('/set-username', authenticate, setUsername);
  */
 router.patch('/set-password', authenticate, setPassword);
 
+/**
+ * POST /api/auth/phone/start
+ * Bepul Telegram bot orqali nomer bilan kirishni boshlash (AuthSession yaratish)
+ */
+import { startPhoneAuth, checkPhoneAuthStatus } from '../controllers/auth.controller';
+router.post('/phone/start', authLimiter, startPhoneAuth);
+
+/**
+ * GET /api/auth/phone/status/:token
+ * Frontend botdan tasdiqlashni kutadi
+ */
+router.get('/phone/status/:token', checkPhoneAuthStatus);
+
 export default router;

@@ -43,6 +43,7 @@ interface AuthContextValue {
   setPassword: (password: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  setTokensAndUser: (newAccessToken: string, newUser: AuthUser, isNew: boolean) => void;
 }
 
 // ─── Context ──────────────────────────────────────────────────────────────────
@@ -143,6 +144,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return false;
   }, []);
 
+  // ── Phone Login (External Update) ────────────────────────────────────────
+  const setTokensAndUser = useCallback((newAccessToken: string, newUser: AuthUser, isNew: boolean) => {
+    setAccessToken(newAccessToken);
+    setUser(newUser);
+    if (isNew) {
+      setNeedsUsername(true);
+    }
+  }, []);
+
   // ── Set Username (after Google login) ────────────────────────────────────
   const setUsername = useCallback(async (username: string): Promise<void> => {
     const { data } = await api.patch<{
@@ -191,6 +201,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setPassword,
         logout,
         refreshUser,
+        setTokensAndUser,
       }}
     >
       {children}

@@ -231,3 +231,58 @@ export const googleLoginOnly = async (req: Request, res: Response): Promise<void
     user,
   });
 };
+
+// ─── Telegram Phone Auth ───────────────────────────────────────────
+
+import { startPhoneAuthService, checkPhoneAuthStatusService } from '../services/auth.service';
+
+const StartPhoneAuthSchema = z.object({
+  phone: z.string().min(9, 'Telefon raqam kiritilishi shart'),
+});
+
+export const startPhoneAuth = async (req: Request, res: Response): Promise<void> => {
+  const parsed = StartPhoneAuthSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.errors[0]?.message });
+    return;
+  }
+
+  const session = await startPhoneAuthService(parsed.data.phone);
+
+  res.status(200).json({
+    message: 'Sessiya yaratildi',
+    token: session.token,
+    botUsername: process.env.TELEGRAM_BOT_USERNAME || 'edujp_auth_bot', // Yoki env dan
+  });
+};
+
+export const checkPhoneAuthStatus = async (req: Request, res: Response): Promise<void> => {
+  const token = req.params.token;
+  if (!token) {
+    res.status(400).json({ error: 'Token is required' });
+    return;
+  }
+
+  const result = await checkPhoneAuthStatusService(token);
+
+  if (result.status === 'PENDING') {
+    res.status(202).json({ status: 'PENDING', message: 'Kutilmoqda...' });
+    return;
+  }
+
+  if (result.status === 'VERIFIED') {
+    if (result.tokens) {
+      setRefreshCookie(res, result.tokens.refreshToken);
+    }
+
+    res.status(result.isNewUser ? 201 : 200).json({
+      status: 'VERIFIED',
+      message: result.isNewUser ? 'Account created' : 'Login successful',
+      accessToken: result.tokens?.accessToken,
+      refreshToken: result.tokens?.refreshToken,
+      isNewUser: result.isNewUser,
+      user: result.user,
+    });
+    return;
+  }
+};
