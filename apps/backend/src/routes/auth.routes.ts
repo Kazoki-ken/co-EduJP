@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { register, login, refresh, logout, me, googleLogin, setUsername, setPassword, googleLoginOnly } from '../controllers/auth.controller';
 import { authenticate } from '../middleware/auth.middleware';
+import { authLimiter } from '../middleware/rateLimiter.middleware';
 
 const router = Router();
 
@@ -8,13 +9,13 @@ const router = Router();
  * POST /api/auth/register
  * Create a new user account
  */
-router.post('/register', register);
+router.post('/register', authLimiter, register);
 
 /**
  * POST /api/auth/login
  * Login and receive access + refresh tokens
  */
-router.post('/login', login);
+router.post('/login', authLimiter, login);
 
 /**
  * POST /api/auth/refresh
