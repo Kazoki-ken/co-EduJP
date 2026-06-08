@@ -13,7 +13,7 @@ if (token) {
   console.log('Telegram Bot is starting...');
 
   // 1. /start {token} komandasi kelganda
-  bot.onText(/\\/start (.+)/, async (msg, match) => {
+  bot.onText(/^\/start (.+)/, async (msg, match) => {
     const chatId = msg.chat.id;
     const sessionToken = match ? match[1] : null;
 
