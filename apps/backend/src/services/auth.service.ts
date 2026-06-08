@@ -25,7 +25,7 @@ interface TokenPair {
 
 export const signTokens = (payload: {
   id: string;
-  email: string;
+  email: string | null;
   username: string;
   role: string;
 }): TokenPair => {

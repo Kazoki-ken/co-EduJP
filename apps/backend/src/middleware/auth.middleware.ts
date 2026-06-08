@@ -5,7 +5,7 @@ import prisma from '../lib/prisma';
 export interface AuthenticatedRequest extends Request {
   user?: {
     id: string;
-    email: string;
+    email: string | null;
     username: string;
     role: string;
   };
