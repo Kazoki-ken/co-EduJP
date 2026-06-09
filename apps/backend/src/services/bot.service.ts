@@ -1,6 +1,4 @@
-import dotenv from 'dotenv';
-import path from 'path';
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+
 import TelegramBot from 'node-telegram-bot-api';
 import prisma from '../lib/prisma';
 
