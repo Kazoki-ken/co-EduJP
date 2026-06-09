@@ -7,17 +7,23 @@ const token = process.env.TELEGRAM_BOT_TOKEN;
 // Vaqtinchalik kesh: chat_id -> session_token
 const pendingAuthCache = new Map<number, string>();
 
-if (token) {
+// Faqat bitta PM2 instanceda botni ishga tushirish (Conflict oldini olish uchun)
+const isPrimaryInstance = process.env.NODE_APP_INSTANCE === '0' || !process.env.NODE_APP_INSTANCE;
+
+if (token && isPrimaryInstance) {
   bot = new TelegramBot(token, { polling: true });
 
-  console.log('Telegram Bot is starting...');
+  console.log('Telegram Bot is starting on instance', process.env.NODE_APP_INSTANCE || 'single');
 
-  // 1. /start {token} komandasi kelganda
-  bot.onText(/^\/start (.+)/, async (msg, match) => {
+  // /start komandasini ushlash (token bilan yoki tokensiz)
+  bot.onText(/^\/start(?: (.+))?/, async (msg, match) => {
     const chatId = msg.chat.id;
-    const sessionToken = match ? match[1] : null;
+    const sessionToken = match && match[1] ? match[1] : null;
 
-    if (!sessionToken) return;
+    if (!sessionToken) {
+      bot?.sendMessage(chatId, "Assalomu alaykum! Sayt orqali ro'yxatdan o'tish uchun maxsus tugmani bosing yoki sahifaga qayting.");
+      return;
+    }
 
     // Sessiyani bazadan tekshirish
     const session = await prisma.authSession.findUnique({
