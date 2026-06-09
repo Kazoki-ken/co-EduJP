@@ -10,6 +10,11 @@ const pendingAuthCache = new Map<number, string>();
 // Faqat bitta PM2 instanceda botni ishga tushirish (Conflict oldini olish uchun)
 const isPrimaryInstance = process.env.NODE_APP_INSTANCE === '0' || !process.env.NODE_APP_INSTANCE;
 
+console.log('--- BOT SERVICE LOADED ---');
+console.log('TOKEN EXISTS:', !!token);
+console.log('NODE_APP_INSTANCE:', process.env.NODE_APP_INSTANCE);
+console.log('IS_PRIMARY:', isPrimaryInstance);
+
 if (token && isPrimaryInstance) {
   bot = new TelegramBot(token, { polling: true });
 
