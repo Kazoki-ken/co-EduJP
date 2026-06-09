@@ -119,12 +119,23 @@ if (token && isPrimaryInstance) {
 
     pendingAuthCache.delete(chatId);
 
+    await bot!.sendMessage(chatId, "Telefon raqamingiz muvaffaqiyatli qabul qilindi! ✅", {
+      reply_markup: { remove_keyboard: true }
+    });
+
     bot!.sendMessage(
       chatId,
       "✅ <b>Muvaffaqiyatli tasdiqlandi!</b> 🎉\n\nSiz endi botdan chiqib, <b>VocabJP sayti yoki ilovasiga</b> qaytishingiz mumkin. Tizimga avtomatik tarzda kirasiz.\n\n<i>Yapon tilini o'rganishda omad!</i> 🌸",
       {
         parse_mode: 'HTML',
-        reply_markup: { remove_keyboard: true },
+        reply_markup: {
+          inline_keyboard: [
+            [
+              { text: "🌐 Veb-sahifaga qaytish", url: "https://edujp.uz" },
+              { text: "📱 Ilovaga qaytish", url: "https://edujp.uz" }
+            ]
+          ]
+        }
       }
     );
   });
@@ -136,7 +147,16 @@ if (token && isPrimaryInstance) {
       "🌸 <b>VocabJP Rasmiy Botiga Xush Kelibsiz!</b>\n\n" +
       "Bu bot orqali siz ilovamizga xavfsiz va tezkor tarzda kira olasiz.\n\n" +
       "Tizimga kirish uchun to'g'ridan-to'g'ri saytga yoki mobil ilovaga o'ting va <b>'Telefon orqali kirish'</b> tugmasini bosing.",
-      { parse_mode: 'HTML' }
+      {
+        parse_mode: 'HTML',
+        reply_markup: {
+          inline_keyboard: [
+            [
+              { text: "🌐 Saytga o'tish (Ro'yxatdan o'tish)", url: "https://edujp.uz" }
+            ]
+          ]
+        }
+      }
     );
   });
 
