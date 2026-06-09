@@ -1,4 +1,6 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import path from 'path';
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 import 'express-async-errors';
 import app from './app';
 import { registerLeagueResetJob } from './jobs/leagueReset.job';
