@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import Link from 'next/link';
 import {
   Flame, Zap, BookOpen, Trophy, TrendingUp,
-  Bookmark, BookmarkCheck, Library,
+  Bookmark, BookmarkCheck, Library, Volume2, ChevronDown, ChevronUp,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
@@ -42,9 +43,34 @@ export default function ProfilePage() {
   // Saved content
   const [savedTab, setSavedTab] = useState<SavedTab>('words');
   const [savedWords, setSavedWords] = useState<Word[]>([]);
+  const [savedWordsTotal, setSavedWordsTotal] = useState(0);
   const [savedBooks, setSavedBooks] = useState<(Book & { savedAt: string })[]>([]);
+  const [savedBooksTotal, setSavedBooksTotal] = useState(0);
   const [savedWordsLoading, setSavedWordsLoading] = useState(false);
   const [savedBooksLoading, setSavedBooksLoading] = useState(false);
+  const [expandedWordIds, setExpandedWordIds] = useState<Set<string>>(new Set());
+
+  const toggleWordExpansion = (wordId: string) => {
+    setExpandedWordIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(wordId)) {
+        next.delete(wordId);
+      } else {
+        next.add(wordId);
+      }
+      return next;
+    });
+  };
+
+  const handleSpeak = (e: React.MouseEvent, japaneseWord: string) => {
+    e.stopPropagation();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(japaneseWord);
+      utterance.lang = 'ja-JP';
+      window.speechSynthesis.speak(utterance);
+    }
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -62,9 +88,10 @@ export default function ProfilePage() {
     setSavedWordsLoading(true);
     try {
       const { data } = await api.get<PaginatedResponse<Word>>('/users/me/saved-words', {
-        params: { limit: 100 },
+        params: { limit: 10 },
       });
       setSavedWords(data.data);
+      setSavedWordsTotal(data.meta.total);
     } catch {}
     setSavedWordsLoading(false);
   }, []);
@@ -74,9 +101,10 @@ export default function ProfilePage() {
     setSavedBooksLoading(true);
     try {
       const { data } = await api.get<PaginatedResponse<Book & { savedAt: string }>>('/users/me/saved-books', {
-        params: { limit: 100 },
+        params: { limit: 10 },
       });
       setSavedBooks(data.data);
+      setSavedBooksTotal(data.meta.total);
     } catch {}
     setSavedBooksLoading(false);
   }, []);
@@ -184,9 +212,9 @@ export default function ProfilePage() {
           >
             <Bookmark size={15} />
             {"Saqlangan so'zlar"}
-            {savedWords.length > 0 && (
+            {savedWordsTotal > 0 && (
               <span className="bg-primary/20 text-primary text-xs px-2 py-0.5 rounded-full font-bold">
-                {savedWords.length}
+                {savedWordsTotal}
               </span>
             )}
           </button>
@@ -201,9 +229,9 @@ export default function ProfilePage() {
           >
             <Library size={15} />
             {"Saqlangan kitoblar"}
-            {savedBooks.length > 0 && (
+            {savedBooksTotal > 0 && (
               <span className="bg-accent/20 text-accent text-xs px-2 py-0.5 rounded-full font-bold">
-                {savedBooks.length}
+                {savedBooksTotal}
               </span>
             )}
           </button>
@@ -232,26 +260,84 @@ export default function ProfilePage() {
               <>
                 <div className="divide-y divide-border/50 max-h-[340px] overflow-y-auto
                                 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent pr-1">
-                  {savedWords.map((w) => (
-                    <div key={w.id} className="py-3 flex items-start justify-between gap-3">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-baseline gap-2">
-                          <span className="text-lg font-bold text-text-primary">{w.japaneseWord}</span>
-                          {w.hiragana && w.hiragana !== w.japaneseWord && (
-                            <span className="text-sm text-primary/80">({w.hiragana})</span>
-                          )}
+                  {savedWords.map((w) => {
+                    const isExpanded = expandedWordIds.has(w.id);
+                    const canExpand = !!(w.exampleSentence || w.exampleTranslation);
+                    return (
+                      <div
+                        key={w.id}
+                        onClick={() => canExpand && toggleWordExpansion(w.id)}
+                        className={cn(
+                          "py-3 flex flex-col gap-2 transition-colors cursor-pointer select-none",
+                          canExpand && "hover:bg-surface-2/30 px-2 -mx-2 rounded-lg"
+                        )}
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-3 flex-1 min-w-0">
+                            {/* TTS Button */}
+                            <button
+                              onClick={(e) => handleSpeak(e, w.japaneseWord)}
+                              className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 hover:bg-primary/20
+                                         flex items-center justify-center shrink-0 text-primary transition-colors"
+                              title="Talaffuzni eshitish"
+                            >
+                              <Volume2 size={15} />
+                            </button>
+
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-baseline gap-2">
+                                <span className="text-lg font-bold text-text-primary">{w.japaneseWord}</span>
+                                {w.hiragana && w.hiragana !== w.japaneseWord && (
+                                  <span className="text-sm text-primary/80">({w.hiragana})</span>
+                                )}
+                              </div>
+                              <p className="text-sm text-text-secondary truncate">{w.meaning}</p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2 shrink-0">
+                            <BookmarkCheck size={14} className="text-accent fill-accent" />
+                            {canExpand && (
+                              <span className="text-text-muted">
+                                {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                        <p className="text-sm text-text-secondary truncate">{w.meaning}</p>
+
+                        {/* Collapsible example sentence */}
+                        {isExpanded && canExpand && (
+                          <div className="ml-11 p-3 bg-surface-2/50 border-l-2 border-primary rounded-r-lg animate-slide-in">
+                            {w.exampleSentence && (
+                              <p className="text-sm font-medium text-text-primary leading-relaxed">
+                                {w.exampleSentence}
+                              </p>
+                            )}
+                            {w.exampleTranslation && (
+                              <p className="text-xs text-text-secondary mt-1 font-medium italic">
+                                {w.exampleTranslation}
+                              </p>
+                            )}
+                          </div>
+                        )}
                       </div>
-                      <BookmarkCheck size={14} className="text-accent fill-accent shrink-0 mt-1" />
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
-                {savedWords.length > 5 && (
+                {savedWordsTotal > 10 && (
                   <p className="text-xs text-text-muted text-center mt-2">
-                    {"Barcha "}{savedWords.length}{" ta saqlangan so'zlarni ko'rish uchun pastga aylantiring"}
+                    {"Barcha "}{savedWordsTotal}{" ta saqlangan so'zni ko'rish uchun quyidagi tugmani bosing"}
                   </p>
                 )}
+                <div className="mt-4 pt-2 border-t border-border/50">
+                  <Link
+                    href="/profile/saved?type=words"
+                    className="flex items-center justify-center w-full py-3 bg-primary/10 border border-primary/25 hover:bg-primary/15
+                               text-primary-hover font-bold text-sm rounded-xl transition-all active:scale-95 text-center"
+                  >
+                    Barcha saqlangan so'zlar
+                  </Link>
+                </div>
               </>
             )}
           </div>
@@ -303,11 +389,20 @@ export default function ProfilePage() {
                     </a>
                   ))}
                 </div>
-                {savedBooks.length > 5 && (
+                {savedBooksTotal > 10 && (
                   <p className="text-xs text-text-muted text-center mt-2">
-                    {"Barcha "}{savedBooks.length}{" ta saqlangan kitoblarni ko'rish uchun pastga aylantiring"}
+                    {"Barcha "}{savedBooksTotal}{" ta saqlangan kitobni ko'rish uchun quyidagi tugmani bosing"}
                   </p>
                 )}
+                <div className="mt-4 pt-2 border-t border-border/50">
+                  <Link
+                    href="/profile/saved?type=books"
+                    className="flex items-center justify-center w-full py-3 bg-accent/10 border border-accent/25 hover:bg-accent/15
+                               text-accent-hover font-bold text-sm rounded-xl transition-all active:scale-95 text-center"
+                  >
+                    Barcha saqlangan kitoblar
+                  </Link>
+                </div>
               </>
             )}
           </div>
