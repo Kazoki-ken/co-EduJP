@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Upload, FileSpreadsheet, X, CheckCircle, XCircle,
-  AlertTriangle, ChevronDown, BookOpen,
+  AlertTriangle, ChevronDown, BookOpen, Download, Copy, Check
 } from 'lucide-react';
 import api from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -18,8 +18,6 @@ interface UploadResult {
   skipped:  number;
   errors:   { row: number; message: string }[];
 }
-
-
 
 // ─── Drop Zone ────────────────────────────────────────────────────────────────
 
@@ -42,7 +40,7 @@ function DropZone({
       onDragLeave={() => setIsDragging(false)}
       onClick={() => inputRef.current?.click()}
       className={cn(
-        'border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-all duration-200',
+        'border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-200',
         isDragging
           ? 'border-primary bg-primary/10 scale-[1.01]'
           : file
@@ -73,18 +71,12 @@ function DropZone({
         </div>
       ) : (
         <div className="flex flex-col items-center gap-3">
-          <Upload size={36} className="text-text-muted" />
+          <Upload size={32} className="text-text-muted" />
           <div>
             <p className="font-semibold text-text-secondary">
               {"Faylni bu yerga tashlang yoki tanlash uchun "} <span className="text-primary">{"bosing"}</span>
             </p>
             <p className="text-xs text-text-muted mt-1">{"CSV, XLS, XLSX — maksimal 10 MB"}</p>
-          </div>
-          <div className="text-xs text-text-muted border border-border rounded-lg px-3 py-2 font-mono text-left bg-surface-2/50">
-            {"Majburiy ustunlar:"}<br />
-            <span className="text-primary">japanese_word</span>,{' '}
-            <span className="text-primary">meaning</span>,{' '}
-            hiragana, example_sentence, example_translation
           </div>
         </div>
       )}
@@ -204,6 +196,89 @@ export default function AdminUploadPage() {
   const [error,     setError]     = useState<string | null>(null);
   const [result,    setResult]    = useState<UploadResult | null>(null);
 
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
+  const [useFileTopics, setUseFileTopics] = useState(false);
+
+  const downloadTemplate = () => {
+    const headers = 'japanese_word,hiragana,meaning,part_of_speech,jlpt_level,frequency,pitch_accent,te_form,ta_form,nai_form,masu_form,example_sentence,example_translation,synonyms,antonyms,nuance,kanji_info,additional_examples,compounds,topic_name\n';
+    const sampleRow = '食べる,たべる,yemoq,fe\'l,N5,Top 500,②,食べて,食べた,食べない,食べます,私は朝ご飯を食べます。,Men nonushta yeyman.,"召し上がる, 食らう",吐き出す,召し上がる - juda hurmatli shakl,"[{""kanji"":""食"",""meaning"":""yemoq"",""kunReading"":""ta"",""onReading"":""shoku"",""strokes"":9}]","[{""sentence"":""りんごを食べたい。"",""translation"":""Olma yeyishni xohlayman.""}]","[{""word"":""食堂"",""hiragana"":""しょくdou"",""meaning"":""oshxona""}]",Taomlar\n';
+    const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + encodeURIComponent(headers + sampleRow);
+    const link = document.createElement("a");
+    link.setAttribute("href", csvContent);
+    link.setAttribute("download", "vocab_template.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const copyPrompt = () => {
+    let promptText = '';
+    if (useFileTopics) {
+      promptText = `Yapon tili so'zlarini o'rganish ilovasi uchun quyidagi talablar asosida 100 ta eng faol va kerakli so'zlarni tanlab, ularni Excel (XLSX) jadvaliga mos formatda shakllantirib ber.
+
+Mavzularni o'zing tanla (har xil kundalik mavzular, masalan: Sayohat, Oila, Ob-havo, Biznes, Texnologiya va h.k.) va har bir so'z qaysi mavzuga tegishli ekanligini "topic_name" ustunida yozib ket.
+
+Ustunlar ro'yxati va ularga qo'yiladigan talablar:
+1. japanese_word - So'zning o'zi (Kanjida, agar kanji bo'lmasa faqat Kanada, masalan: "食べる", "solishtirish").
+2. hiragana - So'zning faqat Xiragana yoki Katakanadagi o'qilishi (masalan: "たべる", "プレゼント").
+3. meaning - So'zning o'zbek tilidagi aniq tarjimasi (masalan: "yemoq").
+4. part_of_speech - So'z turkumi: "ot", "fe'l", "i-sifat", "na-sifat", "ravish", "zarracha", "olmosh", "undov", "bog'lovchi", "qo'shimcha".
+5. jlpt_level - JLPT darajasi: "N5", "N4", "N3", "N2", "N1".
+6. frequency - Ishlatilish darajasi (masalan: "Top 500", "Top 1000", "Top 2000", "Top 5000", "Boshqa").
+7. pitch_accent - Pitch accent belgilari (masalan: "⓪", "①", "②", "③" va h.k.).
+8. te_form - Fe'l va sifatlar uchun "te" shakli (bo'sh qolishi mumkin).
+9. ta_form - Fe'l va sifatlar uchun "ta" shakli (bo'sh qolishi mumkin).
+10. nai_form - Fe'l va sifatlar uchun inkor "nai" shakli (bo'sh qolishi mumkin).
+11. masu_form - Fe'llar uchun "masu" shakli (bo'sh qolishi mumkin).
+12. example_sentence - Chapda Kanjili yaponcha gap va o'ngda qavs ichida uning faqat xiragana/katakanadagi o'qilishi (masalan: "私は朝ご飯を食べます。(わたしはあさごはんをたべます。)").
+13. example_translation - Namunaviy gapning o'zbekcha tarjimasi (masalan: "Men nonushta yeyman.").
+14. synonyms - Sinonimlar (vergul bilan ajratilgan yaponcha so'zlar ro'yxati).
+15. antonyms - Antonimlar (yaponcha so'zlar ro'yxati).
+16. nuance - Sinonimlar orasidagi ma'no farqi yoki o'ziga xos qo'llanilishi haqida o'zbekcha qisqa izoh.
+17. kanji_info - JSON array formatida so'z iyerogliflarining batafsil tahlili (Kanjisiz so'zlar uchun: []). Format: [{"kanji":"食","meaning":"yemoq","kunReading":"ta","onReading":"shoku","strokes":9}]
+18. additional_examples - JSON array formatida yana 2 ta namunaviy gap va o'zbekcha tarjimasi. Qavs ichida gapning xiragana o'qilishini ham kiriting. Format: [{"sentence":"りんごを食べたい。(りんごをたべたい。)","translation":"Olma yeyishni xohlayman."}]
+19. compounds - JSON array formatida birikma so'zlar. Format: [{"word":"食堂","hiragana":"しょくどう","meaning":"oshxona"}]
+20. topic_name - Ushbu so'z tegishli bo'lgan mavzu nomi (masalan: "Mevalar", "Sayohat" va h.k.).
+
+Jadval formati:
+Agar senda Python (Code Interpreter) bo'lsa, ushbu ma'lumotlarni to'g'ridan-to'g'ri .xlsx formatida fayl qilib generatsiya qiladigan Python kodini yozib, menga Excel faylini yuklab olish havolasini ber.
+Agar Python yo'q bo'lsa, jadvalni toza Markdown jadvali ko'rinishida ber, shunda men uni to'g'ridan-to'g'ri Excelga nusxalab (copy-paste) olaman.`;
+    } else {
+      promptText = `Yapon tili so'zlarini o'rganish ilovasi uchun quyidagi talablar asosida berilgan mavzu bo'yicha 100 ta eng faol va kerakli so'zlarni tanlab, ularni Excel (XLSX) jadvaliga mos formatda shakllantirib ber.
+
+Ustunlar ro'yxati va ularga qo'yiladigan talablar:
+1. japanese_word - So'zning o'zi (Kanjida, agar kanji bo'lmasa faqat Kanada, masalan: "食べる", "here").
+2. hiragana - So'zning faqat Xiragana yoki Katakanadagi o'qilishi (masalan: "たべる", "プレゼント").
+3. meaning - So'zning o'zbek tilidagi aniq tarjimasi (masalan: "yemoq").
+4. part_of_speech - So'z turkumi: "ot", "fe'l", "i-sifat", "na-sifat", "ravish", "zarracha", "olmosh", "undov", "bog'lovchi", "qo'shimcha".
+5. jlpt_level - JLPT darajasi: "N5", "N4", "N3", "N2", "N1".
+6. frequency - Ishlatilish darajasi (masalan: "Top 500", "Top 1000", "Top 2000", "Top 5000", "Boshqa").
+7. pitch_accent - Pitch accent belgilari (masalan: "⓪", "①", "②", "③" va h.k.).
+8. te_form - Fe'l va sifatlar uchun "te" shakli (bo'sh qolishi mumkin).
+9. ta_form - Fe'l va sifatlar uchun "ta" shakli (bo'sh qolishi mumkin).
+10. nai_form - Fe'l va sifatlar uchun inkor "nai" shakli (bo'sh qolishi mumkin).
+11. masu_form - Fe'llar uchun "masu" shakli (bo'sh qolishi mumkin).
+12. example_sentence - Chapda Kanjili yaponcha gap va o'ngda qavs ichida uning faqat xiragana/katakanadagi o'qilishi (masalan: "私は朝ご飯を食べます。(わたしはあさごはんをたべます。)").
+13. example_translation - Namunaviy gapning o'zbekcha tarjimasi (masalan: "Men nonushta yeyman.").
+14. synonyms - Sinonimlar (vergul bilan ajratilgan yaponcha so'zlar ro'yxati).
+15. antonyms - Antonimlar (yaponcha so'zlar ro'yxati).
+16. nuance - Sinonimlar orasidagi ma'no farqi yoki o'ziga xos qo'llanilishi haqida o'zbekcha qisqa izoh.
+17. kanji_info - JSON array formatida so'z iyerogliflarining batafsil tahlili (Kanjisiz so'zlar uchun: []). Format: [{"kanji":"食","meaning":"yemoq","kunReading":"ta","onReading":"shoku","strokes":9}]
+18. additional_examples - JSON array formatida yana 2 ta namunaviy gap va o'zbekcha tarjimasi. Qavs ichida gapning xiragana o'qilishini ham kiriting. Format: [{"sentence":"りんごを食べたい。(りんごをたべたい。)","translation":"Olma yeyishni xohlayman."}]
+19. compounds - JSON array formatida birikma so'zlar. Format: [{"word":"食堂","hiragana":"しょくどう","meaning":"oshxona"}]
+
+Jadval formati:
+Agar senda Python (Code Interpreter) bo'lsa, ushbu ma'lumotlarni to'g'ridan-to'g'ri .xlsx formatida fayl qilib generatsiya qiladigan Python kodini yozib, menga Excel faylini yuklab olish havolasini ber.
+Agar Python yo'q bo'lsa, jadvalni toza Markdown jadvali ko'rinishida ber, shunda men uni to'g'ridan-to'g'ri Excelga nusxalab (copy-paste) olaman.
+
+Mavzu: [MAVZU NOMINI SHU YERGA YOZING, masalan: Mevalar]`;
+    }
+
+    navigator.clipboard.writeText(promptText);
+    setCopiedPrompt(true);
+    setTimeout(() => setCopiedPrompt(false), 2000);
+  };
+
   useEffect(() => {
     api.get<{ data: Book[] }>('/books', { params: { limit: 500 } })
       .then(({ data }) => setBooks(data.data))
@@ -230,7 +305,7 @@ export default function AdminUploadPage() {
 
   const handleUpload = async () => {
     if (!file) { setError('Iltimos, avval faylni tanlang.'); return; }
-    if (!bookId || !topicName.trim()) {
+    if (!useFileTopics && (!bookId || !topicName.trim())) {
       setError('Iltimos, kitobni tanlang va mavzu nomini kiriting.'); return;
     }
 
@@ -238,11 +313,13 @@ export default function AdminUploadPage() {
 
     const form = new FormData();
     form.append('file', file);
-    form.append('bookId', bookId);
-    form.append('topicName', topicName.trim());
+    if (!useFileTopics) {
+      form.append('bookId', bookId);
+      form.append('topicName', topicName.trim());
+    }
 
     try {
-      const endpoint = '/admin/upload/book-words';
+      const endpoint = useFileTopics ? '/admin/upload/words' : '/admin/upload/book-words';
       const { data }  = await api.post<UploadResult>(endpoint, form, {
         headers: { 'Content-Type': 'multipart/form-data' },
         validateStatus: (s) => s < 500,
@@ -258,50 +335,110 @@ export default function AdminUploadPage() {
 
   return (
     <div className="space-y-6 animate-fade-in max-w-2xl">
-      <div>
-        <h1 className="text-2xl font-extrabold text-text-primary mb-1">{"Ommaviy yuklash"}</h1>
-        <p className="text-text-muted text-sm">{"Kitob so'zlarini import qilish uchun CSV yoki Excel fayllarini yuklang."}</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-extrabold text-text-primary mb-1">{"Ommaviy yuklash"}</h1>
+          <p className="text-text-muted text-sm">{"Kitob so'zlarini import qilish uchun CSV yoki Excel fayllarini yuklang."}</p>
+        </div>
+        <button
+          onClick={downloadTemplate}
+          className="btn-ghost border border-border px-4 py-2.5 rounded-xl text-xs flex items-center gap-1.5 self-start sm:self-auto hover:bg-surface-2 transition-all"
+        >
+          <Download size={13} /> {"CSV Shablonni yuklash"}
+        </button>
       </div>
 
-      <div className="card-glass p-5 space-y-4">
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <label className="flex items-center gap-1.5 text-sm font-medium text-text-secondary">
-              <BookOpen size={13} /> {"Maqsadli kitob"}
-            </label>
-            <button
-              type="button"
-              onClick={handleCreateBook}
-              className="text-xs text-primary hover:underline"
-            >
-              {"+ Yangi kitob yaratish"}
-            </button>
+      {/* ── AI Prompt Card ───────────────────────────────────────── */}
+      <div className="card-glass p-5 border border-primary/20 bg-primary/5 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🤖</span>
+            <div>
+              <h3 className="text-sm font-bold text-text-primary">{"AI yordamida yuklash"}</h3>
+              <p className="text-xs text-text-muted mt-0.5">{"Gemini yoki ChatGPT-ga quyidagi promptni berib, mos jadval oling."}</p>
+            </div>
           </div>
-          <div className="relative">
-            <select
-              value={bookId}
-              onChange={(e) => setBookId(e.target.value)}
-              className="input-field pr-8 appearance-none cursor-pointer text-sm"
-            >
-              <option value="">{"Kitobni tanlang…"}</option>
-              {books.map((b) => <option key={b.id} value={b.id}>{b.title}</option>)}
-            </select>
-            <ChevronDown size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
-          </div>
+          <button
+            onClick={copyPrompt}
+            className="btn-primary text-xs px-3 py-2 flex items-center gap-1.5"
+          >
+            {copiedPrompt ? (
+              <><Check size={12} /> {"Nusxalandi"}</>
+            ) : (
+              <><Copy size={12} /> {"Promptni nusxalash"}</>
+            )}
+          </button>
         </div>
+      </div>
 
-        <div className="space-y-1.5">
-          <label className="text-sm font-medium text-text-secondary">{"Mavzu nomi"}</label>
-          <input
-            type="text"
-            value={topicName}
-            onChange={(e) => setTopicName(e.target.value)}
-            placeholder="Masalan: Hayvonlar, Taomlar, Salomlashish…"
-            className="input-field text-sm"
+      {/* ── Selection mode toggle ── */}
+      <div className="flex items-center justify-between p-4 bg-surface-2/40 border border-border/60 rounded-2xl">
+        <div>
+          <p className="font-semibold text-sm text-text-primary">Mavzularni fayl ichidan aniqlash</p>
+          <p className="text-xs text-text-muted mt-0.5">Fayl ichidagi "topic_name" yoki "topic" ("mavzu") ustunidan foydalaniladi</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setUseFileTopics(!useFileTopics);
+            setError(null);
+            setResult(null);
+          }}
+          className={cn(
+            'w-11 h-6 rounded-full p-0.5 transition-colors relative outline-none border border-transparent',
+            useFileTopics ? 'bg-primary' : 'bg-surface-3 border-border'
+          )}
+        >
+          <motion.div
+            layout
+            className="w-5 h-5 rounded-full bg-white shadow-sm"
+            animate={{ x: useFileTopics ? 20 : 0 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
           />
-          <p className="text-xs text-text-muted">{"Agar ushbu mavzu mavjud bo'lmasa, u yangidan yaratiladi."}</p>
-        </div>
+        </button>
       </div>
+
+      {!useFileTopics && (
+        <div className="card-glass p-5 space-y-4 animate-slide-down">
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-1.5 text-sm font-medium text-text-secondary">
+                <BookOpen size={13} /> {"Maqsadli kitob"}
+              </label>
+              <button
+                type="button"
+                onClick={handleCreateBook}
+                className="text-xs text-primary hover:underline"
+              >
+                {"+ Yangi kitob yaratish"}
+              </button>
+            </div>
+            <div className="relative">
+              <select
+                value={bookId}
+                onChange={(e) => setBookId(e.target.value)}
+                className="input-field pr-8 appearance-none cursor-pointer text-sm"
+              >
+                <option value="">{"Kitobni tanlang…"}</option>
+                {books.map((b) => <option key={b.id} value={b.id}>{b.title}</option>)}
+              </select>
+              <ChevronDown size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-sm font-medium text-text-secondary">{"Mavzu nomi"}</label>
+            <input
+              type="text"
+              value={topicName}
+              onChange={(e) => setTopicName(e.target.value)}
+              placeholder="Masalan: Hayvonlar, Taomlar, Salomlashish…"
+              className="input-field text-sm"
+            />
+            <p className="text-xs text-text-muted">{"Agar ushbu mavzu mavjud bo'lmasa, u yangidan yaratiladi."}</p>
+          </div>
+        </div>
+      )}
 
       {/* ── Drop Zone ────────────────────────────────────────────── */}
       <DropZone

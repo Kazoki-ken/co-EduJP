@@ -11,6 +11,22 @@ export interface BulkWordRow {
   meaning: string;
   example_sentence?: string;
   example_translation?: string;
+  part_of_speech?: string;
+  jlpt_level?: string;
+  frequency?: string;
+  pitch_accent?: string;
+  te_form?: string;
+  ta_form?: string;
+  nai_form?: string;
+  masu_form?: string;
+  kanji_info?: any;
+  additional_examples?: any;
+  synonyms?: string[];
+  antonyms?: string[];
+  nuance?: string;
+  compounds?: any;
+  homonyms?: any;
+  topic_name?: string;
 }
 
 export interface BulkUploadResult {
@@ -26,7 +42,11 @@ export interface BulkUploadResult {
  * Accepts .csv, .xlsx, and .xls formats (detected by content, not extension).
  */
 export const parseSpreadsheet = (buffer: Buffer): Record<string, unknown>[] => {
-  const workbook = XLSX.read(buffer, { type: 'buffer', codepage: 65001 });
+  let cleanBuffer = buffer;
+  if (buffer.length >= 3 && buffer[0] === 0xEF && buffer[1] === 0xBB && buffer[2] === 0xBF) {
+    cleanBuffer = buffer.subarray ? buffer.subarray(3) : buffer.slice(3);
+  }
+  const workbook = XLSX.read(cleanBuffer, { type: 'buffer', codepage: 65001 });
   const sheetName = workbook.SheetNames[0];
 
   if (!sheetName) {
@@ -55,11 +75,70 @@ const normaliseRow = (
   raw: Record<string, unknown>,
   rowIndex: number,
 ): { data: BulkWordRow; error?: never } | { error: string; data?: never } => {
-  const japaneseWord = String(raw['japanese_word'] ?? raw['Japanese Word'] ?? raw['word'] ?? '').trim();
-  const meaning = String(raw['meaning'] ?? raw['Meaning'] ?? '').trim();
-  const hiragana = String(raw['hiragana'] ?? raw['Hiragana'] ?? '').trim() || undefined;
-  const exampleSentence = String(raw['example_sentence'] ?? raw['Example Sentence'] ?? '').trim() || undefined;
-  const exampleTranslation = String(raw['example_translation'] ?? raw['Example Translation'] ?? '').trim() || undefined;
+  // Normalize keys in raw: trim, lowercase, remove surrounding quotes
+  const cleanRaw: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(raw)) {
+    const cleanKey = key.trim().toLowerCase().replace(/^["']|["']$/g, '');
+    cleanRaw[cleanKey] = value;
+  }
+
+  const getVal = (keys: string[]): unknown => {
+    for (const k of keys) {
+      const cleanK = k.toLowerCase().replace(/_/g, '').replace(/\s+/g, '');
+      // Match cleanRaw keys using the same clean format
+      for (const [rk, rv] of Object.entries(cleanRaw)) {
+        const cleanRk = rk.replace(/_/g, '').replace(/\s+/g, '');
+        if (cleanRk === cleanK) {
+          return rv;
+        }
+      }
+    }
+    return undefined;
+  };
+
+  const japaneseWord = String(getVal(['japanese_word', 'japanese word', 'word']) ?? '').trim();
+  const meaning = String(getVal(['meaning']) ?? '').trim();
+  const hiragana = String(getVal(['hiragana']) ?? '').trim() || undefined;
+  const exampleSentence = String(getVal(['example_sentence', 'example sentence']) ?? '').trim() || undefined;
+  const exampleTranslation = String(getVal(['example_translation', 'example translation']) ?? '').trim() || undefined;
+
+  const partOfSpeech = String(getVal(['part_of_speech', 'partOfSpeech', 'soz_turi', 'soz turi']) ?? '').trim() || undefined;
+  const jlptLevel = String(getVal(['jlpt_level', 'jlptLevel']) ?? '').trim() || undefined;
+  const frequency = String(getVal(['frequency']) ?? '').trim() || undefined;
+  const pitchAccent = String(getVal(['pitch_accent', 'pitchAccent']) ?? '').trim() || undefined;
+  
+  const teForm = String(getVal(['te_form', 'teForm']) ?? '').trim() || undefined;
+  const taForm = String(getVal(['ta_form', 'taForm']) ?? '').trim() || undefined;
+  const naiForm = String(getVal(['nai_form', 'naiForm']) ?? '').trim() || undefined;
+  const masuForm = String(getVal(['masu_form', 'masuForm']) ?? '').trim() || undefined;
+
+  const parseJsonSafe = (val: unknown) => {
+    if (!val) return undefined;
+    if (typeof val === 'object') return val;
+    try {
+      return JSON.parse(String(val).trim());
+    } catch {
+      return undefined;
+    }
+  };
+
+  const parseList = (val: unknown): string[] | undefined => {
+    if (!val) return undefined;
+    if (Array.isArray(val)) return val.map(String);
+    if (typeof val === 'string') {
+      return val.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+    return undefined;
+  };
+
+  const kanjiInfo = parseJsonSafe(getVal(['kanji_info', 'kanjiInfo']));
+  const additionalExamples = parseJsonSafe(getVal(['additional_examples', 'additionalExamples']));
+  const compounds = parseJsonSafe(getVal(['compounds']));
+  const homonyms = parseJsonSafe(getVal(['homonyms', 'homonimlar']));
+  const synonyms = parseList(getVal(['synonyms', 'sinonimlar']));
+  const antonyms = parseList(getVal(['antonyms', 'antonimlar']));
+  const nuance = String(getVal(['nuance', 'nuans']) ?? '').trim() || undefined;
+  const topicName = String(getVal(['topic_name', 'topic', 'mavzu']) ?? '').trim() || undefined;
 
   if (!japaneseWord && !meaning) return { error: 'blank row' };
   if (!japaneseWord) return { error: `Row ${rowIndex}: missing "japanese_word"` };
@@ -68,7 +147,29 @@ const normaliseRow = (
   if (meaning.length > 500) return { error: `Row ${rowIndex}: "meaning" exceeds 500 characters` };
 
   return {
-    data: { japanese_word: japaneseWord, hiragana, meaning, example_sentence: exampleSentence, example_translation: exampleTranslation },
+    data: {
+      japanese_word: japaneseWord,
+      hiragana,
+      meaning,
+      example_sentence: exampleSentence,
+      example_translation: exampleTranslation,
+      part_of_speech: partOfSpeech,
+      jlpt_level: jlptLevel,
+      frequency,
+      pitch_accent: pitchAccent,
+      te_form: teForm,
+      ta_form: taForm,
+      nai_form: naiForm,
+      masu_form: masuForm,
+      kanji_info: kanjiInfo,
+      additional_examples: additionalExamples,
+      synonyms,
+      antonyms,
+      nuance,
+      compounds,
+      homonyms,
+      topic_name: topicName,
+    },
   };
 };
 
@@ -122,15 +223,97 @@ export const bulkUploadWords = async (
   const candidateWords = validRows.map((r) => r.japanese_word);
   const existingWords = await prisma.word.findMany({
     where: { japaneseWord: { in: candidateWords } },
-    select: { japaneseWord: true },
+    select: { id: true, japaneseWord: true },
   });
-  const existingSet = new Set(existingWords.map((w) => w.japaneseWord));
+  const existingWordMap = new Map<string, string>(
+    existingWords.map((w) => [w.japaneseWord, w.id])
+  );
 
-  // Insert each new word individually so we can collect per-row errors
+  // Retrieve existing WordTopic links for candidate words to prevent duplicate junction links
+  let existingLinksSet = new Set<string>(); // key: "wordId-topicId"
+  if (existingWords.length > 0) {
+    const existingWordIds = existingWords.map((w) => w.id);
+    const existingLinks = await prisma.wordTopic.findMany({
+      where: {
+        wordId: { in: existingWordIds },
+      },
+      select: { wordId: true, topicId: true },
+    });
+    existingLinksSet = new Set(
+      existingLinks.map((l) => `${l.wordId}-${l.topicId}`)
+    );
+  }
+
+  // Local cache for resolved global topics (name -> topicId)
+  const globalTopicCache = new Map<string, string>();
+
+  // Process each row
   for (let i = 0; i < validRows.length; i++) {
     const row = validRows[i]!;
+    
+    // Resolve row-specific topic if present
+    let rowTopicId: string | undefined = undefined;
+    if (row.topic_name) {
+      const cacheKey = row.topic_name.toLowerCase().trim();
+      if (globalTopicCache.has(cacheKey)) {
+        rowTopicId = globalTopicCache.get(cacheKey);
+      } else {
+        let topic = await prisma.topic.findFirst({
+          where: {
+            name: { equals: row.topic_name, mode: 'insensitive' },
+            bookId: null,
+          },
+        });
+        if (!topic) {
+          topic = await prisma.topic.create({
+            data: { name: row.topic_name, bookId: null },
+          });
+        }
+        globalTopicCache.set(cacheKey, topic.id);
+        rowTopicId = topic.id;
+      }
+    }
 
-    if (existingSet.has(row.japanese_word)) {
+    const existingId = existingWordMap.get(row.japanese_word);
+    const allTargetTopicIds = [
+      ...(topicIds ?? []),
+      ...(rowTopicId ? [rowTopicId] : []),
+    ];
+
+    if (existingId) {
+      if (allTargetTopicIds.length > 0) {
+        // Find which target topics the existing word is not yet linked to
+        const topicsToLink = allTargetTopicIds.filter(
+          (topicId) => !existingLinksSet.has(`${existingId}-${topicId}`)
+        );
+
+        if (topicsToLink.length > 0) {
+          try {
+            await prisma.wordTopic.createMany({
+              data: topicsToLink.map((topicId) => ({
+                wordId: existingId,
+                topicId,
+              })),
+            });
+
+            // Add the new links to our memory set so we don't try to insert them again
+            for (const topicId of topicsToLink) {
+              existingLinksSet.add(`${existingId}-${topicId}`);
+            }
+
+            result.created++;
+            continue;
+          } catch (err) {
+            result.errors.push({
+              row: i + 2,
+              message: `Failed to link existing word "${row.japanese_word}" to topic: ${(err as Error).message}`,
+            });
+            continue;
+          }
+        }
+      }
+
+      // If it already exists in the dictionary and is already linked to the target topic(s), it is skipped
       result.skipped++;
       continue;
     }
@@ -144,9 +327,24 @@ export const bulkUploadWords = async (
           exampleSentence: row.example_sentence,
           exampleTranslation: row.example_translation,
           authorId,
-          ...(topicIds && topicIds.length > 0 && {
+          partOfSpeech: row.part_of_speech,
+          jlptLevel: row.jlpt_level,
+          frequency: row.frequency,
+          pitchAccent: row.pitch_accent,
+          teForm: row.te_form,
+          taForm: row.ta_form,
+          naiForm: row.nai_form,
+          masuForm: row.masu_form,
+          kanjiInfo: row.kanji_info,
+          additionalExamples: row.additional_examples,
+          synonyms: row.synonyms ?? [],
+          antonyms: row.antonyms ?? [],
+          nuance: row.nuance,
+          compounds: row.compounds,
+          homonyms: row.homonyms,
+          ...(allTargetTopicIds.length > 0 && {
             wordTopics: {
-              create: topicIds.map((topicId) => ({ topicId })),
+              create: allTargetTopicIds.map((topicId) => ({ topicId })),
             },
           }),
         },

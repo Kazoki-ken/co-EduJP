@@ -2,6 +2,7 @@
   "expo": {
     "name": "VocabCards",
     "slug": "cardgame",
+    "scheme": "cardgame",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,7 +29,6 @@
       },
       "package": "com.user.cardgame",
       "versionCode": 1,
-      "permissions": [],
       "usesCleartextTraffic": true
     },
     "web": {
@@ -40,6 +40,7 @@
       }
     },
     "plugins": [
+      "expo-router",
       "expo-secure-store",
       "expo-web-browser",
       "expo-font"

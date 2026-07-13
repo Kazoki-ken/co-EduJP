@@ -11,6 +11,8 @@ import api from '@/lib/api';
 import { cn, leagueColor, leagueIcon } from '@/lib/utils';
 import type { EarnedBadge, Word, Book, PaginatedResponse } from '@/lib/types';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface UserBadgeEntry {
@@ -62,13 +64,19 @@ export default function ProfilePage() {
     });
   };
 
-  const handleSpeak = (e: React.MouseEvent, japaneseWord: string) => {
+  const handleSpeak = async (e: React.MouseEvent, text: string) => {
     e.stopPropagation();
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(japaneseWord);
-      utterance.lang = 'ja-JP';
-      window.speechSynthesis.speak(utterance);
+    try {
+      const url = `${API_BASE}/tts?text=${encodeURIComponent(text)}&voice=ja-JP-NanamiNeural`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('TTS failed');
+      const blob = await res.blob();
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+      audio.onended = () => { URL.revokeObjectURL(audioUrl); };
+      await audio.play();
+    } catch (err) {
+      console.error('TTS playback failed', err);
     }
   };
 
@@ -276,7 +284,7 @@ export default function ProfilePage() {
                           <div className="flex items-center gap-3 flex-1 min-w-0">
                             {/* TTS Button */}
                             <button
-                              onClick={(e) => handleSpeak(e, w.japaneseWord)}
+                              onClick={(e) => handleSpeak(e, w.hiragana || w.japaneseWord)}
                               className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 hover:bg-primary/20
                                          flex items-center justify-center shrink-0 text-primary transition-colors"
                               title="Talaffuzni eshitish"

@@ -85,7 +85,7 @@ export const getCurrentWeekBounds = (): { start: Date; end: Date } => {
  * If the user has fewer than 4 saved words, a friendly error is thrown.
  */
 export const generateSession = async (opts: GenerateSessionOptions) => {
-  const limit = Math.min(opts.limit ?? 20, 50);
+  const limit = Math.min(opts.limit ?? 20, 200);
   const now = new Date();
   const MIN_WORDS = 4; // minimum for multiple-choice options
 
@@ -109,6 +109,20 @@ export const generateSession = async (opts: GenerateSessionOptions) => {
       userId: opts.userId,
       nextReviewDate: { lte: now },
       wordId: { in: savedWordIds },
+      word: {
+        ...(opts.topicId && {
+          wordTopics: {
+            some: { topicId: opts.topicId },
+          },
+        }),
+        ...(opts.bookId && {
+          wordTopics: {
+            some: {
+              topic: { bookId: opts.bookId },
+            },
+          },
+        }),
+      },
     },
     orderBy: { nextReviewDate: 'asc' },
     take: limit,
@@ -140,6 +154,18 @@ export const generateSession = async (opts: GenerateSessionOptions) => {
     const candidates = await prisma.word.findMany({
       where: {
         id: { in: savedWordIds.filter((id) => !dueWordIds.has(id)) },
+        ...(opts.topicId && {
+          wordTopics: {
+            some: { topicId: opts.topicId },
+          },
+        }),
+        ...(opts.bookId && {
+          wordTopics: {
+            some: {
+              topic: { bookId: opts.bookId },
+            },
+          },
+        }),
       },
       take: remaining * 3,
       orderBy: { createdAt: 'desc' },
@@ -164,8 +190,10 @@ export const generateSession = async (opts: GenerateSessionOptions) => {
   const selectedWords = [...dueWords, ...additionalWords];
 
   if (selectedWords.length === 0) {
+    const target = opts.topicId ? 'topic' : opts.bookId ? 'book' : '';
+    const targetStr = target ? ` in the selected ${target}` : '';
     throw createError(
-      'No saved words available for practice. Save some words in the Dictionary first!',
+      `No saved words available for practice${targetStr}. Save some words from this ${target || 'dictionary'} first!`,
       404,
     );
   }
@@ -274,56 +302,79 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
 
   const progressUpserts: Array<ReturnType<typeof prisma.userWordProgress.upsert>> = [];
 
+  // Group answers by wordId to determine overall correctness per word
+  const answersByWord = new Map<string, AnswerDto[]>();
   for (const answer of dto.answers) {
-    // Only grade words that belong to this session
     if (!sessionWordIds.includes(answer.wordId)) continue;
+    if (!answersByWord.has(answer.wordId)) {
+      answersByWord.set(answer.wordId, []);
+    }
+    answersByWord.get(answer.wordId)!.push(answer);
+  }
 
-    const word = wordMap.get(answer.wordId);
+  for (const [wordId, wordAnswers] of answersByWord.entries()) {
+    const word = wordMap.get(wordId);
     if (!word) continue;
 
-    // ── Determine correctness ───────────────────────────────────────────────
-    // Case-insensitive check against meaning OR hiragana
-    const normalised = answer.answer.trim().toLowerCase();
-    const isCorrect =
-      word.meaning.toLowerCase().includes(normalised) ||
-      normalised.includes(word.meaning.toLowerCase()) ||
-      word.hiragana?.toLowerCase() === normalised ||
-      word.japaneseWord === answer.answer.trim();
+    // A word is graded as correct ONLY if all submitted answers for it are correct (no mismatches)
+    let isWordCorrect = true;
 
-    const current = progressMap.get(answer.wordId);
+    for (const answer of wordAnswers) {
+      const normalised = answer.answer.trim().toLowerCase();
+      const isCorrect =
+        word.meaning.toLowerCase().includes(normalised) ||
+        normalised.includes(word.meaning.toLowerCase()) ||
+        word.hiragana?.toLowerCase() === normalised ||
+        word.japaneseWord === answer.answer.trim();
+
+      if (!isCorrect) {
+        isWordCorrect = false;
+      }
+    }
+
+    const current = progressMap.get(wordId);
     const oldLevel = current?.level ?? 1;
     const oldXp = current?.xp ?? 0;
 
     let newLevel = oldLevel;
     let newXp = oldXp;
-    let nextReviewDate: Date;
+    let nextReviewDate = current?.nextReviewDate || now;
 
-    if (isCorrect) {
-      totalCorrect++;
-      totalXp += XP_PER_CORRECT;
-      totalCoins += COINS_PER_CORRECT;
+    if (session.gameType !== 'MATCH') {
+      if (isWordCorrect) {
+        totalCorrect++;
+        totalXp += XP_PER_CORRECT;
+        totalCoins += COINS_PER_CORRECT;
 
-      newXp = oldXp + 1;
-      if (newXp >= XP_PER_LEVEL && oldLevel < 5) {
-        // Level up!
-        newLevel = oldLevel + 1;
+        newXp = oldXp + 1;
+        if (newXp >= XP_PER_LEVEL && oldLevel < 5) {
+          // Level up!
+          newLevel = oldLevel + 1;
+          newXp = 0;
+        } else if (oldLevel === 5) {
+          // Already mastered — keep XP capped
+          newXp = Math.min(newXp, XP_PER_LEVEL);
+        }
+
+        nextReviewDate = new Date(now.getTime() + SRS_INTERVALS[newLevel]);
+      } else {
+        // Wrong — push back one level, reset XP, immediate review
+        newLevel = Math.max(1, oldLevel - 1);
         newXp = 0;
-      } else if (oldLevel === 5) {
-        // Already mastered — keep XP capped
-        newXp = Math.min(newXp, XP_PER_LEVEL);
+        nextReviewDate = new Date(now.getTime() + SRS_INTERVALS[1]); // 1 min
       }
-
-      nextReviewDate = new Date(now.getTime() + SRS_INTERVALS[newLevel]);
     } else {
-      // Wrong — push back one level, reset XP, immediate review
-      newLevel = Math.max(1, oldLevel - 1);
-      newXp = 0;
-      nextReviewDate = new Date(now.getTime() + SRS_INTERVALS[1]); // 1 min
+      // For MATCH games, we still count totalCorrect for stats/XP, but we don't change SRS level/XP
+      if (isWordCorrect) {
+        totalCorrect++;
+        totalXp += XP_PER_CORRECT;
+        totalCoins += COINS_PER_CORRECT;
+      }
     }
 
     srsUpdates.push({
-      wordId: answer.wordId,
-      correct: isCorrect,
+      wordId,
+      correct: isWordCorrect,
       oldLevel,
       newLevel,
       oldXp,
@@ -331,30 +382,30 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
       nextReviewDate,
     });
 
-    progressUpserts.push(
-      prisma.userWordProgress.upsert({
-        where: { userId_wordId: { userId, wordId: answer.wordId } },
-        create: {
-          userId,
-          wordId: answer.wordId,
-          level: newLevel,
-          xp: newXp,
-          nextReviewDate,
-          lastReviewedAt: now,
-        },
-        update: {
-          level: newLevel,
-          xp: newXp,
-          nextReviewDate,
-          lastReviewedAt: now,
-        },
-      }),
-    );
+    if (session.gameType !== 'MATCH') {
+      progressUpserts.push(
+        prisma.userWordProgress.upsert({
+          where: { userId_wordId: { userId, wordId } },
+          create: {
+            userId,
+            wordId,
+            level: newLevel,
+            xp: newXp,
+            nextReviewDate,
+            lastReviewedAt: now,
+          },
+          update: {
+            level: newLevel,
+            xp: newXp,
+            nextReviewDate,
+            lastReviewedAt: now,
+          },
+        }),
+      );
+    }
   }
 
-  const totalQuestions = dto.answers.filter((a) =>
-    sessionWordIds.includes(a.wordId),
-  ).length;
+  const totalQuestions = answersByWord.size;
   const accuracy =
     totalQuestions > 0
       ? Math.round((totalCorrect / totalQuestions) * 100)

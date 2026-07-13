@@ -27,6 +27,7 @@ interface AuthContextValue {
   logout: () => Promise<void>;
   /** Silently refetch /auth/me to refresh XP, coins, streak, etc. */
   refreshUser: () => Promise<void>;
+  setTokensAndUser: (accessToken: string, newUser: User, isNewUser: boolean, refreshToken?: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -104,6 +105,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { isNewUser: data.isNewUser };
   }, []);
 
+  // ─── Set Tokens And User (Telegram login dan keyin) ──────────────
+  const setTokensAndUser = useCallback(async (accessToken: string, newUser: User, isNewUser: boolean, refreshToken?: string) => {
+    setAccessToken(accessToken);
+    if (refreshToken) await storeRefreshToken(refreshToken);
+    setUser(newUser);
+    
+    if (isNewUser) {
+      setNeedsUsername(true);
+    }
+  }, []);
+
   // ─── Set Username (Google login dan keyin) ─────────────────────────
   const setUsername = useCallback(async (username: string) => {
     const { data } = await apiClient.patch<{ user: User }>('/auth/set-username', { username });
@@ -146,6 +158,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUsername,
         logout,
         refreshUser,
+        setTokensAndUser,
       }}
     >
       {children}

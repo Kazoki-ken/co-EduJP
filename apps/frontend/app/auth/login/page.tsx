@@ -35,6 +35,7 @@ export default function LoginPage() {
   const [phoneToken, setPhoneToken] = useState<string | null>(null);
   const [botUsername, setBotUsername] = useState<string>('');
   const [isPolling, setIsPolling] = useState(false);
+  const [showPasswordInput, setShowPasswordInput] = useState(false);
 
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -92,10 +93,20 @@ export default function LoginPage() {
     setError('');
     setIsLoading(true);
     try {
-      const { data } = await api.post('/auth/phone/start', { phone });
-      setPhoneToken(data.token);
-      setBotUsername(data.botUsername);
-      startPolling(data.token);
+      if (showPasswordInput) {
+        await login(phone, password);
+        router.push('/');
+      } else {
+        const checkRes = await api.post('/auth/phone/check', { phone });
+        if (checkRes.data.exists) {
+          setShowPasswordInput(true);
+        } else {
+          const { data } = await api.post('/auth/phone/start', { phone });
+          setPhoneToken(data.token);
+          setBotUsername(data.botUsername);
+          startPolling(data.token);
+        }
+      }
     } catch (err: any) {
       setError(err.response?.data?.error || "Xatolik yuz berdi");
     } finally {
@@ -194,13 +205,36 @@ export default function LoginPage() {
                       id="login-phone"
                       type="tel"
                       required
+                      disabled={showPasswordInput}
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="input-field pl-10 py-3"
+                      className="input-field pl-10 py-3 disabled:opacity-60"
                       placeholder="+998 90 123 45 67"
                     />
                   </div>
                 </div>
+
+                {showPasswordInput && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="space-y-1.5"
+                  >
+                    <label className="text-sm font-medium text-text-secondary pl-1">Parol</label>
+                    <div className="relative group">
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" size={18} />
+                      <input
+                        id="login-phone-password"
+                        type="password"
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="input-field pl-10 py-3"
+                        placeholder="••••••••"
+                      />
+                    </div>
+                  </motion.div>
+                )}
 
                 <button
                   type="submit"
@@ -209,6 +243,11 @@ export default function LoginPage() {
                 >
                   {isLoading ? (
                     <Loader2 className="animate-spin" size={20} />
+                  ) : showPasswordInput ? (
+                    <>
+                      Tizimga kirish
+                      <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                    </>
                   ) : (
                     <>
                       Davom etish
@@ -216,6 +255,16 @@ export default function LoginPage() {
                     </>
                   )}
                 </button>
+
+                {showPasswordInput && (
+                  <button
+                    type="button"
+                    onClick={() => { setShowPasswordInput(false); setPassword(''); setError(''); }}
+                    className="text-xs text-text-muted hover:text-primary transition-colors mt-2 block mx-auto"
+                  >
+                    Raqamni o'zgartirish
+                  </button>
+                )}
               </form>
             ) : (
               <div className="space-y-5 text-center">
@@ -246,7 +295,7 @@ export default function LoginPage() {
                 )}
                 
                 <button
-                  onClick={() => setPhoneToken(null)}
+                  onClick={() => { setPhoneToken(null); setShowPasswordInput(false); setPassword(''); }}
                   className="text-xs text-text-muted hover:text-primary transition-colors mt-4 block mx-auto"
                 >
                   Raqamni o'zgartirish
@@ -319,6 +368,8 @@ export default function LoginPage() {
               onClick={() => {
                 setAuthMode(authMode === 'PHONE' ? 'EMAIL' : 'PHONE');
                 setError('');
+                setPassword('');
+                setShowPasswordInput(false);
               }}
               className="w-full flex items-center justify-center gap-2 py-3.5 px-5 rounded-xl border transition-all duration-200 text-sm font-semibold text-text-secondary hover:text-text-primary"
               style={{

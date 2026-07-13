@@ -44,6 +44,31 @@ export interface WordTopic {
   };
 }
 
+export interface KanjiInfo {
+  kanji: string;
+  meaning: string;
+  kunReading: string;
+  onReading: string;
+  strokes: number;
+}
+
+export interface AdditionalExample {
+  sentence: string;
+  translation: string;
+}
+
+export interface CompoundWord {
+  word: string;
+  hiragana: string;
+  meaning: string;
+}
+
+export interface Homonym {
+  word: string;
+  hiragana: string;
+  meaning: string;
+}
+
 export interface Word {
   id: string;
   japaneseWord: string;
@@ -54,6 +79,24 @@ export interface Word {
   createdAt: string;
   isSaved: boolean;
   wordTopics: WordTopic[];
+
+  // Extended fields
+  partOfSpeech?: string | null;
+  jlptLevel?: string | null;
+  frequency?: string | null;
+  pitchAccent?: string | null;
+  teForm?: string | null;
+  taForm?: string | null;
+  naiForm?: string | null;
+  masuForm?: string | null;
+  kanjiInfo?: KanjiInfo[] | null;
+  additionalExamples?: AdditionalExample[] | null;
+  synonyms?: string[];
+  antonyms?: string[];
+  nuance?: string | null;
+  compounds?: CompoundWord[] | null;
+  homonyms?: Homonym[] | null;
+  userNote?: string | null;
 }
 
 export interface WordProgress {

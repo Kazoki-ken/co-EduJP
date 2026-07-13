@@ -62,8 +62,14 @@ export function TopicCard({ topic, bookId, isAuthenticated, onShowToast }: Topic
                         transition-colors truncate">
             {topic.name}
           </p>
-          <p className="text-xs text-text-muted">
-            {count} {"ta so'z"}
+          <p className="text-xs text-text-muted flex items-center gap-1.5 flex-wrap">
+            <span>{count} {"ta so'z"}</span>
+            {topic.book?.title && (
+              <>
+                <span className="text-text-muted/40">•</span>
+                <span className="text-text-muted truncate">Kitob: {topic.book.title}</span>
+              </>
+            )}
           </p>
         </div>
       </Link>

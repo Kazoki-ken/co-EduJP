@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import {
-  View, Text, TextInput, TouchableOpacity, ActivityIndicator,
-  KeyboardAvoidingView, Platform, ScrollView, Animated, Image,
+  KeyboardAvoidingView, Platform, ScrollView, Animated, Image, Linking, View, Text, TextInput, TouchableOpacity, ActivityIndicator,
   type TextInput as TextInputType,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,6 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/RootStack';
 import { useAuth } from '../context/AuthContext';
+import apiClient from '../api/client';
 import {
   GoogleSignin,
   statusCodes,
@@ -100,25 +100,94 @@ GlowInput.displayName = 'GlowInput';
 
 // ─── Login Screen ─────────────────────────────────────────────────
 export default function LoginScreen({ navigation }: Props) {
-  const { login, googleLogin } = useAuth();
+  const { login, googleLogin, setTokensAndUser } = useAuth();
   const insets = useSafeAreaInsets();
+  
+  const [authMode, setAuthMode] = useState<'PHONE' | 'EMAIL'>('PHONE');
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  
+  const [phone, setPhone] = useState('+998');
+  const [phoneToken, setPhoneToken] = useState<string | null>(null);
+  const [botUsername, setBotUsername] = useState<string>('');
+  const [isPolling, setIsPolling] = useState(false);
+  const [showPasswordInput, setShowPasswordInput] = useState(false);
+  const pollingInterval = useRef<NodeJS.Timeout | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const passwordRef = useRef<TextInputType>(null);
 
+  // Cleanup polling
+  React.useEffect(() => {
+    return () => {
+      if (pollingInterval.current) clearInterval(pollingInterval.current);
+    };
+  }, []);
+
   const handleLogin = async () => {
-    if (!email.trim() || !password) { setError("Iltimos, barcha maydonlarni to'ldiring."); return; }
-    setError(null); setLoading(true);
-    try {
-      await login(email.trim().toLowerCase(), password);
-    } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { error?: string } } })
-        ?.response?.data?.error ?? "Kirish muvaffaqiyatsiz tugadi. Ma'lumotlaringizni tekshiring.";
-      setError(msg);
-    } finally { setLoading(false); }
+    if (authMode === 'EMAIL') {
+      if (!email.trim() || !password) { setError("Iltimos, barcha maydonlarni to'ldiring."); return; }
+      setError(null); setLoading(true);
+      try {
+        await login(email.trim().toLowerCase(), password);
+      } catch (err: unknown) {
+        const msg = (err as { response?: { data?: { error?: string } } })
+          ?.response?.data?.error ?? "Kirish muvaffaqiyatsiz tugadi. Ma'lumotlaringizni tekshiring.";
+        setError(msg);
+      } finally { setLoading(false); }
+    } else {
+      if (!phone.trim() || phone.length < 9) { setError("To'g'ri telefon raqam kiriting."); return; }
+      setError(null); setLoading(true);
+      try {
+        if (showPasswordInput) {
+          await login(phone.trim(), password);
+        } else {
+          const checkRes = await apiClient.post('/auth/phone/check', { phone });
+          if (checkRes.data.exists) {
+            setShowPasswordInput(true);
+          } else {
+            const { data } = await apiClient.post('/auth/phone/start', { phone });
+            setPhoneToken(data.token);
+            setBotUsername(data.botUsername);
+            startPolling(data.token);
+          }
+        }
+      } catch (err: unknown) {
+        const msg = (err as { response?: { data?: { error?: string } } })
+          ?.response?.data?.error ?? "Xatolik yuz berdi";
+        setError(msg);
+      } finally { setLoading(false); }
+    }
+  };
+
+  const startPolling = (token: string) => {
+    setIsPolling(true);
+    pollingInterval.current = setInterval(async () => {
+      try {
+        const { data } = await apiClient.get(`/auth/phone/status/${token}`);
+        if (data.status === 'VERIFIED') {
+          if (pollingInterval.current) clearInterval(pollingInterval.current);
+          setIsPolling(false);
+          await setTokensAndUser(data.accessToken, data.user, data.isNewUser, data.refreshToken);
+        }
+      } catch (err: any) {
+        if (err.response?.status === 400 || err.response?.status === 404) {
+          if (pollingInterval.current) clearInterval(pollingInterval.current);
+          setIsPolling(false);
+          setError(err.response?.data?.error || "Xatolik yuz berdi");
+          setPhoneToken(null);
+        }
+      }
+    }, 3000);
+  };
+
+  const openTelegram = () => {
+    if (botUsername && phoneToken) {
+      Linking.openURL(`https://t.me/${botUsername}?start=${phoneToken}`);
+    }
   };
 
   const handleGoogleLogin = async () => {
@@ -195,15 +264,50 @@ export default function LoginScreen({ navigation }: Props) {
             style={{ borderRadius: 24, overflow: 'hidden',
               borderWidth: 1, borderColor: 'rgba(109,40,217,0.22)' }}>
             <View style={{ backgroundColor: 'rgba(10,10,26,0.72)', padding: 24 }}>
-              <GlowInput label="Email" icon="mail-outline" value={email}
-                onChangeText={setEmail} placeholder="you@example.com"
-                keyboardType="email-address" returnKeyType="next"
-                onSubmitEditing={() => passwordRef.current?.focus()} />
+              
+              {/* Mode Toggle */}
+              <View style={{ flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 12, padding: 4, marginBottom: 24 }}>
+                <TouchableOpacity 
+                  style={{ flex: 1, paddingVertical: 10, alignItems: 'center', borderRadius: 10, backgroundColor: authMode === 'PHONE' ? 'rgba(124,58,237,0.4)' : 'transparent' }}
+                  onPress={() => { setAuthMode('PHONE'); setError(null); setPassword(''); setShowPasswordInput(false); }}
+                >
+                  <Text style={{ color: authMode === 'PHONE' ? '#fff' : '#9ca3af', fontSize: 14, fontWeight: '600' }}>Nomer orqali</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={{ flex: 1, paddingVertical: 10, alignItems: 'center', borderRadius: 10, backgroundColor: authMode === 'EMAIL' ? 'rgba(124,58,237,0.4)' : 'transparent' }}
+                  onPress={() => { setAuthMode('EMAIL'); setError(null); setPassword(''); setShowPasswordInput(false); }}
+                >
+                  <Text style={{ color: authMode === 'EMAIL' ? '#fff' : '#9ca3af', fontSize: 14, fontWeight: '600' }}>Email orqali</Text>
+                </TouchableOpacity>
+              </View>
 
-              <GlowInput ref={passwordRef} label="Parol" icon="lock-closed-outline"
-                value={password} onChangeText={setPassword}
-                placeholder="••••••••" secureTextEntry
-                returnKeyType="done" onSubmitEditing={handleLogin} />
+              {authMode === 'EMAIL' ? (
+                <>
+                  <GlowInput label="Email" icon="mail-outline" value={email}
+                    onChangeText={setEmail} placeholder="you@example.com"
+                    keyboardType="email-address" returnKeyType="next"
+                    onSubmitEditing={() => passwordRef.current?.focus()} />
+
+                  <GlowInput ref={passwordRef} label="Parol" icon="lock-closed-outline"
+                    value={password} onChangeText={setPassword}
+                    placeholder="••••••••" secureTextEntry
+                    returnKeyType="done" onSubmitEditing={handleLogin} />
+                </>
+              ) : (
+                <>
+                  <GlowInput label="Telefon Raqam" icon="call-outline" value={phone}
+                    onChangeText={setPhone} placeholder="+998 90 123 45 67"
+                    keyboardType="phone-pad" returnKeyType="done"
+                    onSubmitEditing={handleLogin} />
+
+                  {showPasswordInput && (
+                    <GlowInput ref={passwordRef} label="Parol" icon="lock-closed-outline"
+                      value={password} onChangeText={setPassword}
+                      placeholder="••••••••" secureTextEntry
+                      returnKeyType="done" onSubmitEditing={handleLogin} />
+                  )}
+                </>
+              )}
 
               {error && (
                 <View style={{
@@ -218,23 +322,61 @@ export default function LoginScreen({ navigation }: Props) {
                 </View>
               )}
 
-              <TouchableOpacity onPress={handleLogin} disabled={loading}
-                activeOpacity={0.85} style={{ marginTop: 4 }}>
-                <LinearGradient colors={['#7c3aed', '#5b21b6']}
-                  start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                  style={{
-                    paddingVertical: 16, borderRadius: 16, alignItems: 'center',
-                    shadowColor: '#6d28d9', shadowOffset: { width: 0, height: 6 },
-                    shadowOpacity: 0.5, shadowRadius: 14, elevation: 10,
-                  }}>
-                  {loading
-                    ? <ActivityIndicator color="#fff" />
-                    : <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', letterSpacing: 0.3 }}>
-                        Tizimga kirish
+              {phoneToken ? (
+                <View style={{ marginTop: 8 }}>
+                  <TouchableOpacity onPress={openTelegram} activeOpacity={0.85}>
+                    <LinearGradient colors={['#2AABEE', '#229ED9']}
+                      start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                      style={{
+                        paddingVertical: 16, borderRadius: 16, alignItems: 'center',
+                        shadowColor: '#2AABEE', shadowOffset: { width: 0, height: 6 },
+                        shadowOpacity: 0.5, shadowRadius: 14, elevation: 10,
+                        flexDirection: 'row', justifyContent: 'center',
+                      }}>
+                      <Ionicons name="paper-plane-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
+                      <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', letterSpacing: 0.3 }}>
+                        Telegram orqali tasdiqlash
                       </Text>
-                  }
-                </LinearGradient>
-              </TouchableOpacity>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                  {isPolling && (
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 16 }}>
+                      <ActivityIndicator color="#7c3aed" size="small" />
+                      <Text style={{ color: '#9ca3af', fontSize: 13, marginLeft: 8 }}>
+                        Tasdiqlash kutilmoqda...
+                      </Text>
+                    </View>
+                  )}
+                  <TouchableOpacity onPress={() => { setPhoneToken(null); setIsPolling(false); setShowPasswordInput(false); setPassword(''); if(pollingInterval.current) clearInterval(pollingInterval.current); }} style={{ marginTop: 16, alignItems: 'center' }}>
+                    <Text style={{ color: '#6b7280', fontSize: 14 }}>Raqamni o'zgartirish</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View>
+                  <TouchableOpacity onPress={handleLogin} disabled={loading}
+                    activeOpacity={0.85} style={{ marginTop: 4 }}>
+                    <LinearGradient colors={['#7c3aed', '#5b21b6']}
+                      start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                      style={{
+                        paddingVertical: 16, borderRadius: 16, alignItems: 'center',
+                        shadowColor: '#6d28d9', shadowOffset: { width: 0, height: 6 },
+                        shadowOpacity: 0.5, shadowRadius: 14, elevation: 10,
+                      }}>
+                      {loading
+                        ? <ActivityIndicator color="#fff" />
+                        : <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', letterSpacing: 0.3 }}>
+                            {authMode === 'PHONE' ? (showPasswordInput ? "Tizimga kirish" : "Davom etish") : "Tizimga kirish"}
+                          </Text>
+                      }
+                    </LinearGradient>
+                  </TouchableOpacity>
+                  {showPasswordInput && (
+                    <TouchableOpacity onPress={() => { setShowPasswordInput(false); setPassword(''); setError(null); }} style={{ marginTop: 16, alignItems: 'center' }}>
+                      <Text style={{ color: '#6b7280', fontSize: 14 }}>Raqamni o'zgartirish</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              )}
 
               {/* ─── Divider ─── */}
               <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>

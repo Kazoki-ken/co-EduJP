@@ -88,6 +88,12 @@ export default function RegisterPage() {
     setError('');
     setIsLoading(true);
     try {
+      const checkRes = await api.post('/auth/phone/check', { phone });
+      if (checkRes.data.exists) {
+        setError("Ushbu telefon raqam allaqachon ro'yxatdan o'tgan! Tizimga kirish sahifasiga o'ting.");
+        return;
+      }
+
       const { data } = await api.post('/auth/phone/start', { phone });
       setPhoneToken(data.token);
       setBotUsername(data.botUsername);

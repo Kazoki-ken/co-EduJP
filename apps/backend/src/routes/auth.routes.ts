@@ -64,8 +64,9 @@ router.patch('/set-password', authenticate, setPassword);
  * POST /api/auth/phone/start
  * Bepul Telegram bot orqali nomer bilan kirishni boshlash (AuthSession yaratish)
  */
-import { startPhoneAuth, checkPhoneAuthStatus } from '../controllers/auth.controller';
+import { startPhoneAuth, checkPhoneAuthStatus, checkPhoneExists } from '../controllers/auth.controller';
 router.post('/phone/start', authLimiter, startPhoneAuth);
+router.post('/phone/check', authLimiter, checkPhoneExists);
 
 /**
  * GET /api/auth/phone/status/:token

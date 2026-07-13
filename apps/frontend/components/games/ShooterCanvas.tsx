@@ -25,15 +25,15 @@ type Particle = { x: number; y: number; vx: number; vy: number; life: number; co
 type Star = { x: number; y: number; r: number; opacity: number };
 
 const COLORS = {
-  bg:        '#0a0a1a',
-  surface:   '#0f0f2a',
-  border:    '#1e1e4a',
-  primary:   '#6d28d9',
-  success:   '#10b981',
-  danger:    '#ef4444',
-  text:      '#f0f0ff',
-  textMuted: '#a0a0c0',
-  accent:    '#f59e0b',
+  bg:        '#161514',     // Sumi Black / Charcoal
+  surface:   '#1f1d1c',     // Warm Dark Ash
+  border:    '#3a3532',     // Warm Stone Border
+  primary:   '#e83929',     // Shu-iro (Vermilion Red)
+  success:   '#2d7a47',     // Matcha / Bamboo Green
+  danger:    '#c0392b',     // Tsubaki / Camellia Red
+  text:      '#faf9f6',     // Washi paper white
+  textMuted: '#b3aba2',     // Golden sand grey
+  accent:    '#f2a900',     // Yamabuki (Gold)
 };
 
 interface ShooterCanvasProps {
@@ -161,7 +161,7 @@ export function ShooterCanvas({ session, onComplete }: ShooterCanvasProps) {
             x: ast.x, y: ast.y,
             vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
             life: 1,
-            color: [COLORS.success, COLORS.accent, '#34d399', '#a78bfa'][Math.floor(Math.random() * 4)],
+            color: [COLORS.success, COLORS.accent, '#d82f25', '#3d8b5a'][Math.floor(Math.random() * 4)],
           });
         }
 

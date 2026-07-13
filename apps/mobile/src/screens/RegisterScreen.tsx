@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, ActivityIndicator,
-  KeyboardAvoidingView, Platform, ScrollView,
+  KeyboardAvoidingView, Platform, ScrollView, Linking,
   type TextInput as TextInputType,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,6 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/RootStack';
 import { useAuth } from '../context/AuthContext';
+import apiClient from '../api/client';
 import { GlowInput } from './LoginScreen';
 import {
   GoogleSignin,
@@ -86,35 +87,100 @@ function classifyRegisterError(err: unknown): string {
 
 // ─── Register Screen ─────────────────────────────────────────────────
 export default function RegisterScreen({ navigation }: Props) {
-  const { register, googleLogin } = useAuth();
+  const { register, googleLogin, setTokensAndUser } = useAuth();
   const insets = useSafeAreaInsets();
+  
+  const [authMode, setAuthMode] = useState<'PHONE' | 'EMAIL'>('PHONE');
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+
+  const [phone, setPhone] = useState('+998');
+  const [phoneToken, setPhoneToken] = useState<string | null>(null);
+  const [botUsername, setBotUsername] = useState<string>('');
+  const [isPolling, setIsPolling] = useState(false);
+  const pollingInterval = useRef<NodeJS.Timeout | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Cleanup polling
+  React.useEffect(() => {
+    return () => {
+      if (pollingInterval.current) clearInterval(pollingInterval.current);
+    };
+  }, []);
   const emailRef = useRef<TextInputType>(null);
   const passwordRef = useRef<TextInputType>(null);
   const confirmRef = useRef<TextInputType>(null);
 
   const handleRegister = async () => {
-    if (!username.trim() || !email.trim() || !password || !confirm) {
-      setError("Iltimos, barcha maydonlarni to'ldiring."); return;
+    if (authMode === 'EMAIL') {
+      if (!username.trim() || !email.trim() || !password || !confirm) {
+        setError("Iltimos, barcha maydonlarni to'ldiring."); return;
+      }
+      if (password !== confirm) {
+        setError("Parollar mos kelmadi."); return;
+      }
+      if (password.length < 8) {
+        setError("Parol kamida 8 ta belgidan iborat bo'lishi kerak."); return;
+      }
+      setError(null); setLoading(true);
+      try {
+        await register(username.trim(), email.trim().toLowerCase(), password);
+      } catch (err: unknown) {
+        setError(classifyRegisterError(err));
+      } finally { setLoading(false); }
+    } else {
+      if (!phone.trim() || phone.length < 9) { setError("To'g'ri telefon raqam kiriting."); return; }
+      setError(null); setLoading(true);
+      try {
+        const checkRes = await apiClient.post('/auth/phone/check', { phone });
+        if (checkRes.data.exists) {
+          setError("Ushbu telefon raqam allaqachon ro'yxatdan o'tgan! Kirish sahifasiga o'ting.");
+          return;
+        }
+
+        const { data } = await apiClient.post('/auth/phone/start', { phone });
+        setPhoneToken(data.token);
+        setBotUsername(data.botUsername);
+        startPolling(data.token);
+      } catch (err: unknown) {
+        const msg = (err as { response?: { data?: { error?: string } } })
+          ?.response?.data?.error ?? "Xatolik yuz berdi";
+        setError(msg);
+      } finally { setLoading(false); }
     }
-    if (password !== confirm) {
-      setError("Parollar mos kelmadi."); return;
+  };
+
+  const startPolling = (token: string) => {
+    setIsPolling(true);
+    pollingInterval.current = setInterval(async () => {
+      try {
+        const { data } = await apiClient.get(`/auth/phone/status/${token}`);
+        if (data.status === 'VERIFIED') {
+          if (pollingInterval.current) clearInterval(pollingInterval.current);
+          setIsPolling(false);
+          await setTokensAndUser(data.accessToken, data.user, data.isNewUser, data.refreshToken);
+        }
+      } catch (err: any) {
+        if (err.response?.status === 400 || err.response?.status === 404) {
+          if (pollingInterval.current) clearInterval(pollingInterval.current);
+          setIsPolling(false);
+          setError(err.response?.data?.error || "Xatolik yuz berdi");
+          setPhoneToken(null);
+        }
+      }
+    }, 3000);
+  };
+
+  const openTelegram = () => {
+    if (botUsername && phoneToken) {
+      Linking.openURL(`https://t.me/${botUsername}?start=${phoneToken}`);
     }
-    if (password.length < 8) {
-      setError("Parol kamida 8 ta belgidan iborat bo'lishi kerak."); return;
-    }
-    setError(null); setLoading(true);
-    try {
-      await register(username.trim(), email.trim().toLowerCase(), password);
-    } catch (err: unknown) {
-      setError(classifyRegisterError(err));
-    } finally { setLoading(false); }
   };
 
   const handleGoogleLogin = async () => {
@@ -187,10 +253,28 @@ export default function RegisterScreen({ navigation }: Props) {
               borderWidth: 1, borderColor: 'rgba(109,40,217,0.22)' }}>
             <View style={{ backgroundColor: 'rgba(10,10,26,0.72)', padding: 24 }}>
 
-              <GlowInput label="Foydalanuvchi nomi" icon="person-outline" value={username}
-                onChangeText={setUsername} placeholder="cool_nihongo_fan"
-                autoCapitalize="none" returnKeyType="next"
-                onSubmitEditing={() => emailRef.current?.focus()} />
+              {/* Mode Toggle */}
+              <View style={{ flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 12, padding: 4, marginBottom: 24 }}>
+                <TouchableOpacity 
+                  style={{ flex: 1, paddingVertical: 10, alignItems: 'center', borderRadius: 10, backgroundColor: authMode === 'PHONE' ? 'rgba(109,40,217,0.4)' : 'transparent' }}
+                  onPress={() => { setAuthMode('PHONE'); setError(null); }}
+                >
+                  <Text style={{ color: authMode === 'PHONE' ? '#fff' : '#9ca3af', fontSize: 14, fontWeight: '600' }}>Nomer orqali</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={{ flex: 1, paddingVertical: 10, alignItems: 'center', borderRadius: 10, backgroundColor: authMode === 'EMAIL' ? 'rgba(109,40,217,0.4)' : 'transparent' }}
+                  onPress={() => { setAuthMode('EMAIL'); setError(null); }}
+                >
+                  <Text style={{ color: authMode === 'EMAIL' ? '#fff' : '#9ca3af', fontSize: 14, fontWeight: '600' }}>Email orqali</Text>
+                </TouchableOpacity>
+              </View>
+
+              {authMode === 'EMAIL' ? (
+                <>
+                  <GlowInput label="Foydalanuvchi nomi" icon="person-outline" value={username}
+                    onChangeText={setUsername} placeholder="cool_nihongo_fan"
+                    autoCapitalize="none" returnKeyType="next"
+                    onSubmitEditing={() => emailRef.current?.focus()} />
 
               <GlowInput ref={emailRef} label="Email" icon="mail-outline" value={email}
                 onChangeText={setEmail} placeholder="you@example.com"
@@ -229,6 +313,15 @@ export default function RegisterScreen({ navigation }: Props) {
                   placeholder="Parolni qayta kiriting" secureTextEntry
                   returnKeyType="done" onSubmitEditing={handleRegister} />
               </View>
+              </>
+              ) : (
+                <>
+                  <GlowInput label="Telefon Raqam" icon="call-outline" value={phone}
+                    onChangeText={setPhone} placeholder="+998 90 123 45 67"
+                    keyboardType="phone-pad" returnKeyType="done"
+                    onSubmitEditing={handleRegister} />
+                </>
+              )}
 
               {/* Error */}
               {error && (
@@ -245,26 +338,57 @@ export default function RegisterScreen({ navigation }: Props) {
               )}
 
               {/* Submit */}
-              <TouchableOpacity onPress={handleRegister} disabled={loading}
-                activeOpacity={0.85}>
-                <LinearGradient colors={['#10b981', '#047857']}
-                  start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                  style={{
-                    paddingVertical: 16, borderRadius: 16, alignItems: 'center',
-                    shadowColor: '#10b981', shadowOffset: { width: 0, height: 6 },
-                    shadowOpacity: 0.4, shadowRadius: 14, elevation: 10,
-                  }}>
-                  {loading
-                    ? <ActivityIndicator color="#fff" />
-                    : <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                        <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', letterSpacing: 0.3 }}>
-                          Hisob yaratish
-                        </Text>
-                        <Ionicons name="rocket-outline" size={18} color="#fff" />
-                      </View>
-                  }
-                </LinearGradient>
-              </TouchableOpacity>
+              {phoneToken ? (
+                <View style={{ marginTop: 8 }}>
+                  <TouchableOpacity onPress={openTelegram} activeOpacity={0.85}>
+                    <LinearGradient colors={['#2AABEE', '#229ED9']}
+                      start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                      style={{
+                        paddingVertical: 16, borderRadius: 16, alignItems: 'center',
+                        shadowColor: '#2AABEE', shadowOffset: { width: 0, height: 6 },
+                        shadowOpacity: 0.5, shadowRadius: 14, elevation: 10,
+                        flexDirection: 'row', justifyContent: 'center',
+                      }}>
+                      <Ionicons name="paper-plane-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
+                      <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', letterSpacing: 0.3 }}>
+                        Telegram orqali tasdiqlash
+                      </Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                  {isPolling && (
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 16 }}>
+                      <ActivityIndicator color="#10b981" size="small" />
+                      <Text style={{ color: '#9ca3af', fontSize: 13, marginLeft: 8 }}>
+                        Tasdiqlash kutilmoqda...
+                      </Text>
+                    </View>
+                  )}
+                  <TouchableOpacity onPress={() => { setPhoneToken(null); setIsPolling(false); if(pollingInterval.current) clearInterval(pollingInterval.current); }} style={{ marginTop: 16, alignItems: 'center' }}>
+                    <Text style={{ color: '#6b7280', fontSize: 14 }}>Raqamni o'zgartirish</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <TouchableOpacity onPress={handleRegister} disabled={loading}
+                  activeOpacity={0.85}>
+                  <LinearGradient colors={['#10b981', '#047857']}
+                    start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                    style={{
+                      paddingVertical: 16, borderRadius: 16, alignItems: 'center',
+                      shadowColor: '#10b981', shadowOffset: { width: 0, height: 6 },
+                      shadowOpacity: 0.4, shadowRadius: 14, elevation: 10,
+                    }}>
+                    {loading
+                      ? <ActivityIndicator color="#fff" />
+                      : <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                          <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', letterSpacing: 0.3 }}>
+                            {authMode === 'PHONE' ? "Kodni yuborish" : "Hisob yaratish"}
+                          </Text>
+                          <Ionicons name="rocket-outline" size={18} color="#fff" />
+                        </View>
+                    }
+                  </LinearGradient>
+                </TouchableOpacity>
+              )}
 
               {/* ─── Divider ─── */}
               <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>

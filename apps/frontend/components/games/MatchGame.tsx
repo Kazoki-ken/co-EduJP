@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { GameSession, GameAnswer, SessionWord } from '@/lib/types';
 
@@ -21,18 +22,32 @@ interface MatchGameProps {
 export function MatchGame({ session, onComplete }: MatchGameProps) {
   const words = session.words;
   const startedAt = useRef<number>(Date.now());
+  const ROUND_SIZE = 10;
+  const totalRounds = Math.ceil(words.length / ROUND_SIZE);
 
   const [tiles,    setTiles]    = useState<Tile[]>([]);
   const [selectedA, setSelectedA] = useState<Tile | null>(null);
   const [wrongPair, setWrongPair] = useState<[string, string] | null>(null);
   const [matched,  setMatched]  = useState(0);
+  const [currentRound, setCurrentRound] = useState(1);
+  const [lives,    setLives]    = useState(5);
   const [answers,  setAnswers]  = useState<GameAnswer[]>([]);
   const isAnimating = useRef(false);
 
   useEffect(() => {
-    const shuffledWords = [...words].sort(() => Math.random() - 0.5);
+    if (words.length === 0) return;
+
+    const startIdx = (currentRound - 1) * ROUND_SIZE;
+    const endIdx = startIdx + ROUND_SIZE;
+    const roundWords = words.slice(startIdx, endIdx);
+
+    const shuffledWords = [...roundWords].sort(() => Math.random() - 0.5);
     const jpTiles: Tile[] = shuffledWords.map((w) => ({
-      id: `jp-${w.id}`, text: w.japaneseWord, wordId: w.id, side: 'jp', matched: false,
+      id: `jp-${w.id}`,
+      text: w.hiragana && w.hiragana !== w.japaneseWord ? `${w.japaneseWord} (${w.hiragana})` : w.japaneseWord,
+      wordId: w.id,
+      side: 'jp',
+      matched: false,
     }));
     const enTiles: Tile[] = shuffledWords.map((w) => ({
       id: `en-${w.id}`, text: w.meaning, wordId: w.id, side: 'en', matched: false,
@@ -41,10 +56,12 @@ export function MatchGame({ session, onComplete }: MatchGameProps) {
     const shuffledJp = jpTiles.sort(() => Math.random() - 0.5);
     const shuffledEn = enTiles.sort(() => Math.random() - 0.5);
     setTiles([...shuffledJp, ...shuffledEn]);
-  }, [words]);
+    setSelectedA(null);
+    setWrongPair(null);
+  }, [words, currentRound]);
 
   const handleSelect = useCallback((tile: Tile) => {
-    if (isAnimating.current || tile.matched) return;
+    if (isAnimating.current || tile.matched || lives <= 0) return;
 
     if (!selectedA) {
       setSelectedA(tile);
@@ -73,14 +90,21 @@ export function MatchGame({ session, onComplete }: MatchGameProps) {
       const updatedAnswers = [...answers, newAnswer];
       setAnswers(updatedAnswers);
 
+      const roundWordsCount = Math.min(ROUND_SIZE, words.length - (currentRound - 1) * ROUND_SIZE);
+
       setTimeout(() => {
         isAnimating.current = false;
-        if (newMatched >= words.length) {
-          onComplete(updatedAnswers);
+        if (newMatched >= roundWordsCount) {
+          if (currentRound < totalRounds) {
+            setCurrentRound((r) => r + 1);
+            setMatched(0);
+          } else {
+            onComplete(updatedAnswers);
+          }
         }
       }, 300);
     } else {
-      // MISMATCH — flash red, deselect
+      // MISMATCH — flash red, deselect, lose a life
       isAnimating.current = true;
       setWrongPair([selectedA.id, tile.id]);
       const wrongAnswer: GameAnswer = {
@@ -88,27 +112,58 @@ export function MatchGame({ session, onComplete }: MatchGameProps) {
         answer: tile.side === 'en' ? tile.text : selectedA.text,
         timeMs,
       };
-      setAnswers((prev) => [...prev, wrongAnswer]);
+      const updatedAnswers = [...answers, wrongAnswer];
+      setAnswers(updatedAnswers);
+
+      setLives((prev) => {
+        const nextLives = prev - 1;
+        if (nextLives <= 0) {
+          setTimeout(() => {
+            onComplete(updatedAnswers);
+          }, 600);
+        }
+        return nextLives;
+      });
+
       setTimeout(() => {
         setWrongPair(null);
         setSelectedA(null);
         isAnimating.current = false;
       }, 600);
     }
-  }, [selectedA, matched, words, answers, onComplete]);
+  }, [selectedA, matched, words, answers, lives, currentRound, totalRounds, onComplete]);
 
-  const progress = (matched / words.length) * 100;
+  const progress = (((currentRound - 1) * ROUND_SIZE + matched) / words.length) * 100;
   const jpTiles  = tiles.filter((t) => t.side === 'jp');
   const enTiles  = tiles.filter((t) => t.side === 'en');
 
   return (
     <div className="max-w-2xl mx-auto">
-      {/* Progress */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="flex-1 h-2 bg-surface-2 rounded-full overflow-hidden">
-          <motion.div className="h-full bg-primary rounded-full" animate={{ width: `${progress}%` }} transition={{ duration: 0.4 }} />
+      {/* Header with Progress & Lives */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        {/* Progress Bar */}
+        <div className="flex-1 flex items-center gap-3">
+          <div className="flex-1 h-2 bg-surface-2 rounded-full overflow-hidden">
+            <motion.div className="h-full bg-primary rounded-full" animate={{ width: `${progress}%` }} transition={{ duration: 0.4 }} />
+          </div>
+          <span className="text-xs text-text-muted shrink-0">
+            Raund {currentRound}/{totalRounds} ({((currentRound - 1) * ROUND_SIZE + matched)}/{words.length})
+          </span>
         </div>
-        <span className="text-xs text-text-muted">{matched}/{words.length} matched</span>
+
+        {/* Lives Display */}
+        <div className="flex items-center gap-1 shrink-0 bg-surface/30 px-3 py-1.5 rounded-full border border-border">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Heart
+              key={i}
+              size={16}
+              className={cn(
+                'transition-all duration-300',
+                i < lives ? 'text-red-500 fill-red-500 scale-100' : 'text-text-muted opacity-20 scale-75'
+              )}
+            />
+          ))}
+        </div>
       </div>
 
       <p className="text-center text-sm text-text-muted mb-5">

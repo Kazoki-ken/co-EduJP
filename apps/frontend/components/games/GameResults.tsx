@@ -18,6 +18,8 @@ interface GameResultsProps {
 export function GameResults({ result, onPlayAgain, onGoHome }: GameResultsProps) {
   const isPerfect = result.accuracy === 100;
 
+  const isMatchGame = result.gameType === 'MATCH';
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -44,25 +46,29 @@ export function GameResults({ result, onPlayAgain, onGoHome }: GameResultsProps)
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
+      <div className={cn("grid gap-3 mb-6", isMatchGame ? "grid-cols-1 max-w-xs mx-auto" : "grid-cols-3")}>
         <StatCard
           icon={<Target size={18} className="text-primary" />}
           label="Accuracy"
           value={`${result.accuracy}%`}
           delay={0.15}
         />
-        <StatCard
-          icon={<Zap size={18} className="text-accent" />}
-          label="XP Earned"
-          value={`+${result.xpEarned}`}
-          delay={0.25}
-        />
-        <StatCard
-          icon={<span className="text-lg">🪙</span>}
-          label="Coins"
-          value={`+${result.coinsEarned}`}
-          delay={0.35}
-        />
+        {!isMatchGame && (
+          <>
+            <StatCard
+              icon={<Zap size={18} className="text-accent" />}
+              label="XP Earned"
+              value={`+${result.xpEarned}`}
+              delay={0.25}
+            />
+            <StatCard
+              icon={<span className="text-lg">🪙</span>}
+              label="Coins"
+              value={`+${result.coinsEarned}`}
+              delay={0.35}
+            />
+          </>
+        )}
       </div>
 
       {/* Badges earned */}
@@ -98,7 +104,7 @@ export function GameResults({ result, onPlayAgain, onGoHome }: GameResultsProps)
       )}
 
       {/* SRS updates summary */}
-      {result.srsUpdates.length > 0 && (
+      {result.srsUpdates.length > 0 && !isMatchGame && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

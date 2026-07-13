@@ -17,7 +17,7 @@ const SessionQuerySchema = z.object({
   type: GameTypeEnum.default('TEST'),
   topicId: z.string().cuid('Invalid topicId').optional(),
   bookId: z.string().cuid('Invalid bookId').optional(),
-  limit: z.coerce.number().int().min(1).max(50).default(20),
+  limit: z.coerce.number().int().min(1).max(200).default(20),
   dueOnly: z
     .string()
     .transform((v) => v === 'true')
@@ -53,6 +53,11 @@ export const getGameSession = async (
   }
 
   const { type, topicId, bookId, limit, dueOnly } = parsed.data;
+
+  if ((type === 'WRITE' || type === 'SHOOTER') && req.user!.role !== 'ADMIN') {
+    res.status(403).json({ error: 'Kirish taqiqlangan. Faqat adminlar uchun ochiq.' });
+    return;
+  }
 
   const result = await generateSession({
     userId: req.user!.id,

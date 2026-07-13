@@ -113,21 +113,42 @@ export const registerUser = async (dto: RegisterDto) => {
 };
 
 export const loginUser = async (dto: LoginDto, timezoneOffset: number = 0) => {
-  const user = await prisma.user.findUnique({
-    where: { email: dto.email.toLowerCase() },
-    include: { 
-      profile: true,
-      _count: {
-        select: {
-          savedWords: true,
-          badges: true,
+  const identifier = dto.email.toLowerCase();
+  const isEmail = identifier.includes('@');
+
+  let user;
+  if (isEmail) {
+    user = await prisma.user.findUnique({
+      where: { email: identifier },
+      include: { 
+        profile: true,
+        _count: {
+          select: {
+            savedWords: true,
+            badges: true,
+          },
         },
       },
-    },
-  });
+    });
+  } else {
+    const cleanPhone = identifier.replace(/\D/g, '');
+    const phoneToSearch = cleanPhone.startsWith('998') ? `+${cleanPhone}` : `+${cleanPhone}`;
+    user = await prisma.user.findUnique({
+      where: { phone: phoneToSearch },
+      include: {
+        profile: true,
+        _count: {
+          select: {
+            savedWords: true,
+            badges: true,
+          },
+        },
+      },
+    });
+  }
 
   if (!user) {
-    throw createError('Invalid email or password', 401);
+    throw createError('Invalid email, phone number, or password', 401);
   }
 
   if (!user.passwordHash) {
@@ -492,55 +513,35 @@ export const checkPhoneAuthStatusService = async (token: string) => {
   }
 
   if (session.status === 'VERIFIED') {
-    // Tasdiqlangan! Endi User yaratamiz yoki mavjudini topamiz.
     let user = await prisma.user.findUnique({
-      where: { phone: session.phone },
+      where: { id: session.userId || undefined },
       include: {
         profile: true,
         _count: { select: { savedWords: true, badges: true } },
       },
     });
 
-    let isNewUser = false;
-
     if (!user) {
-      // Yangi foydalanuvchi!
-      isNewUser = true;
-      const tempUsername = `user_${session.telegramId?.slice(0, 8) || token}`;
-      user = await prisma.user.create({
-        data: {
-          username: tempUsername,
-          phone: session.phone,
-          telegramId: session.telegramId,
-          profile: {
-            create: {
-              streak: 0,
-              lastLoginDate: new Date(),
-            },
-          },
-        },
+      user = await prisma.user.findUnique({
+        where: { phone: session.phone },
         include: {
           profile: true,
           _count: { select: { savedWords: true, badges: true } },
         },
       });
-    } else {
-      // Mavjud foydalanuvchi - telegram id ni yangilaymiz agar yo'q bo'lsa
-      if (!user.telegramId && session.telegramId) {
-        user = await prisma.user.update({
-          where: { id: user.id },
-          data: { telegramId: session.telegramId },
-          include: {
-            profile: true,
-            _count: { select: { savedWords: true, badges: true } },
-          },
-        });
-      }
     }
 
+    // Return isNewUser = false so the frontend doesn't prompt for username setup modal,
+    // as they already chose their username and password inside the Telegram bot.
+    const isNewUser = false;
+
     // Streak yangilash
-    if (user.profile) {
+    if (user && user.profile) {
       await updateStreakOnLogin(user.id, user.profile, 0);
+    }
+
+    if (!user) {
+      throw createError("User not found after verification", 404);
     }
 
     const tokens = signTokens({
@@ -558,6 +559,17 @@ export const checkPhoneAuthStatusService = async (token: string) => {
   }
 
   throw createError("Noma'lum holat", 500);
+};
+
+export const checkPhoneExistsService = async (phone: string): Promise<boolean> => {
+  const cleanPhone = phone.replace(/\D/g, '');
+  const phoneToSearch = cleanPhone.startsWith('998') ? `+${cleanPhone}` : `+${cleanPhone}`;
+  
+  const user = await prisma.user.findUnique({
+    where: { phone: phoneToSearch },
+  });
+  
+  return !!user;
 };
 
 

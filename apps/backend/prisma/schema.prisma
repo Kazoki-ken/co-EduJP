@@ -66,6 +66,7 @@ model User {
   badges       UserBadge[]
   gameSessions GameSession[]
   authSessions AuthSession[]
+  wordNotes    UserWordNote[]
 
   @@map("users")
 }
@@ -125,10 +126,29 @@ model Word {
   authorId           String?  @map("author_id")
   createdAt          DateTime @default(now()) @map("created_at")
 
+  // Extended fields
+  partOfSpeech       String?  @map("part_of_speech")
+  jlptLevel          String?  @map("jlpt_level")
+  frequency          String?
+  pitchAccent        String?  @map("pitch_accent")
+  teForm             String?  @map("te_form")
+  taForm             String?  @map("ta_form")
+  naiForm            String?  @map("nai_form")
+  masuForm           String?  @map("masu_form")
+  kanjiInfo          Json?    @map("kanji_info")
+  additionalExamples Json?    @map("additional_examples")
+  synonyms           String[] @default([])
+  antonyms           String[] @default([])
+  nuance             String?
+  compounds          Json?
+  homonyms           Json?    @map("homonyms")
+
+
   author       User?              @relation("AuthorWords", fields: [authorId], references: [id], onDelete: SetNull)
   wordTopics   WordTopic[]
   savedWords   SavedWord[]
   userProgress UserWordProgress[]
+  wordNotes    UserWordNote[]
 
   @@map("words")
 }
@@ -303,4 +323,17 @@ model AuthSession {
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("auth_sessions")
+}
+
+model UserWordNote {
+  userId    String   @map("user_id")
+  wordId    String   @map("word_id")
+  note      String   @db.Text
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  word Word @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@id([userId, wordId])
+  @@map("user_word_notes")
 }

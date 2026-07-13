@@ -417,6 +417,48 @@ export default function AdminTopicsPage() {
     setRenamingName(activeTopic?.name ?? '');
   }, [selectedTopicId, topics, fetchTopicWords]);
 
+  // Create Topic handler
+  const handleCreateTopic = async () => {
+    if (!selectedBookId) return;
+    const name = window.prompt("Yangi mavzu nomini kiriting:");
+    if (!name?.trim()) return;
+
+    try {
+      const { data } = await api.post<Topic>('/topics', {
+        name: name.trim(),
+        bookId: selectedBookId,
+      });
+      setTopics((prev) => [...prev, data]);
+      setSelectedTopicId(data.id);
+      showToast("Mavzu muvaffaqiyatli yaratildi!");
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error;
+      showToast(msg || "Mavzu yaratib bo'lmadi.", 'error');
+    }
+  };
+
+  // Delete Topic handler
+  const handleDeleteTopic = async () => {
+    if (!selectedTopicId) return;
+    const topicToDelete = topics.find((t) => t.id === selectedTopicId);
+    if (!topicToDelete) return;
+
+    const confirmed = window.confirm(
+      `Haqiqatan ham "${topicToDelete.name}" mavzusini o'chirib tashlamoqchimisiz? Bu mavzudagi barcha so'zlarni va ularning bog'lanishlarini o'chiradi.`
+    );
+    if (!confirmed) return;
+
+    try {
+      await api.delete(`/topics/${selectedTopicId}`);
+      setTopics((prev) => prev.filter((t) => t.id !== selectedTopicId));
+      setSelectedTopicId('');
+      showToast("Mavzu o'chirib tashlandi.");
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error;
+      showToast(msg || "Mavzuni o'chirib bo'lmadi.", 'error');
+    }
+  };
+
   // Rename Topic handler
   const handleRenameTopic = async () => {
     if (!selectedTopicId || !renamingName.trim()) return;
@@ -546,19 +588,40 @@ export default function AdminTopicsPage() {
         </div>
 
         <div className="card-glass p-5 space-y-2">
-          <label className="text-xs font-semibold text-text-secondary flex items-center gap-1.5">
-            <Tag size={13} /> {"2. Mavzuni tanlang"}
+          <label className="text-xs font-semibold text-text-secondary flex items-center justify-between gap-1.5">
+            <span className="flex items-center gap-1.5">
+              <Tag size={13} /> {"2. Mavzuni tanlang"}
+            </span>
+            {selectedBookId && (
+              <button
+                onClick={handleCreateTopic}
+                className="text-primary hover:underline text-xs font-bold flex items-center gap-1 bg-transparent border-none cursor-pointer"
+              >
+                <Plus size={12} /> Yangi mavzu
+              </button>
+            )}
           </label>
-          <div className="relative">
-            <select
-              value={selectedTopicId}
-              onChange={(e) => setSelectedTopicId(e.target.value)}
-              className="input-field text-sm cursor-pointer pr-8 appearance-none"
-              disabled={!selectedBookId}
-            >
-              <option value="">{"Mavzuni tanlang…"}</option>
-              {topics.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
-            </select>
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <select
+                value={selectedTopicId}
+                onChange={(e) => setSelectedTopicId(e.target.value)}
+                className="input-field text-sm cursor-pointer pr-8 appearance-none"
+                disabled={!selectedBookId}
+              >
+                <option value="">{"Mavzuni tanlang…"}</option>
+                {topics.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
+              </select>
+            </div>
+            {selectedTopicId && (
+              <button
+                onClick={handleDeleteTopic}
+                title="Mavzuni o'chirish"
+                className="btn-ghost text-danger hover:bg-danger/10 p-2.5 rounded-xl border border-border shrink-0 animate-fade-in"
+              >
+                <Trash2 size={15} />
+              </button>
+            )}
           </div>
         </div>
       </div>

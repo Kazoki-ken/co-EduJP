@@ -51,11 +51,33 @@ export default function IndexScreen() {
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Custom Alert
+  const [customAlert, setCustomAlert] = useState<{ visible: boolean; title: string; message: string; buttons?: { text: string; onPress?: () => void; style?: 'cancel' | 'default' }[] }>({ visible: false, title: '', message: '' });
+  const showCustomAlert = (title: string, message: string, buttons?: { text: string; onPress?: () => void; style?: 'cancel' | 'default' }[]) => {
+    setCustomAlert({ visible: true, title, message, buttons });
+  };
+  const hideCustomAlert = () => {
+    setCustomAlert(prev => ({ ...prev, visible: false }));
+  };
+
   // Auth
+  const [authMode, setAuthMode] = useState<'PHONE' | 'EMAIL'>('PHONE');
   const [usernameInput, setUsernameInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
+  const [phone, setPhone] = useState('+998');
+  const [phoneToken, setPhoneToken] = useState<string | null>(null);
+  const [botUsername, setBotUsername] = useState<string>('');
+  const [isPolling, setIsPolling] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<{ id: string; username: string; email: string } | null>(null);
+  const pollingInterval = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup polling
+  useEffect(() => {
+    return () => {
+      if (pollingInterval.current) clearInterval(pollingInterval.current);
+    };
+  }, []);
 
   // Google OAuth hook (expo-auth-session)
   const [request, response, promptAsync] = Google.useAuthRequest({
@@ -169,25 +191,80 @@ export default function IndexScreen() {
   };
 
   const handleLogin = async () => {
-    if (!usernameInput.trim() || !passwordInput.trim()) { setError('Login va parolni kiriting'); return; }
-    setLoading(true); setError(null);
-    try {
-      const { data } = await axios.post(`${API_URL}/api/auth/login`, {
-        email: usernameInput.trim().toLowerCase(), password: passwordInput,
-      });
-      setToken(data.accessToken); setUser(data.user);
-      if (data.refreshToken) await SecureStore.setItemAsync('auth_token', data.refreshToken);
-      const h = { Authorization: `Bearer ${data.accessToken}` };
-      const { data: wData } = await axios.get(`${API_URL}/api/users/me/saved-words?limit=1`, { headers: h });
-      setTotalSavedCount(wData.meta?.total || 0);
-      const cached = await AsyncStorage.getItem('cached_words');
-      if (cached) setSavedWords(JSON.parse(cached)); else setSavedWords([]);
-      setIsOfflineMode(false); setScreen('DASHBOARD');
-    } catch (err: any) {
-      const cached = await AsyncStorage.getItem('cached_words');
-      if (cached) { const p = JSON.parse(cached); if (p.length) { setSavedWords(p); setTotalSavedCount(p.length); setIsOfflineMode(true); setScreen('DASHBOARD'); return; } }
-      setError(err.response?.data?.error || err.response?.data?.message || "Email yoki parol noto'g'ri.");
-    } finally { setLoading(false); }
+    if (authMode === 'EMAIL') {
+      if (!usernameInput.trim() || !passwordInput.trim()) { setError('Login va parolni kiriting'); return; }
+      setLoading(true); setError(null);
+      try {
+        const { data } = await axios.post(`${API_URL}/api/auth/login`, {
+          email: usernameInput.trim().toLowerCase(), password: passwordInput,
+        });
+        setToken(data.accessToken); setUser(data.user);
+        if (data.refreshToken) await SecureStore.setItemAsync('auth_token', data.refreshToken);
+        const h = { Authorization: `Bearer ${data.accessToken}` };
+        const { data: wData } = await axios.get(`${API_URL}/api/users/me/saved-words?limit=1`, { headers: h });
+        setTotalSavedCount(wData.meta?.total || 0);
+        const cached = await AsyncStorage.getItem('cached_words');
+        if (cached) setSavedWords(JSON.parse(cached)); else setSavedWords([]);
+        setIsOfflineMode(false); setScreen('DASHBOARD');
+      } catch (err: any) {
+        const cached = await AsyncStorage.getItem('cached_words');
+        if (cached) { const p = JSON.parse(cached); if (p.length) { setSavedWords(p); setTotalSavedCount(p.length); setIsOfflineMode(true); setScreen('DASHBOARD'); return; } }
+        setError(err.response?.data?.error || err.response?.data?.message || "Email yoki parol noto'g'ri.");
+      } finally { setLoading(false); }
+    } else {
+      if (!phone.trim() || phone.length < 9) { setError("To'g'ri telefon raqam kiriting."); return; }
+      setError(null); setLoading(true);
+      try {
+        const { data } = await axios.post(`${API_URL}/api/auth/phone/start`, { phone });
+        setPhoneToken(data.token);
+        setBotUsername(data.botUsername);
+        startPolling(data.token);
+      } catch (err: any) {
+        setError(err.response?.data?.error || "Xatolik yuz berdi");
+      } finally { setLoading(false); }
+    }
+  };
+
+  const startPolling = (tokenValue: string) => {
+    setIsPolling(true);
+    pollingInterval.current = setInterval(async () => {
+      try {
+        const { data } = await axios.get(`${API_URL}/api/auth/phone/status/${tokenValue}`);
+        if (data.status === 'VERIFIED') {
+          if (pollingInterval.current) clearInterval(pollingInterval.current);
+          setIsPolling(false);
+          
+          if (data.isNewUser) {
+            // Mobile2 doesn't support registration
+            setError("Faqat ro'yxatdan o'tgan foydalanuvchilar kira oladi. Saytdan ro'yxatdan o'ting.");
+            setPhoneToken(null);
+            return;
+          }
+          
+          setToken(data.accessToken); setUser(data.user);
+          if (data.refreshToken) await SecureStore.setItemAsync('auth_token', data.refreshToken);
+          const h = { Authorization: `Bearer ${data.accessToken}` };
+          const { data: wData } = await axios.get(`${API_URL}/api/users/me/saved-words?limit=1`, { headers: h });
+          setTotalSavedCount(wData.meta?.total || 0);
+          const cached = await AsyncStorage.getItem('cached_words');
+          if (cached) setSavedWords(JSON.parse(cached)); else setSavedWords([]);
+          setIsOfflineMode(false); setScreen('DASHBOARD');
+        }
+      } catch (err: any) {
+        if (err.response?.status === 400 || err.response?.status === 404) {
+          if (pollingInterval.current) clearInterval(pollingInterval.current);
+          setIsPolling(false);
+          setError(err.response?.data?.error || "Xatolik yuz berdi");
+          setPhoneToken(null);
+        }
+      }
+    }, 3000);
+  };
+
+  const openTelegram = () => {
+    if (botUsername && phoneToken) {
+      Linking.openURL(`https://t.me/${botUsername}?start=${phoneToken}`);
+    }
   };
 
   const handleLogout = async () => {
@@ -217,7 +294,7 @@ export default function IndexScreen() {
       const msg = err.response?.data?.error || 'Xatolik yuz berdi.';
       if (status === 403) {
         // Foydalanuvchi bazada yo'q — edujp.uz ga yo'naltirish
-        Alert.alert(
+        showCustomAlert(
           "Ruxsat yo'q",
           "Siz VocabJP ilovasida ro'yxatdan o'tmagansiz.\n\nIltimos, avval edujp.uz saytida ro'yxatdan o'ting.",
           [
@@ -234,7 +311,7 @@ export default function IndexScreen() {
   };
 
   const downloadOfflineWords = async () => {
-    if (!token) { Alert.alert('Internet kerak', "Yuklab olish uchun internet kerak."); return; }
+    if (!token) { showCustomAlert('Internet kerak', "Yuklab olish uchun internet kerak."); return; }
     setSyncing(true);
     try {
       const h = { Authorization: `Bearer ${token}` };
@@ -253,15 +330,15 @@ export default function IndexScreen() {
       });
       setSavedWords(cleaned); setTotalSavedCount(cleaned.length);
       await AsyncStorage.setItem('cached_words', JSON.stringify(cleaned));
-      Alert.alert('✅ Muvaffaqiyatli!', `${cleaned.length} ta so'z saqlandi. Oflayn ham o'ynashingiz mumkin!`);
+      showCustomAlert('✅ Muvaffaqiyatli!', `${cleaned.length} ta so'z saqlandi. Oflayn ham o'ynashingiz mumkin!`);
     } catch {
-      Alert.alert('Xatolik', "Yuklab olishda muammo. Internetni tekshiring.");
+      showCustomAlert('Xatolik', "Yuklab olishda muammo. Internetni tekshiring.");
     } finally { setSyncing(false); }
   };
 
   // ── Session ──────────────────────────────────────────────────────────
   const startSession = () => {
-    if (!savedWords.length) { Alert.alert("So'zlar yo'q", "Avval 'Yuklab olish' tugmasini bosing."); return; }
+    if (!savedWords.length) { showCustomAlert("So'zlar yo'q", "Avval 'Yuklab olish' tugmasini bosing."); return; }
     const shuffled = [...savedWords].sort(() => 0.5 - Math.random()).slice(0, 20);
     gameCardsRef.current   = shuffled;
     currentIndexRef.current = 0;
@@ -394,22 +471,84 @@ export default function IndexScreen() {
               <Text style={styles.authSubtitle}>Saqlangan so'zlarni Tinder usulida o'rganing</Text>
             </View>
             <BlurView intensity={22} tint="dark" style={styles.glassCard}>
-              <Text style={styles.inputLabel}>Email</Text>
-              <View style={styles.inputRow}>
-                <Ionicons name="person-outline" size={20} color="#6b7280" style={{ marginRight: 8 }} />
-                <TextInput value={usernameInput} onChangeText={setUsernameInput} placeholder="email@example.com"
-                  placeholderTextColor="#4b5563" style={styles.textInput} autoCapitalize="none" />
+              {/* Mode Toggle */}
+              <View style={{ flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 12, padding: 4, marginBottom: 20 }}>
+                <TouchableOpacity 
+                  style={{ flex: 1, paddingVertical: 10, alignItems: 'center', borderRadius: 10, backgroundColor: authMode === 'PHONE' ? 'rgba(124,58,237,0.4)' : 'transparent' }}
+                  onPress={() => { setAuthMode('PHONE'); setError(null); }}
+                >
+                  <Text style={{ color: authMode === 'PHONE' ? '#fff' : '#9ca3af', fontSize: 13, fontWeight: '600' }}>Nomer orqali</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={{ flex: 1, paddingVertical: 10, alignItems: 'center', borderRadius: 10, backgroundColor: authMode === 'EMAIL' ? 'rgba(124,58,237,0.4)' : 'transparent' }}
+                  onPress={() => { setAuthMode('EMAIL'); setError(null); }}
+                >
+                  <Text style={{ color: authMode === 'EMAIL' ? '#fff' : '#9ca3af', fontSize: 13, fontWeight: '600' }}>Email orqali</Text>
+                </TouchableOpacity>
               </View>
-              <Text style={styles.inputLabel}>Parol</Text>
-              <View style={styles.inputRow}>
-                <Ionicons name="lock-closed-outline" size={20} color="#6b7280" style={{ marginRight: 8 }} />
-                <TextInput value={passwordInput} onChangeText={setPasswordInput} placeholder="••••••••"
-                  placeholderTextColor="#4b5563" secureTextEntry style={styles.textInput} autoCapitalize="none" />
-              </View>
+
+              {authMode === 'EMAIL' ? (
+                <>
+                  <Text style={styles.inputLabel}>Email</Text>
+                  <View style={styles.inputRow}>
+                    <Ionicons name="person-outline" size={20} color="#6b7280" style={{ marginRight: 8 }} />
+                    <TextInput value={usernameInput} onChangeText={setUsernameInput} placeholder="email@example.com"
+                      placeholderTextColor="#4b5563" style={styles.textInput} autoCapitalize="none" keyboardType="email-address" />
+                  </View>
+                  <Text style={styles.inputLabel}>Parol</Text>
+                  <View style={styles.inputRow}>
+                    <Ionicons name="lock-closed-outline" size={20} color="#6b7280" style={{ marginRight: 8 }} />
+                    <TextInput value={passwordInput} onChangeText={setPasswordInput} placeholder="••••••••"
+                      placeholderTextColor="#4b5563" secureTextEntry style={styles.textInput} autoCapitalize="none" />
+                  </View>
+                </>
+              ) : (
+                <>
+                  <Text style={styles.inputLabel}>Telefon Raqam</Text>
+                  <View style={styles.inputRow}>
+                    <Ionicons name="call-outline" size={20} color="#6b7280" style={{ marginRight: 8 }} />
+                    <TextInput value={phone} onChangeText={setPhone} placeholder="+998 90 123 45 67"
+                      placeholderTextColor="#4b5563" style={styles.textInput} keyboardType="phone-pad" />
+                  </View>
+                </>
+              )}
+
               {error && <Text style={styles.errorText}>{error}</Text>}
-              <TouchableOpacity onPress={handleLogin} disabled={loading || googleLoading} style={styles.authBtn}>
-                {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.authBtnText}>Kirish</Text>}
-              </TouchableOpacity>
+              
+              {phoneToken ? (
+                <View style={{ marginTop: 24 }}>
+                  <TouchableOpacity onPress={openTelegram} activeOpacity={0.85}>
+                    <LinearGradient colors={['#2AABEE', '#229ED9']}
+                      start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                      style={{
+                        paddingVertical: 14, borderRadius: 14, alignItems: 'center',
+                        shadowColor: '#2AABEE', shadowOffset: { width: 0, height: 6 },
+                        shadowOpacity: 0.5, shadowRadius: 10, elevation: 6,
+                        flexDirection: 'row', justifyContent: 'center',
+                      }}>
+                      <Ionicons name="paper-plane-outline" size={18} color="#fff" style={{ marginRight: 8 }} />
+                      <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>
+                        Telegram orqali tasdiqlash
+                      </Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                  {isPolling && (
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 16 }}>
+                      <ActivityIndicator color="#a78bfa" size="small" />
+                      <Text style={{ color: '#d1d5db', fontSize: 12, marginLeft: 8 }}>
+                        Tasdiqlash kutilmoqda...
+                      </Text>
+                    </View>
+                  )}
+                  <TouchableOpacity onPress={() => { setPhoneToken(null); setIsPolling(false); if(pollingInterval.current) clearInterval(pollingInterval.current); }} style={{ marginTop: 16, alignItems: 'center' }}>
+                    <Text style={{ color: '#9ca3af', fontSize: 12 }}>Raqamni o'zgartirish</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <TouchableOpacity onPress={handleLogin} disabled={loading || googleLoading} style={styles.authBtn}>
+                  {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.authBtnText}>{authMode === 'PHONE' ? "Kodni yuborish" : "Kirish"}</Text>}
+                </TouchableOpacity>
+              )}
 
               {/* Divider */}
               <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 16 }}>
@@ -728,6 +867,42 @@ export default function IndexScreen() {
             </TouchableOpacity>
           </View>
         </SafeAreaView>
+      )}
+
+      {/* ── CUSTOM ALERT OVERLAY ───────────────────────────────────── */}
+      {customAlert.visible && (
+        <View style={[StyleSheet.absoluteFill, { zIndex: 9999, justifyContent: 'center', alignItems: 'center' }]}>
+          <TouchableOpacity activeOpacity={1} onPress={hideCustomAlert} style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.6)' }]} />
+          <View style={{ width: '82%', backgroundColor: '#1e1e2d', borderRadius: 20, padding: 24, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.5, shadowRadius: 20, elevation: 15 }}>
+            <Text style={{ color: '#fff', fontSize: 18, fontWeight: '700', marginBottom: 12, textAlign: 'center' }}>{customAlert.title}</Text>
+            <Text style={{ color: '#d1d5db', fontSize: 14, lineHeight: 22, textAlign: 'center', marginBottom: 24 }}>{customAlert.message}</Text>
+            
+            <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 12 }}>
+              {(customAlert.buttons || [{ text: 'OK', onPress: hideCustomAlert }]).map((btn, idx) => (
+                <TouchableOpacity
+                  key={idx}
+                  onPress={() => {
+                    hideCustomAlert();
+                    if (btn.onPress) btn.onPress();
+                  }}
+                  style={{
+                    flex: 1,
+                    paddingVertical: 12,
+                    borderRadius: 12,
+                    backgroundColor: btn.style === 'cancel' ? 'rgba(255,255,255,0.05)' : '#7c3aed',
+                    borderWidth: 1,
+                    borderColor: btn.style === 'cancel' ? 'rgba(255,255,255,0.1)' : '#7c3aed',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text style={{ color: btn.style === 'cancel' ? '#9ca3af' : '#fff', fontSize: 14, fontWeight: '600' }}>
+                    {btn.text}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </View>
       )}
     </View>
   );

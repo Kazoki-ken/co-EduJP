@@ -21,6 +21,21 @@ export interface CreateWordDto {
   exampleSentence?: string | null;
   exampleTranslation?: string | null;
   topicIds?: string[];
+  partOfSpeech?: string | null;
+  jlptLevel?: string | null;
+  frequency?: string | null;
+  pitchAccent?: string | null;
+  teForm?: string | null;
+  taForm?: string | null;
+  naiForm?: string | null;
+  masuForm?: string | null;
+  kanjiInfo?: any;
+  additionalExamples?: any;
+  synonyms?: string[];
+  antonyms?: string[];
+  nuance?: string | null;
+  compounds?: any;
+  homonyms?: any;
 }
 
 export interface WordListQuery {
@@ -279,16 +294,22 @@ export const getWordById = async (id: string, userId?: string) => {
       author: { select: { id: true, username: true } },
       ...(userId && {
         savedWords: { where: { userId }, select: { userId: true } },
+        wordNotes: { where: { userId }, select: { note: true } },
       }),
     },
   });
 
   if (!word) throw createError('Word not found', 404);
 
-  const { savedWords, ...rest } = word as typeof word & { savedWords?: { userId: string }[] };
+  const { savedWords, wordNotes, ...rest } = word as typeof word & {
+    savedWords?: { userId: string }[];
+    wordNotes?: { note: string }[];
+  };
+
   return {
     ...rest,
     isSaved: userId ? (savedWords?.length ?? 0) > 0 : false,
+    userNote: userId && wordNotes && wordNotes.length > 0 ? wordNotes[0].note : null,
   };
 };
 
@@ -301,6 +322,21 @@ export const createWord = async (dto: CreateWordDto, authorId: string) => {
       exampleSentence: dto.exampleSentence,
       exampleTranslation: dto.exampleTranslation,
       authorId,
+      partOfSpeech: dto.partOfSpeech,
+      jlptLevel: dto.jlptLevel,
+      frequency: dto.frequency,
+      pitchAccent: dto.pitchAccent,
+      teForm: dto.teForm,
+      taForm: dto.taForm,
+      naiForm: dto.naiForm,
+      masuForm: dto.masuForm,
+      kanjiInfo: dto.kanjiInfo,
+      additionalExamples: dto.additionalExamples,
+      synonyms: dto.synonyms ?? [],
+      antonyms: dto.antonyms ?? [],
+      nuance: dto.nuance,
+      compounds: dto.compounds,
+      homonyms: dto.homonyms,
       ...(dto.topicIds?.length && {
         wordTopics: {
           create: dto.topicIds.map((topicId) => ({ topicId })),
@@ -403,6 +439,7 @@ export const getSavedWords = async (userId: string, page = 1, limit = 20) => {
                 topic: { include: { book: { select: { id: true, title: true } } } },
               },
             },
+            wordNotes: { where: { userId }, select: { note: true } },
           },
         },
       },
@@ -411,7 +448,15 @@ export const getSavedWords = async (userId: string, page = 1, limit = 20) => {
   ]);
 
   return {
-    data: savedWords.map((sw) => ({ ...sw.word, isSaved: true, savedAt: sw.savedAt })),
+    data: savedWords.map((sw) => {
+      const { wordNotes, ...wordRest } = sw.word as any;
+      return {
+        ...wordRest,
+        isSaved: true,
+        savedAt: sw.savedAt,
+        userNote: wordNotes && wordNotes.length > 0 ? wordNotes[0].note : null,
+      };
+    }),
     meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
   };
 };
@@ -591,5 +636,16 @@ export const getUserBadges = async (userId: string) => {
     where: { userId },
     include: { badge: true },
     orderBy: { earnedAt: 'desc' },
+  });
+};
+
+export const upsertWordNote = async (userId: string, wordId: string, note: string) => {
+  const word = await prisma.word.findUnique({ where: { id: wordId } });
+  if (!word) throw createError('Word not found', 404);
+
+  return prisma.userWordNote.upsert({
+    where: { userId_wordId: { userId, wordId } },
+    create: { userId, wordId, note },
+    update: { note },
   });
 };

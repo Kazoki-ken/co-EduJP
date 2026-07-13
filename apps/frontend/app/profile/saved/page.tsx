@@ -11,8 +11,10 @@ import api from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
 import type { Word, Book, PaginatedResponse } from '@/lib/types';
+import { WordCard } from '@/components/dictionary/WordCard';
 
 const PAGE_SIZE = 40;
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
 
 function SavedItemsInner() {
   const router = useRouter();
@@ -71,13 +73,13 @@ function SavedItemsInner() {
     });
   };
 
-  const handleSpeak = (e: React.MouseEvent, japaneseWord: string) => {
-    e.stopPropagation();
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(japaneseWord);
-      utterance.lang = 'ja-JP';
-      window.speechSynthesis.speak(utterance);
+  const handleToggleSave = async (wordId: string) => {
+    try {
+      await api.post(`/words/${wordId}/save`);
+      setItems((prev) => prev.filter((item) => item.id !== wordId));
+      setTotalItems((prev) => Math.max(0, prev - 1));
+    } catch (err) {
+      console.error('Failed to toggle save status', err);
     }
   };
 
@@ -210,73 +212,20 @@ function SavedItemsInner() {
         </div>
       ) : (
         <div className="space-y-6">
-          <div className="card-glass p-5 divide-y divide-border/50">
-            {type === 'words' ? (
-              items.map((w: Word) => {
-                const isExpanded = expandedWordIds.has(w.id);
-                const canExpand = !!(w.exampleSentence || w.exampleTranslation);
-                return (
-                  <div
-                    key={w.id}
-                    onClick={() => canExpand && toggleWordExpansion(w.id)}
-                    className={cn(
-                      "py-3 flex flex-col gap-2 transition-colors cursor-pointer select-none",
-                      canExpand && "hover:bg-surface-2/30 px-2 -mx-2 rounded-lg"
-                    )}
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
-                        {/* TTS Button */}
-                        <button
-                          onClick={(e) => handleSpeak(e, w.japaneseWord)}
-                          className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 hover:bg-primary/20
-                                     flex items-center justify-center shrink-0 text-primary transition-colors"
-                          title="Talaffuzni eshitish"
-                        >
-                          <Volume2 size={15} />
-                        </button>
-
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-lg font-bold text-text-primary">{w.japaneseWord}</span>
-                            {w.hiragana && w.hiragana !== w.japaneseWord && (
-                              <span className="text-sm text-primary/80">({w.hiragana})</span>
-                            )}
-                          </div>
-                          <p className="text-sm text-text-secondary truncate">{w.meaning}</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0">
-                        <BookmarkCheck size={14} className="text-accent fill-accent" />
-                        {canExpand && (
-                          <span className="text-text-muted">
-                            {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Collapsible example sentence */}
-                    {isExpanded && canExpand && (
-                      <div className="ml-11 p-3 bg-surface-2/50 border-l-2 border-primary rounded-r-lg animate-slide-in">
-                        {w.exampleSentence && (
-                          <p className="text-sm font-medium text-text-primary leading-relaxed">
-                            {w.exampleSentence}
-                          </p>
-                        )}
-                        {w.exampleTranslation && (
-                          <p className="text-xs text-text-secondary mt-1 font-medium italic">
-                            {w.exampleTranslation}
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })
-            ) : (
-              items.map((b: Book & { savedAt: string }) => (
+          {type === 'words' ? (
+            <div className="space-y-3">
+              {items.map((w: Word) => (
+                <WordCard
+                  key={w.id}
+                  word={w}
+                  isAuthenticated={!!user}
+                  onToggleSave={handleToggleSave}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="card-glass p-5 divide-y divide-border/50">
+              {items.map((b: Book & { savedAt: string }) => (
                 <a
                   key={b.id}
                   href={`/dictionary/${b.id}`}
@@ -300,9 +249,9 @@ function SavedItemsInner() {
                     <BookmarkCheck size={14} className="text-accent fill-accent" />
                   </div>
                 </a>
-              ))
-            )}
-          </div>
+              ))}
+            </div>
+          )}
 
           {/* Pagination Controls */}
           {totalPages > 1 && (

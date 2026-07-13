@@ -23,6 +23,7 @@ import {
   getMySavedTopics,
   getMyProgress,
   getMyBadges,
+  saveWordNote,
 } from '../controllers/vocabulary.controller';
 import { authenticate, optionalAuth } from '../middleware/auth.middleware';
 import { requireAdmin } from '../middleware/admin.middleware';
@@ -99,8 +100,10 @@ router.delete('/words/:id', authenticate, requireAdmin, removeWord);
 
 /**
  * POST /api/words/:id/save — Toggle save/unsave a word (authenticated)
+ * POST /api/words/:id/note — Save/update personal word note (authenticated)
  */
 router.post('/words/:id/save', authenticate, saveWord);
+router.post('/words/:id/note', authenticate, saveWordNote);
 
 // ─── User Routes ──────────────────────────────────────────────────────────────
 

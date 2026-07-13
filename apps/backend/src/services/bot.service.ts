@@ -1,12 +1,21 @@
 
 import TelegramBot from 'node-telegram-bot-api';
 import prisma from '../lib/prisma';
+import bcrypt from 'bcryptjs';
 
 let bot: TelegramBot | null = null;
 const token = process.env.TELEGRAM_BOT_TOKEN;
 
 // Vaqtinchalik kesh: chat_id -> session_token
 const pendingAuthCache = new Map<number, string>();
+
+interface RegState {
+  token: string;
+  phone: string;
+  step: 'WAITING_USERNAME' | 'WAITING_PASSWORD';
+  username?: string;
+}
+const regCache = new Map<number, RegState>();
 
 // Faqat bitta PM2 instanceda botni ishga tushirish (Conflict oldini olish uchun)
 const isPrimaryInstance = process.env.NODE_APP_INSTANCE === '0' || !process.env.NODE_APP_INSTANCE;
@@ -108,36 +117,139 @@ if (token && isPrimaryInstance) {
       return;
     }
 
-    // Muvaffaqiyatli!
-    await prisma.authSession.update({
-      where: { token: sessionToken },
-      data: {
-        status: 'VERIFIED',
-        telegramId: String(contact.user_id),
-      },
+    // Check if the user already exists in DB
+    const phoneToSearch = cleanContactPhone.startsWith('998') ? `+${cleanContactPhone}` : `+${cleanContactPhone}`;
+    const existingUser = await prisma.user.findUnique({
+      where: { phone: phoneToSearch }
     });
 
-    pendingAuthCache.delete(chatId);
+    if (existingUser) {
+      // User is already registered - fail/expire session and redirect them to login in the app
+      await prisma.authSession.update({
+        where: { token: sessionToken },
+        data: { status: 'EXPIRED' }
+      });
+      pendingAuthCache.delete(chatId);
+      
+      await bot!.sendMessage(chatId, "❌ <b>Siz allaqachon ro'yxatdan o'tgansiz!</b>\n\nIltimos, ilovaga/saytga qaytib kirish uchun parolingizni kiriting.", {
+        parse_mode: 'HTML',
+        reply_markup: { remove_keyboard: true }
+      });
+      return;
+    }
 
-    await bot!.sendMessage(chatId, "Telefon raqamingiz muvaffaqiyatli qabul qilindi! ✅", {
+    // User does not exist, start the registration steps
+    regCache.set(chatId, {
+      token: sessionToken,
+      phone: phoneToSearch,
+      step: 'WAITING_USERNAME'
+    });
+
+    await bot!.sendMessage(chatId, "Telefon raqamingiz muvaffaqiyatli tasdiqlandi! ✅", {
       reply_markup: { remove_keyboard: true }
     });
 
     bot!.sendMessage(
       chatId,
-      "✅ <b>Muvaffaqiyatli tasdiqlandi!</b> 🎉\n\nSiz endi botdan chiqib, <b>VocabJP sayti yoki ilovasiga</b> qaytishingiz mumkin. Tizimga avtomatik tarzda kirasiz.\n\n<i>Yapon tilini o'rganishda omad!</i> 🌸",
-      {
-        parse_mode: 'HTML',
-        reply_markup: {
-          inline_keyboard: [
-            [
-              { text: "🌐 Veb-sahifaga qaytish", url: "https://edujp.uz" },
-              { text: "📱 Ilovaga qaytish", url: "https://edujp.uz" }
-            ]
-          ]
-        }
-      }
+      "🎌 <b>Yangi foydalanuvchi!</b>\n\nRo'yxatdan o'tishni yakunlash uchun o'zingizga <b>foydalanuvchi nomi (username)</b> tanlang:\n\n<i>(Faqat ingliz harflari, raqamlar va tag chiziq, 3-30 ta belgi)</i>",
+      { parse_mode: 'HTML' }
     );
+  });
+
+  // 3. Matnli xabarlar bilan ro'yxatdan o'tish qadamlarini boshqarish
+  bot.on('message', async (msg) => {
+    const chatId = msg.chat.id;
+    const text = msg.text?.trim();
+
+    if (!text || text.startsWith('/')) return;
+
+    const state = regCache.get(chatId);
+    if (!state) return;
+
+    if (state.step === 'WAITING_USERNAME') {
+      const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
+      if (!usernameRegex.test(text)) {
+        bot!.sendMessage(chatId, "❌ <b>Foydalanuvchi nomi xato!</b>\n\nFoydalanuvchi nomi 3 dan 30 gacha belgidan iborat bo'lishi va faqat lotin harflari, raqamlar va tag chiziqdan (_) tashkil topishi kerak.\n\nIltimos, boshqa nom kiritib ko'ring:", { parse_mode: 'HTML' });
+        return;
+      }
+
+      // Check username uniqueness in DB
+      const existingUser = await prisma.user.findUnique({
+        where: { username: text }
+      });
+      if (existingUser) {
+        bot!.sendMessage(chatId, "❌ <b>Bu foydalanuvchi nomi allaqachon band!</b>\n\nIltimos, boshqa foydalanuvchi nomini kiriting:", { parse_mode: 'HTML' });
+        return;
+      }
+
+      state.username = text;
+      state.step = 'WAITING_PASSWORD';
+      regCache.set(chatId, state);
+
+      bot!.sendMessage(chatId, "✅ <b>Foydalanuvchi nomi qabul qilindi!</b>\n\nEndi tizimga kirish uchun <b>parol</b> kiriting (kamida 8 ta belgi bo'lishi shart):", { parse_mode: 'HTML' });
+      return;
+    }
+
+    if (state.step === 'WAITING_PASSWORD') {
+      if (text.length < 8) {
+        bot!.sendMessage(chatId, "❌ <b>Parol juda qisqa!</b>\n\nParol kamida 8 ta belgidan iborat bo'lishi kerak. Iltimos, qaytadan kiriting:", { parse_mode: 'HTML' });
+        return;
+      }
+
+      try {
+        const passwordHash = await bcrypt.hash(text, 12);
+
+        // Create the user
+        const user = await prisma.user.create({
+          data: {
+            username: state.username!,
+            phone: state.phone,
+            telegramId: String(msg.from?.id),
+            passwordHash,
+            profile: {
+              create: {
+                streak: 0,
+                lastLoginDate: new Date(),
+              }
+            }
+          }
+        });
+
+        // Set session status to VERIFIED and link user
+        await prisma.authSession.update({
+          where: { token: state.token },
+          data: {
+            status: 'VERIFIED',
+            telegramId: String(msg.from?.id),
+            userId: user.id
+          }
+        });
+
+        regCache.delete(chatId);
+        pendingAuthCache.delete(chatId);
+
+        bot!.sendMessage(
+          chatId,
+          "🎉 <b>Tabriklaymiz! Ro'yxatdan muvaffaqiyatli o'tdingiz.</b>\n\nSiz endi botdan chiqib, <b>VocabJP sayti yoki ilovasiga</b> qaytishingiz mumkin. Tizimga avtomatik tarzda kirasiz.\n\n<i>Yapon tilini o'rganishda omad!</i> 🌸",
+          {
+            parse_mode: 'HTML',
+            reply_markup: {
+              inline_keyboard: [
+                [
+                  { text: "🌐 Veb-sahifaga qaytish", url: "https://edujp.uz" },
+                  { text: "📱 Ilovaga qaytish", url: "https://edujp.uz" }
+                ]
+              ]
+            }
+          }
+        );
+      } catch (err) {
+        console.error('Error in bot registration creation:', err);
+        bot!.sendMessage(chatId, "❌ <b>Xatolik yuz berdi!</b>\n\nRo'yxatdan o'tish jarayonida xatolik yuz berdi. Iltimos, saytdan qaytadan urinib ko'ring.");
+        regCache.delete(chatId);
+      }
+      return;
+    }
   });
 
   // Umumiy /start komandasi

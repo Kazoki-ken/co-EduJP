@@ -19,14 +19,35 @@ async function cleanupRemoteDb() {
       
       async function run() {
         try {
-          const result = await prisma.user.deleteMany({
-            where: {
-              email: {
-                endsWith: '@test.com'
-              }
-            }
-          });
-          console.log('SUCCESS_DELETED: ' + result.count);
+          console.log('Deleting progress...');
+          const progress = await prisma.userWordProgress.deleteMany({});
+          console.log('Deleting notes...');
+          const notes = await prisma.userWordNote.deleteMany({});
+          console.log('Deleting saved words...');
+          const savedWords = await prisma.savedWord.deleteMany({});
+          console.log('Deleting saved topics...');
+          const savedTopics = await prisma.savedTopic.deleteMany({});
+          console.log('Deleting saved books...');
+          const savedBooks = await prisma.savedBook.deleteMany({});
+          console.log('Deleting word topics...');
+          const wordTopics = await prisma.wordTopic.deleteMany({});
+          console.log('Deleting words...');
+          const words = await prisma.word.deleteMany({});
+          console.log('Deleting topics...');
+          const topics = await prisma.topic.deleteMany({});
+          console.log('Deleting books...');
+          const books = await prisma.book.deleteMany({});
+          
+          console.log('SUCCESS_DELETED:');
+          console.log('Progress: ' + progress.count);
+          console.log('Notes: ' + notes.count);
+          console.log('SavedWords: ' + savedWords.count);
+          console.log('SavedTopics: ' + savedTopics.count);
+          console.log('SavedBooks: ' + savedBooks.count);
+          console.log('WordTopics: ' + wordTopics.count);
+          console.log('Words: ' + words.count);
+          console.log('Topics: ' + topics.count);
+          console.log('Books: ' + books.count);
         } catch (e) {
           console.error(e);
         } finally {

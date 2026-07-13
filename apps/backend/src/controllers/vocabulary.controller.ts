@@ -25,6 +25,7 @@ import {
   getSavedTopics,
   getUserProgress,
   getUserBadges,
+  upsertWordNote,
 } from '../services/vocabulary.service';
 
 // ─── Validation Schemas ───────────────────────────────────────────────────────
@@ -47,6 +48,20 @@ const WordSchema = z.object({
   exampleSentence: z.string().max(500).or(z.literal('')).nullable().optional(),
   exampleTranslation: z.string().max(500).or(z.literal('')).nullable().optional(),
   topicIds: z.array(z.string().cuid()).optional(),
+  partOfSpeech: z.string().max(100).nullable().optional(),
+  jlptLevel: z.string().max(10).nullable().optional(),
+  frequency: z.string().max(100).nullable().optional(),
+  pitchAccent: z.string().max(50).nullable().optional(),
+  teForm: z.string().max(200).nullable().optional(),
+  taForm: z.string().max(200).nullable().optional(),
+  naiForm: z.string().max(200).nullable().optional(),
+  masuForm: z.string().max(200).nullable().optional(),
+  kanjiInfo: z.any().nullable().optional(),
+  additionalExamples: z.any().nullable().optional(),
+  synonyms: z.array(z.string()).optional(),
+  antonyms: z.array(z.string()).optional(),
+  nuance: z.string().max(2000).nullable().optional(),
+  compounds: z.any().nullable().optional(),
 });
 
 const PaginationSchema = z.object({
@@ -227,4 +242,10 @@ export const getMyProgress = async (req: AuthenticatedRequest, res: Response): P
 export const getMyBadges = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const badges = await getUserBadges(req.user!.id);
   res.json(badges);
+};
+
+export const saveWordNote = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const { note } = z.object({ note: z.string() }).parse(req.body);
+  const result = await upsertWordNote(req.user!.id, req.params.id, note);
+  res.json(result);
 };

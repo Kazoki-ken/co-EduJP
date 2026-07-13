@@ -10,23 +10,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // ── Deep Space Design System ─────────────────────────
-        background: "#0a0a1a",
-        surface:    "#0f0f2a",
-        "surface-2": "#14143a",
-        border:     "#1e1e4a",
+        // ── Japanese Traditional Design System ─────────────────────────
+        background: "#161514",     // Sumi Black / Charcoal
+        surface:    "#1f1d1c",     // Warm Dark Ash
+        "surface-2": "#2a2725",    // Lighter Charcoal
+        border:     "#3a3532",     // Warm Stone Border
 
-        primary:    "#6d28d9",   // violet
-        "primary-hover": "#7c3aed",
-        "primary-glow": "rgba(109,40,217,0.35)",
+        primary:    "#e83929",     // Shu-iro (Vermilion Red)
+        "primary-hover": "#f05a4f",
+        "primary-glow": "rgba(232,57,41,0.35)",
 
-        accent:     "#f59e0b",   // amber/gold — coins
-        "accent-hover": "#fbbf24",
-        "accent-glow": "rgba(245,158,11,0.3)",
+        accent:     "#f2a900",     // Yamabuki (Gold)
+        "accent-hover": "#ffc107",
+        "accent-glow": "rgba(242,169,0,0.3)",
 
-        success:    "#10b981",
-        warning:    "#f59e0b",
-        danger:     "#ef4444",
+        success:    "#2d7a47",     // Matcha / Bamboo Green
+        warning:    "#e67e22",     // Mikan / Orange
+        danger:     "#c0392b",     // Tsubaki / Camellia Red
 
         // ── League Palette ───────────────────────────────────
         bronze:     "#cd7f32",
@@ -36,9 +36,9 @@ const config: Config = {
         diamond:    "#b9f2ff",
 
         // ── Text Scale ───────────────────────────────────────
-        "text-primary":   "#f0f0ff",
-        "text-secondary": "#a0a0c0",
-        "text-muted":     "#5a5a8a",
+        "text-primary":   "#faf9f6",   // Washi paper white
+        "text-secondary": "#b3aba2",   // Golden sand grey
+        "text-muted":     "#736c64",   // Stone grey
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
@@ -51,20 +51,20 @@ const config: Config = {
         "2xl": "1.5rem",
       },
       boxShadow: {
-        glow:        "0 0 20px rgba(109,40,217,0.4)",
-        "glow-sm":   "0 0 10px rgba(109,40,217,0.3)",
-        "glow-accent": "0 0 20px rgba(245,158,11,0.4)",
+        glow:        "0 0 20px rgba(232,57,41,0.4)",
+        "glow-sm":   "0 0 10px rgba(232,57,41,0.3)",
+        "glow-accent": "0 0 20px rgba(242,169,0,0.4)",
         glass:       "0 8px 32px rgba(0,0,8,0.5)",
       },
       backgroundImage: {
         "space-gradient":
-          "radial-gradient(ellipse at top, #1a0a3a 0%, #0a0a1a 60%)",
+          "radial-gradient(ellipse at top, #3c1e1e 0%, #161514 60%)",
         "primary-gradient":
-          "linear-gradient(135deg, #6d28d9 0%, #4c1d95 100%)",
+          "linear-gradient(135deg, #e83929 0%, #b82216 100%)",
         "accent-gradient":
-          "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+          "linear-gradient(135deg, #f2a900 0%, #c48200 100%)",
         "card-gradient":
-          "linear-gradient(135deg, rgba(15,15,42,0.9) 0%, rgba(20,20,58,0.6) 100%)",
+          "linear-gradient(135deg, rgba(31,29,28,0.9) 0%, rgba(42,39,37,0.6) 100%)",
       },
       animation: {
         "pulse-glow": "pulseGlow 2s ease-in-out infinite",
@@ -74,8 +74,8 @@ const config: Config = {
       },
       keyframes: {
         pulseGlow: {
-          "0%, 100%": { boxShadow: "0 0 10px rgba(109,40,217,0.3)" },
-          "50%":      { boxShadow: "0 0 25px rgba(109,40,217,0.7)" },
+          "0%, 100%": { boxShadow: "0 0 10px rgba(232,57,41,0.3)" },
+          "50%":      { boxShadow: "0 0 25px rgba(232,57,41,0.7)" },
         },
         float: {
           "0%, 100%": { transform: "translateY(0)" },

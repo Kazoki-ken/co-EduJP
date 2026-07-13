@@ -29,7 +29,7 @@ const RegisterSchema = z.object({
 });
 
 const LoginSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email: z.string().min(1, 'Email or phone number is required'),
   password: z.string().min(1, 'Password is required'),
 });
 
@@ -234,7 +234,7 @@ export const googleLoginOnly = async (req: Request, res: Response): Promise<void
 
 // ─── Telegram Phone Auth ───────────────────────────────────────────
 
-import { startPhoneAuthService, checkPhoneAuthStatusService } from '../services/auth.service';
+import { startPhoneAuthService, checkPhoneAuthStatusService, checkPhoneExistsService } from '../services/auth.service';
 
 const StartPhoneAuthSchema = z.object({
   phone: z.string().min(9, 'Telefon raqam kiritilishi shart'),
@@ -285,4 +285,19 @@ export const checkPhoneAuthStatus = async (req: Request, res: Response): Promise
     });
     return;
   }
+};
+
+const CheckPhoneSchema = z.object({
+  phone: z.string().min(9, 'Telefon raqam kiritilishi shart'),
+});
+
+export const checkPhoneExists = async (req: Request, res: Response): Promise<void> => {
+  const parsed = CheckPhoneSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.errors[0]?.message });
+    return;
+  }
+
+  const exists = await checkPhoneExistsService(parsed.data.phone);
+  res.status(200).json({ exists });
 };

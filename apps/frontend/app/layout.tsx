@@ -2,8 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
-import { NavBar } from '@/components/layout/NavBar';
-import { Footer } from '@/components/layout/Footer';
+import { AppLayoutShell } from '@/components/layout/AppLayoutShell';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const inter = Inter({
@@ -38,11 +37,9 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased flex flex-col min-h-screen`}>
         <GoogleOAuthProvider clientId="156336295197-pjb6ocbui8t994dhdg4nv827a22f8e84.apps.googleusercontent.com">
           <AuthProvider>
-            <NavBar />
-            <main className="flex-1 pt-16">
+            <AppLayoutShell>
               {children}
-            </main>
-            <Footer />
+            </AppLayoutShell>
           </AuthProvider>
         </GoogleOAuthProvider>
       </body>

@@ -9,6 +9,7 @@ import { WriteGame } from '@/components/games/WriteGame';
 import { GameResults } from '@/components/games/GameResults';
 import { useGameSession } from '@/hooks/useGameSession';
 import { useGameSubmit } from '@/hooks/useGameSubmit';
+import { useAuth } from '@/context/AuthContext';
 import type { GameAnswer, GameType } from '@/lib/types';
 
 type Step = 'setup' | 'play' | 'results';
@@ -16,6 +17,7 @@ type Step = 'setup' | 'play' | 'results';
 export default function WriteGamePage() {
   const GAME_TYPE: GameType = 'WRITE';
   const router = useRouter();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const { session, isLoading: sessionLoading, error: sessionError, fetchSession, reset: resetSession } = useGameSession();
   const { result,  isLoading: submitLoading,  error: submitError,  submit,       reset: resetSubmit  } = useGameSubmit();
   const [step, setStep] = useState<Step>('setup');
@@ -35,6 +37,30 @@ export default function WriteGamePage() {
     resetSession(); resetSubmit();
     setStep('setup');
   }, [resetSession, resetSubmit]);
+
+  if (authLoading) {
+    return (
+      <div className="page-container py-24 flex items-center justify-center gap-3">
+        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        <span className="text-text-muted">Yuklanmoqda…</span>
+      </div>
+    );
+  }
+
+  if (user?.role !== 'ADMIN') {
+    return (
+      <div className="page-container py-24 max-w-md mx-auto text-center space-y-6">
+        <div className="text-6xl animate-bounce">🔒</div>
+        <h2 className="text-2xl font-extrabold text-text-primary">Kirish cheklangan</h2>
+        <p className="text-text-muted">
+          Kechirasiz, "Yozish amaliyoti" o'yini faqat administratorlar uchun ochiq qilib belgilangan.
+        </p>
+        <Link href="/games" className="btn-primary inline-flex items-center gap-2 justify-center px-6 py-2.5 mx-auto">
+          <ChevronLeft size={16} /> O'yinlar bo'limiga qaytish
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="page-container py-10">
