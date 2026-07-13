@@ -149,8 +149,7 @@ export default function PasswordSetupScreen({ onDone }: Props) {
                 lineHeight: 20,
               }}
             >
-              Email/parol bilan ham kirish uchun{'\n'}parol o'rnating{' '}
-              <Text style={{ color: '#7c3aed', fontWeight: '600' }}>(ixtiyoriy)</Text>
+              Ilovaga xavfsiz kirish uchun{'\n'}parol o'rnating
             </Text>
           </View>
 
@@ -344,16 +343,7 @@ export default function PasswordSetupScreen({ onDone }: Props) {
                 </LinearGradient>
               </TouchableOpacity>
 
-              {/* Skip */}
-              <TouchableOpacity
-                onPress={onDone}
-                activeOpacity={0.7}
-                style={{ marginTop: 16, alignItems: 'center', paddingVertical: 8 }}
-              >
-                <Text style={{ color: '#6b7280', fontSize: 14 }}>
-                  O'tkazib yuborish — keyinroq o'rnataman
-                </Text>
-              </TouchableOpacity>
+
             </View>
           </BlurView>
         </ScrollView>
