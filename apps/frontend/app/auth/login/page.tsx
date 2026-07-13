@@ -101,10 +101,7 @@ export default function LoginPage() {
         if (checkRes.data.exists) {
           setShowPasswordInput(true);
         } else {
-          const { data } = await api.post('/auth/phone/start', { phone });
-          setPhoneToken(data.token);
-          setBotUsername(data.botUsername);
-          startPolling(data.token);
+          setError("Bunday foydalanuvchi mavjud emas. Iltimos, ro'yxatdan o'ting.");
         }
       }
     } catch (err: any) {
