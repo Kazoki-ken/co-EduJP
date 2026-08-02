@@ -11,7 +11,9 @@
     "db:migrate": "pnpm --filter backend db:migrate",
     "db:seed": "pnpm --filter backend db:seed",
     "db:studio": "pnpm --filter backend db:studio",
-    "dev:mobile": "pnpm --filter mobile start"
+    "dev:mobile": "pnpm --filter mobile start",
+    "deploy": "node scripts/deploy.js",
+    "remote": "node scripts/remote.js"
   },
   "engines": {
     "node": ">=18.0.0",
@@ -19,6 +21,8 @@
   },
   "dependencies": {
     "node-ssh": "^13.2.1",
-    "react-native-css-interop": "^0.2.3"
+    "react-native-css-interop": "^0.2.3",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   }
 }
