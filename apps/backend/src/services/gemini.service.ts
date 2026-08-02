@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from '@google/generative-ai';
 import prisma from '../lib/prisma';
+import { createError } from '../middleware/error.middleware';
 
 // ─── Vocabulary-Locked System Prompt ─────────────────────────────────────────
 
@@ -51,35 +52,36 @@ export interface ChatStreamCallbacks {
 // ─── API Key Resolution ───────────────────────────────────────────────────────
 
 /**
- * Hardcoded fallback API key — used when neither the DB nor env var is set.
- * Priority: SiteConfiguration DB → GEMINI_API_KEY env var → fallback key.
- */
-const FALLBACK_GEMINI_API_KEY = 'AIzaSyBHJq8nPqsinaIpk5NIEYbe1JjMWnAd_RQ';
-
-/**
  * Resolves the Gemini API key with priority:
- *   1. SiteConfiguration table key "gemini_api_key"
+ *   1. SiteConfiguration table key "gemini_api_key"  (set via the admin panel)
  *   2. GEMINI_API_KEY environment variable
- *   3. Hardcoded fallback key
  *
- * Never throws — always returns a key.
+ * There is intentionally NO hardcoded fallback — a key committed to the repo is
+ * a leaked credential. Throws a 503-tagged error when no key is configured;
+ * the chat controller turns that into a clean JSON error response.
  */
 export const resolveGeminiApiKey = async (): Promise<string> => {
+  let apiKey: string | undefined;
+
   try {
     const dbConfig = await prisma.siteConfiguration.findUnique({
       where: { key: 'gemini_api_key' },
     });
-
-    const apiKey =
-      dbConfig?.value?.trim() ||
-      process.env.GEMINI_API_KEY?.trim() ||
-      FALLBACK_GEMINI_API_KEY;
-
-    return apiKey;
+    apiKey = dbConfig?.value?.trim();
   } catch {
-    // DB lookup failed — fall back to env or hardcoded key
-    return process.env.GEMINI_API_KEY?.trim() || FALLBACK_GEMINI_API_KEY;
+    // DB lookup failed — fall back to the env var below.
   }
+
+  apiKey ||= process.env.GEMINI_API_KEY?.trim();
+
+  if (!apiKey) {
+    throw createError(
+      'AI suhbatdosh hozircha sozlanmagan. Administrator Gemini API kalitini kiritishi kerak.',
+      503,
+    );
+  }
+
+  return apiKey;
 };
 
 // ─── Main Streaming Chat Function ─────────────────────────────────────────────

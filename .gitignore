@@ -1,10 +1,33 @@
 node_modules/
 dist/
-.env
-*.log
-.DS_Store
-Thumbs.db
+.next/
+.expo/
 
+# ─── Secrets ──────────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+!.env.deploy.example
+.env.deploy
+
+# ─── Logs & crash dumps ───────────────────────────────────────────────────────
+*.log
+build_log*.txt
+decompressed_log.txt
+crash_*.txt
+paramiko.log
+
+# ─── Database dumps & generated data ──────────────────────────────────────────
+*.sql.gz
+*_backup.sql
+generate-progress-*.json
+
+# ─── Binaries & build artefacts ───────────────────────────────────────────────
 *.apk
+*.aab
+ngrok.exe
 platform-tools.zip
 platform-tools/
+
+.DS_Store
+Thumbs.db
