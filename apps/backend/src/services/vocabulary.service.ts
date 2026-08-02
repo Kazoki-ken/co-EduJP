@@ -46,6 +46,19 @@ export interface WordListQuery {
   bookId?: string;
 }
 
+// ─── Official-content Filters ────────────────────────────────────────────────
+
+/**
+ * The main dictionary shows only official, admin-curated content.
+ *
+ * Books and topics a learner built for themselves are reached through that
+ * learner's profile instead (see community.service), so every listing here is
+ * scoped to `authorId: null`. Words use their own flag because bulk uploads
+ * already stamp `authorId` with the importing admin — see schema.prisma.
+ */
+const OFFICIAL_ONLY = { authorId: null } as const;
+const OFFICIAL_WORDS_ONLY = { isUserCreated: false } as const;
+
 // ─── Books ────────────────────────────────────────────────────────────────────
 
 export const listBooks = async (page = 1, limit = 20, userId?: string) => {
@@ -53,6 +66,7 @@ export const listBooks = async (page = 1, limit = 20, userId?: string) => {
 
   const [books, total] = await Promise.all([
     prisma.book.findMany({
+      where: OFFICIAL_ONLY,
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
@@ -63,7 +77,7 @@ export const listBooks = async (page = 1, limit = 20, userId?: string) => {
         }),
       },
     }),
-    prisma.book.count(),
+    prisma.book.count({ where: OFFICIAL_ONLY }),
   ]);
 
   const data = books.map((b) => {
@@ -86,8 +100,8 @@ export const listBooks = async (page = 1, limit = 20, userId?: string) => {
 };
 
 export const getBookById = async (id: string, userId?: string) => {
-  const book = await prisma.book.findUnique({
-    where: { id },
+  const book = await prisma.book.findFirst({
+    where: { id, ...OFFICIAL_ONLY },
     include: {
       _count: { select: { topics: true, savedBooks: true } },
       ...(userId && {
@@ -134,7 +148,7 @@ export const deleteBook = async (id: string) => {
 
 export const listTopics = async (bookId?: string, userId?: string) => {
   const topics = await prisma.topic.findMany({
-    where: bookId ? { bookId } : {},
+    where: bookId ? { bookId, ...OFFICIAL_ONLY } : OFFICIAL_ONLY,
     orderBy: { name: 'asc' },
     include: {
       _count: { select: { wordTopics: true } },
@@ -164,11 +178,11 @@ export const listTopics = async (bookId?: string, userId?: string) => {
 };
 
 export const getTopicsByBook = async (bookId: string, userId?: string) => {
-  const book = await prisma.book.findUnique({ where: { id: bookId } });
+  const book = await prisma.book.findFirst({ where: { id: bookId, ...OFFICIAL_ONLY } });
   if (!book) throw createError('Book not found', 404);
 
   const topics = await prisma.topic.findMany({
-    where: { bookId },
+    where: { bookId, ...OFFICIAL_ONLY },
     orderBy: { name: 'asc' },
     include: {
       _count: { select: { wordTopics: true } },
@@ -229,8 +243,8 @@ export const listWords = async (userId: string | undefined, query: WordListQuery
   const limit = Math.min(query.limit ?? 20, 100);
   const skip = (page - 1) * limit;
 
-  // Build where clause
-  const where: Record<string, unknown> = {};
+  // Build where clause — user-created words never surface in the dictionary.
+  const where: Record<string, unknown> = { ...OFFICIAL_WORDS_ONLY };
 
   if (query.search) {
     where.OR = [
@@ -283,8 +297,22 @@ export const listWords = async (userId: string | undefined, query: WordListQuery
 };
 
 export const getWordById = async (id: string, userId?: string) => {
-  const word = await prisma.word.findUnique({
-    where: { id },
+  const word = await prisma.word.findFirst({
+    where: {
+      id,
+      // Official words are visible to everyone. A user-created word is only
+      // readable by the learner who wrote it or by someone who has saved it,
+      // so a random id cannot be used to read other people's private words.
+      OR: [
+        OFFICIAL_WORDS_ONLY,
+        ...(userId
+          ? [
+              { isUserCreated: true, authorId: userId },
+              { isUserCreated: true, savedWords: { some: { userId } } },
+            ]
+          : []),
+      ],
+    },
     include: {
       wordTopics: {
         include: {
@@ -379,14 +407,45 @@ export const deleteWord = async (id: string) => {
   await prisma.word.delete({ where: { id } });
 };
 
+// ─── Visibility ───────────────────────────────────────────────────────────────
+
+/**
+ * Whether `userId` may save a book/topic, given its ownership and visibility.
+ *
+ * Official content (authorId null) is always saveable; user content only when
+ * it is public or the requester owns it. Without this a learner could save —
+ * and therefore read every word inside — someone else's private topic just by
+ * guessing its id.
+ */
+const canAccess = (
+  entity: { authorId: string | null; isPublic: boolean },
+  userId: string,
+): boolean => entity.authorId === null || entity.isPublic || entity.authorId === userId;
+
 // ─── Save / Unsave Word ───────────────────────────────────────────────────────
 
 export const toggleSaveWord = async (userId: string, wordId: string) => {
   const word = await prisma.word.findUnique({
     where: { id: wordId },
-    include: { wordTopics: { select: { topicId: true } } },
+    include: {
+      wordTopics: {
+        select: {
+          topicId: true,
+          topic: { select: { authorId: true, isPublic: true } },
+        },
+      },
+    },
   });
   if (!word) throw createError('Word not found', 404);
+
+  // A user-created word is only reachable through a topic the requester is
+  // allowed to see (or one they wrote themselves).
+  if (word.isUserCreated) {
+    const reachable =
+      word.authorId === userId ||
+      word.wordTopics.some((wt) => canAccess(wt.topic, userId));
+    if (!reachable) throw createError('Word not found', 404);
+  }
 
   const existing = await prisma.savedWord.findUnique({
     where: { userId_wordId: { userId, wordId } },
@@ -480,6 +539,8 @@ export const getSavedWords = async (userId: string, page = 1, limit = 20) => {
 export const toggleSaveBook = async (userId: string, bookId: string) => {
   const book = await prisma.book.findUnique({ where: { id: bookId } });
   if (!book) throw createError('Book not found', 404);
+  // 404 rather than 403 — a private book should not confirm it exists.
+  if (!canAccess(book, userId)) throw createError('Book not found', 404);
 
   const existing = await prisma.savedBook.findUnique({
     where: { userId_bookId: { userId, bookId } },
@@ -544,6 +605,8 @@ export const toggleSaveTopic = async (userId: string, topicId: string) => {
     },
   });
   if (!topic) throw createError('Topic not found', 404);
+  // 404 rather than 403 — a private topic should not confirm it exists.
+  if (!canAccess(topic, userId)) throw createError('Topic not found', 404);
 
   const wordIds = topic.wordTopics.map((wt) => wt.wordId);
 

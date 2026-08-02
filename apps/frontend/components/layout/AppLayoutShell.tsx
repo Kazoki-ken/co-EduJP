@@ -18,6 +18,7 @@ import {
   Settings,
   Flame,
   LayoutDashboard,
+  Library,
   ChevronRight
 } from 'lucide-react';
 import { cn, leagueIcon } from '@/lib/utils';
@@ -69,6 +70,7 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
   const navItems = [
     { href: '/', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/dictionary', label: "Lug'at & Mavzular", icon: BookOpen },
+    { href: '/library', label: "Mening lug'atim", icon: Library },
     { href: '/games', label: "Mashg'ulot & O'yinlar", icon: Gamepad2 },
     { href: '/chat', label: "AI Suhbatdosh", icon: MessageCircle },
     { href: '/leaderboard', label: 'Reyting', icon: Trophy },

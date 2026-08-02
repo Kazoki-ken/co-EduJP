@@ -68,6 +68,8 @@ model User {
   authSessions  AuthSession[]
   wordNotes     UserWordNote[]
   refreshTokens RefreshToken[]
+  books         Book[]             @relation("AuthoredBooks")
+  topics        Topic[]            @relation("AuthoredTopics")
 
   @@map("users")
 }
@@ -114,28 +116,42 @@ model Profile {
 
 // ─── Vocabulary Content ────────────────────────────────────────────────────────
 
+// Books and topics come from two places:
+//   - Official content, curated by admins — authorId is null.
+//   - User-created content — authorId points at its owner.
+// The main dictionary lists only official content (authorId: null); user
+// content is reached through its author's profile instead. isPublic decides
+// whether anyone other than the owner can see it.
 model Book {
   id          String   @id @default(cuid())
   title       String
   description String?
   imageUrl    String?  @map("image_url")
+  authorId    String?  @map("author_id")
+  isPublic    Boolean  @default(false) @map("is_public")
   createdAt   DateTime @default(now()) @map("created_at")
 
+  author     User?       @relation("AuthoredBooks", fields: [authorId], references: [id], onDelete: Cascade)
   topics     Topic[]
   savedBooks SavedBook[]
 
+  @@index([authorId])
   @@map("books")
 }
 
 model Topic {
-  id     String  @id @default(cuid())
-  name   String
-  bookId String? @map("book_id")
+  id       String  @id @default(cuid())
+  name     String
+  bookId   String? @map("book_id")
+  authorId String? @map("author_id")
+  isPublic Boolean @default(false) @map("is_public")
 
+  author      User?        @relation("AuthoredTopics", fields: [authorId], references: [id], onDelete: Cascade)
   book        Book?        @relation(fields: [bookId], references: [id], onDelete: SetNull)
   wordTopics  WordTopic[]
   savedTopics SavedTopic[]
 
+  @@index([authorId])
   @@map("topics")
 }
 
@@ -147,6 +163,11 @@ model Word {
   exampleSentence    String?  @map("example_sentence")
   exampleTranslation String?  @map("example_translation")
   authorId           String?  @map("author_id")
+  // Distinct from authorId: bulk uploads already stamp authorId with the
+  // admin who imported the row, so it cannot tell official words apart from
+  // ones a learner typed into their own topic. This flag can. The main
+  // dictionary lists only isUserCreated: false.
+  isUserCreated      Boolean  @default(false) @map("is_user_created")
   createdAt          DateTime @default(now()) @map("created_at")
 
   // Extended fields

@@ -7,8 +7,10 @@ import {
   Book,
   BookOpen,
   ChevronDown,
+  ChevronRight,
   CornerDownLeft,
   Layers,
+  Library,
   Search,
   Tag,
   User,
@@ -24,7 +26,7 @@ import { useBooks } from '@/hooks/useBooks';
 import { useWords } from '@/hooks/useWords';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
-import type { Topic } from '@/lib/types';
+import type { CommunityAuthor, Topic } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -41,7 +43,7 @@ const PLACEHOLDER: Record<Tab, string> = {
   words: "So'z, hiragana yoki ma'nosini yozing...",
   topics: "Mavzu nomi yoki so'z qidiring...",
   books: "Kitob nomi yoki so'z qidiring...",
-  users: "Foydalanuvchi qidiruvi (tez orada)...",
+  users: "Foydalanuvchi nomini yozing...",
 };
 
 export default function DictionaryPage() {
@@ -70,6 +72,11 @@ export default function DictionaryPage() {
    */
   const [wordsQuery, setWordsQuery] = useState('');
   const [wordsPage, setWordsPage] = useState(1);
+
+  /** Learners who share public material — loaded when the users tab is opened. */
+  const [authors, setAuthors] = useState<CommunityAuthor[]>([]);
+  const [authorsLoading, setAuthorsLoading] = useState(false);
+  const [authorsError, setAuthorsError] = useState<string | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -103,18 +110,43 @@ export default function DictionaryPage() {
     setTopicPage(1);
   }, [searchQuery, activeTab]);
 
+  /**
+   * The user directory is small and filtered server-side, so unlike the word
+   * search it can run as you type — debounced so a fast typist doesn't fire a
+   * request per keystroke.
+   */
+  useEffect(() => {
+    if (activeTab !== 'users') return;
+
+    const term = searchQuery.trim();
+    const timer = setTimeout(() => {
+      setAuthorsLoading(true);
+      setAuthorsError(null);
+      api
+        .get<{ data: CommunityAuthor[] }>('/community/users', {
+          params: { ...(term && { search: term }), limit: 24 },
+        })
+        .then(({ data }) => setAuthors(data.data))
+        .catch(() => setAuthorsError('Foydalanuvchilarni yuklashda xatolik.'))
+        .finally(() => setAuthorsLoading(false));
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [activeTab, searchQuery]);
+
   const query = searchQuery.trim();
   const isSearching = query.length > 0;
 
   /**
    * The hero owns the whole first screen until there is actually something to
    * show — merely selecting a tab is not enough. "So'zlar" only shrinks it
-   * once a search has been submitted (wordsQuery set); "Foydalanuvchi" has no
-   * real behaviour yet, so it never shrinks it at all; Mavzular/Kitoblar
-   * shrink it once you search or ask to browse everything.
+   * once a search has been submitted (wordsQuery set); Mavzular/Kitoblar once
+   * you search or ask to browse everything; "Foydalanuvchi" as soon as the
+   * directory has loaded someone (it browses rather than searches).
    */
   const showResults =
     (activeTab === 'words' && wordsQuery !== '') ||
+    (activeTab === 'users' && (authorsLoading || authors.length > 0 || isSearching)) ||
     ((activeTab === 'topics' || activeTab === 'books') && (isSearching || browseAll));
 
   const filteredTopics = useMemo(
@@ -165,6 +197,10 @@ export default function DictionaryPage() {
    */
   const submitWordSearch = () => {
     if (!query) return;
+    // On the users tab the directory already filters as you type, so Enter
+    // must not yank the learner over to a word search.
+    if (activeTab === 'users') return;
+
     setActiveTab('words');
     setWordsQuery(query);
     setWordsPage(1);
@@ -334,20 +370,32 @@ export default function DictionaryPage() {
               </button>
             )}
 
-            <Link
-              href="/dictionary/words"
-              className="flex items-center gap-3 px-4 py-3 rounded-xl text-left
-                         text-text-secondary hover:text-text-primary hover:bg-surface-2/60
-                         transition-colors"
-            >
-              <Layers size={17} className="shrink-0 text-accent" />
-              <span>
-                {"Kengaytirilgan qidiruv (filtrlar bilan)"}
-                {wordCount !== null && (
-                  <span className="text-text-muted"> · {wordCount.toLocaleString()} ta so'z</span>
-                )}
-              </span>
-            </Link>
+            {activeTab === 'users' ? (
+              <Link
+                href="/library"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-left
+                           text-text-secondary hover:text-text-primary hover:bg-surface-2/60
+                           transition-colors"
+              >
+                <Library size={17} className="shrink-0 text-accent" />
+                <span>{"O'z mavzu va kitoblaringizni yarating"}</span>
+              </Link>
+            ) : (
+              <Link
+                href="/dictionary/words"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-left
+                           text-text-secondary hover:text-text-primary hover:bg-surface-2/60
+                           transition-colors"
+              >
+                <Layers size={17} className="shrink-0 text-accent" />
+                <span>
+                  {"Kengaytirilgan qidiruv (filtrlar bilan)"}
+                  {wordCount !== null && (
+                    <span className="text-text-muted"> · {wordCount.toLocaleString()} ta so'z</span>
+                  )}
+                </span>
+              </Link>
+            )}
 
             {(activeTab === 'topics' || activeTab === 'books') && !showResults && (
               <button
@@ -398,6 +446,11 @@ export default function DictionaryPage() {
                       {wordsMeta?.total ?? 0}
                     </span>
                     {" ta so'z topildi"}
+                  </>
+                ) : activeTab === 'users' ? (
+                  <>
+                    <span className="text-text-primary font-semibold">{authors.length}</span>
+                    {' ta foydalanuvchi'}
                   </>
                 ) : isSearching ? (
                   <>
@@ -463,8 +516,32 @@ export default function DictionaryPage() {
                   )}
                 </>
               )
-              // 'users' never reaches this renderer — showResults is always
-              // false for that tab until its real behaviour is defined.
+            ) : activeTab === 'users' ? (
+              authorsError ? (
+                <EmptyState icon="⚠️" message="Xatolik" description={authorsError} />
+              ) : authorsLoading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="h-[92px] skeleton rounded-xl" />
+                  ))}
+                </div>
+              ) : authors.length === 0 ? (
+                <EmptyState
+                  icon="👤"
+                  message={isSearching ? 'Foydalanuvchi topilmadi' : "Hali hech kim ulashmagan"}
+                  description={
+                    isSearching
+                      ? "Boshqa nom bilan qidirib ko'ring."
+                      : "Bu yerda o'z mavzu va kitoblarini ochiq qilgan foydalanuvchilar chiqadi. Birinchi bo'ling — \"Mening lug'atim\" bo'limidan boshlang."
+                  }
+                />
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {authors.map((author) => (
+                    <AuthorCard key={author.id} author={author} />
+                  ))}
+                </div>
+              )
             ) : activeTab === 'books' ? (
               isLoading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -529,6 +606,32 @@ export default function DictionaryPage() {
         )}
       </div>
     </div>
+  );
+}
+
+function AuthorCard({ author }: { author: CommunityAuthor }) {
+  return (
+    <Link
+      href={`/dictionary/users/${encodeURIComponent(author.username)}`}
+      className="card-glass p-4 flex items-center gap-3 hover:border-primary/40 transition-colors group"
+    >
+      <div className="w-11 h-11 rounded-full bg-primary/20 border border-primary/40
+                      flex items-center justify-center font-bold text-primary uppercase shrink-0">
+        {author.username[0]}
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <p className="font-bold text-text-primary truncate group-hover:text-primary transition-colors">
+          {author.username}
+        </p>
+        <p className="text-xs text-text-muted mt-0.5">
+          {author.publicTopics} ta mavzu
+          {author.publicBooks > 0 && ` · ${author.publicBooks} ta kitob`}
+        </p>
+      </div>
+
+      <ChevronRight size={16} className="text-text-muted group-hover:text-primary transition-colors shrink-0" />
+    </Link>
   );
 }
 

@@ -13,6 +13,8 @@ import vocabularyRoutes from './routes/vocabulary.routes';
 import gameRoutes from './routes/game.routes';
 import adminRoutes from './routes/admin.routes';
 import utilityRoutes from './routes/utility.routes';
+import libraryRoutes from './routes/library.routes';
+import communityRoutes from './routes/community.routes';
 import { getLeaderboardHandler } from './controllers/game.controller';
 
 const app = express();
@@ -121,6 +123,8 @@ app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', vocabularyRoutes);
 app.use('/api/games', gameRoutes);
+app.use('/api/library', libraryRoutes);
+app.use('/api/community', communityRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', utilityRoutes);
 app.get('/api/leaderboard', getLeaderboardHandler);
