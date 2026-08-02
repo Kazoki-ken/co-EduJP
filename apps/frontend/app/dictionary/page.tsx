@@ -12,6 +12,7 @@ import {
   Layers,
   Search,
   Tag,
+  User,
   X,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -107,10 +108,16 @@ export default function DictionaryPage() {
   const topicCount = topics.filter((t) => t.bookId === null).length;
   const resultCount = activeTab === 'topics' ? totalTopics : filteredBooks.length;
 
-  /** Enter searches the words themselves, not just topic/book names. */
+  /**
+   * Searches the words themselves, not just topic/book names — used by Enter,
+   * the "So'zlar" button and the inline quick action. With no query typed yet
+   * it just opens the full words list rather than doing nothing.
+   */
   const submitWordSearch = () => {
-    if (!query) return;
-    router.push(`/dictionary/words?search=${encodeURIComponent(query)}`);
+    const target = query
+      ? `/dictionary/words?search=${encodeURIComponent(query)}`
+      : '/dictionary/words';
+    router.push(target);
   };
 
   const revealAll = () => {
@@ -168,42 +175,84 @@ export default function DictionaryPage() {
           {"Lug'atdagi so'zlarni kitoblar yoki alohida mavzular kesimida o'rganing."}
         </p>
 
-        {/* ── Segmented tabs ─────────────────────────────────────────── */}
-        <div className="flex bg-surface-2/60 p-1.5 rounded-xl border border-border/40 w-fit relative mt-8">
-          <button
-            onClick={() => switchTab('topics')}
-            className={cn(
-              'relative flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200',
-              activeTab === 'topics' ? 'text-white' : 'text-text-muted hover:text-text-secondary',
-            )}
-          >
-            {activeTab === 'topics' && (
-              <motion.span
-                layoutId="activeTabGlow"
-                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                className="absolute inset-0 bg-primary rounded-lg shadow-glow-sm"
-              />
-            )}
-            <Tag size={14} className="relative z-10" />
-            <span className="relative z-10">Mavzular</span>
-          </button>
+        {/* ── Tab row: [So'zlar] [Mavzular | Kitoblar] ...... [Foydalanuvchi] ──
+            A 3-column grid (1fr / auto / auto+pill / 1fr) keeps the middle
+            group visually centered no matter how wide the right-hand button
+            is — the two 1fr spacer columns always match. Below `sm` there is
+            not enough width for that, so it collapses to a plain centred,
+            wrapping row instead. */}
+        <div
+          className="w-full flex flex-wrap items-center justify-center gap-2 mt-8
+                     sm:grid sm:grid-cols-[1fr_auto_1fr] sm:max-w-3xl"
+        >
+          <div aria-hidden className="hidden sm:block" />
 
+          <div className="flex items-center gap-2 justify-self-center">
+            {/* "So'zlar" — not a view-switching tab like the two beside it;
+                clicking it jumps straight to searching the words themselves
+                with whatever is currently in the search box below. */}
+            <button
+              onClick={submitWordSearch}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
+                         bg-surface-2/60 border border-border/40 text-text-muted
+                         hover:text-text-primary hover:border-primary/40 transition-colors duration-200"
+            >
+              <Search size={14} />
+              <span>So'zlar</span>
+            </button>
+
+            <div className="flex bg-surface-2/60 p-1.5 rounded-xl border border-border/40 w-fit relative">
+              <button
+                onClick={() => switchTab('topics')}
+                className={cn(
+                  'relative flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200',
+                  activeTab === 'topics' ? 'text-white' : 'text-text-muted hover:text-text-secondary',
+                )}
+              >
+                {activeTab === 'topics' && (
+                  <motion.span
+                    layoutId="activeTabGlow"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    className="absolute inset-0 bg-primary rounded-lg shadow-glow-sm"
+                  />
+                )}
+                <Tag size={14} className="relative z-10" />
+                <span className="relative z-10">Mavzular</span>
+              </button>
+
+              <button
+                onClick={() => switchTab('books')}
+                className={cn(
+                  'relative flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200',
+                  activeTab === 'books' ? 'text-white' : 'text-text-muted hover:text-text-secondary',
+                )}
+              >
+                {activeTab === 'books' && (
+                  <motion.span
+                    layoutId="activeTabGlow"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    className="absolute inset-0 bg-primary rounded-lg shadow-glow-sm"
+                  />
+                )}
+                <Book size={14} className="relative z-10" />
+                <span className="relative z-10">Kitoblar</span>
+              </button>
+            </div>
+          </div>
+
+          {/* "Foydalanuvchi" — scaffolded for a future feature (what it filters
+              and searches is not decided yet), so it deliberately does nothing
+              on click rather than pretending to work. */}
           <button
-            onClick={() => switchTab('books')}
-            className={cn(
-              'relative flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200',
-              activeTab === 'books' ? 'text-white' : 'text-text-muted hover:text-text-secondary',
-            )}
+            onClick={(e) => e.preventDefault()}
+            aria-disabled="true"
+            title="Tez orada qo'shiladi"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
+                       border border-border/40 text-text-muted/60 cursor-not-allowed
+                       justify-self-end shrink-0"
           >
-            {activeTab === 'books' && (
-              <motion.span
-                layoutId="activeTabGlow"
-                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                className="absolute inset-0 bg-primary rounded-lg shadow-glow-sm"
-              />
-            )}
-            <Book size={14} className="relative z-10" />
-            <span className="relative z-10">Kitoblar</span>
+            <User size={14} />
+            <span>Foydalanuvchi</span>
           </button>
         </div>
 
