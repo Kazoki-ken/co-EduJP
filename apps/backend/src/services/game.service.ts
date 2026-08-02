@@ -2,7 +2,7 @@ import prisma from '../lib/prisma';
 import { createError } from '../middleware/error.middleware';
 import { BadgeType, GameType, League } from '@prisma/client';
 import { syncStreakAndDailyCounts } from './streak.service';
-import { isAnswerCorrect } from '../utils/answerCheck';
+import { isAnswerCorrect, type AnswerDirection } from '../utils/answerCheck';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -287,6 +287,14 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
 
   const wordMap = new Map(words.map((w) => [w.id, w]));
 
+  /**
+   * WRITE shows the Uzbek meaning and asks the learner to type the Japanese,
+   * so it must not accept the meaning back as an answer — that would be the
+   * prompt itself. Every other mode shows the Japanese and collects a meaning.
+   */
+  const answerDirection: AnswerDirection =
+    session.gameType === 'WRITE' ? 'toJapanese' : 'toMeaning';
+
   // ── Fetch current SRS progress for all words ──────────────────────────────
   const existingProgress = await prisma.userWordProgress.findMany({
     where: { userId, wordId: { in: sessionWordIds } },
@@ -328,7 +336,7 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
     let isWordCorrect = true;
 
     for (const answer of wordAnswers) {
-      if (!isAnswerCorrect(word, answer.answer)) {
+      if (!isAnswerCorrect(word, answer.answer, answerDirection)) {
         isWordCorrect = false;
       }
     }

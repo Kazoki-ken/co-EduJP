@@ -51,7 +51,9 @@ export function WriteGame({ session, onComplete }: WriteGameProps) {
 
     // Uses the same normalisation as the server so the feedback shown here
     // always agrees with the score that comes back from /games/submit.
-    const isCorrect = isAnswerCorrect(currentWord, input);
+    // 'toJapanese': this game asks for the Japanese, so kanji, hiragana and
+    // katakana all pass — but typing the Uzbek prompt back does not.
+    const isCorrect = isAnswerCorrect(currentWord, input, 'toJapanese');
 
     setState(isCorrect ? 'correct' : 'wrong');
     const newAnswer: GameAnswer = { wordId: currentWord.id, answer: input.trim(), timeMs };
@@ -92,22 +94,15 @@ export function WriteGame({ session, onComplete }: WriteGameProps) {
           transition={{ duration: 0.25 }}
           className="space-y-4"
         >
-          {/* Word display */}
+          {/* Prompt — the Uzbek meaning; the Japanese is what we're asking for,
+              so neither the word nor its audio may be shown before answering. */}
           <div className="card-glass p-8 text-center">
             <p className="text-xs text-text-muted mb-3 font-medium uppercase tracking-widest">
-              Type the meaning in English
+              {"Yaponchasini yozing"}
             </p>
-            <div className="flex items-center justify-center gap-3">
-              <p className="text-4xl font-bold text-text-primary tracking-wide">
-                {currentWord.japaneseWord}
-              </p>
-              <button onClick={handleTts} className="p-2 rounded-lg hover:bg-surface-2 text-text-muted hover:text-primary transition-colors">
-                <Volume2 size={18} />
-              </button>
-            </div>
-            {currentWord.hiragana !== currentWord.japaneseWord && (
-              <p className="text-primary/70 text-lg mt-1">{currentWord.hiragana}</p>
-            )}
+            <p className="text-3xl font-bold text-text-primary leading-snug">
+              {currentWord.meaning}
+            </p>
           </div>
 
           {/* Input */}
@@ -118,7 +113,11 @@ export function WriteGame({ session, onComplete }: WriteGameProps) {
               value={input}
               onChange={(e) => state === 'idle' && setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Type meaning…"
+              placeholder="日本語 — kanji, hiragana yoki katakana…"
+              lang="ja"
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
               animate={state === 'wrong' ? { x: [-6, 6, -6, 0] } : {}}
               transition={{ duration: 0.3 }}
               className={cn(
@@ -155,13 +154,29 @@ export function WriteGame({ session, onComplete }: WriteGameProps) {
                   ? <CheckCircle size={16} className="shrink-0 mt-0.5" />
                   : <XCircle    size={16} className="shrink-0 mt-0.5" />
                 }
-                <div>
-                  <p className="font-semibold">{state === 'correct' ? 'Correct!' : 'Incorrect'}</p>
-                  {state === 'wrong' && (
-                    <p className="text-text-muted mt-0.5">
-                      The answer was: <span className="text-text-primary font-medium">{currentWord.meaning}</span>
-                    </p>
-                  )}
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold">
+                    {state === 'correct' ? "To'g'ri!" : "Noto'g'ri"}
+                  </p>
+
+                  {/* Always reveal the Japanese afterwards — right or wrong,
+                      seeing the written form is the point of this drill. */}
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    <span className="text-text-muted">Javob:</span>
+                    <span className="text-text-primary font-bold text-lg">
+                      {currentWord.japaneseWord}
+                    </span>
+                    {currentWord.hiragana && currentWord.hiragana !== currentWord.japaneseWord && (
+                      <span className="text-primary/80">({currentWord.hiragana})</span>
+                    )}
+                    <button
+                      onClick={handleTts}
+                      title="Talaffuzni eshitish"
+                      className="p-1.5 rounded-lg hover:bg-surface-2 text-text-muted hover:text-primary transition-colors"
+                    >
+                      <Volume2 size={15} />
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             )}

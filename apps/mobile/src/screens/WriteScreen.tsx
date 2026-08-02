@@ -74,7 +74,9 @@ export default function WriteScreen({ route, navigation }: Props) {
     const timeMs = Date.now() - startedAt.current;
     const word = session.words[index];
     // Same normalisation as the server so the feedback matches the final score.
-    const isCorrect = isAnswerCorrect(word, input);
+    // 'toJapanese': this game asks for the Japanese, so kanji, hiragana and
+    // katakana all pass — but typing the Uzbek prompt back does not.
+    const isCorrect = isAnswerCorrect(word, input, 'toJapanese');
 
     setState(isCorrect ? 'correct' : 'wrong');
     if (!isCorrect) {
@@ -130,15 +132,14 @@ export default function WriteScreen({ route, navigation }: Props) {
         {/* Word display card */}
         <BlurView intensity={22} tint="dark" style={{borderRadius:28,overflow:'hidden',borderWidth:1,borderColor:'rgba(16,185,129,0.22)',marginBottom:24}}>
           <LinearGradient colors={['rgba(18,18,48,0.95)','rgba(8,8,24,0.98)']} style={{paddingVertical:36,paddingHorizontal:28,alignItems:'center'}}>
+            {/* The Uzbek meaning is the prompt; the Japanese is the answer, so
+                it stays hidden until the learner has committed to a guess. */}
             <Text style={{color:'#6b7280',fontSize:12,fontWeight:'700',letterSpacing:1.5,textTransform:'uppercase',marginBottom:14}}>
-              Tarjimasini yozing
+              Yaponchasini yozing
             </Text>
-            <Text style={{color:'#f9fafb',fontSize:52,fontWeight:'700',letterSpacing:4,textShadowColor:'rgba(16,185,129,0.3)',textShadowOffset:{width:0,height:0},textShadowRadius:20}}>
-              {word.japaneseWord}
+            <Text style={{color:'#f9fafb',fontSize:30,fontWeight:'700',lineHeight:40,textAlign:'center'}}>
+              {word.meaning}
             </Text>
-            {word.hiragana !== word.japaneseWord && (
-              <Text style={{color:'#6ee7b7',fontSize:18,letterSpacing:2,marginTop:8}}>{word.hiragana}</Text>
-            )}
           </LinearGradient>
         </BlurView>
 
@@ -154,10 +155,12 @@ export default function WriteScreen({ route, navigation }: Props) {
                 value={input}
                 onChangeText={t => { if(state==='idle') setInput(t); }}
                 onSubmitEditing={handleSubmit}
-                placeholder="Tarjimasini yozing…"
+                placeholder="日本語 — kanji, hiragana yoki katakana…"
                 placeholderTextColor="#374151"
                 style={{flex:1,color:'#f3f4f6',fontSize:16,paddingVertical:14}}
                 returnKeyType="done"
+                autoCapitalize="none"
+                autoCorrect={false}
                 editable={state==='idle'}
               />
               <TouchableOpacity onPress={handleSubmit} disabled={!input.trim()||state!=='idle'}>
@@ -180,11 +183,14 @@ export default function WriteScreen({ route, navigation }: Props) {
                 <Text style={{color:state==='correct'?'#10b981':'#ef4444',fontWeight:'700',fontSize:14}}>
                   {state==='correct'?"To'g'ri!":"Noto'g'ri"}
                 </Text>
-                {state==='wrong' && (
-                  <Text style={{color:'#9ca3af',fontSize:13,marginTop:2}}>
-                    Javob: <Text style={{color:'#f3f4f6',fontWeight:'600'}}>{word.meaning}</Text>
-                  </Text>
-                )}
+                {/* Always reveal the Japanese afterwards — right or wrong,
+                    seeing the written form is the point of this drill. */}
+                <Text style={{color:'#9ca3af',fontSize:13,marginTop:4}}>
+                  Javob: <Text style={{color:'#f3f4f6',fontWeight:'700',fontSize:17}}>{word.japaneseWord}</Text>
+                  {!!word.hiragana && word.hiragana !== word.japaneseWord && (
+                    <Text style={{color:'#6ee7b7'}}>{'  '}({word.hiragana})</Text>
+                  )}
+                </Text>
               </View>
             </View>
           </BlurView>

@@ -9,7 +9,7 @@ import type { Book, Topic, GameType, GameSession } from '@/lib/types';
 const GAME_LABELS: Record<GameType, { label: string; icon: string; desc: string }> = {
   TEST:    { label: 'Multiple Choice', icon: '🧠', desc: 'Pick the right meaning from 4 options' },
   MATCH:   { label: 'Matching Pairs',  icon: '🔗', desc: 'Match Japanese words to their meanings' },
-  WRITE:   { label: 'Typing Practice', icon: '⌨️',  desc: 'Type the meaning from memory' },
+  WRITE:   { label: 'Yozish mashqi',   icon: '⌨️',  desc: "O'zbekcha ma'nosidan yaponchasini yozing (kanji, hiragana yoki katakana)" },
   SHOOTER: { label: 'Space Shooter',   icon: '🚀', desc: 'Click the right asteroid!' },
 };
 

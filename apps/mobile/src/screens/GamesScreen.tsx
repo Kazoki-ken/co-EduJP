@@ -54,7 +54,7 @@ const MODES: GameMode[] = [
   {
     screen: 'Write', type: 'WRITE',
     title: 'Yozish amaliyoti', icon: 'create',
-    subtitle: "Ma'nosini yoddan klaviaturada yozing",
+    subtitle: "Ma'nosidan yaponchasini yozing",
     colors: ['#3b82f6', '#1d4ed8'], glow: '#3b82f6',
   },
   {

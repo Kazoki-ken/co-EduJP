@@ -33,7 +33,7 @@ const SOLO_GAMES = [
     href:  '/games/write',
     icon:  '⌨️',
     title: 'Yozish amaliyoti',
-    desc:  "Yaponcha so'zning ma'nosini klaviaturada yozing. SRS tizimida xotirani to'liq sinash uchun.",
+    desc:  "O'zbekcha ma'nosini ko'rib, yaponchasini yozing — kanji, hiragana yoki katakana. Xotirani eng chuqur sinaydi.",
     gradient: 'from-red-700 to-red-950',
     border:   'hover:border-red-500/60',
     glow:     'hover:shadow-[0_0_20px_rgba(232,57,41,0.35)]',
