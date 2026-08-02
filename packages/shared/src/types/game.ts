@@ -45,7 +45,10 @@ export interface EarnedBadge {
 export interface GameResult {
   sessionId: string;
   gameType: string;
+  /** Words the server put in the session — the denominator for `accuracy`. */
   totalQuestions: number;
+  /** Words the player actually attempted (may be lower if they ran out of lives). */
+  answeredCount?: number;
   totalCorrect: number;
   accuracy: number;
   xpEarned: number;

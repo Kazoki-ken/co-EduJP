@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, Send, CheckCircle, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { isAnswerCorrect } from '@/lib/answerCheck';
 import type { GameSession, GameAnswer, SessionWord } from '@/lib/types';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
@@ -46,14 +47,11 @@ export function WriteGame({ session, onComplete }: WriteGameProps) {
   const handleSubmit = useCallback(() => {
     if (state !== 'idle' || !input.trim()) return;
 
-    const timeMs   = Date.now() - startedAt.current;
-    const trimmed  = input.trim().toLowerCase();
-    const correct  = currentWord.meaning.toLowerCase();
+    const timeMs = Date.now() - startedAt.current;
 
-    // Lenient matching: answer is a substring of correct OR correct is substring of answer
-    const isCorrect =
-      correct.includes(trimmed) || trimmed.includes(correct) ||
-      trimmed === correct;
+    // Uses the same normalisation as the server so the feedback shown here
+    // always agrees with the score that comes back from /games/submit.
+    const isCorrect = isAnswerCorrect(currentWord, input);
 
     setState(isCorrect ? 'correct' : 'wrong');
     const newAnswer: GameAnswer = { wordId: currentWord.id, answer: input.trim(), timeMs };

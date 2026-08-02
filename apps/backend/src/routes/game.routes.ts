@@ -14,14 +14,17 @@ const router = Router();
  *     type     (TEST | MATCH | WRITE | SHOOTER) default: TEST
  *     topicId  (optional CUID)
  *     bookId   (optional CUID)
- *     limit    (1–50, default 20)
+ *     limit    (1–200, default 20)
  *     dueOnly  ("true" to only return SRS-due words)
  */
 router.get('/session', authenticate, getGameSession);
 
 /**
  * POST /api/games/submit  — Submit answers + trigger SRS + badges
- *   Body: { sessionId: string, answers: [{ wordId, answer }] }
+ *   Body: { sessionId: string, answers: [{ wordId, answer }] }  (max 400 answers)
+ *
+ * Accuracy is scored against the number of words the server put in the session,
+ * so skipping words lowers the score rather than inflating it.
  */
 router.post('/submit', authenticate, postSubmitSession);
 

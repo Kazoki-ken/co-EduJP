@@ -5,6 +5,7 @@ import {
   generateSession,
   submitSession,
   getLeaderboard,
+  MAX_SESSION_WORDS,
 } from '../services/game.service';
 import { GameType, League } from '@prisma/client';
 
@@ -17,7 +18,7 @@ const SessionQuerySchema = z.object({
   type: GameTypeEnum.default('TEST'),
   topicId: z.string().cuid('Invalid topicId').optional(),
   bookId: z.string().cuid('Invalid bookId').optional(),
-  limit: z.coerce.number().int().min(1).max(200).default(20),
+  limit: z.coerce.number().int().min(1).max(MAX_SESSION_WORDS).default(20),
   dueOnly: z
     .string()
     .transform((v) => v === 'true')
@@ -29,9 +30,20 @@ const AnswerSchema = z.object({
   answer: z.string().min(0).max(500),
 });
 
+/**
+ * A session holds up to MAX_SESSION_WORDS words, and the MATCH game submits one
+ * answer per matched pair PLUS one per wrong attempt (5 lives). The old cap of
+ * 50 answers rejected any MATCH game longer than 50 words with a 400 — the
+ * default MATCH session is 200 words.
+ */
+const MAX_ANSWERS = 400;
+
 const SubmitSchema = z.object({
   sessionId: z.string().cuid('Invalid sessionId'),
-  answers: z.array(AnswerSchema).min(1, 'At least one answer is required').max(50),
+  answers: z
+    .array(AnswerSchema)
+    .min(1, 'At least one answer is required')
+    .max(MAX_ANSWERS, 'Too many answers submitted'),
 });
 
 // ─── Controllers ──────────────────────────────────────────────────────────────

@@ -2,6 +2,7 @@ import prisma from '../lib/prisma';
 import { createError } from '../middleware/error.middleware';
 import { BadgeType, GameType, League } from '@prisma/client';
 import { syncStreakAndDailyCounts } from './streak.service';
+import { isAnswerCorrect } from '../utils/answerCheck';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -32,6 +33,13 @@ const XP_PER_CORRECT = 5;
 
 /** Session expires in 30 minutes — prevents replaying old sessions. */
 const SESSION_TTL_MS = 30 * 60 * 1000;
+
+/**
+ * Hard ceiling on words per session. The MATCH game defaults to 200, so this
+ * must stay >= that. Keep the controller's `limit` validation and the service
+ * clamp in agreement — they used to disagree with the route documentation.
+ */
+export const MAX_SESSION_WORDS = 200;
 
 // ─── DTOs ─────────────────────────────────────────────────────────────────────
 
@@ -85,7 +93,7 @@ export const getCurrentWeekBounds = (): { start: Date; end: Date } => {
  * If the user has fewer than 4 saved words, a friendly error is thrown.
  */
 export const generateSession = async (opts: GenerateSessionOptions) => {
-  const limit = Math.min(opts.limit ?? 20, 200);
+  const limit = Math.min(opts.limit ?? 20, MAX_SESSION_WORDS);
   const now = new Date();
   const MIN_WORDS = 4; // minimum for multiple-choice options
 
@@ -320,14 +328,7 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
     let isWordCorrect = true;
 
     for (const answer of wordAnswers) {
-      const normalised = answer.answer.trim().toLowerCase();
-      const isCorrect =
-        word.meaning.toLowerCase().includes(normalised) ||
-        normalised.includes(word.meaning.toLowerCase()) ||
-        word.hiragana?.toLowerCase() === normalised ||
-        word.japaneseWord === answer.answer.trim();
-
-      if (!isCorrect) {
+      if (!isAnswerCorrect(word, answer.answer)) {
         isWordCorrect = false;
       }
     }
@@ -405,12 +406,17 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
     }
   }
 
-  const totalQuestions = answersByWord.size;
+  // The denominator is the number of words the SERVER put in the session, not
+  // the number of answers the client chose to send back. Grading against the
+  // submitted answers let a client post a single correct answer for a 20-word
+  // session and walk away with 100% accuracy and the Perfect Game badge.
+  const totalQuestions = sessionWordIds.length;
+  const answeredCount = answersByWord.size;
   const accuracy =
     totalQuestions > 0
       ? Math.round((totalCorrect / totalQuestions) * 100)
       : 0;
-  const isPerfect = accuracy === 100 && totalQuestions > 0;
+  const isPerfect = totalQuestions > 0 && totalCorrect === totalQuestions;
 
   // ── Run all DB writes in a single transaction ─────────────────────────────
   await prisma.$transaction([
@@ -459,6 +465,8 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
     sessionId: dto.sessionId,
     gameType: session.gameType,
     totalQuestions,
+    /** How many of the session's words the player actually attempted. */
+    answeredCount,
     totalCorrect,
     accuracy,
     xpEarned: totalXp,

@@ -10,6 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { GamesStackParamList } from '../navigation/GamesStack';
 import apiClient from '../api/client';
+import { isAnswerCorrect } from '../utils/answerCheck';
 import type { GameSession, SessionWord, GameAnswer, GameResult } from '@vocabjp/shared';
 
 type Props = NativeStackScreenProps<GamesStackParamList, 'Mixed'>;
@@ -111,9 +112,8 @@ function WritePanel({ word, answered, onAnswer }: {
   const handleSubmit = () => {
     if (state !== 'idle' || !input.trim()) return;
     const ms = Date.now() - startAt.current;
-    const trimmed = input.trim().toLowerCase();
-    const correct = word.meaning.toLowerCase();
-    const isCorrect = correct.includes(trimmed) || trimmed.includes(correct) || trimmed === correct;
+    // Same normalisation as the server so the feedback matches the final score.
+    const isCorrect = isAnswerCorrect(word, input);
     setState(isCorrect ? 'correct' : 'wrong');
     if (!isCorrect) {
       Animated.sequence([
