@@ -18,7 +18,7 @@ import {
 import Link from 'next/link';
 import { BookCard, BookCardSkeleton } from '@/components/dictionary/BookCard';
 import { TopicCard } from '@/components/dictionary/TopicCard';
-import { WordCard, WordCardSkeleton } from '@/components/dictionary/WordCard';
+import { WordResultRow, WordResultRowSkeleton } from '@/components/dictionary/WordResultRow';
 import { Pagination } from '@/components/ui/Pagination';
 import { useBooks } from '@/hooks/useBooks';
 import { useWords } from '@/hooks/useWords';
@@ -45,7 +45,7 @@ const PLACEHOLDER: Record<Tab, string> = {
 };
 
 export default function DictionaryPage() {
-  const [activeTab, setActiveTab] = useState<Tab>('topics');
+  const [activeTab, setActiveTab] = useState<Tab>('words');
   const { books, meta, isLoading, error, page, setPage } = useBooks(15);
   const { isAuthenticated } = useAuth();
 
@@ -107,14 +107,15 @@ export default function DictionaryPage() {
   const isSearching = query.length > 0;
 
   /**
-   * The hero owns the whole first screen until there is something to show.
-   * "So'zlar" and "Foydalanuvchi" always have *something* to render (a
-   * search prompt or the placeholder), so selecting either tab shrinks the
-   * hero immediately; Mavzular/Kitoblar only shrink it once you search or
-   * ask to browse everything.
+   * The hero owns the whole first screen until there is actually something to
+   * show — merely selecting a tab is not enough. "So'zlar" only shrinks it
+   * once a search has been submitted (wordsQuery set); "Foydalanuvchi" has no
+   * real behaviour yet, so it never shrinks it at all; Mavzular/Kitoblar
+   * shrink it once you search or ask to browse everything.
    */
   const showResults =
-    activeTab === 'words' || activeTab === 'users' || isSearching || browseAll;
+    (activeTab === 'words' && wordsQuery !== '') ||
+    ((activeTab === 'topics' || activeTab === 'books') && (isSearching || browseAll));
 
   const filteredTopics = useMemo(
     () =>
@@ -389,54 +390,44 @@ export default function DictionaryPage() {
       <div ref={resultsRef} className="scroll-mt-24">
         {showResults && (
           <div key={activeTab} className="animate-fade-in">
-            {/* Result count + reset — omitted for the empty "type to search"
-                prompt and the Foydalanuvchi placeholder, since there is
-                nothing to count or clear yet. */}
-            {(activeTab === 'topics' ||
-              activeTab === 'books' ||
-              (activeTab === 'words' && wordsQuery)) && (
-              <div className="flex items-center justify-between gap-4 border-b border-border/60 pb-3 mb-6">
-                <p className="text-sm text-text-muted font-medium">
-                  {activeTab === 'words' ? (
-                    <>
-                      <span className="text-text-primary font-semibold">
-                        {wordsMeta?.total ?? 0}
-                      </span>
-                      {" ta so'z topildi"}
-                    </>
-                  ) : isSearching ? (
-                    <>
-                      <span className="text-text-primary font-semibold">{resultCount}</span>
-                      {activeTab === 'topics' ? ' ta mavzu' : ' ta kitob'} topildi
-                    </>
-                  ) : (
-                    <>
-                      {activeTab === 'topics' ? 'Barcha mavzular' : 'Barcha kitoblar'}
-                      <span className="text-text-primary font-semibold"> · {resultCount}</span>
-                    </>
-                  )}
-                </p>
+            <div className="flex items-center justify-between gap-4 border-b border-border/60 pb-3 mb-6">
+              <p className="text-sm text-text-muted font-medium">
+                {activeTab === 'words' ? (
+                  <>
+                    <span className="text-text-primary font-semibold">
+                      {wordsMeta?.total ?? 0}
+                    </span>
+                    {" ta so'z topildi"}
+                  </>
+                ) : isSearching ? (
+                  <>
+                    <span className="text-text-primary font-semibold">{resultCount}</span>
+                    {activeTab === 'topics' ? ' ta mavzu' : ' ta kitob'} topildi
+                  </>
+                ) : (
+                  <>
+                    {activeTab === 'topics' ? 'Barcha mavzular' : 'Barcha kitoblar'}
+                    <span className="text-text-primary font-semibold"> · {resultCount}</span>
+                  </>
+                )}
+              </p>
 
-                <button
-                  onClick={clearAll}
-                  className="text-sm text-text-muted hover:text-primary transition-colors font-medium shrink-0"
-                >
-                  Tozalash
-                </button>
-              </div>
-            )}
+              <button
+                onClick={clearAll}
+                className="text-sm text-text-muted hover:text-primary transition-colors font-medium shrink-0"
+              >
+                Tozalash
+              </button>
+            </div>
 
+            {/* This branch only renders once wordsQuery is set (see showResults
+                above), so there is no separate "type to search" prompt case
+                here — the big hero with its placeholder already covers that. */}
             {activeTab === 'words' ? (
-              !wordsQuery ? (
-                <EmptyState
-                  icon="🔍"
-                  message="So'z qidirish uchun yozing"
-                  description="Qidiruv oynasiga so'z, hiragana yoki ma'nosini yozib, Enter tugmasini yoki qidiruv belgisini bosing."
-                />
-              ) : wordsLoading ? (
+              wordsLoading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <WordCardSkeleton key={i} />
+                    <WordResultRowSkeleton key={i} />
                   ))}
                 </div>
               ) : wordResults.length === 0 ? (
@@ -449,7 +440,7 @@ export default function DictionaryPage() {
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {wordResults.map((word) => (
-                      <WordCard
+                      <WordResultRow
                         key={word.id}
                         word={word}
                         isAuthenticated={isAuthenticated}
@@ -472,12 +463,8 @@ export default function DictionaryPage() {
                   )}
                 </>
               )
-            ) : activeTab === 'users' ? (
-              <EmptyState
-                icon="👤"
-                message="Tez orada qo'shiladi"
-                description="Foydalanuvchilar bo'yicha qidiruv funksiyasi hali ishlab chiqilmoqda."
-              />
+              // 'users' never reaches this renderer — showResults is always
+              // false for that tab until its real behaviour is defined.
             ) : activeTab === 'books' ? (
               isLoading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
