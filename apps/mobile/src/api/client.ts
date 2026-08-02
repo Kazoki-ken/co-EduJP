@@ -140,10 +140,16 @@ apiClient.interceptors.response.use(
         const storedRefresh = await loadRefreshToken();
         if (!storedRefresh) throw new Error('No refresh token stored');
 
-        const { data } = await axios.post<{ accessToken: string }>(
-          `${BASE_URL}/api/auth/refresh`,
-          { refreshToken: storedRefresh },
-        );
+        const { data } = await axios.post<{
+          accessToken: string;
+          refreshToken?: string;
+        }>(`${BASE_URL}/api/auth/refresh`, { refreshToken: storedRefresh });
+
+        // The server rotates refresh tokens — persist the new one or the next
+        // refresh will present a revoked token and log the user out.
+        if (data.refreshToken && data.refreshToken !== storedRefresh) {
+          await storeRefreshToken(data.refreshToken);
+        }
 
         _accessToken = data.accessToken;
         processQueue(data.accessToken);

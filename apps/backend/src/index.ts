@@ -2,6 +2,7 @@ import 'dotenv/config';
 import 'express-async-errors';
 import app from './app';
 import { registerLeagueResetJob } from './jobs/leagueReset.job';
+import { registerCleanupJob } from './jobs/cleanup.job';
 
 const PORT = parseInt(process.env.PORT ?? '4000', 10);
 
@@ -11,6 +12,7 @@ const server = app.listen(PORT, () => {
 
   // Start background jobs
   registerLeagueResetJob();
+  registerCleanupJob();
 
   // Start Telegram bot (agar token bo'lsa)
   import('./services/bot.service').catch(console.error);

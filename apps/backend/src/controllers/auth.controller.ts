@@ -4,11 +4,15 @@ import {
   registerUser,
   loginUser,
   refreshTokens,
+  revokeRefreshToken,
   getMe,
   googleAuth,
   setUsernameService,
   setPasswordService,
   googleLoginOnlyService,
+  startPhoneAuthService,
+  checkPhoneAuthStatusService,
+  checkPhoneExistsService,
 } from '../services/auth.service';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { createError } from '../middleware/error.middleware';
@@ -95,13 +99,23 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
     throw createError('Refresh token not found', 401);
   }
 
-  const tokens = await refreshTokens(token);
+  const tokens = await refreshTokens(token, req.headers['user-agent']);
   setRefreshCookie(res, tokens.refreshToken);
 
-  res.json({ accessToken: tokens.accessToken });
+  // Mobile clients keep the refresh token in SecureStore, so they need the
+  // rotated value back. Web clients ignore it and use the cookie.
+  res.json({ accessToken: tokens.accessToken, refreshToken: tokens.refreshToken });
 };
 
-export const logout = (_req: Request, res: Response): void => {
+export const logout = async (req: Request, res: Response): Promise<void> => {
+  // Revoke the token server-side so it cannot be replayed if it was stolen.
+  const token = (req.cookies?.refreshToken as string | undefined)
+    ?? (req.body?.refreshToken as string | undefined);
+
+  if (token) {
+    await revokeRefreshToken(token);
+  }
+
   res.clearCookie('refreshToken', { path: '/api/auth' });
   res.json({ message: 'Logged out successfully' });
 };
@@ -233,8 +247,6 @@ export const googleLoginOnly = async (req: Request, res: Response): Promise<void
 };
 
 // ─── Telegram Phone Auth ───────────────────────────────────────────
-
-import { startPhoneAuthService, checkPhoneAuthStatusService, checkPhoneExistsService } from '../services/auth.service';
 
 const StartPhoneAuthSchema = z.object({
   phone: z.string().min(9, 'Telefon raqam kiritilishi shart'),

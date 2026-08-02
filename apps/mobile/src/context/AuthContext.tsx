@@ -44,10 +44,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const stored = await loadRefreshToken();
         if (stored) {
-          const { data } = await apiClient.post<{ accessToken: string }>(
-            '/auth/refresh',
-            { refreshToken: stored },
-          );
+          const { data } = await apiClient.post<{
+            accessToken: string;
+            refreshToken?: string;
+          }>('/auth/refresh', { refreshToken: stored });
+
+          // Refresh tokens rotate server-side — keep the newest one.
+          if (data.refreshToken && data.refreshToken !== stored) {
+            await storeRefreshToken(data.refreshToken);
+          }
           setAccessToken(data.accessToken);
 
           const me = await apiClient.get<{ user: User }>('/auth/me');
@@ -125,7 +130,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     try {
-      await apiClient.post('/auth/logout');
+      // Send the refresh token so the server can revoke it, not just forget it.
+      const stored = await loadRefreshToken();
+      await apiClient.post('/auth/logout', stored ? { refreshToken: stored } : {});
     } catch {
       // ignore
     } finally {

@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
@@ -49,10 +50,77 @@ export const signTokens = (payload: {
 
 export const verifyRefreshToken = (
   token: string,
-): { id: string } => {
+): { id: string; exp?: number } => {
   const secret = process.env.JWT_REFRESH_SECRET;
   if (!secret) throw new Error('JWT_REFRESH_SECRET not configured');
-  return jwt.verify(token, secret) as { id: string };
+  return jwt.verify(token, secret) as { id: string; exp?: number };
+};
+
+// ─── Refresh Token Store ──────────────────────────────────────────────────────
+// Refresh tokens are recorded server-side so that logout actually revokes them.
+// Only a SHA-256 hash is persisted — the raw token never touches the database.
+
+const hashToken = (token: string): string =>
+  crypto.createHash('sha256').update(token).digest('hex');
+
+/**
+ * Grace period during which an already-rotated token is still accepted.
+ * Two browser tabs (or a retrying mobile client) can refresh at nearly the same
+ * moment; without this window the loser of that race would be logged out.
+ */
+const ROTATION_GRACE_MS = 60 * 1000;
+
+const persistRefreshToken = async (
+  userId: string,
+  refreshToken: string,
+  userAgent?: string,
+): Promise<void> => {
+  const decoded = jwt.decode(refreshToken) as { exp?: number } | null;
+  const expiresAt = decoded?.exp
+    ? new Date(decoded.exp * 1000)
+    : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+  await prisma.refreshToken.create({
+    data: {
+      tokenHash: hashToken(refreshToken),
+      userId,
+      expiresAt,
+      userAgent: userAgent?.slice(0, 255) ?? null,
+    },
+  });
+};
+
+/**
+ * Signs an access/refresh pair AND records the refresh token so it can later be
+ * revoked. Every sign-in path must use this instead of bare `signTokens`.
+ */
+export const issueTokens = async (
+  payload: { id: string; email: string | null; username: string; role: string },
+  userAgent?: string,
+): Promise<TokenPair> => {
+  const tokens = signTokens(payload);
+  await persistRefreshToken(payload.id, tokens.refreshToken, userAgent);
+  return tokens;
+};
+
+/** Revokes a single refresh token (normal logout). Never throws. */
+export const revokeRefreshToken = async (refreshToken: string): Promise<void> => {
+  try {
+    await prisma.refreshToken.updateMany({
+      where: { tokenHash: hashToken(refreshToken), revokedAt: null },
+      data: { revokedAt: new Date() },
+    });
+  } catch {
+    // Logout must succeed for the client even if the write fails.
+  }
+};
+
+/** Revokes every active session for a user (password change, token reuse). */
+export const revokeAllUserTokens = async (userId: string): Promise<void> => {
+  await prisma.refreshToken.updateMany({
+    where: { userId, revokedAt: null },
+    data: { revokedAt: new Date() },
+  });
 };
 
 // ─── Auth Service Methods ─────────────────────────────────────────────────────
@@ -102,7 +170,7 @@ export const registerUser = async (dto: RegisterDto) => {
     },
   });
 
-  const tokens = signTokens({
+  const tokens = await issueTokens({
     id: user.id,
     email: user.email,
     username: user.username,
@@ -164,7 +232,7 @@ export const loginUser = async (dto: LoginDto, timezoneOffset: number = 0) => {
   // Update streak and daily reset
   const updatedProfile = await updateStreakOnLogin(user.id, user.profile, timezoneOffset);
 
-  const tokens = signTokens({
+  const tokens = await issueTokens({
     id: user.id,
     email: user.email,
     username: user.username,
@@ -179,7 +247,21 @@ export const loginUser = async (dto: LoginDto, timezoneOffset: number = 0) => {
   };
 };
 
-export const refreshTokens = async (refreshToken: string): Promise<TokenPair> => {
+/**
+ * Exchanges a refresh token for a fresh pair, rotating the refresh token.
+ *
+ * Rules:
+ *  - Signature/expiry must be valid.
+ *  - The token must exist in the store (i.e. it was issued by us and not purged).
+ *  - A revoked token is rejected — unless it was rotated within the grace window,
+ *    in which case we return a new access token without rotating again.
+ *  - Presenting a long-revoked token is treated as theft: every session for that
+ *    user is revoked.
+ */
+export const refreshTokens = async (
+  refreshToken: string,
+  userAgent?: string,
+): Promise<TokenPair & { rotated: boolean }> => {
   let payload: { id: string };
   try {
     payload = verifyRefreshToken(refreshToken);
@@ -196,7 +278,40 @@ export const refreshTokens = async (refreshToken: string): Promise<TokenPair> =>
     throw createError('User not found', 401);
   }
 
-  return signTokens(user);
+  const tokenHash = hashToken(refreshToken);
+  const stored = await prisma.refreshToken.findUnique({ where: { tokenHash } });
+
+  // Tokens issued before this feature shipped have no store entry. Accept them
+  // once and adopt them into the store so nobody is logged out by the upgrade.
+  if (!stored) {
+    const tokens = await issueTokens(user, userAgent);
+    return { ...tokens, rotated: true };
+  }
+
+  if (stored.expiresAt < new Date()) {
+    throw createError('Invalid or expired refresh token', 401);
+  }
+
+  if (stored.revokedAt) {
+    const revokedAgoMs = Date.now() - stored.revokedAt.getTime();
+
+    if (revokedAgoMs <= ROTATION_GRACE_MS) {
+      // Concurrent refresh from another tab — hand out an access token only.
+      return { ...signTokens(user), refreshToken, rotated: false };
+    }
+
+    // Replay of an old token: assume it leaked and kill every session.
+    await revokeAllUserTokens(user.id);
+    throw createError('Refresh token has been revoked. Please sign in again.', 401);
+  }
+
+  const tokens = await issueTokens(user, userAgent);
+  await prisma.refreshToken.update({
+    where: { id: stored.id },
+    data: { revokedAt: new Date() },
+  });
+
+  return { ...tokens, rotated: true };
 };
 
 export const getMe = async (userId: string, timezoneOffset: number = 0) => {
@@ -325,7 +440,7 @@ export const googleAuth = async (idToken?: string, accessToken?: string) => {
     await updateStreakOnLogin(user.id, user.profile, 0);
   }
 
-  const tokens = signTokens({
+  const tokens = await issueTokens({
     id: user.id,
     email: user.email,
     username: user.username,
@@ -457,7 +572,7 @@ export const googleLoginOnlyService = async (idToken?: string, accessToken?: str
     await updateStreakOnLogin(user.id, user.profile, 0);
   }
 
-  const tokens = signTokens({
+  const tokens = await issueTokens({
     id: user.id,
     email: user.email,
     username: user.username,
@@ -470,8 +585,6 @@ export const googleLoginOnlyService = async (idToken?: string, accessToken?: str
 
 // ─── Telegram Phone Auth ──────────────────────────────────────────────────────
 
-import crypto from 'crypto';
-
 export const startPhoneAuthService = async (phone: string) => {
   // 1. Tozalanadi
   const cleanPhone = phone.replace(/\D/g, '');
@@ -479,10 +592,21 @@ export const startPhoneAuthService = async (phone: string) => {
     throw createError("Faqat +998 bilan boshlanuvchi O'zbekiston raqamlari qabul qilinadi", 400);
   }
 
-  // 2. Token generatsiya qilish (5 xonali oson kod yoki havola uchun)
-  const token = crypto.randomInt(10000, 99999).toString();
+  // 2. Token generatsiya qilish.
+  //    The status endpoint hands out real access + refresh tokens once the bot
+  //    verifies the phone, so this value is a bearer credential — it must not be
+  //    guessable. A 5-digit code (90k possibilities) was brute-forceable inside
+  //    the 5-minute window; 32 random bytes are not.
+  //    base64url keeps it valid inside a Telegram deep link (`?start=<token>`,
+  //    which allows A–Z a–z 0–9 _ - up to 64 characters).
+  const token = crypto.randomBytes(32).toString('base64url');
 
-  // 3. Bazaga saqlash
+  // 3. Eskirgan sessiyalarni tozalash (shu raqam uchun)
+  await prisma.authSession.deleteMany({
+    where: { phone: `+${cleanPhone}`, status: 'PENDING' },
+  });
+
+  // 4. Bazaga saqlash
   const session = await prisma.authSession.create({
     data: {
       token,
@@ -544,7 +668,7 @@ export const checkPhoneAuthStatusService = async (token: string) => {
       throw createError("User not found after verification", 404);
     }
 
-    const tokens = signTokens({
+    const tokens = await issueTokens({
       id: user.id,
       email: user.email || '',
       username: user.username,
