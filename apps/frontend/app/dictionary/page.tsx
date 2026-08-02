@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import {
   AlertCircle,
   ArrowRight,
@@ -14,34 +13,63 @@ import {
   Tag,
   User,
   X,
+  type LucideIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import { BookCard, BookCardSkeleton } from '@/components/dictionary/BookCard';
 import { TopicCard } from '@/components/dictionary/TopicCard';
+import { WordCard, WordCardSkeleton } from '@/components/dictionary/WordCard';
 import { Pagination } from '@/components/ui/Pagination';
 import { useBooks } from '@/hooks/useBooks';
+import { useWords } from '@/hooks/useWords';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import type { Topic } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
+type Tab = 'words' | 'topics' | 'books' | 'users';
+
+const TABS: { id: Tab; label: string; icon: LucideIcon }[] = [
+  { id: 'words', label: "So'zlar", icon: Search },
+  { id: 'topics', label: 'Mavzular', icon: Tag },
+  { id: 'books', label: 'Kitoblar', icon: Book },
+  { id: 'users', label: 'Foydalanuvchi', icon: User },
+];
+
+const PLACEHOLDER: Record<Tab, string> = {
+  words: "So'z, hiragana yoki ma'nosini yozing...",
+  topics: "Mavzu nomi yoki so'z qidiring...",
+  books: "Kitob nomi yoki so'z qidiring...",
+  users: "Foydalanuvchi qidiruvi (tez orada)...",
+};
+
 export default function DictionaryPage() {
-  const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'books' | 'topics'>('topics');
+  const [activeTab, setActiveTab] = useState<Tab>('topics');
   const { books, meta, isLoading, error, page, setPage } = useBooks(15);
   const { isAuthenticated } = useAuth();
 
   const [topics, setTopics] = useState<Topic[]>([]);
   const [topicsLoading, setTopicsLoading] = useState(false);
   const [topicsError, setTopicsError] = useState<string | null>(null);
+
+  /** One shared search box drives all four tabs — see PLACEHOLDER above. */
   const [searchQuery, setSearchQuery] = useState('');
 
   /** Total word count, shown as a hint under the search box. */
   const [wordCount, setWordCount] = useState<number | null>(null);
 
-  /** Set when the user asks to see the full list without searching. */
+  /** Set when the user asks to see the full topics/books list without searching. */
   const [browseAll, setBrowseAll] = useState(false);
+
+  /**
+   * Word search only runs on explicit submit (Enter / the arrow button), not on
+   * every keystroke — hitting the real /api/words endpoint on each keypress
+   * would be wasteful and laggy. `wordsQuery` is the committed term; typing
+   * into the box updates `searchQuery` but not this, until submitted.
+   */
+  const [wordsQuery, setWordsQuery] = useState('');
+  const [wordsPage, setWordsPage] = useState(1);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -77,8 +105,16 @@ export default function DictionaryPage() {
 
   const query = searchQuery.trim();
   const isSearching = query.length > 0;
-  /** The hero owns the whole first screen until there is something to show. */
-  const showResults = isSearching || browseAll;
+
+  /**
+   * The hero owns the whole first screen until there is something to show.
+   * "So'zlar" and "Foydalanuvchi" always have *something* to render (a
+   * search prompt or the placeholder), so selecting either tab shrinks the
+   * hero immediately; Mavzular/Kitoblar only shrink it once you search or
+   * ask to browse everything.
+   */
+  const showResults =
+    activeTab === 'words' || activeTab === 'users' || isSearching || browseAll;
 
   const filteredTopics = useMemo(
     () =>
@@ -108,16 +144,32 @@ export default function DictionaryPage() {
   const topicCount = topics.filter((t) => t.bookId === null).length;
   const resultCount = activeTab === 'topics' ? totalTopics : filteredBooks.length;
 
+  // ── Word search — only fetches once a term has actually been submitted ──
+  const {
+    words: wordResults,
+    meta: wordsMeta,
+    isLoading: wordsLoading,
+    error: wordsError,
+    toggleSave: toggleSaveWord,
+  } = useWords(
+    { search: wordsQuery, page: wordsPage, limit: 20 },
+    { enabled: activeTab === 'words' && wordsQuery !== '' },
+  );
+
   /**
-   * Searches the words themselves, not just topic/book names — used by Enter,
-   * the "So'zlar" button and the inline quick action. With no query typed yet
-   * it just opens the full words list rather than doing nothing.
+   * Runs the word search itself, in place on this page, against the same
+   * /api/words endpoint the dedicated /dictionary/words page uses — used by
+   * Enter, the arrow button and the inline quick action. Does nothing on an
+   * empty box (the arrow button is only shown while there is a query anyway).
    */
   const submitWordSearch = () => {
-    const target = query
-      ? `/dictionary/words?search=${encodeURIComponent(query)}`
-      : '/dictionary/words';
-    router.push(target);
+    if (!query) return;
+    setActiveTab('words');
+    setWordsQuery(query);
+    setWordsPage(1);
+    requestAnimationFrame(() =>
+      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+    );
   };
 
   const revealAll = () => {
@@ -127,9 +179,21 @@ export default function DictionaryPage() {
     );
   };
 
-  const switchTab = (tab: 'books' | 'topics') => {
-    setActiveTab(tab);
+  const clearAll = () => {
     setSearchQuery('');
+    setBrowseAll(false);
+    setWordsQuery('');
+    setWordsPage(1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  /**
+   * The search box is shared across all four tabs on purpose (one search,
+   * many views), so switching tabs does not clear what's typed — only what
+   * each tab *does* with it differs (live filter vs. explicit word search).
+   */
+  const switchTab = (tab: Tab) => {
+    setActiveTab(tab);
     inputRef.current?.focus();
   };
 
@@ -175,85 +239,31 @@ export default function DictionaryPage() {
           {"Lug'atdagi so'zlarni kitoblar yoki alohida mavzular kesimida o'rganing."}
         </p>
 
-        {/* ── Tab row: [So'zlar] [Mavzular | Kitoblar] ...... [Foydalanuvchi] ──
-            A 3-column grid (1fr / auto / auto+pill / 1fr) keeps the middle
-            group visually centered no matter how wide the right-hand button
-            is — the two 1fr spacer columns always match. Below `sm` there is
-            not enough width for that, so it collapses to a plain centred,
-            wrapping row instead. */}
-        <div
-          className="w-full flex flex-wrap items-center justify-center gap-2 mt-8
-                     sm:grid sm:grid-cols-[1fr_auto_1fr] sm:max-w-3xl"
-        >
-          <div aria-hidden className="hidden sm:block" />
-
-          <div className="flex items-center gap-2 justify-self-center">
-            {/* "So'zlar" — not a view-switching tab like the two beside it;
-                clicking it jumps straight to searching the words themselves
-                with whatever is currently in the search box below. */}
+        {/* ── Tab row: one pill, four equal segments ───────────────────
+            So'zlar and Foydalanuvchi share the exact same button markup as
+            Mavzular/Kitoblar (including the shared layoutId glow), so all
+            four look and behave identically — no separate outline styling. */}
+        <div className="flex flex-wrap items-center justify-center gap-1 bg-surface-2/60 p-1.5 rounded-xl border border-border/40 w-fit relative mt-8">
+          {TABS.map(({ id, label, icon: Icon }) => (
             <button
-              onClick={submitWordSearch}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
-                         bg-surface-2/60 border border-border/40 text-text-muted
-                         hover:text-text-primary hover:border-primary/40 transition-colors duration-200"
+              key={id}
+              onClick={() => switchTab(id)}
+              className={cn(
+                'relative flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200',
+                activeTab === id ? 'text-white' : 'text-text-muted hover:text-text-secondary',
+              )}
             >
-              <Search size={14} />
-              <span>So'zlar</span>
+              {activeTab === id && (
+                <motion.span
+                  layoutId="activeTabGlow"
+                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  className="absolute inset-0 bg-primary rounded-lg shadow-glow-sm"
+                />
+              )}
+              <Icon size={14} className="relative z-10" />
+              <span className="relative z-10">{label}</span>
             </button>
-
-            <div className="flex bg-surface-2/60 p-1.5 rounded-xl border border-border/40 w-fit relative">
-              <button
-                onClick={() => switchTab('topics')}
-                className={cn(
-                  'relative flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200',
-                  activeTab === 'topics' ? 'text-white' : 'text-text-muted hover:text-text-secondary',
-                )}
-              >
-                {activeTab === 'topics' && (
-                  <motion.span
-                    layoutId="activeTabGlow"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    className="absolute inset-0 bg-primary rounded-lg shadow-glow-sm"
-                  />
-                )}
-                <Tag size={14} className="relative z-10" />
-                <span className="relative z-10">Mavzular</span>
-              </button>
-
-              <button
-                onClick={() => switchTab('books')}
-                className={cn(
-                  'relative flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200',
-                  activeTab === 'books' ? 'text-white' : 'text-text-muted hover:text-text-secondary',
-                )}
-              >
-                {activeTab === 'books' && (
-                  <motion.span
-                    layoutId="activeTabGlow"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    className="absolute inset-0 bg-primary rounded-lg shadow-glow-sm"
-                  />
-                )}
-                <Book size={14} className="relative z-10" />
-                <span className="relative z-10">Kitoblar</span>
-              </button>
-            </div>
-          </div>
-
-          {/* "Foydalanuvchi" — scaffolded for a future feature (what it filters
-              and searches is not decided yet), so it deliberately does nothing
-              on click rather than pretending to work. */}
-          <button
-            onClick={(e) => e.preventDefault()}
-            aria-disabled="true"
-            title="Tez orada qo'shiladi"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
-                       border border-border/40 text-text-muted/60 cursor-not-allowed
-                       justify-self-end shrink-0"
-          >
-            <User size={14} />
-            <span>Foydalanuvchi</span>
-          </button>
+          ))}
         </div>
 
         {/* ── The single search box ──────────────────────────────────── */}
@@ -272,11 +282,7 @@ export default function DictionaryPage() {
               ref={inputRef}
               type="text"
               autoComplete="off"
-              placeholder={
-                activeTab === 'books'
-                  ? "Kitob nomi yoki so'z qidiring..."
-                  : "Mavzu nomi yoki so'z qidiring..."
-              }
+              placeholder={PLACEHOLDER[activeTab]}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && submitWordSearch()}
@@ -312,7 +318,7 @@ export default function DictionaryPage() {
 
           {/* ── Quick actions (ChatGPT-style rows) ───────────────────── */}
           <div className="mt-5 flex flex-col items-stretch gap-1">
-            {isSearching && (
+            {isSearching && activeTab !== 'words' && (
               <button
                 onClick={submitWordSearch}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-left
@@ -335,14 +341,14 @@ export default function DictionaryPage() {
             >
               <Layers size={17} className="shrink-0 text-accent" />
               <span>
-                {"Barcha so'zlarni ko'rish"}
+                {"Kengaytirilgan qidiruv (filtrlar bilan)"}
                 {wordCount !== null && (
-                  <span className="text-text-muted"> · {wordCount.toLocaleString()} ta</span>
+                  <span className="text-text-muted"> · {wordCount.toLocaleString()} ta so'z</span>
                 )}
               </span>
             </Link>
 
-            {!showResults && (
+            {(activeTab === 'topics' || activeTab === 'books') && !showResults && (
               <button
                 onClick={revealAll}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-left
@@ -366,11 +372,11 @@ export default function DictionaryPage() {
       </section>
 
       {/* ── Error Displays ───────────────────────────────────────────── */}
-      {(error || topicsError) && (
+      {(error || topicsError || wordsError) && (
         <div className="flex items-center gap-3 p-4 rounded-xl bg-danger/10 border border-danger/30
                         text-danger text-sm mb-6">
           <AlertCircle size={16} className="shrink-0" />
-          {error || topicsError}
+          {error || topicsError || wordsError}
         </div>
       )}
 
@@ -382,11 +388,23 @@ export default function DictionaryPage() {
       */}
       <div ref={resultsRef} className="scroll-mt-24">
         {showResults && (
-          <div key={`${activeTab}-${isSearching}`} className="animate-fade-in">
-              {/* Result count + reset */}
+          <div key={activeTab} className="animate-fade-in">
+            {/* Result count + reset — omitted for the empty "type to search"
+                prompt and the Foydalanuvchi placeholder, since there is
+                nothing to count or clear yet. */}
+            {(activeTab === 'topics' ||
+              activeTab === 'books' ||
+              (activeTab === 'words' && wordsQuery)) && (
               <div className="flex items-center justify-between gap-4 border-b border-border/60 pb-3 mb-6">
                 <p className="text-sm text-text-muted font-medium">
-                  {isSearching ? (
+                  {activeTab === 'words' ? (
+                    <>
+                      <span className="text-text-primary font-semibold">
+                        {wordsMeta?.total ?? 0}
+                      </span>
+                      {" ta so'z topildi"}
+                    </>
+                  ) : isSearching ? (
                     <>
                       <span className="text-text-primary font-semibold">{resultCount}</span>
                       {activeTab === 'topics' ? ' ta mavzu' : ' ta kitob'} topildi
@@ -400,77 +418,126 @@ export default function DictionaryPage() {
                 </p>
 
                 <button
-                  onClick={() => {
-                    setSearchQuery('');
-                    setBrowseAll(false);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
+                  onClick={clearAll}
                   className="text-sm text-text-muted hover:text-primary transition-colors font-medium shrink-0"
                 >
                   Tozalash
                 </button>
               </div>
+            )}
 
-              {activeTab === 'books' ? (
-                isLoading ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                    {Array.from({ length: 9 }).map((_, i) => (
-                      <BookCardSkeleton key={i} />
-                    ))}
-                  </div>
-                ) : filteredBooks.length === 0 ? (
-                  <EmptyState message="Kitoblar topilmadi" />
-                ) : (
-                  <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                      {filteredBooks.map((book, i) => (
-                        <BookCard key={book.id} book={book} index={i} isAuthenticated={isAuthenticated} />
-                      ))}
-                    </div>
-
-                    {meta && !isSearching && (
-                      <Pagination
-                        page={page}
-                        totalPages={meta.totalPages}
-                        total={meta.total}
-                        limit={meta.limit}
-                        onChange={setPage}
-                      />
-                    )}
-                  </>
-                )
-              ) : topicsLoading ? (
+            {activeTab === 'words' ? (
+              !wordsQuery ? (
+                <EmptyState
+                  icon="🔍"
+                  message="So'z qidirish uchun yozing"
+                  description="Qidiruv oynasiga so'z, hiragana yoki ma'nosini yozib, Enter tugmasini yoki qidiruv belgisini bosing."
+                />
+              ) : wordsLoading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {Array.from({ length: 9 }).map((_, i) => (
-                    <div key={i} className="h-[74px] skeleton rounded-xl" />
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <WordCardSkeleton key={i} />
                   ))}
                 </div>
-              ) : filteredTopics.length === 0 ? (
-                <EmptyState message="Mavzular topilmadi" />
+              ) : wordResults.length === 0 ? (
+                <EmptyState
+                  icon="🔍"
+                  message="So'zlar topilmadi"
+                  description="Boshqa kalit so'z bilan qayta urinib ko'ring."
+                />
               ) : (
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {displayedTopics.map((topic) => (
-                      <TopicCard
-                        key={topic.id}
-                        topic={topic}
-                        bookId={topic.bookId || ''}
+                    {wordResults.map((word) => (
+                      <WordCard
+                        key={word.id}
+                        word={word}
                         isAuthenticated={isAuthenticated}
+                        onToggleSave={toggleSaveWord}
                       />
                     ))}
                   </div>
 
-                  {totalTopicPages > 1 && (
+                  {wordsMeta && wordsMeta.totalPages > 1 && (
                     <Pagination
-                      page={topicPage}
-                      totalPages={totalTopicPages}
-                      total={totalTopics}
-                      limit={topicsPerPage}
-                      onChange={setTopicPage}
+                      page={wordsPage}
+                      totalPages={wordsMeta.totalPages}
+                      total={wordsMeta.total}
+                      limit={wordsMeta.limit}
+                      onChange={(p) => {
+                        setWordsPage(p);
+                        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }}
                     />
                   )}
                 </>
-              )}
+              )
+            ) : activeTab === 'users' ? (
+              <EmptyState
+                icon="👤"
+                message="Tez orada qo'shiladi"
+                description="Foydalanuvchilar bo'yicha qidiruv funksiyasi hali ishlab chiqilmoqda."
+              />
+            ) : activeTab === 'books' ? (
+              isLoading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {Array.from({ length: 9 }).map((_, i) => (
+                    <BookCardSkeleton key={i} />
+                  ))}
+                </div>
+              ) : filteredBooks.length === 0 ? (
+                <EmptyState message="Kitoblar topilmadi" />
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {filteredBooks.map((book, i) => (
+                      <BookCard key={book.id} book={book} index={i} isAuthenticated={isAuthenticated} />
+                    ))}
+                  </div>
+
+                  {meta && !isSearching && (
+                    <Pagination
+                      page={page}
+                      totalPages={meta.totalPages}
+                      total={meta.total}
+                      limit={meta.limit}
+                      onChange={setPage}
+                    />
+                  )}
+                </>
+              )
+            ) : topicsLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: 9 }).map((_, i) => (
+                  <div key={i} className="h-[74px] skeleton rounded-xl" />
+                ))}
+              </div>
+            ) : filteredTopics.length === 0 ? (
+              <EmptyState message="Mavzular topilmadi" />
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {displayedTopics.map((topic) => (
+                    <TopicCard
+                      key={topic.id}
+                      topic={topic}
+                      bookId={topic.bookId || ''}
+                      isAuthenticated={isAuthenticated}
+                    />
+                  ))}
+                </div>
+
+                {totalTopicPages > 1 && (
+                  <Pagination
+                    page={topicPage}
+                    totalPages={totalTopicPages}
+                    total={totalTopics}
+                    limit={topicsPerPage}
+                    onChange={setTopicPage}
+                  />
+                )}
+              </>
+            )}
           </div>
         )}
       </div>
@@ -478,13 +545,21 @@ export default function DictionaryPage() {
   );
 }
 
-function EmptyState({ message }: { message: string }) {
+function EmptyState({
+  icon = '📚',
+  message,
+  description,
+}: {
+  icon?: string;
+  message: string;
+  description?: string;
+}) {
   return (
     <div className="flex flex-col items-center justify-center py-20 text-center animate-fade-in">
-      <div className="text-5xl mb-4">📚</div>
+      <div className="text-5xl mb-4">{icon}</div>
       <h3 className="text-xl font-bold text-text-primary mb-2">{message}</h3>
       <p className="text-text-muted max-w-xs">
-        {"Mavzular yoki so'zlar ro'yxati hozircha bo'sh yoki kalit so'zga mos kelmadi."}
+        {description ?? "Mavzular yoki so'zlar ro'yxati hozircha bo'sh yoki kalit so'zga mos kelmadi."}
       </p>
     </div>
   );

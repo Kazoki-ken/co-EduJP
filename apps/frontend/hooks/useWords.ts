@@ -20,7 +20,17 @@ interface UseWordsResult {
   lastTopicCompletions: TopicCompletion[];
 }
 
-export function useWords(params: WordListParams): UseWordsResult {
+interface UseWordsOptions {
+  /**
+   * When false, skips fetching entirely — for callers that only want the
+   * words API hit once some other condition is met (e.g. a search tab
+   * becoming active), rather than on every mount. Defaults to true.
+   */
+  enabled?: boolean;
+}
+
+export function useWords(params: WordListParams, options?: UseWordsOptions): UseWordsResult {
+  const enabled = options?.enabled ?? true;
   const [words, setWords] = useState<Word[]>([]);
   const [meta, setMeta] = useState<PaginatedResponse<Word>['meta'] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,6 +39,8 @@ export function useWords(params: WordListParams): UseWordsResult {
   const abortRef = useRef<AbortController | null>(null);
 
   const fetchWords = useCallback(async () => {
+    if (!enabled) return;
+
     abortRef.current?.abort();
     abortRef.current = new AbortController();
 
@@ -54,7 +66,7 @@ export function useWords(params: WordListParams): UseWordsResult {
     } finally {
       setIsLoading(false);
     }
-  }, [params.page, params.limit, params.search, params.topicId, params.bookId]); // eslint-disable-line
+  }, [enabled, params.page, params.limit, params.search, params.topicId, params.bookId]); // eslint-disable-line
 
   useEffect(() => {
     fetchWords();
