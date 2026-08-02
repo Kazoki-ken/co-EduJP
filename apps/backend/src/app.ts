@@ -16,30 +16,75 @@ import utilityRoutes from './routes/utility.routes';
 import { getLeaderboardHandler } from './controllers/game.controller';
 
 const app = express();
+const isProduction = process.env.NODE_ENV === 'production';
+
+// ─── Proxy Awareness ──────────────────────────────────────────────────────────
+// Behind nginx, req.ip is the proxy's address unless Express is told to trust
+// the X-Forwarded-For header. Without this, express-rate-limit buckets EVERY
+// visitor together and the auth limit is exhausted site-wide by a few users.
+// TRUST_PROXY=1 means "trust exactly one hop" (nginx) — never use `true`, which
+// lets a client spoof its own IP through the header.
+const trustProxy = process.env.TRUST_PROXY ?? (isProduction ? '1' : '');
+if (trustProxy) {
+  const numericHops = Number(trustProxy);
+  app.set('trust proxy', Number.isNaN(numericHops) ? trustProxy : numericHops);
+}
 
 // ─── Security & Core Middleware ───────────────────────────────────────────────
 app.use(helmet());
+
+/**
+ * Origins are matched on the parsed hostname, never with `includes()`.
+ * A substring check would let `https://ngrok-free.app.attacker.com` through.
+ *
+ * FRONTEND_URL may hold several comma-separated origins.
+ */
+const staticOrigins = new Set(
+  (process.env.FRONTEND_URL ?? 'http://localhost:3000')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean),
+);
+
+/** Dev-tunnel hosts allowed as an exact host or as a `*.domain` subdomain. */
+const TUNNEL_DOMAINS = ['ngrok-free.app', 'ngrok-free.dev', 'ngrok.io', 'ngrok.app'];
+
+const LOCAL_HOSTNAMES = new Set(['localhost', '127.0.0.1', '[::1]', '10.0.2.2']);
+
+export const isOriginAllowed = (origin: string): boolean => {
+  if (staticOrigins.has(origin)) return true;
+
+  let hostname: string;
+  let protocol: string;
+  try {
+    const url = new URL(origin);
+    hostname = url.hostname.toLowerCase();
+    protocol = url.protocol;
+  } catch {
+    return false; // Malformed Origin header
+  }
+
+  if (protocol !== 'http:' && protocol !== 'https:') return false;
+
+  // Local development hosts (any port)
+  if (LOCAL_HOSTNAMES.has(hostname)) return true;
+
+  // Tunnel domains: exact match or a direct subdomain — nothing else.
+  return TUNNEL_DOMAINS.some(
+    (domain) => hostname === domain || hostname.endsWith(`.${domain}`),
+  );
+};
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      const allowedOrigins = [
-        process.env.FRONTEND_URL ?? 'http://localhost:3000',
-        'http://localhost:8081', // Default React Native/Expo port
-        'http://localhost:5173', // Default Vite port
-        'http://localhost:4000', // Backend port itself
-      ];
-      
-      // Allow if no origin (e.g. mobile apps, curl, postman), if in development mode,
-      // or if it matches localhost or ngrok domains
-      if (
-        !origin || 
-        process.env.NODE_ENV === 'development' || 
-        allowedOrigins.includes(origin) ||
-        origin.startsWith('http://localhost:') || 
-        origin.includes('ngrok-free.app') || 
-        origin.includes('ngrok-free.dev') || 
-        origin.includes('ngrok.io')
-      ) {
+      // No Origin header — native mobile apps, curl, server-to-server.
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+
+      if (isOriginAllowed(origin)) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
@@ -60,23 +105,20 @@ if (process.env.NODE_ENV !== 'test') {
 // ─── Global Rate Limiter ─────────────────────────────────────────────────────
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 500,
+  max: isProduction ? 1000 : 5000,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests, please try again later.' },
 });
 app.use(limiter);
 
-// Stricter limiter for auth routes
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: process.env.NODE_ENV === 'development' ? 1000 : 20, // Higher limit for dev
-  message: { error: 'Too many authentication attempts, please try again later.' },
-});
+// NOTE: auth routes are NOT wrapped in a blanket limiter here. Sign-in attempts
+// and the Telegram status-polling endpoint need very different budgets, so each
+// auth route picks its own limiter in routes/auth.routes.ts.
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use('/api/health', healthRoutes);
-app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api', vocabularyRoutes);
 app.use('/api/games', gameRoutes);
 app.use('/api/admin', adminRoutes);

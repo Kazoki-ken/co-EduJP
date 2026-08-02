@@ -1,7 +1,24 @@
 import { Router } from 'express';
-import { register, login, refresh, logout, me, googleLogin, setUsername, setPassword, googleLoginOnly } from '../controllers/auth.controller';
+import {
+  register,
+  login,
+  refresh,
+  logout,
+  me,
+  googleLogin,
+  googleLoginOnly,
+  setUsername,
+  setPassword,
+  startPhoneAuth,
+  checkPhoneAuthStatus,
+  checkPhoneExists,
+} from '../controllers/auth.controller';
 import { authenticate } from '../middleware/auth.middleware';
-import { authLimiter } from '../middleware/rateLimiter.middleware';
+import {
+  authLimiter,
+  pollingLimiter,
+  refreshLimiter,
+} from '../middleware/rateLimiter.middleware';
 
 const router = Router();
 
@@ -19,13 +36,13 @@ router.post('/login', authLimiter, login);
 
 /**
  * POST /api/auth/refresh
- * Exchange refresh token (httpOnly cookie) for new access token
+ * Exchange refresh token (httpOnly cookie or request body) for a new access token
  */
-router.post('/refresh', refresh);
+router.post('/refresh', refreshLimiter, refresh);
 
 /**
  * POST /api/auth/logout
- * Clear the refresh token cookie
+ * Revoke the refresh token and clear the cookie
  */
 router.post('/logout', logout);
 
@@ -39,14 +56,14 @@ router.get('/me', authenticate, me);
  * POST /api/auth/google
  * Sign in or register with Google OAuth (main app)
  */
-router.post('/google', googleLogin);
+router.post('/google', authLimiter, googleLogin);
 
 /**
  * POST /api/auth/google-login-only
  * Sign in with Google — ONLY for existing VocabJP users (no registration)
  * Used by secondary apps like VocabCards
  */
-router.post('/google-login-only', googleLoginOnly);
+router.post('/google-login-only', authLimiter, googleLoginOnly);
 
 /**
  * PATCH /api/auth/set-username
@@ -63,15 +80,18 @@ router.patch('/set-password', authenticate, setPassword);
 /**
  * POST /api/auth/phone/start
  * Bepul Telegram bot orqali nomer bilan kirishni boshlash (AuthSession yaratish)
+ *
+ * POST /api/auth/phone/check
+ * Raqam bazada bor-yo'qligini tekshirish
  */
-import { startPhoneAuth, checkPhoneAuthStatus, checkPhoneExists } from '../controllers/auth.controller';
 router.post('/phone/start', authLimiter, startPhoneAuth);
 router.post('/phone/check', authLimiter, checkPhoneExists);
 
 /**
  * GET /api/auth/phone/status/:token
- * Frontend botdan tasdiqlashni kutadi
+ * Frontend botdan tasdiqlashni kutadi — har 3 soniyada so'raladi, shuning uchun
+ * qat'iy authLimiter emas, yumshoqroq pollingLimiter ishlatiladi.
  */
-router.get('/phone/status/:token', checkPhoneAuthStatus);
+router.get('/phone/status/:token', pollingLimiter, checkPhoneAuthStatus);
 
 export default router;
