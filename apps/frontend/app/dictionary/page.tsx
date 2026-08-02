@@ -1,7 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { AlertCircle, BookOpen, Search, Book, Tag } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  AlertCircle,
+  ArrowRight,
+  Book,
+  BookOpen,
+  ChevronDown,
+  CornerDownLeft,
+  Layers,
+  Search,
+  Tag,
+  X,
+} from 'lucide-react';
 import Link from 'next/link';
 import { BookCard, BookCardSkeleton } from '@/components/dictionary/BookCard';
 import { TopicCard } from '@/components/dictionary/TopicCard';
@@ -11,8 +23,10 @@ import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import type { Topic } from '@/lib/types';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 export default function DictionaryPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'books' | 'topics'>('topics');
   const { books, meta, isLoading, error, page, setPage } = useBooks(15);
   const { isAuthenticated } = useAuth();
@@ -21,6 +35,15 @@ export default function DictionaryPage() {
   const [topicsLoading, setTopicsLoading] = useState(false);
   const [topicsError, setTopicsError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+
+  /** Total word count, shown as a hint under the search box. */
+  const [wordCount, setWordCount] = useState<number | null>(null);
+
+  /** Set when the user asks to see the full list without searching. */
+  const [browseAll, setBrowseAll] = useState(false);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   // Pagination for topics
   const [topicPage, setTopicPage] = useState(1);
@@ -39,56 +62,120 @@ export default function DictionaryPage() {
     }
   }, [activeTab, topics.length]);
 
+  // One cheap request just for the "N ta so'z" hint in the hero.
+  useEffect(() => {
+    api.get<{ meta: { total: number } }>('/words', { params: { limit: 1 } })
+      .then(({ data }) => setWordCount(data.meta.total))
+      .catch(() => {});
+  }, []);
+
   // Reset topic page when search query or active tab changes
   useEffect(() => {
     setTopicPage(1);
   }, [searchQuery, activeTab]);
 
-  const filteredTopics = topics
-    .filter(t => t.bookId === null)
-    .filter(t => 
-      t.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  const query = searchQuery.trim();
+  const isSearching = query.length > 0;
+  /** The hero owns the whole first screen until there is something to show. */
+  const showResults = isSearching || browseAll;
+
+  const filteredTopics = useMemo(
+    () =>
+      topics
+        .filter((t) => t.bookId === null)
+        .filter((t) => t.name.toLowerCase().includes(query.toLowerCase())),
+    [topics, query],
+  );
+
+  const filteredBooks = useMemo(
+    () =>
+      books.filter(
+        (b) =>
+          b.title.toLowerCase().includes(query.toLowerCase()) ||
+          (b.description || '').toLowerCase().includes(query.toLowerCase()),
+      ),
+    [books, query],
+  );
 
   const totalTopics = filteredTopics.length;
   const totalTopicPages = Math.ceil(totalTopics / topicsPerPage);
   const displayedTopics = filteredTopics.slice(
     (topicPage - 1) * topicsPerPage,
-    topicPage * topicsPerPage
+    topicPage * topicsPerPage,
   );
 
+  const topicCount = topics.filter((t) => t.bookId === null).length;
+  const resultCount = activeTab === 'topics' ? totalTopics : filteredBooks.length;
+
+  /** Enter searches the words themselves, not just topic/book names. */
+  const submitWordSearch = () => {
+    if (!query) return;
+    router.push(`/dictionary/words?search=${encodeURIComponent(query)}`);
+  };
+
+  const revealAll = () => {
+    setBrowseAll(true);
+    requestAnimationFrame(() =>
+      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+    );
+  };
+
+  const switchTab = (tab: 'books' | 'topics') => {
+    setActiveTab(tab);
+    setSearchQuery('');
+    inputRef.current?.focus();
+  };
+
   return (
-    <div className="page-container py-10 animate-fade-in">
-      {/* ── Header ───────────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-        <div>
-          <div className="flex items-center gap-2 text-primary text-sm font-medium mb-2">
-            <BookOpen size={14} />
-            <span>{"Lug'at"}</span>
-          </div>
-          <h1 className="text-3xl font-extrabold text-text-primary">Kutubxona & Mavzular</h1>
-          <p className="text-text-muted mt-1 font-medium">
-            {"Lug'atdagi so'zlarni kitoblar yoki alohida mavzular kesimida o'rganing."}
-          </p>
+    <div className="page-container pb-16 animate-fade-in">
+      {/* ── Hero: fills the first screen until there is something to show ── */}
+      {/*
+        Deliberately plain CSS rather than framer-motion `layout`: the layout
+        animation measures the element before and after and compensates with a
+        transform, which fought the font-size change and left the heading stuck
+        at scale(1, 0.86).
+      */}
+      {/*
+        min-height is an inline style, not a conditional utility class: swapping
+        `min-h-[68vh]` for `min-h-0` depends on which rule Tailwind emits last,
+        which is not guaranteed and left the hero stuck at full height.
+
+        It is also deliberately not transitioned — animating min-height between
+        a `vh` value and zero stalls at the start value, so the hero never
+        actually shrank. The results block fades in instead, which reads better
+        anyway.
+      */}
+      <section
+        style={{ minHeight: showResults ? undefined : '68vh' }}
+        className="flex flex-col items-center justify-center text-center pt-10 pb-8"
+      >
+        {/* Eyebrow */}
+        <div className="flex items-center gap-2 text-primary text-sm font-semibold mb-3">
+          <BookOpen size={15} />
+          <span>{"Lug'at"}</span>
         </div>
 
-        <Link
-          href="/dictionary/words"
-          className="btn-ghost flex items-center gap-2 text-sm self-start sm:self-auto"
+        {/* Heading + description */}
+        <h1
+          className={cn(
+            'font-extrabold text-text-primary tracking-tight',
+            showResults ? 'text-3xl' : 'text-4xl sm:text-5xl',
+          )}
         >
-          <Search size={14} /> {"Barcha so'zlarni qidirish"}
-        </Link>
-      </div>
+          Kutubxona &amp; Mavzular
+        </h1>
+        <p className="text-text-secondary mt-3 max-w-xl font-medium">
+          {"Lug'atdagi so'zlarni kitoblar yoki alohida mavzular kesimida o'rganing."}
+        </p>
 
-      {/* ── Tabs & Search ────────────────────────────────────────────── */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/60 pb-4 mb-6">
-        {/* Animated Tabs */}
-        <div className="flex bg-surface-2/60 p-1.5 rounded-xl border border-border/40 w-fit shrink-0 relative">
+        {/* ── Segmented tabs ─────────────────────────────────────────── */}
+        <div className="flex bg-surface-2/60 p-1.5 rounded-xl border border-border/40 w-fit relative mt-8">
           <button
-            onClick={() => { setActiveTab('topics'); setSearchQuery(''); }}
-            className={`relative flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
-              activeTab === 'topics' ? 'text-white' : 'text-text-muted hover:text-text-secondary'
-            }`}
+            onClick={() => switchTab('topics')}
+            className={cn(
+              'relative flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200',
+              activeTab === 'topics' ? 'text-white' : 'text-text-muted hover:text-text-secondary',
+            )}
           >
             {activeTab === 'topics' && (
               <motion.span
@@ -102,10 +189,11 @@ export default function DictionaryPage() {
           </button>
 
           <button
-            onClick={() => { setActiveTab('books'); setSearchQuery(''); }}
-            className={`relative flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
-              activeTab === 'books' ? 'text-white' : 'text-text-muted hover:text-text-secondary'
-            }`}
+            onClick={() => switchTab('books')}
+            className={cn(
+              'relative flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200',
+              activeTab === 'books' ? 'text-white' : 'text-text-muted hover:text-text-secondary',
+            )}
           >
             {activeTab === 'books' && (
               <motion.span
@@ -119,20 +207,114 @@ export default function DictionaryPage() {
           </button>
         </div>
 
-        {/* Live Search */}
-        <div className="relative w-full md:max-w-sm">
-          <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text-muted">
-            <Search size={16} />
-          </span>
-          <input
-            type="text"
-            placeholder={activeTab === 'books' ? "Kitoblarni qidirish..." : "Mavzularni qidirish..."}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm bg-surface-2/40 border border-border/60 hover:border-primary/40 focus:border-primary focus:ring-1 focus:ring-primary/30 rounded-xl transition-all outline-none text-text-primary placeholder:text-text-muted"
-          />
+        {/* ── The single search box ──────────────────────────────────── */}
+        <div className="w-full max-w-2xl mt-6">
+          <div
+            className={cn(
+              'group flex items-center gap-3 w-full rounded-2xl border transition-all duration-200',
+              'bg-surface/80 backdrop-blur-md px-5 py-4',
+              'border-border/70 hover:border-primary/40',
+              'focus-within:border-primary focus-within:shadow-glow-sm',
+            )}
+          >
+            <Search size={20} className="shrink-0 text-text-muted group-focus-within:text-primary transition-colors" />
+
+            <input
+              ref={inputRef}
+              type="text"
+              autoComplete="off"
+              placeholder={
+                activeTab === 'books'
+                  ? "Kitob nomi yoki so'z qidiring..."
+                  : "Mavzu nomi yoki so'z qidiring..."
+              }
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && submitWordSearch()}
+              className="flex-1 min-w-0 bg-transparent text-base text-text-primary
+                         placeholder:text-text-muted outline-none text-left"
+            />
+
+            {isSearching ? (
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  onClick={() => setSearchQuery('')}
+                  aria-label="Tozalash"
+                  className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition-colors"
+                >
+                  <X size={16} />
+                </button>
+                <button
+                  onClick={submitWordSearch}
+                  aria-label="So'zlar ichidan qidirish"
+                  className="p-2 rounded-lg bg-primary text-white hover:bg-primary-hover
+                             transition-colors active:scale-95"
+                >
+                  <ArrowRight size={16} />
+                </button>
+              </div>
+            ) : (
+              <kbd className="hidden sm:flex items-center gap-1 shrink-0 text-[11px] font-medium
+                              text-text-muted border border-border/60 rounded-md px-1.5 py-1">
+                <CornerDownLeft size={11} /> Enter
+              </kbd>
+            )}
+          </div>
+
+          {/* ── Quick actions (ChatGPT-style rows) ───────────────────── */}
+          <div className="mt-5 flex flex-col items-stretch gap-1">
+            {isSearching && (
+              <button
+                onClick={submitWordSearch}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-left
+                           text-text-secondary hover:text-text-primary hover:bg-surface-2/60
+                           transition-colors"
+              >
+                <Search size={17} className="shrink-0 text-primary" />
+                <span className="truncate">
+                  <span className="font-semibold text-text-primary">{`“${query}”`}</span>
+                  {" — so'zlar ichidan qidirish"}
+                </span>
+              </button>
+            )}
+
+            <Link
+              href="/dictionary/words"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-left
+                         text-text-secondary hover:text-text-primary hover:bg-surface-2/60
+                         transition-colors"
+            >
+              <Layers size={17} className="shrink-0 text-accent" />
+              <span>
+                {"Barcha so'zlarni ko'rish"}
+                {wordCount !== null && (
+                  <span className="text-text-muted"> · {wordCount.toLocaleString()} ta</span>
+                )}
+              </span>
+            </Link>
+
+            {!showResults && (
+              <button
+                onClick={revealAll}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-left
+                           text-text-secondary hover:text-text-primary hover:bg-surface-2/60
+                           transition-colors"
+              >
+                <ChevronDown size={17} className="shrink-0 text-text-muted" />
+                <span>
+                  {activeTab === 'topics' ? "Barcha mavzular" : "Barcha kitoblar"}
+                  <span className="text-text-muted">
+                    {' · '}
+                    {activeTab === 'topics'
+                      ? `${topicCount || '—'} ta`
+                      : `${meta?.total ?? '—'} ta`}
+                  </span>
+                </span>
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* ── Error Displays ───────────────────────────────────────────── */}
       {(error || topicsError) && (
@@ -143,81 +325,113 @@ export default function DictionaryPage() {
         </div>
       )}
 
-      {/* ── Tab Content ──────────────────────────────────────────────── */}
-      {activeTab === 'books' ? (
-        isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {Array.from({ length: 9 }).map((_, i) => (
-              <BookCardSkeleton key={i} />
-            ))}
-          </div>
-        ) : books.length === 0 ? (
-          <EmptyState message="Kitoblar mavjud emas" />
-        ) : (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 animate-slide-up">
-              {books
-                .filter(b => 
-                  b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  (b.description || '').toLowerCase().includes(searchQuery.toLowerCase())
+      {/* ── Results ──────────────────────────────────────────────────── */}
+      {/*
+        A plain conditional render with a CSS fade, not AnimatePresence: the
+        exit animation did not always complete, leaving an invisible results
+        block mounted and padding the page with dead scroll space.
+      */}
+      <div ref={resultsRef} className="scroll-mt-24">
+        {showResults && (
+          <div key={`${activeTab}-${isSearching}`} className="animate-fade-in">
+              {/* Result count + reset */}
+              <div className="flex items-center justify-between gap-4 border-b border-border/60 pb-3 mb-6">
+                <p className="text-sm text-text-muted font-medium">
+                  {isSearching ? (
+                    <>
+                      <span className="text-text-primary font-semibold">{resultCount}</span>
+                      {activeTab === 'topics' ? ' ta mavzu' : ' ta kitob'} topildi
+                    </>
+                  ) : (
+                    <>
+                      {activeTab === 'topics' ? 'Barcha mavzular' : 'Barcha kitoblar'}
+                      <span className="text-text-primary font-semibold"> · {resultCount}</span>
+                    </>
+                  )}
+                </p>
+
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setBrowseAll(false);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="text-sm text-text-muted hover:text-primary transition-colors font-medium shrink-0"
+                >
+                  Tozalash
+                </button>
+              </div>
+
+              {activeTab === 'books' ? (
+                isLoading ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {Array.from({ length: 9 }).map((_, i) => (
+                      <BookCardSkeleton key={i} />
+                    ))}
+                  </div>
+                ) : filteredBooks.length === 0 ? (
+                  <EmptyState message="Kitoblar topilmadi" />
+                ) : (
+                  <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                      {filteredBooks.map((book, i) => (
+                        <BookCard key={book.id} book={book} index={i} isAuthenticated={isAuthenticated} />
+                      ))}
+                    </div>
+
+                    {meta && !isSearching && (
+                      <Pagination
+                        page={page}
+                        totalPages={meta.totalPages}
+                        total={meta.total}
+                        limit={meta.limit}
+                        onChange={setPage}
+                      />
+                    )}
+                  </>
                 )
-                .map((book, i) => (
-                  <BookCard key={book.id} book={book} index={i} isAuthenticated={isAuthenticated} />
-                ))}
-            </div>
+              ) : topicsLoading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {Array.from({ length: 9 }).map((_, i) => (
+                    <div key={i} className="h-[74px] skeleton rounded-xl" />
+                  ))}
+                </div>
+              ) : filteredTopics.length === 0 ? (
+                <EmptyState message="Mavzular topilmadi" />
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {displayedTopics.map((topic) => (
+                      <TopicCard
+                        key={topic.id}
+                        topic={topic}
+                        bookId={topic.bookId || ''}
+                        isAuthenticated={isAuthenticated}
+                      />
+                    ))}
+                  </div>
 
-            {meta && !searchQuery && (
-              <Pagination
-                page={page}
-                totalPages={meta.totalPages}
-                total={meta.total}
-                limit={meta.limit}
-                onChange={setPage}
-              />
-            )}
-          </>
-        )
-      ) : (
-        topicsLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Array.from({ length: 9 }).map((_, i) => (
-              <div key={i} className="h-[74px] skeleton rounded-xl" />
-            ))}
+                  {totalTopicPages > 1 && (
+                    <Pagination
+                      page={topicPage}
+                      totalPages={totalTopicPages}
+                      total={totalTopics}
+                      limit={topicsPerPage}
+                      onChange={setTopicPage}
+                    />
+                  )}
+                </>
+              )}
           </div>
-        ) : filteredTopics.length === 0 ? (
-          <EmptyState message="Mavzular topilmadi" />
-        ) : (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-slide-up">
-              {displayedTopics.map((topic) => (
-                <TopicCard
-                  key={topic.id}
-                  topic={topic}
-                  bookId={topic.bookId || ''}
-                  isAuthenticated={isAuthenticated}
-                />
-              ))}
-            </div>
-
-            {totalTopicPages > 1 && (
-              <Pagination
-                page={topicPage}
-                totalPages={totalTopicPages}
-                total={totalTopics}
-                limit={topicsPerPage}
-                onChange={setTopicPage}
-              />
-            )}
-          </>
-        )
-      )}
+        )}
+      </div>
     </div>
   );
 }
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-24 text-center animate-fade-in">
+    <div className="flex flex-col items-center justify-center py-20 text-center animate-fade-in">
       <div className="text-5xl mb-4">📚</div>
       <h3 className="text-xl font-bold text-text-primary mb-2">{message}</h3>
       <p className="text-text-muted max-w-xs">
