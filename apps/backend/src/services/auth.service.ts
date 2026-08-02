@@ -41,19 +41,27 @@ export const signTokens = (payload: {
     expiresIn: (process.env.JWT_ACCESS_EXPIRES_IN ?? '15m') as jwt.SignOptions['expiresIn'],
   });
 
-  const refreshToken = jwt.sign({ id: payload.id }, refreshSecret, {
-    expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN ?? '7d') as jwt.SignOptions['expiresIn'],
-  });
+  // `jti` gives every refresh token a unique payload. Without it, two tokens
+  // signed for the same user inside the same second are byte-identical (iat has
+  // one-second resolution), so rotating right after sign-in produced a
+  // duplicate token_hash and the refresh request failed.
+  const refreshToken = jwt.sign(
+    { id: payload.id, jti: crypto.randomUUID() },
+    refreshSecret,
+    {
+      expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN ?? '7d') as jwt.SignOptions['expiresIn'],
+    },
+  );
 
   return { accessToken, refreshToken };
 };
 
 export const verifyRefreshToken = (
   token: string,
-): { id: string; exp?: number } => {
+): { id: string; jti?: string; exp?: number } => {
   const secret = process.env.JWT_REFRESH_SECRET;
   if (!secret) throw new Error('JWT_REFRESH_SECRET not configured');
-  return jwt.verify(token, secret) as { id: string; exp?: number };
+  return jwt.verify(token, secret) as { id: string; jti?: string; exp?: number };
 };
 
 // ─── Refresh Token Store ──────────────────────────────────────────────────────
