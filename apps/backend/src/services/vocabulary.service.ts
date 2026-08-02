@@ -416,7 +416,21 @@ export const toggleSaveWord = async (userId: string, wordId: string) => {
         word: { wordTopics: { some: { topicId } } },
       },
     });
-    topicCompletions.push({ topicId, allSaved: savedInTopic >= totalInTopic });
+
+    const allSaved = totalInTopic > 0 && savedInTopic >= totalInTopic;
+    topicCompletions.push({ topicId, allSaved });
+
+    // Keep the SavedTopic table in step with the words, so the topic shows up
+    // in (or disappears from) GET /api/users/me/saved-topics.
+    if (allSaved) {
+      await prisma.savedTopic.upsert({
+        where: { userId_topicId: { userId, topicId } },
+        create: { userId, topicId },
+        update: {},
+      });
+    } else {
+      await prisma.savedTopic.deleteMany({ where: { userId, topicId } });
+    }
   }
 
   return { saved, topicCompletions };
@@ -517,6 +531,10 @@ export const getSavedBooks = async (userId: string, page = 1, limit = 20) => {
  *  - If the user has saved < 100% of the topic's words → INSERT the missing
  *    ones so it reaches 100%.  (skipDuplicates keeps already-saved words.)
  *  - ONLY when the user has already saved 100% → UNSAVE all of them.
+ *
+ * A matching SavedTopic row is written alongside the words. Without it,
+ * GET /api/users/me/saved-topics (which reads the SavedTopic table) always
+ * returned an empty list no matter how many topics the user had saved.
  */
 export const toggleSaveTopic = async (userId: string, topicId: string) => {
   const topic = await prisma.topic.findUnique({
@@ -540,9 +558,12 @@ export const toggleSaveTopic = async (userId: string, topicId: string) => {
 
   if (existingSavedCount === wordIds.length) {
     // ── 100% saved → UNSAVE all ──────────────────────────────────
-    await prisma.savedWord.deleteMany({
-      where: { userId, wordId: { in: wordIds } },
-    });
+    await prisma.$transaction([
+      prisma.savedWord.deleteMany({
+        where: { userId, wordId: { in: wordIds } },
+      }),
+      prisma.savedTopic.deleteMany({ where: { userId, topicId } }),
+    ]);
     return {
       saved: false,
       savedCount: 0,
@@ -550,10 +571,17 @@ export const toggleSaveTopic = async (userId: string, topicId: string) => {
     };
   } else {
     // ── < 100% saved → FILL the missing words ────────────────────
-    await prisma.savedWord.createMany({
-      data: wordIds.map((wordId) => ({ userId, wordId })),
-      skipDuplicates: true,
-    });
+    await prisma.$transaction([
+      prisma.savedWord.createMany({
+        data: wordIds.map((wordId) => ({ userId, wordId })),
+        skipDuplicates: true,
+      }),
+      prisma.savedTopic.upsert({
+        where: { userId_topicId: { userId, topicId } },
+        create: { userId, topicId },
+        update: {},
+      }),
+    ]);
     const newlySaved = wordIds.length - existingSavedCount;
     return {
       saved: true,
