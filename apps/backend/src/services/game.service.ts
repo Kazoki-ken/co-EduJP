@@ -288,22 +288,41 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
   const wordMap = new Map(words.map((w) => [w.id, w]));
 
   /**
-   * WRITE shows the Uzbek meaning and asks the learner to type the Japanese,
-   * so it must not accept the meaning back as an answer — that would be the
-   * prompt itself. Every other mode shows the Japanese and collects a meaning.
+   * Which way round a given word was asked.
+   *
+   * WRITE shows the Uzbek meaning and wants the Japanese typed back, so it must
+   * not accept the meaning — that would be the prompt itself. Most other modes
+   * show the Japanese and collect a meaning.
+   *
+   * BLOCKS mixes both formats, so the direction is derived from the word's
+   * position in the session: even indexes are multiple-choice (pick the
+   * meaning), odd ones are typed (write the Japanese). Deriving it rather than
+   * letting the client declare it means a modified client cannot ask to be
+   * graded in whichever direction happens to be easier — and because the server
+   * shuffles the word order, the sequence still feels random to the player.
    */
-  const answerDirection: AnswerDirection =
-    session.gameType === 'WRITE' ? 'toJapanese' : 'toMeaning';
+  const directionFor = (wordId: string): AnswerDirection => {
+    if (session.gameType === 'WRITE') return 'toJapanese';
+    if (session.gameType === 'BLOCKS') {
+      return sessionWordIds.indexOf(wordId) % 2 === 0 ? 'toMeaning' : 'toJapanese';
+    }
+    return 'toMeaning';
+  };
 
   /**
    * Modes that do not move a word's SRS level.
    *
    * MATCH is a recognition drill rather than recall. SHOOTER is an endless
-   * arcade mode where the same word comes round wave after wave, so letting it
-   * drive the review schedule would flood it with repetitions the algorithm
-   * never asked for. Both still earn XP, coins and weekly stats.
+   * arcade mode where the same word comes round wave after wave, and BLOCKS is
+   * a puzzle whose questions repeat for as long as the player survives — in
+   * both, letting the game drive the review schedule would flood a word with
+   * repetitions the algorithm never asked for. All still earn XP, coins and
+   * weekly stats.
    */
-  const affectsSrs = session.gameType !== 'MATCH' && session.gameType !== 'SHOOTER';
+  const affectsSrs =
+    session.gameType !== 'MATCH' &&
+    session.gameType !== 'SHOOTER' &&
+    session.gameType !== 'BLOCKS';
 
   // ── Fetch current SRS progress for all words ──────────────────────────────
   const existingProgress = await prisma.userWordProgress.findMany({
@@ -346,7 +365,7 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
     let isWordCorrect = true;
 
     for (const answer of wordAnswers) {
-      if (!isAnswerCorrect(word, answer.answer, answerDirection)) {
+      if (!isAnswerCorrect(word, answer.answer, directionFor(wordId))) {
         isWordCorrect = false;
       }
     }

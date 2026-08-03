@@ -51,6 +51,17 @@ const SOLO_GAMES = [
     tag:      "🔥 Sevimli o'yin",
     tagColor: 'bg-amber-500/20 text-amber-300',
   },
+  {
+    href:  '/games/blocks',
+    icon:  '🧱',
+    title: 'Blok jumboq',
+    desc:  "Shakllarni tarmoqqa joylab qatorlarni tozalang. Har yangi to'plam uchun so'z savoliga javob berasiz.",
+    gradient: 'from-emerald-700 to-teal-900',
+    border:   'hover:border-emerald-500/60',
+    glow:     'hover:shadow-[0_0_20px_rgba(45,122,71,0.35)]',
+    tag:      '🆕 Yangi',
+    tagColor: 'bg-emerald-500/20 text-emerald-300',
+  },
 ];
 
 const LOCKED_GAMES = [

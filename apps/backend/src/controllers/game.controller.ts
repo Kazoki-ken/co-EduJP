@@ -11,7 +11,7 @@ import { GameType, League } from '@prisma/client';
 
 // ─── Validation Schemas ───────────────────────────────────────────────────────
 
-const GameTypeEnum = z.enum(['TEST', 'MATCH', 'WRITE', 'SHOOTER'] as const);
+const GameTypeEnum = z.enum(['TEST', 'MATCH', 'WRITE', 'SHOOTER', 'BLOCKS'] as const);
 const LeagueEnum = z.enum(['BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'DIAMOND'] as const);
 
 const SessionQuerySchema = z.object({

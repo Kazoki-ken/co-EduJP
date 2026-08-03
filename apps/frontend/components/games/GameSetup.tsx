@@ -11,6 +11,7 @@ const GAME_LABELS: Record<GameType, { label: string; icon: string; desc: string 
   MATCH:   { label: 'Juftlik moslash', icon: '🔗', desc: "Yaponcha so'zlarni ma'nosiga moslang" },
   WRITE:   { label: 'Yozish mashqi',   icon: '⌨️',  desc: "O'zbekcha ma'nosidan yaponchasini yozing (kanji, hiragana yoki katakana)" },
   SHOOTER: { label: 'Space Shooter',   icon: '🚀', desc: "To'g'ri asteroidni bosing!" },
+  BLOCKS:  { label: 'Blok jumboq',     icon: '🧱', desc: "Shakllarni joylang — har yangi to'plam uchun savolga javob bering" },
 };
 
 const DEFAULT_DIFFICULTY_OPTIONS = [
@@ -66,6 +67,15 @@ export function GameSetup({ gameType, isLoading, error, defaultDueOnly = false, 
   const isMatchGame = gameType === 'MATCH';
   const difficultyOptions = isMatchGame ? MATCH_DIFFICULTY_OPTIONS : DEFAULT_DIFFICULTY_OPTIONS;
 
+  /**
+   * SHOOTER and BLOCKS run until you lose, so "5 / 10 / 15 / 20 questions"
+   * describes nothing the player will experience — the pool just recycles.
+   * The SRS toggle is misleading there too, since neither mode touches the
+   * review schedule. Picking a book or topic still decides *which* words come
+   * up, so that stays behind the filters button.
+   */
+  const isEndless = gameType === 'SHOOTER' || gameType === 'BLOCKS';
+
   return (
     <div className="max-w-lg mx-auto animate-fade-in">
       {/* Game type badge */}
@@ -76,51 +86,61 @@ export function GameSetup({ gameType, isLoading, error, defaultDueOnly = false, 
       </div>
 
       <div className="card-glass p-6 space-y-5">
-        {/* Difficulty Level (Sets the questions/words count) */}
-        <div className="space-y-1.5">
-          <label className="flex items-center gap-1.5 text-sm font-medium text-text-secondary">
-            <Zap size={14} className="text-primary" /> Qiyinchilik darajasi
-          </label>
-          <div className="grid grid-cols-4 gap-2">
-            {difficultyOptions.map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => setLimit(opt.value)}
+        {!isEndless && (
+          <>
+            {/* Difficulty Level (Sets the questions/words count) */}
+            <div className="space-y-1.5">
+              <label className="flex items-center gap-1.5 text-sm font-medium text-text-secondary">
+                <Zap size={14} className="text-primary" /> Qiyinchilik darajasi
+              </label>
+              <div className="grid grid-cols-4 gap-2">
+                {difficultyOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => setLimit(opt.value)}
+                    className={cn(
+                      'flex flex-col items-center justify-center p-2.5 rounded-xl text-center border transition-all duration-200',
+                      limit === opt.value
+                        ? 'bg-primary/20 border-primary text-primary shadow-glow-sm scale-[1.02]'
+                        : 'bg-surface/30 border-border/60 text-text-muted hover:border-primary/40 hover:text-text-secondary',
+                    )}
+                  >
+                    <span className="text-xs font-bold">{opt.label}</span>
+                    <span className="text-[9px] opacity-70 mt-0.5">{opt.desc}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Due only toggle */}
+            <label className="flex items-center justify-between cursor-pointer group py-2">
+              <div>
+                <p className="text-sm font-medium text-text-secondary group-hover:text-text-primary transition-colors">
+                  Faqat takrorlash kerak bo'lganlar
+                </p>
+                <p className="text-xs text-text-muted">Faqat bugun takrorlanishi kerak bo'lgan so'zlarni ko'rsatish</p>
+              </div>
+              <div
+                onClick={() => setDueOnly((v) => !v)}
                 className={cn(
-                  'flex flex-col items-center justify-center p-2.5 rounded-xl text-center border transition-all duration-200',
-                  limit === opt.value
-                    ? 'bg-primary/20 border-primary text-primary shadow-glow-sm scale-[1.02]'
-                    : 'bg-surface/30 border-border/60 text-text-muted hover:border-primary/40 hover:text-text-secondary',
+                  'w-11 h-6 rounded-full border-2 transition-all relative',
+                  dueOnly ? 'bg-primary border-primary' : 'bg-surface-2 border-border',
                 )}
               >
-                <span className="text-xs font-bold">{opt.label}</span>
-                <span className="text-[9px] opacity-70 mt-0.5">{opt.desc}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+                <div className={cn(
+                  'w-4 h-4 rounded-full bg-white absolute top-0.5 transition-all',
+                  dueOnly ? 'left-5' : 'left-0.5',
+                )} />
+              </div>
+            </label>
+          </>
+        )}
 
-        {/* Due only toggle */}
-        <label className="flex items-center justify-between cursor-pointer group py-2">
-          <div>
-            <p className="text-sm font-medium text-text-secondary group-hover:text-text-primary transition-colors">
-              Faqat takrorlash kerak bo'lganlar
-            </p>
-            <p className="text-xs text-text-muted">Faqat bugun takrorlanishi kerak bo'lgan so'zlarni ko'rsatish</p>
-          </div>
-          <div
-            onClick={() => setDueOnly((v) => !v)}
-            className={cn(
-              'w-11 h-6 rounded-full border-2 transition-all relative',
-              dueOnly ? 'bg-primary border-primary' : 'bg-surface-2 border-border',
-            )}
-          >
-            <div className={cn(
-              'w-4 h-4 rounded-full bg-white absolute top-0.5 transition-all',
-              dueOnly ? 'left-5' : 'left-0.5',
-            )} />
-          </div>
-        </label>
+        {isEndless && (
+          <p className="text-sm text-text-muted text-center">
+            {"Bu rejim cheksiz — o'yin siz yutqazguningizcha davom etadi."}
+          </p>
+        )}
 
         {/* Advanced Filters Button */}
         <div className="flex justify-center pt-1">
@@ -128,7 +148,9 @@ export function GameSetup({ gameType, isLoading, error, defaultDueOnly = false, 
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-1.5 text-xs text-text-muted hover:text-primary transition-colors border border-border/50 rounded-full px-3 py-1.5 bg-surface-2/40"
           >
-            <span>⚙️ Qo'shimcha filtrlar (Kitob/Mavzu/Savollar)</span>
+            <span>
+              {isEndless ? "⚙️ Kitob / mavzu tanlash" : "⚙️ Qo'shimcha filtrlar (Kitob/Mavzu/Savollar)"}
+            </span>
             {(bookId || topicId || (limit !== (isMatchGame ? 200 : 20) && !difficultyOptions.some((o) => o.value === limit))) && (
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
             )}

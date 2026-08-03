@@ -40,6 +40,8 @@ enum GameType {
   MATCH
   WRITE
   SHOOTER
+  // Block-puzzle mode: a vocabulary question gates each new set of pieces.
+  BLOCKS
 }
 
 // ─── Core Auth ────────────────────────────────────────────────────────────────

@@ -187,7 +187,7 @@ export interface WordProgress {
 
 // ─── Game Types ──────────────────────────────────────────────────────────────
 
-export type GameType = 'TEST' | 'MATCH' | 'WRITE' | 'SHOOTER';
+export type GameType = 'TEST' | 'MATCH' | 'WRITE' | 'SHOOTER' | 'BLOCKS';
 
 export interface SessionWord {
   id: string;

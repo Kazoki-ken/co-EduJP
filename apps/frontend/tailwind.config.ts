@@ -71,6 +71,8 @@ const config: Config = {
         "float":      "float 3s ease-in-out infinite",
         "slide-in":   "slideIn 0.3s ease-out",
         "fade-in":    "fadeIn 0.4s ease-out",
+        // Score popups in the block game: rise and fade, then unmount.
+        "float-up":   "floatUp 0.9s ease-out forwards",
       },
       keyframes: {
         pulseGlow: {
@@ -88,6 +90,11 @@ const config: Config = {
         fadeIn: {
           from: { opacity: "0" },
           to:   { opacity: "1" },
+        },
+        floatUp: {
+          "0%":   { opacity: "0", transform: "translateY(6px) scale(0.9)" },
+          "20%":  { opacity: "1", transform: "translateY(0) scale(1.05)" },
+          "100%": { opacity: "0", transform: "translateY(-28px) scale(1)" },
         },
       },
     },
