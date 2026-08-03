@@ -80,7 +80,7 @@ export default function ShooterPage() {
       {submitLoading ? (
         <div className="flex items-center justify-center py-24 gap-3">
           <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-          <span className="text-text-muted">Calculating your score…</span>
+          <span className="text-text-muted">Natijalar hisoblanmoqda…</span>
         </div>
       ) : step === 'setup' ? (
         <GameSetup gameType={GAME_TYPE} isLoading={sessionLoading} error={sessionError} onStart={handleStart} />

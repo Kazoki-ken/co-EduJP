@@ -13,15 +13,14 @@ type Asteroid = {
   vx:         number;
   vy:         number;
   radius:     number;
-  flash:      'none' | 'correct' | 'wrong'; // frame-level flash state
+  /** Frames left on a hit flash. */
+  flash:      'none' | 'correct' | 'wrong' | 'reveal';
   flashTimer: number;
-  exploding:  boolean;
-  explodeT:   number;    // 0→1 progress
+  cleared:    boolean;
   particles:  Particle[];
 };
 
 type Particle = { x: number; y: number; vx: number; vy: number; life: number; color: string };
-
 type Star = { x: number; y: number; r: number; opacity: number };
 
 const COLORS = {
@@ -36,30 +35,52 @@ const COLORS = {
   accent:    '#f2a900',     // Yamabuki (Gold)
 };
 
+/** Seconds granted per word, and the floor for very short rounds. */
+const SECONDS_PER_WORD = 6;
+const MIN_SECONDS = 30;
+const MAX_LIVES = 3;
+/** How long the correct answer is revealed after a mistake, in frames @60fps. */
+const REVEAL_FRAMES = 70;
+
 interface ShooterCanvasProps {
   session:    GameSession;
   onComplete: (answers: GameAnswer[]) => void;
 }
 
 export function ShooterCanvas({ session, onComplete }: ShooterCanvasProps) {
-  const canvasRef  = useRef<HTMLCanvasElement>(null);
-  const gameRef    = useRef<{
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const gameRef = useRef<{
     asteroids: Asteroid[];
     stars:     Star[];
     targetIdx: number;
     answers:   GameAnswer[];
     timeLeft:  number;
+    totalTime: number;
     score:     number;
+    lives:     number;
     done:      boolean;
     startedAt: number;
     roundStart: number;
   } | null>(null);
 
-  const rafRef     = useRef<number>(0);
-  const lastRef    = useRef<number>(0);
-  const [uiState, setUiState] = useState<{
-    timeLeft: number; score: number; total: number; targetMeaning: string;
-  }>({ timeLeft: 60, score: 0, total: session.words.length, targetMeaning: '' });
+  const rafRef  = useRef<number>(0);
+  const lastRef = useRef<number>(0);
+  /** Keeps the loop free of changing deps so it never restarts mid-game. */
+  const completeRef = useRef(onComplete);
+  completeRef.current = onComplete;
+  /** Throttles React updates — the previous version set state every frame. */
+  const uiTickRef = useRef(0);
+
+  const totalTime = Math.max(MIN_SECONDS, session.words.length * SECONDS_PER_WORD);
+
+  const [ui, setUi] = useState({
+    timeLeft: totalTime,
+    score: 0,
+    lives: MAX_LIVES,
+    total: session.words.length,
+    targetMeaning: '',
+    targetIndex: 1,
+  });
   const [done, setDone] = useState(false);
 
   // ── Build initial state ──────────────────────────────────────────────────
@@ -70,90 +91,117 @@ export function ShooterCanvas({ session, onComplete }: ShooterCanvasProps) {
 
     const words = [...session.words].sort(() => Math.random() - 0.5);
 
-    // Stars
     const stars: Star[] = Array.from({ length: 120 }, () => ({
       x: Math.random() * W, y: Math.random() * H,
       r: Math.random() * 1.5 + 0.3,
       opacity: Math.random() * 0.7 + 0.2,
     }));
 
-    // Asteroids — one per word
+    // Spread the asteroids over a grid, then let them drift from there so they
+    // start apart rather than stacked on top of each other.
+    const cols  = Math.ceil(Math.sqrt(words.length));
+    const rows  = Math.ceil(words.length / cols);
+    const padX  = 70;
+    const topY  = 70;
+    const botY  = H - 40;
+    const cellW = (W - padX * 2) / cols;
+    const cellH = (botY - topY) / rows;
+    const radius = Math.max(34, Math.min(48, Math.min(cellW, cellH) / 2 - 6));
+
+    // Grid cells are handed out in a shuffled order. Filling them in array
+    // order put the first target top-left, the second next to it and so on —
+    // so sweeping the canvas left-to-right walked the answers in sequence
+    // without reading a single word.
+    const cells = Array.from({ length: words.length }, (_, i) => i);
+    for (let i = cells.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cells[i], cells[j]] = [cells[j], cells[i]];
+    }
+
     const asteroids: Asteroid[] = words.map((word, i) => {
-      const cols    = Math.ceil(Math.sqrt(words.length));
-      const col     = i % cols;
-      const row     = Math.floor(i / cols);
-      const pad     = 100;
-      const cellW   = (W - pad * 2) / cols;
-      const cellH   = Math.min(180, (H - 200) / Math.ceil(words.length / cols));
-      const radius  = 46;
-      const speed   = 0.6 + Math.random() * 0.5;
-      const angle   = Math.random() * Math.PI * 2;
+      const cell = cells[i];
+      const col = cell % cols;
+      const row = Math.floor(cell / cols);
+      const speed = 0.25 + Math.random() * 0.3;
+      const angle = Math.random() * Math.PI * 2;
 
       return {
-        id:          word.id,
+        id: word.id,
         word,
-        x:           pad + col * cellW + cellW / 2,
-        y:           120 + row * cellH + cellH / 2,
-        vx:          Math.cos(angle) * speed,
-        vy:          Math.sin(angle) * speed,
+        x: padX + col * cellW + cellW / 2 + (Math.random() - 0.5) * 10,
+        y: topY + row * cellH + cellH / 2 + (Math.random() - 0.5) * 10,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
         radius,
-        flash:       'none',
-        flashTimer:  0,
-        exploding:   false,
-        explodeT:    0,
-        particles:   [],
+        flash: 'none',
+        flashTimer: 0,
+        cleared: false,
+        particles: [],
       };
     });
 
     gameRef.current = {
       asteroids,
       stars,
-      targetIdx:  0,
-      answers:    [],
-      timeLeft:   60,
-      score:      0,
-      done:       false,
-      startedAt:  Date.now(),
+      targetIdx: 0,
+      answers: [],
+      timeLeft: totalTime,
+      totalTime,
+      score: 0,
+      lives: MAX_LIVES,
+      done: false,
+      startedAt: Date.now(),
       roundStart: Date.now(),
     };
 
-    setUiState({
-      timeLeft:      60,
-      score:         0,
-      total:         words.length,
+    setUi({
+      timeLeft: totalTime,
+      score: 0,
+      lives: MAX_LIVES,
+      total: words.length,
       targetMeaning: words[0]?.meaning ?? '',
+      targetIndex: 1,
     });
-  }, [session]);
+  }, [session, totalTime]);
 
-  // ── Click handler ────────────────────────────────────────────────────────
-  const handleCanvasClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+  const finish = useCallback((g: NonNullable<typeof gameRef.current>) => {
+    if (g.done) return;
+    g.done = true;
+    // Anything never attempted counts as a miss, so accuracy reflects the
+    // whole session rather than only the words the player got to.
+    const answered = new Set(g.answers.map((a) => a.wordId));
+    for (const ast of g.asteroids) {
+      if (!answered.has(ast.word.id)) {
+        g.answers.push({ wordId: ast.word.id, answer: '', timeMs: g.totalTime * 1000 });
+      }
+    }
+    setTimeout(() => { setDone(true); completeRef.current(g.answers); }, 600);
+  }, []);
+
+  // ── Pointer handler (works for mouse and touch) ──────────────────────────
+  const handlePointer = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     const g = gameRef.current;
     if (!g || g.done) return;
     const canvas = canvasRef.current!;
-    const rect   = canvas.getBoundingClientRect();
-    const mx     = (e.clientX - rect.left) * (canvas.width / rect.width);
-    const my     = (e.clientY - rect.top)  * (canvas.height / rect.height);
+    const rect = canvas.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const my = (e.clientY - rect.top) * (canvas.height / rect.height);
 
     const target = g.asteroids[g.targetIdx];
     if (!target) return;
 
-    // Check which asteroid was clicked
     for (const ast of g.asteroids) {
-      if (ast.exploding || ast.word.id === target.word.id && g.asteroids.indexOf(ast) !== g.targetIdx) continue;
-      const dx   = mx - ast.x, dy = my - ast.y;
-      const hit  = dx * dx + dy * dy <= ast.radius * ast.radius;
-      if (!hit) continue;
+      if (ast.cleared) continue;
+      const dx = mx - ast.x, dy = my - ast.y;
+      if (dx * dx + dy * dy > ast.radius * ast.radius) continue;
 
       const timeMs = Date.now() - g.roundStart;
 
       if (ast.word.id === target.word.id) {
-        // CORRECT
-        ast.flash      = 'correct';
+        ast.flash = 'correct';
         ast.flashTimer = 8;
-        ast.exploding  = true;
-        ast.explodeT   = 0;
+        ast.cleared = true;
 
-        // Spawn particles
         for (let p = 0; p < 18; p++) {
           const angle = (p / 18) * Math.PI * 2 + Math.random() * 0.3;
           const speed = 2 + Math.random() * 3;
@@ -167,70 +215,59 @@ export function ShooterCanvas({ session, onComplete }: ShooterCanvasProps) {
 
         g.answers.push({ wordId: ast.word.id, answer: ast.word.meaning, timeMs });
         g.score++;
+        g.targetIdx += 1;
+        g.roundStart = Date.now();
 
-        // Advance target
-        const nextIdx = g.targetIdx + 1;
-        g.targetIdx   = nextIdx;
-        g.roundStart  = Date.now();
-
-        if (nextIdx >= g.asteroids.length) {
-          g.done = true;
-          setTimeout(() => {
-            setDone(true);
-            onComplete(g.answers);
-          }, 800);
+        if (g.targetIdx >= g.asteroids.length) {
+          finish(g);
         } else {
-          setUiState((u) => ({
+          setUi((u) => ({
             ...u,
-            score:         g.score,
-            targetMeaning: g.asteroids[nextIdx]?.word.meaning ?? '',
+            score: g.score,
+            targetMeaning: g.asteroids[g.targetIdx]?.word.meaning ?? '',
+            targetIndex: g.targetIdx + 1,
           }));
         }
       } else {
-        // WRONG
-        ast.flash      = 'wrong';
-        ast.flashTimer = 12;
+        // Wrong pick: flag it, and briefly outline the one that was right —
+        // seeing the correct pairing is the point of the drill.
+        ast.flash = 'wrong';
+        ast.flashTimer = 14;
+        target.flash = 'reveal';
+        target.flashTimer = REVEAL_FRAMES;
+
         g.answers.push({ wordId: target.word.id, answer: ast.word.meaning, timeMs });
+        g.lives -= 1;
+        setUi((u) => ({ ...u, lives: g.lives }));
+
+        if (g.lives <= 0) finish(g);
       }
       break;
     }
-  }, [onComplete]);
+  }, [finish]);
 
   // ── Game loop ────────────────────────────────────────────────────────────
   const loop = useCallback((ts: number) => {
     const g = gameRef.current;
     const canvas = canvasRef.current;
-    if (!g || !canvas || g.done) return;
-
-    const dt    = Math.min(ts - lastRef.current, 50);
-    lastRef.current = ts;
-
-    // Timer
-    const elapsed   = (Date.now() - g.startedAt) / 1000;
-    g.timeLeft      = Math.max(0, 60 - elapsed);
-
-    if (g.timeLeft <= 0 && !g.done) {
-      g.done = true;
-      // Submit remaining unanswered as empty
-      const answered = new Set(g.answers.map((a) => a.wordId));
-      for (const ast of g.asteroids) {
-        if (!answered.has(ast.word.id)) {
-          g.answers.push({ wordId: ast.word.id, answer: '', timeMs: 60000 });
-        }
-      }
-      setTimeout(() => { setDone(true); onComplete(g.answers); }, 200);
+    if (!g || !canvas) return;
+    if (g.done) {
+      rafRef.current = requestAnimationFrame(loop);
       return;
     }
 
+    const dt = Math.min(ts - lastRef.current, 50);
+    lastRef.current = ts;
+
+    const elapsed = (Date.now() - g.startedAt) / 1000;
+    g.timeLeft = Math.max(0, g.totalTime - elapsed);
+    if (g.timeLeft <= 0) { finish(g); return; }
+
     const W = canvas.width, H = canvas.height;
     const ctx = canvas.getContext('2d')!;
-    ctx.clearRect(0, 0, W, H);
-
-    // ── Background ──────────────────────────────────────────────────────
     ctx.fillStyle = COLORS.bg;
     ctx.fillRect(0, 0, W, H);
 
-    // Stars
     for (const s of g.stars) {
       ctx.beginPath();
       ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
@@ -238,19 +275,31 @@ export function ShooterCanvas({ session, onComplete }: ShooterCanvasProps) {
       ctx.fill();
     }
 
-    // ── Asteroids ───────────────────────────────────────────────────────
-    const target = g.asteroids[g.targetIdx];
+    const live = g.asteroids.filter((a) => !a.cleared);
+
+    // Keep asteroids from overlapping — unreadable text is the main way this
+    // game got frustrating.
+    for (let i = 0; i < live.length; i++) {
+      for (let j = i + 1; j < live.length; j++) {
+        const a = live[i], b = live[j];
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const dist = Math.hypot(dx, dy) || 0.01;
+        const minDist = a.radius + b.radius + 6;
+        if (dist < minDist) {
+          const push = (minDist - dist) / 2;
+          const nx = dx / dist, ny = dy / dist;
+          a.x -= nx * push; a.y -= ny * push;
+          b.x += nx * push; b.y += ny * push;
+        }
+      }
+    }
 
     for (const ast of g.asteroids) {
-      if (ast.exploding) {
-        // Advance explosion
-        ast.explodeT += dt / 400;
-
-        // Update + draw particles
+      if (ast.cleared) {
         for (const p of ast.particles) {
-          p.x    += p.vx * (dt / 16);
-          p.y    += p.vy * (dt / 16);
-          p.vy   += 0.08 * (dt / 16);
+          p.x += p.vx * (dt / 16);
+          p.y += p.vy * (dt / 16);
+          p.vy += 0.08 * (dt / 16);
           p.life -= 0.025 * (dt / 16);
           if (p.life <= 0) continue;
           ctx.beginPath();
@@ -259,142 +308,159 @@ export function ShooterCanvas({ session, onComplete }: ShooterCanvasProps) {
           ctx.fill();
         }
         ast.particles = ast.particles.filter((p) => p.life > 0);
-        if (ast.explodeT >= 1) {
-          // Remove from active rendering (keep in array for index integrity)
-        }
         continue;
       }
 
-      // Move
-      ast.x  += ast.vx * (dt / 16);
-      ast.y  += ast.vy * (dt / 16);
-      if (ast.x - ast.radius < 0)   { ast.x  = ast.radius;     ast.vx = Math.abs(ast.vx); }
-      if (ast.x + ast.radius > W)    { ast.x  = W - ast.radius; ast.vx = -Math.abs(ast.vx); }
-      if (ast.y - ast.radius < 80)   { ast.y  = 80 + ast.radius; ast.vy = Math.abs(ast.vy); }
-      if (ast.y + ast.radius > H - 60) { ast.y = H - 60 - ast.radius; ast.vy = -Math.abs(ast.vy); }
+      ast.x += ast.vx * (dt / 16);
+      ast.y += ast.vy * (dt / 16);
+      if (ast.x - ast.radius < 0)       { ast.x = ast.radius;         ast.vx = Math.abs(ast.vx); }
+      if (ast.x + ast.radius > W)       { ast.x = W - ast.radius;     ast.vx = -Math.abs(ast.vx); }
+      if (ast.y - ast.radius < 50)      { ast.y = 50 + ast.radius;    ast.vy = Math.abs(ast.vy); }
+      if (ast.y + ast.radius > H - 20)  { ast.y = H - 20 - ast.radius; ast.vy = -Math.abs(ast.vy); }
 
-      // Flash timer
       if (ast.flashTimer > 0) ast.flashTimer--;
       else ast.flash = 'none';
 
-      const isTarget = ast.word.id === target?.word.id;
-
-      // Outer glow for target
-      if (isTarget) {
-        ctx.beginPath();
-        ctx.arc(ast.x, ast.y, ast.radius + 8, 0, Math.PI * 2);
-        const grd = ctx.createRadialGradient(ast.x, ast.y, ast.radius, ast.x, ast.y, ast.radius + 8);
-        grd.addColorStop(0, `${COLORS.primary}60`);
-        grd.addColorStop(1, `${COLORS.primary}00`);
-        ctx.fillStyle = grd;
-        ctx.fill();
-      }
-
-      // Asteroid body
+      // NOTE: every asteroid is drawn identically. The old version gave the
+      // target a red glow and even told the player "Glowing = target word",
+      // so the round could be cleared without reading anything.
       ctx.beginPath();
       ctx.arc(ast.x, ast.y, ast.radius, 0, Math.PI * 2);
-      const bodyColor =
+      ctx.fillStyle =
         ast.flash === 'correct' ? `${COLORS.success}80`
         : ast.flash === 'wrong' ? `${COLORS.danger}80`
-        : isTarget              ? `${COLORS.primary}50`
-        :                         `${COLORS.surface}cc`;
-      ctx.fillStyle = bodyColor;
+        : ast.flash === 'reveal' ? `${COLORS.accent}35`
+        : `${COLORS.surface}dd`;
       ctx.fill();
 
-      const borderColor =
+      ctx.strokeStyle =
         ast.flash === 'correct' ? COLORS.success
         : ast.flash === 'wrong' ? COLORS.danger
-        : isTarget              ? COLORS.primary
-        :                         COLORS.border;
-      ctx.strokeStyle = borderColor;
-      ctx.lineWidth   = isTarget ? 2.5 : 1.5;
+        : ast.flash === 'reveal' ? COLORS.accent
+        : COLORS.border;
+      ctx.lineWidth = ast.flash === 'none' ? 1.5 : 2.5;
       ctx.stroke();
 
-      // Japanese word text
-      ctx.fillStyle   = isTarget ? COLORS.text : COLORS.textMuted;
-      ctx.font        = `bold ${ast.radius > 40 ? 16 : 13}px sans-serif`;
-      ctx.textAlign   = 'center';
+      const fontSize = ast.radius > 42 ? 17 : ast.radius > 36 ? 15 : 13;
+      ctx.fillStyle = COLORS.text;
+      ctx.font = `bold ${fontSize}px sans-serif`;
+      ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(ast.word.japaneseWord, ast.x, ast.y - 6);
+      ctx.fillText(ast.word.japaneseWord, ast.x, ast.y - 7);
 
-      // Hiragana below
-      ctx.fillStyle  = isTarget ? `${COLORS.primary}` : COLORS.textMuted;
-      ctx.font       = `12px sans-serif`;
-      ctx.fillText(ast.word.hiragana, ast.x, ast.y + 10);
+      if (ast.word.hiragana && ast.word.hiragana !== ast.word.japaneseWord) {
+        ctx.fillStyle = COLORS.textMuted;
+        ctx.font = `${fontSize - 4}px sans-serif`;
+        ctx.fillText(ast.word.hiragana, ast.x, ast.y + 11);
+      }
     }
 
-    // ── HUD ─────────────────────────────────────────────────────────────
-    // Timer bar at top
-    const timerFrac = g.timeLeft / 60;
+    // Timer bar
     ctx.fillStyle = COLORS.surface;
-    ctx.fillRect(0, 0, W, 6);
-    ctx.fillStyle = g.timeLeft < 15 ? COLORS.danger : COLORS.primary;
-    ctx.fillRect(0, 0, W * timerFrac, 6);
+    ctx.fillRect(0, 0, W, 5);
+    ctx.fillStyle = g.timeLeft < g.totalTime * 0.25 ? COLORS.danger : COLORS.primary;
+    ctx.fillRect(0, 0, W * (g.timeLeft / g.totalTime), 5);
 
-    // Update UI state every ~10 frames
-    setUiState((prev) => ({
-      ...prev,
-      timeLeft: Math.ceil(g.timeLeft),
-      score:    g.score,
-    }));
+    // Throttle React to ~5 updates/sec instead of 60 — the old code called
+    // setUiState inside every frame, re-rendering the whole component 60x/sec.
+    uiTickRef.current += dt;
+    if (uiTickRef.current > 200) {
+      uiTickRef.current = 0;
+      const secs = Math.ceil(g.timeLeft);
+      setUi((u) => (u.timeLeft === secs ? u : { ...u, timeLeft: secs }));
+    }
 
     rafRef.current = requestAnimationFrame(loop);
-  }, [onComplete]);
+  }, [finish]);
 
   useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+
     initGame();
     lastRef.current = performance.now();
-    rafRef.current  = requestAnimationFrame(loop);
+    rafRef.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(rafRef.current);
   }, [initGame, loop]);
 
-  // Handle canvas resize
+  // Keep the backing store in step with the element, without re-seeding the
+  // round (resizing mid-game should not reshuffle the asteroids).
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const resize = () => {
-      canvas.width  = canvas.offsetWidth;
+      canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
     };
-    resize();
     window.addEventListener('resize', resize);
     return () => window.removeEventListener('resize', resize);
   }, []);
 
+  const lowTime = ui.timeLeft < Math.max(10, totalTime * 0.25);
+
   return (
-    <div className="w-full space-y-3">
-      {/* HUD overlay */}
-      <div className="flex items-center justify-between px-2">
+    <div className="w-full max-w-4xl mx-auto space-y-3">
+      {/* ── The question, given the space it deserves ───────────────────── */}
+      <div className="card-glass px-5 py-4 text-center border-primary/30">
+        <p className="text-[10px] text-text-muted uppercase tracking-widest font-bold mb-1.5">
+          {"Shu ma'nodagi so'zni toping"}
+        </p>
+        <p className="text-xl sm:text-2xl font-black text-text-primary leading-snug">
+          {ui.targetMeaning}
+        </p>
+      </div>
+
+      {/* ── HUD ─────────────────────────────────────────────────────────── */}
+      <div className="flex items-center justify-between gap-3 px-1">
         <div className="flex items-center gap-3">
-          <div className={`text-sm font-bold tabular-nums ${uiState.timeLeft < 15 ? 'text-danger' : 'text-text-primary'}`}>
-            ⏱ {uiState.timeLeft}s
-          </div>
-          <div className="text-sm font-bold text-accent">⭐ {uiState.score}/{uiState.total}</div>
+          <span className={`text-sm font-bold tabular-nums ${lowTime ? 'text-danger' : 'text-text-secondary'}`}>
+            ⏱ {ui.timeLeft}s
+          </span>
+          <span className="text-sm font-bold text-accent tabular-nums">
+            ⭐ {ui.score}/{ui.total}
+          </span>
         </div>
-        <div className="text-right max-w-[60%]">
-          <p className="text-xs text-text-muted">Click the asteroid for:</p>
-          <p className="text-sm font-bold text-primary truncate">{uiState.targetMeaning}</p>
+
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-text-muted tabular-nums">
+            {ui.targetIndex}/{ui.total}
+          </span>
+          <span className="flex items-center gap-0.5" title={`${ui.lives} ta jon qoldi`}>
+            {Array.from({ length: MAX_LIVES }).map((_, i) => (
+              <span key={i} className={i < ui.lives ? 'opacity-100' : 'opacity-25 grayscale'}>
+                ❤️
+              </span>
+            ))}
+          </span>
         </div>
       </div>
 
-      {/* Canvas */}
-      <div className="relative w-full rounded-xl overflow-hidden border border-border" style={{ height: 480 }}>
+      {/* ── Canvas ──────────────────────────────────────────────────────── */}
+      <div className="relative w-full rounded-xl overflow-hidden border border-border"
+           style={{ height: 'min(60vh, 480px)' }}>
         <canvas
           ref={canvasRef}
-          onClick={handleCanvasClick}
-          className="w-full h-full cursor-crosshair block"
+          onPointerDown={handlePointer}
+          className="w-full h-full cursor-crosshair block touch-none"
           style={{ background: COLORS.bg }}
         />
         {done && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-            <p className="text-2xl font-extrabold text-text-primary animate-bounce">Natijalar saqlanmoqda…</p>
+            <p className="text-xl font-extrabold text-text-primary animate-pulse">
+              {'Natijalar saqlanmoqda…'}
+            </p>
           </div>
         )}
       </div>
 
       <p className="text-center text-xs text-text-muted">
-        Click the asteroid whose Japanese word matches the meaning shown above.{' '}
-        <span className="text-primary">Glowing = target word.</span>
+        {"Yuqoridagi ma'noga mos yaponcha so'zni bosing. "}
+        <span className="text-danger">{"Xato bossangiz jon kamayadi"}</span>
+        {" — to'g'ri javob bir lahza "}
+        <span className="text-accent">{'oltin rangda'}</span>
+        {' ko’rsatiladi.'}
       </p>
     </div>
   );

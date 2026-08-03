@@ -6,7 +6,7 @@ import { cn, leagueIcon } from '@/lib/utils';
 import type { GameResult } from '@/lib/types';
 
 const SRS_LEVEL_LABELS: Record<number, string> = {
-  1: 'Beginner', 2: 'Familiar', 3: 'Practiced', 4: 'Advanced', 5: 'Mastered',
+  1: 'Yangi', 2: 'Tanish', 3: 'Mashq qilingan', 4: "Ilg'or", 5: "O'zlashtirilgan",
 };
 
 interface GameResultsProps {
@@ -38,10 +38,10 @@ export function GameResults({ result, onPlayAgain, onGoHome }: GameResultsProps)
           {isPerfect ? '🎉' : result.accuracy >= 70 ? '✅' : '💪'}
         </motion.div>
         <h2 className="text-3xl font-extrabold text-text-primary">
-          {isPerfect ? 'Perfect!' : result.accuracy >= 70 ? 'Great Job!' : 'Keep Practicing!'}
+          {isPerfect ? "Ajoyib!" : result.accuracy >= 70 ? "Barakalla!" : "Mashqni davom ettiring!"}
         </h2>
         <p className="text-text-muted mt-1">
-          {result.totalCorrect}/{result.totalQuestions} correct
+          {result.totalCorrect}/{result.totalQuestions} to'g'ri
         </p>
       </div>
 
@@ -49,7 +49,7 @@ export function GameResults({ result, onPlayAgain, onGoHome }: GameResultsProps)
       <div className={cn("grid gap-3 mb-6", isMatchGame ? "grid-cols-1 max-w-xs mx-auto" : "grid-cols-3")}>
         <StatCard
           icon={<Target size={18} className="text-primary" />}
-          label="Accuracy"
+          label="Aniqlik"
           value={`${result.accuracy}%`}
           delay={0.15}
         />
@@ -57,13 +57,13 @@ export function GameResults({ result, onPlayAgain, onGoHome }: GameResultsProps)
           <>
             <StatCard
               icon={<Zap size={18} className="text-accent" />}
-              label="XP Earned"
+              label="Olingan XP"
               value={`+${result.xpEarned}`}
               delay={0.25}
             />
             <StatCard
               icon={<span className="text-lg">🪙</span>}
-              label="Coins"
+              label="Tangalar"
               value={`+${result.coinsEarned}`}
               delay={0.35}
             />
@@ -111,7 +111,7 @@ export function GameResults({ result, onPlayAgain, onGoHome }: GameResultsProps)
           transition={{ delay: 0.6 }}
           className="card-glass p-5 mb-6 max-h-48 overflow-y-auto"
         >
-          <h3 className="text-sm font-semibold text-text-secondary mb-3">SRS Progress</h3>
+          <h3 className="text-sm font-semibold text-text-secondary mb-3">SRS taraqqiyoti</h3>
           <div className="space-y-2">
             {result.srsUpdates.map((u) => (
               <div key={u.wordId} className="flex items-center justify-between text-xs">
@@ -141,10 +141,10 @@ export function GameResults({ result, onPlayAgain, onGoHome }: GameResultsProps)
       {/* Actions */}
       <div className="flex gap-3">
         <button onClick={onGoHome} className="btn-ghost flex items-center gap-2 flex-1 justify-center">
-          <Home size={16} /> Home
+          <Home size={16} /> O&rsquo;yinlarga
         </button>
         <button onClick={onPlayAgain} className="btn-primary flex items-center gap-2 flex-1 justify-center">
-          <RotateCcw size={16} /> Play Again
+          <RotateCcw size={16} /> Yana o&rsquo;ynash
         </button>
       </div>
     </motion.div>
