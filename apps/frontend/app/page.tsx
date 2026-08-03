@@ -14,9 +14,21 @@ import {
   ChevronRight,
   Trophy,
   Sparkles,
+  Check,
+  Library,
+  Volume2,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { useDashboard } from '@/hooks/useDashboard';
 import { cn, leagueIcon } from '@/lib/utils';
+
+const LEAGUE_NAMES: Record<string, string> = {
+  BRONZE: 'Bronza',
+  SILVER: 'Kumush',
+  GOLD: 'Oltin',
+  PLATINUM: 'Platina',
+  DIAMOND: 'Olmos',
+};
 
 // ─── Hero Section (unauthenticated) ──────────────────────────────────────────
 
@@ -117,288 +129,445 @@ function FeaturesSection() {
 
 function AuthenticatedDashboard() {
   const { user } = useAuth();
+  const { data, isLoading: dataLoading } = useDashboard(!!user);
+
   if (!user) return null;
 
-  // Stats for the user
-  const stats = [
+  const profile = user.profile;
+  const league = profile?.league ?? 'BRONZE';
+
+  /**
+   * Daily goals driven by the per-day counters the backend already resets at
+   * local midnight. The previous version checked lifetime totals, so the first
+   * two "daily" goals ticked green forever and the third was hardcoded to
+   * never complete.
+   */
+  const goals = [
     {
-      icon: Flame,
-      label: 'Kunlik faollik',
-      value: user.profile?.streak ?? 0,
-      unit: 'kun',
-      color: 'text-orange-400',
-      bg: 'bg-orange-500/10 border-orange-500/20',
+      id: 'test',
+      text: 'Test o’yinini o’ynang',
+      href: '/games/test',
+      done: (profile?.dailyTestCount ?? 0) > 0,
     },
     {
-      icon: Zap,
-      label: 'Umumiy XP',
-      value: (user.profile?.xp ?? 0).toLocaleString(),
-      unit: 'xp',
-      color: 'text-primary',
-      bg: 'bg-primary/10 border-primary/20',
+      id: 'match',
+      text: 'Juftlik moslash o’yini',
+      href: '/games/match',
+      done: (profile?.dailyMatchCount ?? 0) > 0,
     },
     {
-      icon: Star,
-      label: 'Tangalar',
-      value: (user.profile?.coins ?? 0).toLocaleString(),
-      unit: 'tanga',
-      color: 'text-accent',
-      bg: 'bg-accent/10 border-accent/20',
-    },
-    {
-      icon: BookOpen,
-      label: 'Saqlangan so\'zlar',
-      value: user._count?.savedWords ?? 0,
-      unit: 'so\'z',
-      color: 'text-success',
-      bg: 'bg-success/10 border-success/20',
+      id: 'write',
+      text: 'Yozish mashqi',
+      href: '/games/write',
+      done: (profile?.dailyWriteCount ?? 0) > 0,
     },
   ];
-
-  // Daily quests based on user stats
-  const hasSavedWords = (user._count?.savedWords ?? 0) > 0;
-  const hasXp = (user.profile?.xp ?? 0) > 0;
-
-  const quests = [
-    { id: 1, text: "Lug'atdan yangi so'z o'rganish", xp: 10, done: hasSavedWords },
-    { id: 2, text: "1 ta interaktiv o'yin o'ynash", xp: 15, done: hasXp },
-    { id: 3, text: "AI Suhbatdosh bilan suhbat", xp: 25, done: false },
-  ];
-  
-  const completedQuestsCount = quests.filter(q => q.done).length;
+  const doneGoals = goals.filter((g) => g.done).length;
 
   const menuItems = [
     {
       href: '/dictionary',
       icon: BookOpen,
-      title: 'Lug\'at & Mavzular',
-      desc: 'Mavzular va kitob darsliklari kesimida so\'zlarni o\'rganing',
-      gradient: 'from-blue-500 to-indigo-600',
-      badge: 'Lug\'at',
+      title: "Lug'at & Mavzular",
+      desc: "10 000+ so'z, mavzular kesimida",
+    },
+    {
+      href: '/library',
+      icon: Library,
+      title: "Mening lug'atim",
+      desc: "O'z mavzu va kitoblaringizni yarating",
     },
     {
       href: '/games',
       icon: Gamepad2,
-      title: 'Mashg\'ulotlar & O\'yinlar',
-      desc: 'Juftlik moslash, testlar va SRS o\'yinlar amaliyoti',
-      gradient: 'from-purple-500 to-pink-600',
-      badge: 'SRS',
+      title: "Mashg'ulot & O'yinlar",
+      desc: "Test, juftlik, yozish va Space Shooter",
     },
     {
       href: '/chat',
       icon: Brain,
-      title: 'AI Chat (Suhbatdosh)',
-      desc: 'Sun\'iy idrok bilan yapon tilida jonli muloqot qiling',
-      gradient: 'from-emerald-500 to-teal-600',
-      badge: 'AI Partner',
+      title: 'AI Suhbatdosh',
+      desc: "So'zlarni sun'iy idrok bilan mashq qiling",
     },
     {
       href: '/leaderboard',
       icon: Trophy,
-      title: 'Haftalik Reyting (Ligalar)',
-      desc: 'Olmos ligasigacha ko\'tarilib raqobatlashing',
-      gradient: 'from-amber-500 to-orange-600',
-      badge: 'Ligalar',
+      title: 'Haftalik reyting',
+      desc: "Olmos ligasigacha ko'tarilib raqobatlashing",
     },
     {
       href: '/tools',
       icon: Wrench,
-      title: 'Yordamchi Asboblar',
-      desc: 'Pomodoro taymeri va Yapon alifbosi asboblari',
-      gradient: 'from-sky-500 to-cyan-600',
-      badge: 'Asboblar',
-    },
-    {
-      href: '/profile',
-      icon: User,
-      title: 'Mening Profilim',
-      desc: 'O\'rganish tarixi va erishilgan yutuqlar hisoboti',
-      gradient: 'from-violet-500 to-purple-600',
-      badge: 'Profil',
+      title: 'Uskunalar',
+      desc: 'Pomodoro taymeri va yapon alifbosi',
     },
   ];
-
   return (
-    <div className="page-container py-10 space-y-10 animate-fade-in">
-      
-      {/* ── Welcome Banner ── */}
-      <div className="card-glass p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border-primary/20">
-        <div className="absolute inset-0 bg-primary-gradient opacity-[0.03] rounded-2xl pointer-events-none" />
-        <div className="space-y-3 text-center md:text-left relative z-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/25 border border-primary/30 text-primary text-xs font-semibold">
-            <Sparkles size={12} className="text-primary-hover animate-pulse" />
-            {"Yapon tili sari olg'a!"}
+    <div className="page-container py-8 space-y-8 animate-fade-in">
+
+      {/* ── Header: greeting + the four numbers, in one compact strip ──────
+          Previously two full-width banners stacked on top of each other, so
+          the actual study content started below the fold. */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+        <div>
+          <div className="inline-flex items-center gap-1.5 text-primary text-xs font-semibold mb-2">
+            <Sparkles size={12} />
+            {"Yapon tili sari olg'a"}
           </div>
-          <h1 className="text-3xl md:text-4xl font-black text-text-primary tracking-tight">
-            {"Konnichiwa, "}<span className="bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent">{user.username}</span>! 🇯🇵
+          <h1 className="text-2xl md:text-3xl font-black text-text-primary tracking-tight">
+            {'Konnichiwa, '}
+            <span className="bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent">
+              {user.username}
+            </span>
+            ! 🇯🇵
           </h1>
-          <p className="text-text-secondary text-sm max-w-md leading-relaxed">
-            {"Bugun yapon tili so'zlarini oraliqli takrorlash (SRS) orqali yod olish va bilimingizni oshirish uchun ajoyib kun!"}
-          </p>
         </div>
-        
-        {/* League badge info */}
-        <div className="flex items-center gap-4 bg-surface-2/70 border border-border/40 p-4.5 rounded-2xl shrink-0 relative z-10 shadow-glass">
-          <span className="text-4xl filter drop-shadow-[0_4px_10px_rgba(109,40,217,0.3)]">
-            {leagueIcon(user.profile?.league ?? 'BRONZE')}
-          </span>
-          <div>
-            <p className="text-[10px] text-text-muted uppercase tracking-widest font-bold">{"Joriy Liga"}</p>
-            <p className="font-extrabold text-base text-text-primary mt-0.5">
-              {{
-                BRONZE: 'Bronza',
-                SILVER: 'Kumush',
-                GOLD: 'Oltin',
-                PLATINUM: 'Platina',
-                DIAMOND: 'Olmos',
-              }[user.profile?.league ?? 'BRONZE'] ?? (user.profile?.league ?? 'BRONZE')}{" ligasi"}
-            </p>
-            <Link href="/leaderboard" className="text-xs text-primary font-bold flex items-center gap-1 mt-1.5 hover:text-primary-hover transition-colors group">
-              {"Batafsil reyting"} <ArrowRight size={11} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <HeaderStat
+            icon={Flame}
+            value={profile?.streak ?? 0}
+            label="kun"
+            tone={(profile?.streak ?? 0) > 0 ? 'flame' : 'muted'}
+          />
+          <HeaderStat icon={Zap} value={(profile?.xp ?? 0).toLocaleString()} label="XP" tone="primary" />
+          <HeaderStat icon={Star} value={(profile?.coins ?? 0).toLocaleString()} label="tanga" tone="accent" />
+          <Link
+            href="/leaderboard"
+            className="stat-pill hover:border-primary/40 transition-colors group"
+            title={`${LEAGUE_NAMES[league] ?? league} ligasi`}
+          >
+            <span className="text-base leading-none">{leagueIcon(league)}</span>
+            <span className="text-text-primary font-bold">{LEAGUE_NAMES[league] ?? league}</span>
+            <ChevronRight size={12} className="text-text-muted group-hover:text-primary transition-colors" />
+          </Link>
+        </div>
+      </div>
+
+      {/* ── Primary action: what the SRS actually wants you to do today ──── */}
+      <ReviewCard
+        isLoading={dataLoading}
+        dueCount={data?.dueTodayCount ?? 0}
+        totalSaved={data?.totalSaved ?? 0}
+      />
+
+      {/* ── Mastery + daily goals + word of the day ──────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+        {/* Mastery breakdown — real SRS levels, the app's core mechanic and
+            previously not shown anywhere on the dashboard. */}
+        <div className="card-glass p-5 lg:col-span-2">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xs font-bold text-text-muted uppercase tracking-widest">
+              {"O'zlashtirish darajalari"}
+            </h2>
+            <span className="text-xs text-text-muted">
+              {(data?.totalSaved ?? 0).toLocaleString()} {"ta saqlangan so'z"}
+            </span>
           </div>
-        </div>
-      </div>
 
-      {/* ── Quick Practice Banner ── */}
-      <div className="card-glass p-6 md:p-8 relative overflow-hidden bg-gradient-to-r from-primary/10 via-surface to-surface border border-primary/35 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-glow-sm hover:border-primary/50 transition-all duration-300">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -z-10" />
-        <div className="space-y-2 text-center md:text-left">
-          <div className="badge-chip bg-primary text-white text-[10px] uppercase tracking-wider font-extrabold">Active Learning</div>
-          <h2 className="text-2xl font-black text-text-primary tracking-tight">{"Bugungi Mashg'ulot 🚀"}</h2>
-          <p className="text-xs text-text-secondary max-w-lg leading-relaxed">
-            {"Spaced-repetition (SRS) tizimi xotirangizni mustahkamlash uchun navbatdagi yaponcha so'zlarni tayyorlab qo'ydi. Hozir boshlang va 50 XP gacha yuting!"}
-          </p>
-        </div>
-        <Link href="/games" className="btn-primary flex items-center gap-2 text-sm px-6 py-3 shrink-0 shadow-glow group hover:-translate-y-0.5 transition-all">
-          {"Mashq qilishni boshlash"} <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
-        </Link>
-      </div>
-
-      {/* ── Daily Quests & Stats Section ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Daily Quests Card */}
-        <div className="card-glass p-6 border-border/60 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-extrabold text-text-primary uppercase tracking-wider flex items-center gap-2">
-                <span className="text-lg">🎯</span> Kunlik topshiriqlar
-              </h2>
-              <span className="text-xs font-bold text-primary">
-                {completedQuestsCount}/{quests.length} bajarildi
-              </span>
-            </div>
-
-            {/* Quests list */}
-            <div className="space-y-3">
-              {quests.map((q) => (
-                <div key={q.id} className={cn("flex items-center gap-3 p-3 rounded-xl border transition-colors", q.done ? "bg-success/5 border-success/20 text-text-secondary" : "bg-surface-2/30 border-border/40")}>
-                  <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all", q.done ? "border-success bg-success text-white border-transparent" : "border-text-muted bg-transparent")}>
-                    {q.done && <span className="text-[10px] font-bold">✓</span>}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className={cn("text-xs font-semibold truncate", q.done && "line-through text-text-muted")}>{q.text}</p>
-                    <p className="text-[10px] text-text-muted mt-0.5">Mukofot: +{q.xp} XP</p>
-                  </div>
-                </div>
+          {dataLoading ? (
+            <div className="grid grid-cols-5 gap-3">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="h-24 skeleton rounded-xl" />
               ))}
             </div>
+          ) : (data?.totalSaved ?? 0) === 0 ? (
+            <p className="text-sm text-text-muted py-6 text-center">
+              {"So'z saqlaganingizdan keyin bu yerda o'zlashtirish darajangiz ko'rinadi."}
+            </p>
+          ) : (
+            <>
+              <div className="grid grid-cols-5 gap-1.5 sm:gap-3">
+                {data!.levels.map(({ level, count }) => {
+                  const max = Math.max(...data!.levels.map((l) => l.count), 1);
+                  return (
+                    <div key={level} className="flex flex-col items-center gap-2 min-w-0">
+                      <div className="w-full h-20 bg-surface-2/40 rounded-xl border border-border/40 flex items-end overflow-hidden">
+                        <div
+                          className={cn(
+                            'w-full rounded-b-[10px] transition-all duration-500',
+                            level === 5 ? 'bg-accent' : 'bg-primary',
+                          )}
+                          style={{ height: `${Math.max((count / max) * 100, count > 0 ? 8 : 0)}%` }}
+                        />
+                      </div>
+                      <div className="text-center min-w-0">
+                        <p className="text-sm font-extrabold text-text-primary leading-none">{count}</p>
+                        {/* Just the level number — spelling it out does not fit
+                            five columns on a 375px screen. The legend below
+                            explains what the ends of the scale mean. */}
+                        <p
+                          className={cn(
+                            'text-[10px] mt-1',
+                            level === 5 ? 'text-accent font-bold' : 'text-text-muted',
+                          )}
+                        >
+                          {level}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="text-[10px] text-text-muted mt-3 text-center">
+                {"1 — yangi so'z · "}
+                <span className="text-accent font-semibold">{"5 — o'zlashtirilgan"}</span>
+              </p>
+            </>
+          )}
+        </div>
+
+        {/* Daily goals — driven by counters the server resets each day. */}
+        <div className="card-glass p-5 flex flex-col">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xs font-bold text-text-muted uppercase tracking-widest">
+              Bugungi maqsadlar
+            </h2>
+            <span className="text-xs font-bold text-primary">{doneGoals}/{goals.length}</span>
           </div>
-          
-          {/* Progress bar */}
-          <div className="mt-6 pt-4 border-t border-border/20">
-            <div className="flex justify-between text-xs text-text-muted mb-1.5 font-bold">
-              <span>Kunlik taraqqiyot</span>
-              <span>{Math.round((completedQuestsCount / quests.length) * 100)}%</span>
-            </div>
-            <div className="h-2 bg-surface-2 rounded-full overflow-hidden border border-border/30">
+
+          <div className="space-y-2 flex-1">
+            {goals.map((g) => (
+              <Link
+                key={g.id}
+                href={g.href}
+                className={cn(
+                  'flex items-center gap-3 p-3 rounded-xl border transition-colors',
+                  g.done
+                    ? 'bg-success/5 border-success/25'
+                    : 'bg-surface-2/30 border-border/40 hover:border-primary/40',
+                )}
+              >
+                <span
+                  className={cn(
+                    'w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0',
+                    g.done ? 'bg-success border-success text-white' : 'border-text-muted',
+                  )}
+                >
+                  {g.done && <Check size={11} strokeWidth={3} />}
+                </span>
+                <span
+                  className={cn(
+                    'text-xs font-semibold flex-1 min-w-0 truncate',
+                    g.done ? 'text-text-muted line-through' : 'text-text-secondary',
+                  )}
+                >
+                  {g.text}
+                </span>
+                {!g.done && <ChevronRight size={13} className="text-text-muted shrink-0" />}
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-border/30">
+            <div className="h-1.5 bg-surface-2 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-primary to-success transition-all duration-500"
-                style={{ width: `${(completedQuestsCount / quests.length) * 100}%` }}
+                style={{ width: `${(doneGoals / goals.length) * 100}%` }}
               />
             </div>
           </div>
         </div>
-
-        {/* User stats grid (Takes 2 cols on lg) */}
-        <div className="lg:col-span-2 flex flex-col justify-between">
-          <div className="space-y-4">
-            <h2 className="text-xs font-bold text-text-muted uppercase tracking-widest">{"O'rganish ko'rsatkichlari"}</h2>
-            <div className="grid grid-cols-2 gap-4">
-              {stats.map(({ icon: Icon, label, value, unit, color, bg }) => (
-                <div key={label} className={cn('card-glass p-5 hover:border-primary/30 transition-all border border-border/40 flex items-center justify-between gap-4 group')}>
-                  <div className="space-y-1">
-                    <p className="text-xs text-text-muted font-bold uppercase tracking-wider">{label}</p>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-black text-text-primary tracking-tight group-hover:text-primary-hover transition-colors">{value}</span>
-                      <span className="text-xs text-text-secondary font-medium">{unit}</span>
-                    </div>
-                  </div>
-                  <div className={cn('w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border transition-transform group-hover:scale-105', bg)}>
-                    <Icon size={20} className={color} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Daily Japanese Word / Wisdom Card */}
-          <div className="card-glass p-5 border-border/40 bg-surface-2/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-6">
-            <div className="space-y-1.5">
-              <div className="inline-flex items-center gap-1.5 text-[10px] font-bold text-text-muted uppercase tracking-wider">
-                <span>📖</span> Bugungi Yapon So'zi
-              </div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-xl font-black text-text-primary tracking-wide">木漏れ日</span>
-                <span className="text-sm text-primary font-semibold">(Komorebi)</span>
-              </div>
-              <p className="text-xs text-text-secondary leading-relaxed">
-                {"Daraxt barglari orasidan suzilib o'tuvchi quyosh nurlari."}
-              </p>
-            </div>
-            <Link href="/dictionary" className="text-xs font-bold text-primary hover:text-primary-hover flex items-center gap-1 border border-primary/20 hover:border-primary/40 bg-primary/5 hover:bg-primary/10 px-3.5 py-2 rounded-xl transition-all self-stretch sm:self-auto text-center justify-center">
-              {"Lug'atni o'rganish"} <ChevronRight size={14} />
-            </Link>
-          </div>
-        </div>
       </div>
 
-      {/* ── App Navigation Menu (Bo'limlar) ── */}
-      <div className="space-y-5">
-        <h2 className="text-xs font-bold text-text-muted uppercase tracking-widest">{"Ilova bo'limlari"}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {menuItems.map(({ href, icon: Icon, title, desc, gradient, badge }) => (
+      {/* ── Word of the day — a real dictionary entry, rotating daily ────── */}
+      {data?.wordOfTheDay && <WordOfTheDay word={data.wordOfTheDay} />}
+
+      {/* ── Sections ──────────────────────────────────────────────────────
+          Compact rows rather than six large gradient tiles: this repeats the
+          sidebar, so it should not dominate the page. */}
+      <div className="space-y-4">
+        <h2 className="text-xs font-bold text-text-muted uppercase tracking-widest">
+          {"Ilova bo'limlari"}
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {menuItems.map(({ href, icon: Icon, title, desc }) => (
             <Link
               key={href}
               href={href}
-              className="group card-glass p-6 hover:border-primary/50 hover:shadow-glow-sm transition-all duration-300 hover:-translate-y-1 border border-border/40 flex flex-col justify-between"
+              className="group card-glass p-4 flex items-center gap-3.5 border border-border/40
+                         hover:border-primary/50 hover:shadow-glow-sm transition-all duration-200"
             >
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className={cn('w-11 h-11 rounded-xl bg-gradient-to-br flex items-center justify-center text-white shrink-0 group-hover:scale-110 transition-transform duration-300', gradient)}>
-                    <Icon size={20} />
-                  </div>
-                  <span className="badge-chip text-[10px] bg-surface-2 border border-border/40 text-text-muted px-2 py-0.5">
-                    {badge}
-                  </span>
-                </div>
-                <h3 className="font-extrabold text-text-primary mb-1 group-hover:text-primary transition-colors text-base">
+              <span className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 text-primary group-hover:scale-105 transition-transform">
+                <Icon size={18} />
+              </span>
+              <span className="flex-1 min-w-0">
+                <span className="block font-bold text-sm text-text-primary truncate group-hover:text-primary transition-colors">
                   {title}
-                </h3>
-                <p className="text-xs text-text-secondary leading-relaxed mb-4">{desc}</p>
-              </div>
-              
-              <div className="flex items-center gap-1 text-xs text-primary font-bold pt-2 border-t border-border/20 group-hover:gap-1.5 transition-all">
-                <span>{"Bo'limga o'tish"}</span>
-                <ChevronRight size={13} className="mt-0.5" />
-              </div>
+                </span>
+                <span className="block text-[11px] text-text-muted truncate">{desc}</span>
+              </span>
+              <ChevronRight size={15} className="text-text-muted group-hover:text-primary transition-colors shrink-0" />
             </Link>
           ))}
         </div>
       </div>
     </div>
   );
+}
+
+// ─── Dashboard pieces ─────────────────────────────────────────────────────────
+
+function HeaderStat({
+  icon: Icon,
+  value,
+  label,
+  tone,
+}: {
+  icon: typeof Flame;
+  value: number | string;
+  label: string;
+  tone: 'flame' | 'primary' | 'accent' | 'muted';
+}) {
+  const toneClass = {
+    flame: 'text-orange-400',
+    primary: 'text-primary',
+    accent: 'text-accent',
+    muted: 'text-text-muted',
+  }[tone];
+
+  return (
+    <div className="stat-pill">
+      <Icon size={13} className={toneClass} />
+      <span className="text-text-primary font-bold">{value}</span>
+      <span className="text-text-muted text-xs">{label}</span>
+    </div>
+  );
+}
+
+/**
+ * The one thing the dashboard should push: words the SRS says are due now.
+ *
+ * Three states, because the right call to action genuinely differs — nothing
+ * saved yet, nothing due right now, or N words waiting.
+ */
+function ReviewCard({
+  isLoading,
+  dueCount,
+  totalSaved,
+}: {
+  isLoading: boolean;
+  dueCount: number;
+  totalSaved: number;
+}) {
+  if (isLoading) {
+    return <div className="h-28 skeleton rounded-xl" />;
+  }
+
+  if (totalSaved === 0) {
+    return (
+      <div className="card-glass p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-border/50">
+        <div>
+          <h2 className="text-lg font-black text-text-primary">{"Birinchi so'zlaringizni saqlang"}</h2>
+          <p className="text-sm text-text-secondary mt-1">
+            {"O'yin boshlash uchun kamida 4 ta saqlangan so'z kerak."}
+          </p>
+        </div>
+        <Link href="/dictionary" className="btn-primary flex items-center gap-2 text-sm shrink-0">
+          {"Lug'atga o'tish"} <ArrowRight size={15} />
+        </Link>
+      </div>
+    );
+  }
+
+  if (dueCount === 0) {
+    return (
+      <div className="card-glass p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-success/30 bg-success/[0.04]">
+        <div className="flex items-center gap-3.5">
+          <span className="w-11 h-11 rounded-xl bg-success/15 border border-success/30 flex items-center justify-center text-success shrink-0">
+            <Check size={20} strokeWidth={2.5} />
+          </span>
+          <div>
+            <h2 className="text-lg font-black text-text-primary">{"Bugungi takrorlash tugadi"}</h2>
+            <p className="text-sm text-text-secondary mt-0.5">
+              {"Navbatdagi so'zlar vaqti kelganda shu yerda paydo bo'ladi."}
+            </p>
+          </div>
+        </div>
+        <Link href="/games" className="btn-ghost flex items-center gap-2 text-sm shrink-0">
+          {"Baribir mashq qilish"} <ArrowRight size={15} />
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="card-glass p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-5
+                    border-primary/40 bg-gradient-to-r from-primary/10 to-transparent shadow-glow-sm">
+      <div className="flex items-center gap-4">
+        <div className="text-center shrink-0">
+          <p className="text-4xl font-black text-primary leading-none">{dueCount}</p>
+          <p className="text-[10px] text-text-muted uppercase tracking-wider font-bold mt-1">
+            {"so'z"}
+          </p>
+        </div>
+        <div className="w-px h-12 bg-border/60 shrink-0" />
+        <div>
+          <h2 className="text-lg font-black text-text-primary">{'Bugun takrorlash kerak'}</h2>
+          <p className="text-sm text-text-secondary mt-0.5">
+            {"Oraliqli takrorlash tizimi bu so'zlarni unutish arafangizda tanladi."}
+          </p>
+        </div>
+      </div>
+
+      <Link
+        href="/games/test?due=1"
+        className="btn-primary flex items-center gap-2 text-sm px-5 py-3 shrink-0 shadow-glow
+                   hover:-translate-y-0.5 transition-all group"
+      >
+        {'Takrorlashni boshlash'}
+        <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+      </Link>
+    </div>
+  );
+}
+
+function WordOfTheDay({ word }: { word: { id: string; japaneseWord: string; hiragana: string; meaning: string } }) {
+  const speak = () => {
+    const base = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
+    const text = word.hiragana || word.japaneseWord;
+    fetch(`${base}/tts?text=${encodeURIComponent(text)}&voice=ja-JP-NanamiNeural`)
+      .then((r) => r.blob())
+      .then((b) => new Audio(URL.createObjectURL(b)).play())
+      .catch(() => {});
+  };
+
+  return (
+    <div className="card-glass p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-border/40">
+      <div className="min-w-0">
+        <div className="inline-flex items-center gap-1.5 text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">
+          <span>📖</span> {"Bugungi so'z"}
+        </div>
+        <div className="flex items-baseline gap-2.5 flex-wrap">
+          <span className="text-2xl font-black text-text-primary tracking-wide">
+            {word.japaneseWord}
+          </span>
+          {word.hiragana && word.hiragana !== word.japaneseWord && (
+            <span className="text-sm text-primary font-semibold">({word.hiragana})</span>
+          )}
+          <button
+            onClick={speak}
+            title="Talaffuzni eshitish"
+            className="p-1.5 rounded-lg text-text-muted hover:text-primary hover:bg-surface-2 transition-colors"
+          >
+            <Volume2 size={15} />
+          </button>
+        </div>
+        <p className="text-sm text-text-secondary mt-1 line-clamp-2">{word.meaning}</p>
+      </div>
+
+      <Link
+        href={`/dictionary/words?search=${encodeURIComponent(word.japaneseWord)}`}
+        className="text-xs font-bold text-primary hover:text-primary-hover flex items-center gap-1
+                   border border-primary/20 hover:border-primary/40 bg-primary/5 hover:bg-primary/10
+                   px-3.5 py-2 rounded-xl transition-all shrink-0 justify-center"
+      >
+        {"Lug'atda ko'rish"} <ChevronRight size={14} />
+      </Link>
+    </div>
+  );
+
 }
 
 // ─── Main HomePage ────────────────────────────────────────────────────────────

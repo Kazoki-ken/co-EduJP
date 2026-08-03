@@ -1,7 +1,7 @@
 'use client';
 
-import { useCallback, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useCallback, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 import { GameSetup } from '@/components/games/GameSetup';
@@ -14,8 +14,20 @@ import type { GameAnswer, GameType } from '@/lib/types';
 type Step = 'setup' | 'play' | 'results';
 
 export default function TestGamePage() {
+  // useSearchParams needs a Suspense boundary in the app router.
+  return (
+    <Suspense fallback={null}>
+      <TestGameContent />
+    </Suspense>
+  );
+}
+
+function TestGameContent() {
   const GAME_TYPE: GameType = 'TEST';
   const router = useRouter();
+  const searchParams = useSearchParams();
+  /** The dashboard links here with ?due=1 to jump straight into SRS review. */
+  const dueOnly = searchParams.get('due') === '1';
   const { session, isLoading: sessionLoading, error: sessionError, fetchSession, reset: resetSession } = useGameSession();
   const { result,  isLoading: submitLoading,  error: submitError,  submit,       reset: resetSubmit  } = useGameSubmit();
   const [step, setStep] = useState<Step>('setup');
@@ -41,7 +53,7 @@ export default function TestGamePage() {
       {/* Back link */}
       <Link href="/games" className="inline-flex items-center gap-1.5 text-sm text-text-muted
                                      hover:text-primary transition-colors mb-8">
-        <ChevronLeft size={14} /> Back to Games
+        <ChevronLeft size={14} /> O'yinlarga qaytish
       </Link>
 
       {submitError && (
@@ -53,10 +65,10 @@ export default function TestGamePage() {
       {submitLoading ? (
         <div className="flex items-center justify-center py-24 gap-3">
           <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-          <span className="text-text-muted">Submitting results…</span>
+          <span className="text-text-muted">Natijalar saqlanmoqda…</span>
         </div>
       ) : step === 'setup' ? (
-        <GameSetup gameType={GAME_TYPE} isLoading={sessionLoading} error={sessionError} onStart={handleStart} />
+        <GameSetup gameType={GAME_TYPE} isLoading={sessionLoading} error={sessionError} defaultDueOnly={dueOnly} onStart={handleStart} />
       ) : step === 'play' && session ? (
         <TestGame session={session} onComplete={handleComplete} />
       ) : step === 'results' && result ? (

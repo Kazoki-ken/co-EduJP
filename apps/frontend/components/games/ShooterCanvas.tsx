@@ -387,7 +387,7 @@ export function ShooterCanvas({ session, onComplete }: ShooterCanvasProps) {
         />
         {done && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-            <p className="text-2xl font-extrabold text-text-primary animate-bounce">Submitting results…</p>
+            <p className="text-2xl font-extrabold text-text-primary animate-bounce">Natijalar saqlanmoqda…</p>
           </div>
         )}
       </div>

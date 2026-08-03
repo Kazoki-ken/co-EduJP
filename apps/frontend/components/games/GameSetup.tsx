@@ -7,10 +7,10 @@ import api from '@/lib/api';
 import type { Book, Topic, GameType, GameSession } from '@/lib/types';
 
 const GAME_LABELS: Record<GameType, { label: string; icon: string; desc: string }> = {
-  TEST:    { label: 'Multiple Choice', icon: '🧠', desc: 'Pick the right meaning from 4 options' },
-  MATCH:   { label: 'Matching Pairs',  icon: '🔗', desc: 'Match Japanese words to their meanings' },
+  TEST:    { label: 'Test',            icon: '🧠', desc: "4 ta variantdan to'g'ri ma'noni tanlang" },
+  MATCH:   { label: 'Juftlik moslash', icon: '🔗', desc: "Yaponcha so'zlarni ma'nosiga moslang" },
   WRITE:   { label: 'Yozish mashqi',   icon: '⌨️',  desc: "O'zbekcha ma'nosidan yaponchasini yozing (kanji, hiragana yoki katakana)" },
-  SHOOTER: { label: 'Space Shooter',   icon: '🚀', desc: 'Click the right asteroid!' },
+  SHOOTER: { label: 'Space Shooter',   icon: '🚀', desc: "To'g'ri asteroidni bosing!" },
 };
 
 const DEFAULT_DIFFICULTY_OPTIONS = [
@@ -31,16 +31,18 @@ interface GameSetupProps {
   gameType:   GameType;
   isLoading:  boolean;
   error:      string | null;
+  /** Pre-checks "SRS review only" — used by the dashboard's review button. */
+  defaultDueOnly?: boolean;
   onStart:    (opts: { gameType: GameType; topicId?: string; bookId?: string; limit: number; dueOnly: boolean }) => void;
 }
 
-export function GameSetup({ gameType, isLoading, error, onStart }: GameSetupProps) {
+export function GameSetup({ gameType, isLoading, error, defaultDueOnly = false, onStart }: GameSetupProps) {
   const [books,    setBooks]    = useState<Book[]>([]);
   const [topics,   setTopics]   = useState<Topic[]>([]);
   const [bookId,   setBookId]   = useState('');
   const [topicId,  setTopicId]  = useState('');
   const [limit,    setLimit]    = useState(gameType === 'MATCH' ? 200 : 20);
-  const [dueOnly,  setDueOnly]  = useState(false);
+  const [dueOnly,  setDueOnly]  = useState(defaultDueOnly);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Load books
@@ -102,7 +104,7 @@ export function GameSetup({ gameType, isLoading, error, onStart }: GameSetupProp
         <label className="flex items-center justify-between cursor-pointer group py-2">
           <div>
             <p className="text-sm font-medium text-text-secondary group-hover:text-text-primary transition-colors">
-              SRS review only
+              Faqat takrorlash kerak bo'lganlar
             </p>
             <p className="text-xs text-text-muted">Faqat bugun takrorlanishi kerak bo'lgan so'zlarni ko'rsatish</p>
           </div>

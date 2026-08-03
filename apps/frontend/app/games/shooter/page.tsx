@@ -68,7 +68,7 @@ export default function ShooterPage() {
     <div className={step === 'play' ? 'px-4 py-6' : 'page-container py-10'}>
       <Link href="/games" className="inline-flex items-center gap-1.5 text-sm text-text-muted
                                      hover:text-primary transition-colors mb-6">
-        <ChevronLeft size={14} /> Back to Games
+        <ChevronLeft size={14} /> O'yinlarga qaytish
       </Link>
 
       {submitError && (

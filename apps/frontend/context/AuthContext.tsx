@@ -18,6 +18,15 @@ export interface UserProfile {
   xp: number;
   league: 'BRONZE' | 'SILVER' | 'GOLD' | 'PLATINUM' | 'DIAMOND';
   lastLoginDate: string | null;
+  /**
+   * Per-day game counters. The backend resets these when the local day rolls
+   * over (streak.service), so unlike lifetime totals they can drive genuinely
+   * daily goals on the dashboard.
+   */
+  dailyTestCount?: number;
+  dailyMatchCount?: number;
+  dailyWriteCount?: number;
+  lastGameDate?: string | null;
 }
 
 export interface AuthUser {

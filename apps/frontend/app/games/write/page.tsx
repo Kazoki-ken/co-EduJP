@@ -66,7 +66,7 @@ export default function WriteGamePage() {
     <div className="page-container py-10">
       <Link href="/games" className="inline-flex items-center gap-1.5 text-sm text-text-muted
                                      hover:text-primary transition-colors mb-8">
-        <ChevronLeft size={14} /> Back to Games
+        <ChevronLeft size={14} /> O'yinlarga qaytish
       </Link>
 
       {submitError && (
@@ -78,7 +78,7 @@ export default function WriteGamePage() {
       {submitLoading ? (
         <div className="flex items-center justify-center py-24 gap-3">
           <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-          <span className="text-text-muted">Submitting results…</span>
+          <span className="text-text-muted">Natijalar saqlanmoqda…</span>
         </div>
       ) : step === 'setup' ? (
         <GameSetup gameType={GAME_TYPE} isLoading={sessionLoading} error={sessionError} onStart={handleStart} />
