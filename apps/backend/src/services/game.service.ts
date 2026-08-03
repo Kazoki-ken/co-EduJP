@@ -295,6 +295,16 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
   const answerDirection: AnswerDirection =
     session.gameType === 'WRITE' ? 'toJapanese' : 'toMeaning';
 
+  /**
+   * Modes that do not move a word's SRS level.
+   *
+   * MATCH is a recognition drill rather than recall. SHOOTER is an endless
+   * arcade mode where the same word comes round wave after wave, so letting it
+   * drive the review schedule would flood it with repetitions the algorithm
+   * never asked for. Both still earn XP, coins and weekly stats.
+   */
+  const affectsSrs = session.gameType !== 'MATCH' && session.gameType !== 'SHOOTER';
+
   // ── Fetch current SRS progress for all words ──────────────────────────────
   const existingProgress = await prisma.userWordProgress.findMany({
     where: { userId, wordId: { in: sessionWordIds } },
@@ -349,7 +359,7 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
     let newXp = oldXp;
     let nextReviewDate = current?.nextReviewDate || now;
 
-    if (session.gameType !== 'MATCH') {
+    if (affectsSrs) {
       if (isWordCorrect) {
         totalCorrect++;
         totalXp += XP_PER_CORRECT;
@@ -373,7 +383,8 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
         nextReviewDate = new Date(now.getTime() + SRS_INTERVALS[1]); // 1 min
       }
     } else {
-      // For MATCH games, we still count totalCorrect for stats/XP, but we don't change SRS level/XP
+      // MATCH / SHOOTER still count towards stats, XP and coins, but leave the
+      // word's review schedule exactly where it was.
       if (isWordCorrect) {
         totalCorrect++;
         totalXp += XP_PER_CORRECT;
@@ -391,7 +402,7 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
       nextReviewDate,
     });
 
-    if (session.gameType !== 'MATCH') {
+    if (affectsSrs) {
       progressUpserts.push(
         prisma.userWordProgress.upsert({
           where: { userId_wordId: { userId, wordId } },

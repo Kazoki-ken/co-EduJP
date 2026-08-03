@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 import { GameSetup } from '@/components/games/GameSetup';
-import { ShooterCanvas } from '@/components/games/ShooterCanvas';
-import { GameResults } from '@/components/games/GameResults';
+import { ShooterCanvas, type ArcadeStats } from '@/components/games/ShooterCanvas';
+import { ShooterResults } from '@/components/games/ShooterResults';
 import { useGameSession } from '@/hooks/useGameSession';
 import { useGameSubmit } from '@/hooks/useGameSubmit';
 import { useAuth } from '@/context/AuthContext';
@@ -19,23 +19,30 @@ export default function ShooterPage() {
   const router = useRouter();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const { session, isLoading: sessionLoading, error: sessionError, fetchSession, reset: resetSession } = useGameSession();
-  const { result,  isLoading: submitLoading,  error: submitError,  submit,       reset: resetSubmit  } = useGameSubmit();
+  // No submitLoading gate here: the results screen renders from local arcade
+  // stats immediately and the server's XP/coins line appears when it lands.
+  const { result, error: submitError, submit, reset: resetSubmit } = useGameSubmit();
   const [step, setStep] = useState<Step>('setup');
+  const [arcade, setArcade] = useState<ArcadeStats | null>(null);
 
   const handleStart = useCallback(async (opts: Parameters<typeof fetchSession>[0]) => {
-    // Shooter works best with 8–12 words — cap the limit
+    // One wave holds 8–12 planets; the run itself is endless and just
+    // reshuffles this pool into a fresh wave each time.
     const s = await fetchSession({ ...opts, limit: Math.min(opts.limit ?? 10, 12) });
     if (s) setStep('play');
   }, [fetchSession]);
 
-  const handleComplete = useCallback(async (answers: GameAnswer[]) => {
-    if (!session) return;
-    const r = await submit(session.sessionId, answers);
-    if (r) setStep('results');
+  const handleComplete = useCallback(async (answers: GameAnswer[], stats: ArcadeStats) => {
+    setArcade(stats);
+    // Show the run summary even if the submit fails — the score is the
+    // player's, not the server's, and it would be galling to lose it.
+    setStep('results');
+    if (session) await submit(session.sessionId, answers);
   }, [session, submit]);
 
   const handlePlayAgain = useCallback(() => {
     resetSession(); resetSubmit();
+    setArcade(null);
     setStep('setup');
   }, [resetSession, resetSubmit]);
 
@@ -77,19 +84,19 @@ export default function ShooterPage() {
         </div>
       )}
 
-      {submitLoading ? (
-        <div className="flex items-center justify-center py-24 gap-3">
-          <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-          <span className="text-text-muted">Natijalar hisoblanmoqda…</span>
-        </div>
-      ) : step === 'setup' ? (
+      {step === 'setup' ? (
         <GameSetup gameType={GAME_TYPE} isLoading={sessionLoading} error={sessionError} onStart={handleStart} />
       ) : step === 'play' && session ? (
         <ShooterCanvas session={session} onComplete={handleComplete} />
-      ) : step === 'results' && result ? (
-        <div className="max-w-xl mx-auto">
-          <GameResults result={result} onPlayAgain={handlePlayAgain} onGoHome={() => router.push('/games')} />
-        </div>
+      ) : step === 'results' && arcade ? (
+        // Rendered as soon as the run ends; `result` fills in the profile
+        // XP/coins line a moment later when the submit resolves.
+        <ShooterResults
+          stats={arcade}
+          result={result}
+          onPlayAgain={handlePlayAgain}
+          onGoHome={() => router.push('/games')}
+        />
       ) : null}
     </div>
   );
