@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User, Volume2, AlertCircle, Sparkles, RotateCcw } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { QuotaBar } from '@/components/premium/UpgradeNotice';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { getAccessToken } from '@/lib/api';
@@ -285,6 +286,11 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-col" style={{ height: 'calc(100vh - 64px)' }}>
+      {/* Free accounts see how many AI messages are left today. */}
+      <div className="shrink-0 px-4 pt-3">
+        <QuotaBar kind="ai" className="max-w-3xl mx-auto" />
+      </div>
+
       {/* ── Header ─────────────────────────────────────────────────── */}
       <div className="shrink-0 border-b border-border/60 bg-surface/60 backdrop-blur-md px-4 py-3">
         <div className="max-w-3xl mx-auto flex items-center justify-between">

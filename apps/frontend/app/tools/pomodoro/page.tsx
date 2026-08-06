@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, RotateCcw, Settings, Coffee, Brain, BookOpen } from 'lucide-react';
+import { Play, Pause, RotateCcw, Settings, Coffee, Brain, BookOpen, Timer } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // ─── Modes ────────────────────────────────────────────────────────────────────
@@ -95,7 +95,10 @@ export default function PomodoroPage() {
     <div className="page-container py-10 animate-fade-in max-w-xl mx-auto">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-extrabold text-text-primary mb-1">🍅 Pomodoro Timer</h1>
+        <h1 className="text-3xl font-extrabold text-text-primary mb-1 flex items-center justify-center gap-2.5">
+          <Timer size={26} className="text-rose-400" />
+          Pomodoro Timer
+        </h1>
         <p className="text-text-muted text-sm">Stay focused. Study smarter.</p>
       </div>
 
@@ -199,7 +202,10 @@ export default function PomodoroPage() {
             exit={{ opacity: 0, height: 0 }}
             className="card-glass p-5 space-y-4 overflow-hidden"
           >
-            <h3 className="font-semibold text-text-primary text-sm">⚙️ Timer Durations (minutes)</h3>
+            <h3 className="font-semibold text-text-primary text-sm flex items-center gap-2">
+              <Settings size={15} className="text-text-muted" />
+              Timer Durations (minutes)
+            </h3>
             {MODES.map(({ key, label }) => (
               <div key={key} className="flex items-center justify-between gap-4">
                 <label className="text-sm text-text-secondary">{label}</label>

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { streamChat, ChatMessage, resolveGeminiApiKey } from '../services/gemini.service';
 import { synthesise, getJapaneseVoices } from '../services/tts.service';
+import { consumeChatQuota, consumeTtsQuota } from '../services/entitlement.service';
 
 // ─── Validation Schemas ───────────────────────────────────────────────────────
 
@@ -64,6 +65,20 @@ export const chatHandler = async (
   }
 
   const { message, history } = parsed.data;
+
+  // ── 1b. Spend one message from today's allowance ──────────────────────────
+  // Before the SSE headers go out, so a 402 is still a clean JSON response the
+  // client can turn into the upgrade prompt.
+  const timezoneOffset = req.headers['x-timezone-offset']
+    ? parseInt(req.headers['x-timezone-offset'] as string, 10)
+    : 0;
+  try {
+    await consumeChatQuota(req.user!.id, Number.isNaN(timezoneOffset) ? 0 : timezoneOffset);
+  } catch (err) {
+    const status = (err as { statusCode?: number }).statusCode ?? 402;
+    res.status(status).json({ error: (err as Error).message });
+    return;
+  }
 
   // ── 2. Pre-validate API key BEFORE committing to SSE headers ──────────────
   // This ensures a clean JSON error (400/503) can be returned if the key is
@@ -136,6 +151,15 @@ export const ttsHandler = async (
   }
 
   const { text, voice, lang } = parsed.data;
+
+  // Signed-in listeners spend from their daily allowance. Anonymous visitors
+  // are left to the IP rate limiter — the dictionary is public and has no tier.
+  if (req.user) {
+    const tz = req.headers['x-timezone-offset']
+      ? parseInt(req.headers['x-timezone-offset'] as string, 10)
+      : 0;
+    await consumeTtsQuota(req.user.id, Number.isNaN(tz) ? 0 : tz);
+  }
 
   // `voice` takes priority over `lang`; if neither provided the service defaults to Nanami
   const resolvedVoice = voice ?? lang;

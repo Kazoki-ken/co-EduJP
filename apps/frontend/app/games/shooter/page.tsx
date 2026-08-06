@@ -18,7 +18,7 @@ export default function ShooterPage() {
   const GAME_TYPE: GameType = 'SHOOTER';
   const router = useRouter();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
-  const { session, isLoading: sessionLoading, error: sessionError, fetchSession, reset: resetSession } = useGameSession();
+  const { session, isLoading: sessionLoading, error: sessionError, quotaExceeded, fetchSession, reset: resetSession } = useGameSession();
   // No submitLoading gate here: the results screen renders from local arcade
   // stats immediately and the server's XP/coins line appears when it lands.
   const { result, error: submitError, submit, reset: resetSubmit } = useGameSubmit();
@@ -55,20 +55,6 @@ export default function ShooterPage() {
     );
   }
 
-  if (user?.role !== 'ADMIN') {
-    return (
-      <div className="page-container py-24 max-w-md mx-auto text-center space-y-6">
-        <div className="text-6xl animate-bounce">🔒</div>
-        <h2 className="text-2xl font-extrabold text-text-primary">Kirish cheklangan</h2>
-        <p className="text-text-muted">
-          Kechirasiz, "Kosmik otishma" o'yini faqat administratorlar uchun ochiq qilib belgilangan.
-        </p>
-        <Link href="/games" className="btn-primary inline-flex items-center gap-2 justify-center px-6 py-2.5 mx-auto">
-          <ChevronLeft size={16} /> O'yinlar bo'limiga qaytish
-        </Link>
-      </div>
-    );
-  }
 
   return (
     // Full-width for the canvas
@@ -85,7 +71,7 @@ export default function ShooterPage() {
       )}
 
       {step === 'setup' ? (
-        <GameSetup gameType={GAME_TYPE} isLoading={sessionLoading} error={sessionError} onStart={handleStart} />
+        <GameSetup gameType={GAME_TYPE} isLoading={sessionLoading} error={sessionError} quotaExceeded={quotaExceeded} onStart={handleStart} />
       ) : step === 'play' && session ? (
         <ShooterCanvas session={session} onComplete={handleComplete} />
       ) : step === 'results' && arcade ? (

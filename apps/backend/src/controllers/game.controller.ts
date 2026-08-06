@@ -11,7 +11,7 @@ import { GameType, League } from '@prisma/client';
 
 // ─── Validation Schemas ───────────────────────────────────────────────────────
 
-const GameTypeEnum = z.enum(['TEST', 'MATCH', 'WRITE', 'SHOOTER', 'BLOCKS'] as const);
+const GameTypeEnum = z.enum(['TEST', 'MATCH', 'WRITE', 'SHOOTER', 'BLOCKS', 'MIXED'] as const);
 const LeagueEnum = z.enum(['BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'DIAMOND'] as const);
 
 const SessionQuerySchema = z.object({
@@ -66,11 +66,13 @@ export const getGameSession = async (
 
   const { type, topicId, bookId, limit, dueOnly } = parsed.data;
 
-  if ((type === 'WRITE' || type === 'SHOOTER') && req.user!.role !== 'ADMIN') {
-    res.status(403).json({ error: 'Kirish taqiqlangan. Faqat adminlar uchun ochiq.' });
-    return;
-  }
+  const timezoneOffset = req.headers['x-timezone-offset']
+    ? parseInt(req.headers['x-timezone-offset'] as string, 10)
+    : 0;
 
+  // Every game type is open to every signed-in user now. What the free tier
+  // limits is HOW MANY sessions per day, not which modes — enforced inside
+  // generateSession so it cannot be skipped by calling the service elsewhere.
   const result = await generateSession({
     userId: req.user!.id,
     gameType: type as GameType,
@@ -78,6 +80,7 @@ export const getGameSession = async (
     bookId,
     limit,
     dueOnly: dueOnly ?? false,
+    timezoneOffset: Number.isNaN(timezoneOffset) ? 0 : timezoneOffset,
   });
 
   res.json(result);

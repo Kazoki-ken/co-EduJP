@@ -19,7 +19,8 @@ import {
   Flame,
   LayoutDashboard,
   Library,
-  ChevronRight
+  ChevronRight,
+  Crown
 } from 'lucide-react';
 import { cn, leagueIcon } from '@/lib/utils';
 
@@ -75,6 +76,7 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
     { href: '/chat', label: "AI Suhbatdosh", icon: MessageCircle },
     { href: '/leaderboard', label: 'Reyting', icon: Trophy },
     { href: '/tools', label: 'Uskunalar', icon: Wrench },
+    { href: '/premium', label: 'Premium', icon: Crown },
     { href: '/profile', label: 'Mening Profilim', icon: User },
   ];
 
@@ -141,7 +143,12 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
               {user.username[0]}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-bold text-text-primary truncate">{user.username}</p>
+              <p className="text-sm font-bold text-text-primary truncate flex items-center gap-1.5">
+                {user.username}
+                {user.entitlements?.isPremium && (
+                  <Crown size={11} className="text-accent shrink-0" aria-label="Premium" />
+                )}
+              </p>
               <p className="text-[10px] text-text-muted truncate capitalize">
                 {leagueIcon(user.profile?.league ?? 'BRONZE')}{' '}
                 {{

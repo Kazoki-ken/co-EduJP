@@ -1,0 +1,72 @@
+[
+  {
+    "japaneseWord": "維持",
+    "hiragana": "いじ",
+    "meaning": "saqlab turish, ushlab turish, muhofaza qilish",
+    "partOfSpeech": "fe'l (suru)",
+    "jlptLevel": "N2",
+    "frequency": "Top 1500",
+    "pitchAccent": "①",
+    "teForm": "維持して",
+    "taForm": "維持した",
+    "naiForm": "維持しない",
+    "masuForm": "維持します",
+    "exampleSentence": "健康を維持するために、毎日走っています。",
+    "exampleTranslation": "Sog'liqni saqlab turish (yaxshi holatda saqlash) uchun har kuni yuguraman.",
+    "additionalExamples": [
+      {
+        "sentence": "現状を維持するのは簡単ではありません。",
+        "translation": "Hozirgi holatni (status-kvoni) saqlab turish oson emas."
+      },
+      {
+        "sentence": "友情を維持するためには、お互いの信頼が必要です。",
+        "translation": "Do'stlikni saqlab qolish uchun o'zaro ishonch zarur."
+      }
+    ],
+    "synonyms": [
+      "キープする",
+      "保つ"
+    ],
+    "antonyms": [
+      "崩壊する",
+      "失う"
+    ],
+    "nuance": "Mavjud bo'lgan yaxshi yoki barqaror holatni (masalan: sog'liq, munosabatlar, tartib, tezlik) o'zgartirmasdan, pasaytirmasdan o'z holicha ushlab turish harakatiga nisbatan ishlatiladi.",
+    "compounds": [
+      {
+        "word": "維持費",
+        "hiragana": "いじひ",
+        "meaning": "saqlash xarajatlari, ekspluatatsiya xarajatlari"
+      },
+      {
+        "word": "現状維持",
+        "hiragana": "げんじょういじ",
+        "meaning": "status-kvoni saqlash, hozirgi holatni saqlab turish"
+      }
+    ],
+    "homonyms": [
+      {
+        "word": "意地",
+        "hiragana": "いじ",
+        "meaning": "o'jarlik, qaysarlik"
+      }
+    ],
+    "kanjiInfo": [
+      {
+        "kanji": "維",
+        "meaning": "ushlab turish, bog'lash",
+        "kunReading": "-",
+        "onReading": "イ",
+        "strokes": 14
+      },
+      {
+        "kanji": "持",
+        "meaning": "ega bo'lmoq, ushlab turmoq",
+        "kunReading": "も.つ",
+        "onReading": "ジ",
+        "strokes": 9
+      }
+    ],
+    "topicName": "N2 Akademik so'zlar"
+  }
+]

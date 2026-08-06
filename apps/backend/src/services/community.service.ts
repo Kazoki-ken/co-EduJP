@@ -1,5 +1,6 @@
 import prisma from '../lib/prisma';
 import { createError } from '../middleware/error.middleware';
+import { effectiveTier } from './entitlement.service';
 
 /**
  * Browsing other learners' shared material.
@@ -10,12 +11,20 @@ import { createError } from '../middleware/error.middleware';
  * nothing stay unlisted.
  */
 
-/** Public profile fields. Email, phone and role are deliberately absent. */
+/**
+ * Public profile fields. Email, phone and role are deliberately absent.
+ *
+ * `tier` and `premiumUntil` are selected only to derive the subscriber badge —
+ * they are folded into a plain `isPremium` boolean before anything is returned,
+ * so a renewal date never reaches another learner's screen.
+ */
 const PUBLIC_USER_FIELDS = {
   id: true,
   username: true,
   avatarUrl: true,
   createdAt: true,
+  tier: true,
+  premiumUntil: true,
 } as const;
 
 // ─── Directory ────────────────────────────────────────────────────────────────
@@ -60,11 +69,82 @@ export const listPublicAuthors = async (search?: string, page = 1, limit = 24) =
       username: u.username,
       avatarUrl: u.avatarUrl,
       createdAt: u.createdAt,
+      isPremium: effectiveTier(u) !== 'FREE',
       publicTopics: u._count.topics,
       publicBooks: u._count.books,
     })),
     meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
   };
+};
+
+/**
+ * The learners whose shared material other people have saved the most.
+ *
+ * Written as raw SQL because the ranking is a sum of counts across a relation
+ * (saves per topic, summed per author) — Prisma can count a relation but not
+ * order by an aggregate of one, so the alternative would be fetching every
+ * author and sorting in memory.
+ *
+ * Self-saves are excluded: saving your own topic says nothing about whether
+ * anyone else found it useful.
+ *
+ * There is deliberately no `HAVING saves > 0`. On a young install nobody has
+ * saved anything yet, and an empty "popular" strip is worse than one ordered
+ * by how much material each author has actually shared.
+ */
+export const listPopularAuthors = async (limit = 6) => {
+  const rows = await prisma.$queryRaw<
+    {
+      id: string;
+      username: string;
+      avatarUrl: string | null;
+      createdAt: Date;
+      tier: string;
+      premiumUntil: Date | null;
+      publicTopics: number;
+      publicBooks: number;
+      saves: number;
+    }[]
+  >`
+    SELECT
+      u.id,
+      u.username,
+      u.avatar_url                          AS "avatarUrl",
+      u.created_at                          AS "createdAt",
+      u.tier::text                          AS "tier",
+      u.premium_until                       AS "premiumUntil",
+      (SELECT COUNT(*)::int FROM topics t2
+         WHERE t2.author_id = u.id AND t2.is_public = true
+           AND EXISTS (SELECT 1 FROM word_topics wt2 WHERE wt2.topic_id = t2.id)
+      )                                     AS "publicTopics",
+      (SELECT COUNT(*)::int FROM books b
+         WHERE b.author_id = u.id AND b.is_public = true
+      )                                     AS "publicBooks",
+      COUNT(st.user_id)::int                AS "saves"
+    FROM users u
+    JOIN topics t
+      ON t.author_id = u.id
+     AND t.is_public = true
+     AND EXISTS (SELECT 1 FROM word_topics wt WHERE wt.topic_id = t.id)
+    LEFT JOIN saved_topics st
+      ON st.topic_id = t.id
+     AND st.user_id <> u.id
+    GROUP BY u.id
+    ORDER BY "saves" DESC, "publicTopics" DESC, u.username ASC
+    LIMIT ${limit}
+  `;
+
+  return rows.map((r) => ({
+    id: r.id,
+    username: r.username,
+    avatarUrl: r.avatarUrl,
+    createdAt: r.createdAt,
+    isPremium: effectiveTier({ tier: r.tier as never, premiumUntil: r.premiumUntil }) !== 'FREE',
+    publicTopics: r.publicTopics,
+    publicBooks: r.publicBooks,
+    /** How many other learners have saved one of their topics. */
+    saves: r.saves,
+  }));
 };
 
 // ─── Profile ──────────────────────────────────────────────────────────────────
@@ -134,6 +214,7 @@ export const getPublicProfile = async (username: string, viewerId?: string) => {
       username: user.username,
       avatarUrl: user.avatarUrl,
       createdAt: user.createdAt,
+      isPremium: effectiveTier(user) !== 'FREE',
       streak: user.profile?.streak ?? 0,
       xp: user.profile?.xp ?? 0,
       league: user.profile?.league ?? 'BRONZE',

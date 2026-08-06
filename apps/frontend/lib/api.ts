@@ -104,4 +104,17 @@ api.interceptors.response.use(
   },
 );
 
+/**
+ * Pulls a readable message out of an axios error.
+ *
+ * The backend answers a spent quota with 402 and a message written for the
+ * learner, so screens can show that text directly and add an upgrade link.
+ */
+export const errorMessage = (err: unknown, fallback = 'Xatolik yuz berdi'): string =>
+  (err as { response?: { data?: { error?: string } } })?.response?.data?.error ?? fallback;
+
+/** True when a request failed because a tier allowance ran out. */
+export const isQuotaError = (err: unknown): boolean =>
+  (err as { response?: { status?: number } })?.response?.status === 402;
+
 export default api;

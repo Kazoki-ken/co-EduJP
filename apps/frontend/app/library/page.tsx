@@ -4,22 +4,22 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   AlertCircle,
+  BookOpen,
   BookPlus,
-  Check,
-  Eye,
-  EyeOff,
+  ChevronRight,
   FolderPlus,
   Library,
   Loader2,
   Pencil,
-  Plus,
   Tag,
   Trash2,
   X,
 } from 'lucide-react';
-import api from '@/lib/api';
+import api, { errorMessage, isQuotaError } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
+import { VisibilityBadge, VisibilityToggle } from '@/components/library/Visibility';
+import { UpgradeNotice } from '@/components/premium/UpgradeNotice';
 import type { LibraryBook, LibrarySummary, LibraryTopic } from '@/lib/types';
 
 export default function LibraryPage() {
@@ -69,7 +69,7 @@ export default function LibraryPage() {
   if (!isAuthenticated) {
     return (
       <div className="page-container py-24 text-center">
-        <div className="text-5xl mb-4">📖</div>
+        <Library size={44} className="mx-auto mb-4 text-text-muted" />
         <h1 className="text-2xl font-bold text-text-primary mb-2">{"Mening lug'atim"}</h1>
         <p className="text-text-muted mb-6">
           {"O'z mavzu va kitoblaringizni yaratish uchun tizimga kiring."}
@@ -168,7 +168,7 @@ export default function LibraryPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {topics.map((topic) => (
-              <TopicRow key={topic.id} topic={topic} onChanged={load} />
+              <TopicRow key={topic.id} topic={topic} books={books} onChanged={load} />
             ))}
           </div>
         )}
@@ -215,6 +215,7 @@ function BookForm({ onCancel, onCreated }: { onCancel: () => void; onCreated: ()
   const [isPublic, setIsPublic] = useState(false);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [quota, setQuota] = useState(false);
 
   const submit = async () => {
     if (!title.trim() || saving) return;
@@ -224,7 +225,8 @@ function BookForm({ onCancel, onCreated }: { onCancel: () => void; onCreated: ()
       await api.post('/library/books', { title: title.trim(), description: description.trim() || null, isPublic });
       onCreated();
     } catch (e: unknown) {
-      setErr((e as { response?: { data?: { error?: string } } })?.response?.data?.error ?? 'Xatolik');
+      setQuota(isQuotaError(e));
+      setErr(errorMessage(e));
     } finally {
       setSaving(false);
     }
@@ -248,7 +250,7 @@ function BookForm({ onCancel, onCreated }: { onCancel: () => void; onCreated: ()
         className="input-field"
       />
       <VisibilityToggle isPublic={isPublic} onChange={setIsPublic} />
-      {err && <p className="text-danger text-sm">{err}</p>}
+      {err && (quota ? <UpgradeNotice message={err} /> : <p className="text-danger text-sm">{err}</p>)}
       <div className="flex gap-2">
         <button onClick={submit} disabled={!title.trim() || saving} className="btn-primary text-sm disabled:opacity-50">
           {saving ? <Loader2 size={14} className="animate-spin" /> : 'Yaratish'}
@@ -273,6 +275,7 @@ function TopicForm({
   const [isPublic, setIsPublic] = useState(false);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [quota, setQuota] = useState(false);
 
   const submit = async () => {
     if (!name.trim() || saving) return;
@@ -286,7 +289,8 @@ function TopicForm({
       });
       onCreated();
     } catch (e: unknown) {
-      setErr((e as { response?: { data?: { error?: string } } })?.response?.data?.error ?? 'Xatolik');
+      setQuota(isQuotaError(e));
+      setErr(errorMessage(e));
     } finally {
       setSaving(false);
     }
@@ -309,7 +313,7 @@ function TopicForm({
         ))}
       </select>
       <VisibilityToggle isPublic={isPublic} onChange={setIsPublic} />
-      {err && <p className="text-danger text-sm">{err}</p>}
+      {err && (quota ? <UpgradeNotice message={err} /> : <p className="text-danger text-sm">{err}</p>)}
       <div className="flex gap-2">
         <button onClick={submit} disabled={!name.trim() || saving} className="btn-primary text-sm disabled:opacity-50">
           {saving ? <Loader2 size={14} className="animate-spin" /> : 'Yaratish'}
@@ -317,45 +321,6 @@ function TopicForm({
         <button onClick={onCancel} className="btn-ghost text-sm">Bekor qilish</button>
       </div>
     </div>
-  );
-}
-
-function VisibilityToggle({
-  isPublic,
-  onChange,
-}: {
-  isPublic: boolean;
-  onChange: (v: boolean) => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={() => onChange(!isPublic)}
-      className={cn(
-        'flex items-center gap-2.5 w-full px-3.5 py-2.5 rounded-lg border text-sm font-medium transition-colors text-left',
-        isPublic
-          ? 'border-success/40 bg-success/10 text-success'
-          : 'border-border text-text-muted hover:text-text-secondary',
-      )}
-    >
-      {isPublic ? <Eye size={15} /> : <EyeOff size={15} />}
-      <span className="flex-1">
-        {isPublic ? 'Ochiq — boshqalar topib, saqlay oladi' : 'Yopiq — faqat siz ko’rasiz'}
-      </span>
-      <span
-        className={cn(
-          'w-9 h-5 rounded-full relative transition-colors shrink-0',
-          isPublic ? 'bg-success' : 'bg-surface-2 border border-border',
-        )}
-      >
-        <span
-          className={cn(
-            'absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all',
-            isPublic ? 'left-[18px]' : 'left-0.5',
-          )}
-        />
-      </span>
-    </button>
   );
 }
 
@@ -384,95 +349,41 @@ function BookRow({ book, onChanged }: { book: LibraryBook; onChanged: () => void
   };
 
   return (
-    <div className="card-glass p-4">
+    <div className="card-glass p-4 flex flex-col">
+      {/* The whole heading is the way in — a book with no way to open it was
+          the main thing missing from this screen. */}
       <div className="flex items-start gap-3">
-        <div className="flex-1 min-w-0">
-          <p className="font-bold text-text-primary truncate">{book.title}</p>
-          {book.description && (
-            <p className="text-sm text-text-muted mt-0.5 line-clamp-2">{book.description}</p>
-          )}
-          <p className="text-xs text-text-muted mt-2">{book._count.topics} ta mavzu</p>
-        </div>
+        <Link href={`/library/books/${book.id}`} className="group flex items-start gap-2 flex-1 min-w-0">
+          <BookOpen size={15} className="text-primary shrink-0 mt-1" />
+          <div className="min-w-0 flex-1">
+            <p className="font-bold text-text-primary truncate group-hover:text-primary transition-colors">
+              {book.title}
+            </p>
+            {book.description && (
+              <p className="text-sm text-text-muted mt-0.5 line-clamp-2">{book.description}</p>
+            )}
+            <p className="text-xs text-text-muted mt-2">{book._count.topics} ta mavzu</p>
+          </div>
+          <ChevronRight
+            size={16}
+            className="text-text-muted group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0 mt-0.5"
+          />
+        </Link>
         <VisibilityBadge isPublic={book.isPublic} busy={busy} onToggle={toggleVisibility} />
       </div>
 
-      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border/40">
-        {confirmDelete ? (
-          <>
-            <button onClick={remove} disabled={busy} className="text-xs font-semibold text-danger hover:underline">
-              O&rsquo;chirishni tasdiqlash
-            </button>
-            <button onClick={() => setConfirmDelete(false)} className="text-xs text-text-muted hover:text-text-primary">
-              Bekor
-            </button>
-          </>
-        ) : (
-          <button
-            onClick={() => setConfirmDelete(true)}
-            className="flex items-center gap-1.5 text-xs text-text-muted hover:text-danger transition-colors"
-          >
-            <Trash2 size={13} /> O&rsquo;chirish
-          </button>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function TopicRow({ topic, onChanged }: { topic: LibraryTopic; onChanged: () => void }) {
-  const [busy, setBusy] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-
-  const toggleVisibility = async () => {
-    setBusy(true);
-    try {
-      await api.patch(`/library/topics/${topic.id}`, { isPublic: !topic.isPublic });
-      onChanged();
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const remove = async () => {
-    setBusy(true);
-    try {
-      await api.delete(`/library/topics/${topic.id}`);
-      onChanged();
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  return (
-    <div className="card-glass p-4">
-      <div className="flex items-start gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <Tag size={14} className="text-primary shrink-0" />
-            <p className="font-bold text-text-primary truncate">{topic.name}</p>
-          </div>
-          {topic.book && (
-            <p className="text-xs text-text-muted mt-1 truncate">📕 {topic.book.title}</p>
-          )}
-          <p className="text-xs text-text-muted mt-2">{topic._count.wordTopics} ta so&rsquo;z</p>
-        </div>
-        <VisibilityBadge isPublic={topic.isPublic} busy={busy} onToggle={toggleVisibility} />
-      </div>
-
-      {/* An empty public topic is hidden from the profile until it has words,
-          so say so rather than leaving the author wondering. */}
-      {topic.isPublic && topic._count.wordTopics === 0 && (
+      {book.isPublic && book._count.topics === 0 && (
         <p className="text-xs text-accent mt-2">
-          {"So'z qo'shmaguningizcha profilingizda ko'rinmaydi"}
+          {"Mavzu qo'shmaguningizcha kitob bo'sh ko'rinadi"}
         </p>
       )}
 
       <div className="flex items-center gap-3 mt-3 pt-3 border-t border-border/40">
         <Link
-          href={`/library/topics/${topic.id}`}
+          href={`/library/books/${book.id}`}
           className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
         >
-          <Plus size={13} /> So&rsquo;zlar
+          <FolderPlus size={13} /> Mavzularni boshqarish
         </Link>
 
         {confirmDelete ? (
@@ -497,36 +408,178 @@ function TopicRow({ topic, onChanged }: { topic: LibraryTopic; onChanged: () => 
   );
 }
 
-function VisibilityBadge({
-  isPublic,
-  busy,
-  onToggle,
+function TopicRow({
+  topic, books, onChanged,
 }: {
-  isPublic: boolean;
-  busy: boolean;
-  onToggle: () => void;
+  topic: LibraryTopic;
+  books: LibraryBook[];
+  onChanged: () => void;
 }) {
+  const [busy, setBusy] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [editing, setEditing] = useState(false);
+
+  const toggleVisibility = async () => {
+    setBusy(true);
+    try {
+      await api.patch(`/library/topics/${topic.id}`, { isPublic: !topic.isPublic });
+      onChanged();
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const remove = async () => {
+    setBusy(true);
+    try {
+      await api.delete(`/library/topics/${topic.id}`);
+      onChanged();
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (editing) {
+    return (
+      <TopicEditForm
+        topic={topic}
+        books={books}
+        onCancel={() => setEditing(false)}
+        onSaved={() => { setEditing(false); onChanged(); }}
+      />
+    );
+  }
+
   return (
-    <button
-      onClick={onToggle}
-      disabled={busy}
-      title={isPublic ? "Ochiq — yopishga bosing" : "Yopiq — ochishga bosing"}
-      className={cn(
-        'badge-chip shrink-0 border transition-colors',
-        busy && 'opacity-50',
-        isPublic
-          ? 'bg-success/10 text-success border-success/30 hover:bg-success/20'
-          : 'bg-surface-2 text-text-muted border-border hover:text-text-secondary',
+    <div className="card-glass p-4 flex flex-col">
+      <div className="flex items-start gap-3">
+        <Link href={`/library/topics/${topic.id}`} className="group flex items-start gap-2 flex-1 min-w-0">
+          <Tag size={14} className="text-primary shrink-0 mt-1" />
+          <div className="min-w-0 flex-1">
+            <p className="font-bold text-text-primary truncate group-hover:text-primary transition-colors">
+              {topic.name}
+            </p>
+            {topic.book ? (
+              <p className="text-xs text-text-muted mt-1 truncate flex items-center gap-1">
+                <BookOpen size={11} /> {topic.book.title}
+              </p>
+            ) : (
+              <p className="text-xs text-text-muted/70 mt-1">Kitobsiz</p>
+            )}
+            <p className="text-xs text-text-muted mt-2">{topic._count.wordTopics} ta so&rsquo;z</p>
+          </div>
+          <ChevronRight
+            size={16}
+            className="text-text-muted group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0 mt-0.5"
+          />
+        </Link>
+        <VisibilityBadge isPublic={topic.isPublic} busy={busy} onToggle={toggleVisibility} />
+      </div>
+
+      {/* An empty public topic is hidden from the profile until it has words,
+          so say so rather than leaving the author wondering. */}
+      {topic.isPublic && topic._count.wordTopics === 0 && (
+        <p className="text-xs text-accent mt-2">
+          {"So'z qo'shmaguningizcha profilingizda ko'rinmaydi"}
+        </p>
       )}
-    >
-      {busy ? (
-        <Loader2 size={11} className="animate-spin" />
-      ) : isPublic ? (
-        <Eye size={11} />
-      ) : (
-        <EyeOff size={11} />
-      )}
-      {isPublic ? 'Ochiq' : 'Yopiq'}
-    </button>
+
+      <div className="flex items-center gap-3 mt-3 pt-3 border-t border-border/40">
+        <Link
+          href={`/library/topics/${topic.id}`}
+          className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+        >
+          <BookOpen size={13} /> So&rsquo;zlar
+        </Link>
+        <button
+          onClick={() => setEditing(true)}
+          className="flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors"
+        >
+          <Pencil size={12} /> Tahrirlash
+        </button>
+
+        {confirmDelete ? (
+          <>
+            <button onClick={remove} disabled={busy} className="text-xs font-semibold text-danger hover:underline ml-auto">
+              Tasdiqlash
+            </button>
+            <button onClick={() => setConfirmDelete(false)} className="text-xs text-text-muted hover:text-text-primary">
+              Bekor
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={() => setConfirmDelete(true)}
+            className="flex items-center gap-1.5 text-xs text-text-muted hover:text-danger transition-colors ml-auto"
+          >
+            <Trash2 size={13} /> O&rsquo;chirish
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/** Rename a topic and move it between books — the piece that was missing. */
+function TopicEditForm({
+  topic, books, onCancel, onSaved,
+}: {
+  topic: LibraryTopic;
+  books: LibraryBook[];
+  onCancel: () => void;
+  onSaved: () => void;
+}) {
+  const [name, setName] = useState(topic.name);
+  const [bookId, setBookId] = useState(topic.bookId ?? '');
+  const [isPublic, setIsPublic] = useState(topic.isPublic);
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [quota, setQuota] = useState(false);
+
+  const submit = async () => {
+    if (!name.trim() || saving) return;
+    setSaving(true);
+    setErr(null);
+    try {
+      await api.patch(`/library/topics/${topic.id}`, {
+        name: name.trim(),
+        // An empty select means "no book" — null unparents it.
+        bookId: bookId || null,
+        isPublic,
+      });
+      onSaved();
+    } catch (e: unknown) {
+      setQuota(isQuotaError(e));
+      setErr(errorMessage(e));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="card-glass p-4 space-y-3 border-primary/40">
+      <input
+        autoFocus
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && submit()}
+        placeholder="Mavzu nomi"
+        className="input-field"
+      />
+      <select value={bookId} onChange={(e) => setBookId(e.target.value)} className="input-field">
+        <option value="">Kitobsiz (alohida mavzu)</option>
+        {books.map((b) => (
+          <option key={b.id} value={b.id}>{b.title}</option>
+        ))}
+      </select>
+      <VisibilityToggle isPublic={isPublic} onChange={setIsPublic} />
+      {err && (quota ? <UpgradeNotice message={err} /> : <p className="text-danger text-sm">{err}</p>)}
+      <div className="flex gap-2">
+        <button onClick={submit} disabled={!name.trim() || saving} className="btn-primary text-sm disabled:opacity-50">
+          {saving ? <Loader2 size={14} className="animate-spin" /> : 'Saqlash'}
+        </button>
+        <button onClick={onCancel} className="btn-ghost text-sm">Bekor qilish</button>
+      </div>
+    </div>
   );
 }

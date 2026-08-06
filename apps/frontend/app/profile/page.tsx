@@ -9,6 +9,8 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import { cn, leagueColor, leagueIcon } from '@/lib/utils';
+import { PremiumBadge, PremiumMark, UpgradeChip } from '@/components/premium/PremiumBadge';
+import { SubscriptionCard } from '@/components/premium/SubscriptionCard';
 import type { EarnedBadge, Word, Book, PaginatedResponse } from '@/lib/types';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
@@ -37,7 +39,7 @@ const SRS_LEVELS: Record<number, { label: string; color: string; bg: string }> =
 };
 
 export default function ProfilePage() {
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, entitlements, isLoading: authLoading } = useAuth();
   const [badges,   setBadges]   = useState<UserBadgeEntry[]>([]);
   const [progress, setProgress] = useState<ProgressData | null>(null);
   const [loading,  setLoading]  = useState(true);
@@ -152,6 +154,10 @@ export default function ProfilePage() {
 
   return (
     <div className="page-container py-10 animate-fade-in space-y-8">
+      {/* Subscription state — tier, renewal date and what today's usage looks
+          like against the tier's limits. */}
+      <SubscriptionCard className="mb-6" />
+
       {/* ── Profile Header ─────────────────────────────────────────── */}
       <div
         className="card-glass p-7 flex flex-col sm:flex-row items-center sm:items-start gap-6 animate-fade-in"
@@ -170,7 +176,10 @@ export default function ProfilePage() {
 
         {/* Info */}
         <div className="flex-1 text-center sm:text-left">
-          <h1 className="text-2xl font-extrabold text-text-primary">{user.username}</h1>
+          <div className="flex items-center gap-2.5 justify-center sm:justify-start">
+            <h1 className="text-2xl font-extrabold text-text-primary">{user.username}</h1>
+            {entitlements?.isPremium && <PremiumMark size={18} />}
+          </div>
           <p className="text-text-muted text-sm">{user.email}</p>
           <div className="flex flex-wrap gap-3 mt-3 justify-center sm:justify-start">
             <span className={cn('badge-chip border', leagueColor(user.profile?.league ?? 'BRONZE'))}>
@@ -186,6 +195,9 @@ export default function ProfilePage() {
             <span className="badge-chip bg-surface-2 text-text-muted border border-border">
               {new Date(user.createdAt).getFullYear()}{" yildan beri a'zo"}
             </span>
+            {/* The tier sits with the other identity chips — a subscriber
+                should see what they are paying for without hunting. */}
+            {entitlements?.isPremium ? <PremiumBadge /> : <UpgradeChip />}
           </div>
         </div>
 

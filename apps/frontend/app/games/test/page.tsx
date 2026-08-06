@@ -28,7 +28,7 @@ function TestGameContent() {
   const searchParams = useSearchParams();
   /** The dashboard links here with ?due=1 to jump straight into SRS review. */
   const dueOnly = searchParams.get('due') === '1';
-  const { session, isLoading: sessionLoading, error: sessionError, fetchSession, reset: resetSession } = useGameSession();
+  const { session, isLoading: sessionLoading, error: sessionError, quotaExceeded, fetchSession, reset: resetSession } = useGameSession();
   const { result,  isLoading: submitLoading,  error: submitError,  submit,       reset: resetSubmit  } = useGameSubmit();
   const [step, setStep] = useState<Step>('setup');
 
@@ -68,7 +68,7 @@ function TestGameContent() {
           <span className="text-text-muted">Natijalar saqlanmoqda…</span>
         </div>
       ) : step === 'setup' ? (
-        <GameSetup gameType={GAME_TYPE} isLoading={sessionLoading} error={sessionError} defaultDueOnly={dueOnly} onStart={handleStart} />
+        <GameSetup gameType={GAME_TYPE} isLoading={sessionLoading} error={sessionError} quotaExceeded={quotaExceeded} defaultDueOnly={dueOnly} onStart={handleStart} />
       ) : step === 'play' && session ? (
         <TestGame session={session} onComplete={handleComplete} />
       ) : step === 'results' && result ? (

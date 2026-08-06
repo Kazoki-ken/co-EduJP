@@ -5,6 +5,7 @@ import { OAuth2Client } from 'google-auth-library';
 import prisma from '../lib/prisma';
 import { createError } from '../middleware/error.middleware';
 import { updateStreakOnLogin, syncStreakAndDailyCounts } from './streak.service';
+import { getEntitlements } from './entitlement.service';
 
 interface RegisterDto {
   username: string;
@@ -336,6 +337,8 @@ export const getMe = async (userId: string, timezoneOffset: number = 0) => {
       createdAt: true,
       profile: true,
       avatarUrl: true,
+      tier: true,
+      premiumUntil: true,
       _count: {
         select: {
           savedWords: true,
@@ -346,7 +349,14 @@ export const getMe = async (userId: string, timezoneOffset: number = 0) => {
   });
 
   if (!user) throw createError('User not found', 404);
-  return user;
+
+  // The entitlement snapshot rides along with /me so the shell knows the tier
+  // and today's usage on first paint, without a second round trip. It is
+  // recomputed from the database here — never trusted from the access token,
+  // which may have been minted before an upgrade or an expiry.
+  const entitlements = await getEntitlements(userId, timezoneOffset);
+
+  return { ...user, tier: entitlements.tier, entitlements };
 };
 
 // ─── Google OAuth ─────────────────────────────────────────────────────────────

@@ -9,6 +9,7 @@ import React, {
   useState,
 } from 'react';
 import api, { setAccessToken, getAccessToken } from '@/lib/api';
+import type { Entitlements, Tier } from '@/lib/types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -37,12 +38,20 @@ export interface AuthUser {
   createdAt: string;
   profile: UserProfile | null;
   _count: { savedWords: number; badges: number };
+  /** Subscription tier, recomputed server-side on every /me — never from the token. */
+  tier?: Tier;
+  premiumUntil?: string | null;
+  /** Tier limits and today's usage, so the shell knows both on first paint. */
+  entitlements?: Entitlements;
 }
 
 interface AuthContextValue {
   user: AuthUser | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  /** Shorthand for `user?.entitlements?.isPremium`. */
+  isPremium: boolean;
+  entitlements: Entitlements | null;
   needsUsername: boolean;
   pendingGoogleToken: string | null;
   login: (email: string, password: string) => Promise<void>;
@@ -201,6 +210,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         isLoading,
         isAuthenticated: !!user,
+        isPremium: user?.entitlements?.isPremium ?? false,
+        entitlements: user?.entitlements ?? null,
         needsUsername,
         pendingGoogleToken,
         login,

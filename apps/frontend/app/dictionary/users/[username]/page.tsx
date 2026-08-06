@@ -14,6 +14,7 @@ import {
   Users,
 } from 'lucide-react';
 import api from '@/lib/api';
+import { PremiumBadge } from '@/components/premium/PremiumBadge';
 import { cn, leagueIcon } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
 import type { Book, CommunityProfile, Topic } from '@/lib/types';
@@ -81,7 +82,10 @@ export default function CommunityProfilePage() {
         </div>
 
         <div className="flex-1 min-w-0">
-          <h1 className="text-2xl font-extrabold text-text-primary truncate">{user.username}</h1>
+          <div className="flex items-center gap-2.5 min-w-0">
+            <h1 className="text-2xl font-extrabold text-text-primary truncate">{user.username}</h1>
+            {user.isPremium && <PremiumBadge size="sm" />}
+          </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-sm text-text-muted">
             <span className="flex items-center gap-1.5">
               <Flame size={13} className={user.streak > 0 ? 'text-orange-400' : ''} />

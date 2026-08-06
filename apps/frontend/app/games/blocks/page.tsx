@@ -19,7 +19,7 @@ export default function BlocksGamePage() {
   const GAME_TYPE: GameType = 'BLOCKS';
   const router = useRouter();
   const { user } = useAuth();
-  const { session, isLoading: sessionLoading, error: sessionError, fetchSession, reset: resetSession } = useGameSession();
+  const { session, isLoading: sessionLoading, error: sessionError, quotaExceeded, fetchSession, reset: resetSession } = useGameSession();
   const { result, error: submitError, submit, reset: resetSubmit } = useGameSubmit();
   const [step, setStep] = useState<Step>('setup');
   const [stats, setStats] = useState<BlockStats | null>(null);
@@ -59,7 +59,7 @@ export default function BlocksGamePage() {
       )}
 
       {step === 'setup' ? (
-        <GameSetup gameType={GAME_TYPE} isLoading={sessionLoading} error={sessionError} onStart={handleStart} />
+        <GameSetup gameType={GAME_TYPE} isLoading={sessionLoading} error={sessionError} quotaExceeded={quotaExceeded} onStart={handleStart} />
       ) : step === 'play' && session ? (
         <BlockBlastGame session={session} userId={user?.id} onComplete={handleComplete} />
       ) : step === 'results' && stats ? (

@@ -30,6 +30,115 @@ const KNOWN_KEYS: { key: string; label: string; desc: string; sensitive: boolean
     sensitive:   false,
     placeholder: 'Welcome to VocabJP!',
   },
+
+  // ─── Premium: pricing ───────────────────────────────────────────────────
+  // Amounts in so'm. An empty value or 0 hides that option on /premium.
+  {
+    key:         'premium_price_monthly',
+    label:       'Premium — oylik narx',
+    desc:        "So'mda. Bo'sh qoldirilsa tariflar sahifasida narx ko'rsatilmaydi.",
+    sensitive:   false,
+    placeholder: '30000',
+  },
+  {
+    key:         'premium_price_yearly',
+    label:       'Premium — yillik narx',
+    desc:        "So'mda. Ixtiyoriy — kiritilmasa yillik variant ko'rsatilmaydi.",
+    sensitive:   false,
+    placeholder: '300000',
+  },
+  {
+    key:         'premium_price_lifetime',
+    label:       'Premium — umrbod narx',
+    desc:        "So'mda. Ixtiyoriy — kiritilmasa umrbod variant ko'rsatilmaydi.",
+    sensitive:   false,
+    placeholder: '750000',
+  },
+
+  // ─── Premium: to'lov kartasi ────────────────────────────────────────────
+  // The bot shows these to the buyer. Without a card number it refuses to
+  // start a purchase rather than asking for money with nowhere to send it.
+  {
+    key:         'payment_card_number',
+    label:       'To‘lov kartasi raqami',
+    desc:        "Bot shu kartani ko'rsatadi. Masalan: 8600 1234 5678 9012",
+    sensitive:   false,
+    placeholder: '8600 1234 5678 9012',
+  },
+  {
+    key:         'payment_card_holder',
+    label:       'Karta egasi',
+    desc:        'Karta egasining ismi — bot chekni solishtirish uchun ko‘rsatadi.',
+    sensitive:   false,
+    placeholder: 'ALISHER RAHIMOV',
+  },
+
+  // ─── Premium: limits ────────────────────────────────────────────────────
+  // These override the defaults in entitlement.service without a deploy.
+  // Leave a field empty (or type "cheksiz") to remove the cap entirely.
+  {
+    key:         'limit_free_dailyGames',
+    label:       'Bepul — kunlik o‘yin',
+    desc:        "Bepul tarifda kuniga nechta o'yin. Standart: 5. SRS takrorlash baribir cheklanmaydi.",
+    sensitive:   false,
+    placeholder: '5',
+  },
+  {
+    key:         'limit_free_dailyAiMessages',
+    label:       'Bepul — kunlik AI xabar',
+    desc:        'Standart: 10.',
+    sensitive:   false,
+    placeholder: '10',
+  },
+  {
+    key:         'limit_free_maxTopics',
+    label:       'Bepul — mavzular soni',
+    desc:        'Standart: 3.',
+    sensitive:   false,
+    placeholder: '3',
+  },
+  {
+    key:         'limit_free_maxWordsPerTopic',
+    label:       'Bepul — mavzudagi so‘zlar',
+    desc:        'Standart: 50.',
+    sensitive:   false,
+    placeholder: '50',
+  },
+  {
+    key:         'limit_free_maxSavedWords',
+    label:       'Bepul — saqlangan so‘zlar',
+    desc:        "Bepul tarifda jami nechta so'z saqlanadi. Standart: 500.",
+    sensitive:   false,
+    placeholder: '500',
+  },
+  {
+    key:         'limit_free_dailyTts',
+    label:       'Bepul — kunlik talaffuz',
+    desc:        'Standart: 50. Tizimga kirmagan mehmonlar hisobga olinmaydi.',
+    sensitive:   false,
+    placeholder: '50',
+  },
+  {
+    key:         'limit_premium_dailyAiMessages',
+    label:       'Premium — kunlik AI xabar',
+    desc:        'Standart: 100. "cheksiz" deb yozsangiz limit olib tashlanadi.',
+    sensitive:   false,
+    placeholder: '100',
+  },
+  {
+    key:         'limit_premium_maxTopics',
+    label:       'Premium — mavzular soni',
+    desc:        'Standart: 30.',
+    sensitive:   false,
+    placeholder: '30',
+  },
+  {
+    key:         'limit_premium_maxWordsPerTopic',
+    label:       'Premium — mavzudagi so‘zlar',
+    desc:        'Standart: 200.',
+    sensitive:   false,
+    placeholder: '200',
+  },
 ];
 
 // ─── Config Row ───────────────────────────────────────────────────────────────

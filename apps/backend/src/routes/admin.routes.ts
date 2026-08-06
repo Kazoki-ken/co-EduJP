@@ -13,6 +13,14 @@ import {
   removeConfig,
   getStats,
 } from '../controllers/admin.controller';
+import {
+  postGrantPremium,
+  deletePremium,
+  getUserGrants,
+  getPendingPayments,
+  postApprovePayment,
+  postRejectPayment,
+} from '../controllers/premium.controller';
 
 const router = Router();
 
@@ -99,6 +107,37 @@ router.post(
 router.get('/users', getUsers);
 router.put('/users/:id/role', putUserRole);
 router.delete('/users/:id', removeUser);
+
+// ─── Premium Management ───────────────────────────────────────────────────────
+
+/**
+ * POST   /api/admin/users/:id/premium — grant premium
+ *        Body: { months?: number, amount?: number, note?: string }
+ *        months omitted or 0 → lifetime grant.
+ * DELETE /api/admin/users/:id/premium — revoke, back to FREE
+ * GET    /api/admin/users/:id/premium — that user's grant history
+ *
+ * Manual granting is stage one of billing: payment is collected out of band
+ * and recorded here. The Payme/Click webhooks will call the same service.
+ */
+router.post('/users/:id/premium', postGrantPremium);
+router.delete('/users/:id/premium', deletePremium);
+router.get('/users/:id/premium', getUserGrants);
+
+// ─── Payment Review ───────────────────────────────────────────────────────────
+
+/**
+ * GET  /api/admin/payments             — receipts waiting for a decision
+ * POST /api/admin/payments/:id/approve — grant the premium that was paid for
+ * POST /api/admin/payments/:id/reject  — decline, with an optional reason
+ *
+ * The same decisions can be made from the bot's inline buttons; both paths run
+ * through payment.service, so approving twice is a no-op rather than a double
+ * grant.
+ */
+router.get('/payments', getPendingPayments);
+router.post('/payments/:id/approve', postApprovePayment);
+router.post('/payments/:id/reject', postRejectPayment);
 
 // ─── Site Configuration Routes ────────────────────────────────────────────────
 

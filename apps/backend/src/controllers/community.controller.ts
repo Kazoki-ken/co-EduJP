@@ -4,6 +4,7 @@ import { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { createError } from '../middleware/error.middleware';
 import {
   listPublicAuthors,
+  listPopularAuthors,
   getPublicProfile,
   getPublicTopicWords,
 } from '../services/community.service';
@@ -12,6 +13,14 @@ const DirectoryQuerySchema = z.object({
   search: z.string().trim().max(60).optional(),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(50).default(24),
+  /**
+   * `popular` ranks by how many other learners saved the author's topics.
+   *
+   * A query flag rather than a /users/popular route: that path would be
+   * shadowed by /users/:username unless declared first, which is the kind of
+   * ordering trap that breaks quietly when routes get reshuffled.
+   */
+  sort: z.enum(['recent', 'popular']).default('recent'),
 });
 
 /**
@@ -25,7 +34,13 @@ export const getAuthors = async (req: AuthenticatedRequest, res: Response): Prom
     return;
   }
 
-  const { search, page, limit } = parsed.data;
+  const { search, page, limit, sort } = parsed.data;
+
+  if (sort === 'popular') {
+    res.json({ data: await listPopularAuthors(limit) });
+    return;
+  }
+
   res.json(await listPublicAuthors(search || undefined, page, limit));
 };
 

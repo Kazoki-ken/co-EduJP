@@ -1,5 +1,10 @@
 import prisma from '../lib/prisma';
 import { createError } from '../middleware/error.middleware';
+import {
+  assertCanAddWord,
+  assertCanCreateTopic,
+  assertCanShare,
+} from './entitlement.service';
 
 /**
  * "My library" — books, topics and words a learner creates for themselves.
@@ -57,6 +62,9 @@ export const listMyBooks = async (userId: string) => {
 };
 
 export const createMyBook = async (userId: string, dto: LibraryBookDto) => {
+  // Books themselves are unlimited — only publishing one is a paid feature.
+  if (dto.isPublic) await assertCanShare(userId);
+
   return prisma.book.create({
     data: {
       title: dto.title,
@@ -74,6 +82,7 @@ export const updateMyBook = async (
   dto: Partial<LibraryBookDto>,
 ) => {
   await ownedBook(userId, bookId);
+  if (dto.isPublic) await assertCanShare(userId);
 
   return prisma.book.update({
     where: { id: bookId },
@@ -109,6 +118,8 @@ export const listMyTopics = async (userId: string, bookId?: string) => {
 export const createMyTopic = async (userId: string, dto: LibraryTopicDto) => {
   // Only allow attaching a topic to a book the same user owns.
   if (dto.bookId) await ownedBook(userId, dto.bookId);
+  await assertCanCreateTopic(userId);
+  if (dto.isPublic) await assertCanShare(userId);
 
   return prisma.topic.create({
     data: {
@@ -131,6 +142,7 @@ export const updateMyTopic = async (
 ) => {
   await ownedTopic(userId, topicId);
   if (dto.bookId) await ownedBook(userId, dto.bookId);
+  if (dto.isPublic) await assertCanShare(userId);
 
   return prisma.topic.update({
     where: { id: topicId },
@@ -199,6 +211,7 @@ export const addWordToMyTopic = async (
   dto: LibraryWordDto,
 ) => {
   await ownedTopic(userId, topicId);
+  await assertCanAddWord(userId, topicId);
 
   return prisma.word.create({
     data: {

@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { BookOpen, Tag, Play, ChevronDown, AlertCircle, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import api from '@/lib/api';
-import type { Book, Topic, GameType, GameSession } from '@/lib/types';
+import { UpgradeNotice } from '@/components/premium/UpgradeNotice';
+import type { Book, Topic, GameType } from '@/lib/types';
 
 const GAME_LABELS: Record<GameType, { label: string; icon: string; desc: string }> = {
   TEST:    { label: 'Test',            icon: '🧠', desc: "4 ta variantdan to'g'ri ma'noni tanlang" },
@@ -12,6 +13,9 @@ const GAME_LABELS: Record<GameType, { label: string; icon: string; desc: string 
   WRITE:   { label: 'Yozish mashqi',   icon: '⌨️',  desc: "O'zbekcha ma'nosidan yaponchasini yozing (kanji, hiragana yoki katakana)" },
   SHOOTER: { label: 'Space Shooter',   icon: '🚀', desc: "To'g'ri asteroidni bosing!" },
   BLOCKS:  { label: 'Blok jumboq',     icon: '🧱', desc: "Shakllarni joylang — har yangi to'plam uchun savolga javob bering" },
+  // MIXED never reaches this screen — it starts with a single button — but the
+  // map is keyed by GameType, so it needs an entry.
+  MIXED:   { label: 'Aralash mashq',   icon: '🎯', desc: "20 ta raund: test, juftlik va yozish aralash keladi" },
 };
 
 const DEFAULT_DIFFICULTY_OPTIONS = [
@@ -32,12 +36,16 @@ interface GameSetupProps {
   gameType:   GameType;
   isLoading:  boolean;
   error:      string | null;
+  /** When true, `error` is a spent daily allowance rather than a real failure. */
+  quotaExceeded?: boolean;
   /** Pre-checks "SRS review only" — used by the dashboard's review button. */
   defaultDueOnly?: boolean;
   onStart:    (opts: { gameType: GameType; topicId?: string; bookId?: string; limit: number; dueOnly: boolean }) => void;
 }
 
-export function GameSetup({ gameType, isLoading, error, defaultDueOnly = false, onStart }: GameSetupProps) {
+export function GameSetup({
+  gameType, isLoading, error, quotaExceeded = false, defaultDueOnly = false, onStart,
+}: GameSetupProps) {
   const [books,    setBooks]    = useState<Book[]>([]);
   const [topics,   setTopics]   = useState<Topic[]>([]);
   const [bookId,   setBookId]   = useState('');
@@ -157,12 +165,17 @@ export function GameSetup({ gameType, isLoading, error, defaultDueOnly = false, 
           </button>
         </div>
 
-        {/* Error */}
+        {/* A spent daily allowance is not a failure — it gets the upgrade card
+            rather than a red error box. */}
         {error && (
-          <div className="flex items-start gap-2 p-3 rounded-lg bg-danger/10 border border-danger/30 text-danger text-sm">
-            <AlertCircle size={14} className="shrink-0 mt-0.5" />
-            {error}
-          </div>
+          quotaExceeded ? (
+            <UpgradeNotice message={error} />
+          ) : (
+            <div className="flex items-start gap-2 p-3 rounded-lg bg-danger/10 border border-danger/30 text-danger text-sm">
+              <AlertCircle size={14} className="shrink-0 mt-0.5" />
+              {error}
+            </div>
+          )
         )}
 
         {/* Start button */}

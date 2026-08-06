@@ -3,10 +3,11 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Trophy, Flame, Zap, Crown } from 'lucide-react';
+import { Trophy, Flame, Zap } from 'lucide-react';
 import api from '@/lib/api';
 import { cn, leagueColor, leagueIcon } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
+import { PremiumMark } from '@/components/premium/PremiumBadge';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -20,6 +21,7 @@ interface LeaderboardEntry {
   weeklyXp:    number;
   weeklyGames: number;
   score:       number;
+  isPremium?:  boolean;
 }
 
 type LeagueFilter = 'ALL' | 'BRONZE' | 'SILVER' | 'GOLD' | 'PLATINUM' | 'DIAMOND';
@@ -166,7 +168,9 @@ function LeaderboardInner() {
                       {entry.username}
                       {isMe && <span className="text-xs text-primary/70 ml-1">(siz)</span>}
                     </p>
-                    {entry.rank === 1 && <Crown size={14} className="text-yellow-400 shrink-0" />}
+                    {/* The rank medal already marks first place, so the crown
+                        is free to mean one thing everywhere: a subscriber. */}
+                    {entry.isPremium && <PremiumMark size={14} />}
                   </div>
                   <p className={cn('text-xs', leagueColor(entry.league))}>
                     {leagueIcon(entry.league)}{' '}

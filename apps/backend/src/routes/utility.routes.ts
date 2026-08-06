@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
-import { authenticate } from '../middleware/auth.middleware';
+import { authenticate, optionalAuth } from '../middleware/auth.middleware';
 import {
   chatHandler,
   ttsHandler,
@@ -71,7 +71,10 @@ router.post('/chat', authenticate, chatLimiter, chatHandler);
  *   voice (optional) — voice short-name, e.g. "ja-JP-KeitaNeural"
  *   lang  (optional) — locale alias, e.g. "ja-JP"
  */
-router.get('/tts', ttsLimiter, ttsHandler);
+// optionalAuth, not authenticate: the dictionary is public, so anonymous
+// visitors keep working — they simply fall under the IP limiter instead of a
+// per-account daily quota.
+router.get('/tts', optionalAuth, ttsLimiter, ttsHandler);
 
 /**
  * GET /api/tts/voices

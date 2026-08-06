@@ -14,8 +14,9 @@ const server = app.listen(PORT, () => {
   registerLeagueResetJob();
   registerCleanupJob();
 
-  // Start Telegram bot (agar token bo'lsa)
+  // Start the Telegram bots (each is a no-op without its own token).
   import('./services/bot.service').catch(console.error);
+  import('./services/paymentBot.service').catch(console.error);
 });
 
 // Graceful shutdown

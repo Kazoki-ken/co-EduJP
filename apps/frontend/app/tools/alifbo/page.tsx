@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Volume2 } from 'lucide-react';
+import { Volume2, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
@@ -173,9 +173,12 @@ export default function AlifboPage() {
 
       {/* Legend */}
       <div className="mt-10 card-glass p-5 max-w-xl mx-auto text-center">
-        <p className="text-sm text-text-muted">
-          💡 Click any cell to hear the <span className="text-primary font-medium">natural Japanese pronunciation</span>{' '}
+        <p className="text-sm text-text-muted inline-flex items-start gap-2 text-left">
+          <Lightbulb size={15} className="text-accent shrink-0 mt-0.5" />
+          <span>
+          Click any cell to hear the <span className="text-primary font-medium">natural Japanese pronunciation</span>{' '}
           via Microsoft Edge TTS. Each syllable is cached for instant playback.
+          </span>
         </p>
       </div>
     </div>

@@ -431,6 +431,8 @@ export const listUsers = async (query: ListUsersQuery = {}) => {
         email: true,
         role: true,
         createdAt: true,
+        tier: true,
+        premiumUntil: true,
         profile: {
           select: {
             streak: true,

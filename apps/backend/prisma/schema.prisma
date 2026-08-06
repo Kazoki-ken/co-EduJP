@@ -25,6 +25,43 @@ enum League {
   DIAMOND
 }
 
+// Subscription tiers.
+//
+// Only two exist today. The tier is an enum rather than a boolean, and every
+// limit is looked up by tier in entitlement.service, so adding a middle tier
+// later is a new enum value plus config rows — no rewrite of the call sites.
+enum Tier {
+  FREE
+  PREMIUM
+}
+
+// Where a premium grant came from. ADMIN covers both a hand-typed grant and
+// one an admin approved in the payment bot; the providers are placeholders for
+// the automated webhook stage.
+enum GrantSource {
+  ADMIN
+  TELEGRAM
+  PAYME
+  CLICK
+}
+
+// Lifecycle of a bot purchase.
+//
+//   PENDING   — the web app created it, the buyer has not opened the bot yet
+//   AWAITING  — bot opened, card details shown, waiting for the receipt photo
+//   SUBMITTED — receipt received and forwarded to the admin chat
+//   APPROVED  — admin confirmed; a PremiumGrant exists
+//   REJECTED  — admin declined, with a reason sent back to the buyer
+//   EXPIRED   — never completed before expiresAt
+enum PaymentStatus {
+  PENDING
+  AWAITING
+  SUBMITTED
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
 enum BadgeType {
   STREAK
   WORDS_SAVED
@@ -42,6 +79,9 @@ enum GameType {
   SHOOTER
   // Block-puzzle mode: a vocabulary question gates each new set of pieces.
   BLOCKS
+  // Combined review mode: 20 rounds, each randomly TEST, MATCH or WRITE.
+  // This is the mode the dashboard's SRS review button points at.
+  MIXED
 }
 
 // ─── Core Auth ────────────────────────────────────────────────────────────────
@@ -58,6 +98,13 @@ model User {
   role         Role     @default(USER)
   createdAt    DateTime @default(now()) @map("created_at")
 
+  // ── Subscription ──
+  // `tier` is the effective tier and `premiumUntil` is when it lapses.
+  // A PREMIUM user with premiumUntil = null holds a lifetime grant; the daily
+  // cron only downgrades rows where the date has actually passed.
+  tier         Tier      @default(FREE)
+  premiumUntil DateTime? @map("premium_until")
+
   profile      Profile?
   words        Word[]             @relation("AuthorWords")
   savedWords   SavedWord[]
@@ -72,8 +119,85 @@ model User {
   refreshTokens RefreshToken[]
   books         Book[]             @relation("AuthoredBooks")
   topics        Topic[]            @relation("AuthoredTopics")
+  premiumGrants PremiumGrant[]     @relation("GrantRecipient")
+  grantsIssued  PremiumGrant[]     @relation("GrantIssuer")
+  payments      PaymentRequest[]   @relation("PaymentBuyer")
+  paymentsReviewed PaymentRequest[] @relation("PaymentReviewer")
 
   @@map("users")
+}
+
+// A purchase started in the web app and completed in the Telegram bot.
+//
+// The buyer transfers the money to a card out of band and sends the receipt to
+// the bot; an admin approves it there and `grantPremium` runs. The row is the
+// audit trail for that exchange — who bought what, which receipt, who approved.
+//
+// `linkToken` is what ties the two halves together: the web app mints it, the
+// deep link carries it into the bot, and the bot resolves it back to a user.
+// That avoids ever asking the buyer to type their username into a chat, which
+// nobody gets right and anybody could fake.
+model PaymentRequest {
+  id       String        @id @default(cuid())
+  userId   String        @map("user_id")
+  /// 'monthly' | 'yearly' | 'lifetime' — which price row was chosen.
+  plan     String
+  /// Whole months to grant on approval. 0 = lifetime.
+  months   Int
+  /// Price in so'm, frozen at checkout so a later price change cannot alter it.
+  amount   Int
+  status   PaymentStatus @default(PENDING)
+
+  linkToken      String  @unique @map("link_token")
+  telegramUserId String? @map("telegram_user_id")
+  telegramChatId String? @map("telegram_chat_id")
+  /// Telegram file_id of the receipt — the image itself stays on Telegram.
+  receiptFileId  String? @map("receipt_file_id")
+
+  reviewedById String?   @map("reviewed_by_id")
+  reviewedAt   DateTime? @map("reviewed_at")
+  rejectReason String?   @map("reject_reason")
+  /// The grant created on approval, so a refund can find what to revoke.
+  grantId      String?   @map("grant_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  expiresAt DateTime @map("expires_at")
+
+  user       User  @relation("PaymentBuyer", fields: [userId], references: [id], onDelete: Cascade)
+  reviewedBy User? @relation("PaymentReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([status])
+  @@map("payment_requests")
+}
+
+// Every premium period a user has ever been given — the billing ledger.
+//
+// User.tier/premiumUntil is the fast answer to "can they do this right now";
+// this table is the history behind it, so a disputed charge or a mistaken
+// admin grant can be traced. Payment webhooks will write rows here too, which
+// is why `externalId` exists: it makes a provider's retry idempotent.
+model PremiumGrant {
+  id          String      @id @default(cuid())
+  userId      String      @map("user_id")
+  tier        Tier        @default(PREMIUM)
+  /// null = lifetime, no expiry
+  expiresAt   DateTime?   @map("expires_at")
+  source      GrantSource @default(ADMIN)
+  /// Amount paid in so'm. Null for a manual admin grant.
+  amount      Int?
+  /// Provider transaction id — unique so a replayed webhook cannot double-credit.
+  externalId  String?     @unique @map("external_id")
+  note        String?
+  grantedById String?     @map("granted_by_id")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  revokedAt   DateTime?   @map("revoked_at")
+
+  user      User  @relation("GrantRecipient", fields: [userId], references: [id], onDelete: Cascade)
+  grantedBy User? @relation("GrantIssuer", fields: [grantedById], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@map("premium_grants")
 }
 
 // Server-side record of every issued refresh token.
@@ -109,6 +233,19 @@ model Profile {
   dailyTestCount  Int       @default(0) @map("daily_test_count")
   dailyMatchCount Int       @default(0) @map("daily_match_count")
   dailyWriteCount Int       @default(0) @map("daily_write_count")
+  // The per-type counters above drive the dashboard's daily goals: they count
+  // games COMPLETED and roll over with lastGameDate.
+  //
+  // The two below are the free-tier quota counters instead. They count every
+  // game STARTED and every AI message sent, and they roll over against their
+  // own `quotaDate` — a stamp of the local day they belong to. Without a
+  // separate stamp a session left open past midnight would keep spending
+  // yesterday's allowance, since lastGameDate only moves when a game is
+  // finished.
+  dailyGameCount  Int       @default(0) @map("daily_game_count")
+  dailyAiCount    Int       @default(0) @map("daily_ai_count")
+  dailyTtsCount   Int       @default(0) @map("daily_tts_count")
+  quotaDate       DateTime? @map("quota_date")
   lastGameDate    DateTime? @map("last_game_date")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import api from '@/lib/api';
+import api, { errorMessage, isQuotaError } from '@/lib/api';
 import type { GameSession, GameType } from '@/lib/types';
 
 interface UseGameSessionResult {
   session:     GameSession | null;
   isLoading:   boolean;
   error:       string | null;
+  /** True when the failure was a spent daily allowance (HTTP 402), not a real error. */
+  quotaExceeded: boolean;
   fetchSession: (opts: {
     gameType: GameType;
     topicId?: string;
@@ -22,6 +24,7 @@ export function useGameSession(): UseGameSessionResult {
   const [session,   setSession]   = useState<GameSession | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error,     setError]     = useState<string | null>(null);
+  const [quotaExceeded, setQuotaExceeded] = useState(false);
 
   const fetchSession = useCallback(async (opts: {
     gameType: GameType;
@@ -32,6 +35,7 @@ export function useGameSession(): UseGameSessionResult {
   }): Promise<GameSession | null> => {
     setIsLoading(true);
     setError(null);
+    setQuotaExceeded(false);
     try {
       const { data } = await api.get<GameSession>('/games/session', {
         params: {
@@ -45,11 +49,10 @@ export function useGameSession(): UseGameSessionResult {
       setSession(data);
       return data;
     } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { error?: string } } })
-          ?.response?.data?.error ??
-        'Failed to start session. Make sure there are words available.';
-      setError(msg);
+      setQuotaExceeded(isQuotaError(err));
+      setError(
+        errorMessage(err, "Sessiyani boshlab bo'lmadi. Saqlangan so'zlaringiz borligini tekshiring."),
+      );
       return null;
     } finally {
       setIsLoading(false);
@@ -59,7 +62,8 @@ export function useGameSession(): UseGameSessionResult {
   const reset = useCallback(() => {
     setSession(null);
     setError(null);
+    setQuotaExceeded(false);
   }, []);
 
-  return { session, isLoading, error, fetchSession, reset };
+  return { session, isLoading, error, quotaExceeded, fetchSession, reset };
 }

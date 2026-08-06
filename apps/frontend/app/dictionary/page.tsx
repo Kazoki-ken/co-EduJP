@@ -13,6 +13,7 @@ import {
   Library,
   Search,
   Tag,
+  TrendingUp,
   User,
   X,
   type LucideIcon,
@@ -26,6 +27,7 @@ import { useBooks } from '@/hooks/useBooks';
 import { useWords } from '@/hooks/useWords';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
+import { PremiumMark } from '@/components/premium/PremiumBadge';
 import type { CommunityAuthor, Topic } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -111,20 +113,30 @@ export default function DictionaryPage() {
   }, [searchQuery, activeTab]);
 
   /**
-   * The user directory is small and filtered server-side, so unlike the word
-   * search it can run as you type — debounced so a fast typist doesn't fire a
-   * request per keystroke.
+   * The user directory searches as you type — it is small and filtered
+   * server-side — but only once something has been typed.
+   *
+   * It used to fire on entering the tab with an empty term, which listed every
+   * author before anyone asked for one and shrank the hero on arrival. The
+   * "most saved" strip below now fills that space instead.
    */
   useEffect(() => {
     if (activeTab !== 'users') return;
 
     const term = searchQuery.trim();
+    if (!term) {
+      setAuthors([]);
+      setAuthorsLoading(false);
+      setAuthorsError(null);
+      return;
+    }
+
     const timer = setTimeout(() => {
       setAuthorsLoading(true);
       setAuthorsError(null);
       api
         .get<{ data: CommunityAuthor[] }>('/community/users', {
-          params: { ...(term && { search: term }), limit: 24 },
+          params: { search: term, limit: 24 },
         })
         .then(({ data }) => setAuthors(data.data))
         .catch(() => setAuthorsError('Foydalanuvchilarni yuklashda xatolik.'))
@@ -141,12 +153,13 @@ export default function DictionaryPage() {
    * The hero owns the whole first screen until there is actually something to
    * show — merely selecting a tab is not enough. "So'zlar" only shrinks it
    * once a search has been submitted (wordsQuery set); Mavzular/Kitoblar once
-   * you search or ask to browse everything; "Foydalanuvchi" as soon as the
-   * directory has loaded someone (it browses rather than searches).
+   * you search or ask to browse everything; "Foydalanuvchi" only once a name
+   * has been typed — the "most saved" strip below renders outside this block
+   * precisely so that loading it never moves the search box.
    */
   const showResults =
     (activeTab === 'words' && wordsQuery !== '') ||
-    (activeTab === 'users' && (authorsLoading || authors.length > 0 || isSearching)) ||
+    (activeTab === 'users' && isSearching) ||
     ((activeTab === 'topics' || activeTab === 'books') && (isSearching || browseAll));
 
   const filteredTopics = useMemo(
@@ -380,7 +393,11 @@ export default function DictionaryPage() {
                 <Library size={17} className="shrink-0 text-accent" />
                 <span>{"O'z mavzu va kitoblaringizni yarating"}</span>
               </Link>
-            ) : (
+            ) : activeTab === 'words' ? (
+              /* Only on the word tab: /dictionary/words is a word-only screen,
+                 so offering it while browsing topics or books sent people
+                 somewhere that had nothing to do with what they were looking
+                 at. */
               <Link
                 href="/dictionary/words"
                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-left
@@ -395,7 +412,7 @@ export default function DictionaryPage() {
                   )}
                 </span>
               </Link>
-            )}
+            ) : null}
 
             {(activeTab === 'topics' || activeTab === 'books') && !showResults && (
               <button
@@ -428,6 +445,12 @@ export default function DictionaryPage() {
           {error || topicsError || wordsError}
         </div>
       )}
+
+      {/* ── Most-saved authors (user tab only) ───────────────────────
+          Rendered OUTSIDE the results block on purpose. It is not a search
+          result, so it must never feed `showResults` — otherwise loading it
+          would collapse the hero and yank the search box upward. */}
+      {activeTab === 'users' && !isSearching && <PopularAuthors />}
 
       {/* ── Results ──────────────────────────────────────────────────── */}
       {/*
@@ -528,12 +551,8 @@ export default function DictionaryPage() {
               ) : authors.length === 0 ? (
                 <EmptyState
                   icon="👤"
-                  message={isSearching ? 'Foydalanuvchi topilmadi' : "Hali hech kim ulashmagan"}
-                  description={
-                    isSearching
-                      ? "Boshqa nom bilan qidirib ko'ring."
-                      : "Bu yerda o'z mavzu va kitoblarini ochiq qilgan foydalanuvchilar chiqadi. Birinchi bo'ling — \"Mening lug'atim\" bo'limidan boshlang."
-                  }
+                  message="Foydalanuvchi topilmadi"
+                  description="Boshqa nom bilan qidirib ko'ring."
                 />
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -609,6 +628,54 @@ export default function DictionaryPage() {
   );
 }
 
+/**
+ * The six learners whose shared topics other people have saved the most.
+ *
+ * Loads once, on its own, and lives below the search box rather than inside
+ * the results area — the directory should have something worth looking at
+ * before you have typed anything, without pretending to be a search result.
+ */
+function PopularAuthors() {
+  const [authors, setAuthors] = useState<CommunityAuthor[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    api
+      .get<{ data: CommunityAuthor[] }>('/community/users', {
+        params: { sort: 'popular', limit: 6 },
+      })
+      .then(({ data }) => setAuthors(data.data))
+      .catch(() => {})
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  // Nothing shared yet — say nothing rather than show an empty heading.
+  if (!isLoading && authors.length === 0) return null;
+
+  return (
+    <section className="mt-2">
+      <div className="flex items-center gap-2.5 border-b border-border/60 pb-3 mb-5">
+        <TrendingUp size={17} className="text-accent shrink-0" />
+        <h2 className="font-bold text-text-primary">Eng ko&rsquo;p saqlangan mualliflar</h2>
+      </div>
+
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-[92px] skeleton rounded-xl" />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {authors.map((author) => (
+            <AuthorCard key={author.id} author={author} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
 function AuthorCard({ author }: { author: CommunityAuthor }) {
   return (
     <Link
@@ -621,12 +688,17 @@ function AuthorCard({ author }: { author: CommunityAuthor }) {
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="font-bold text-text-primary truncate group-hover:text-primary transition-colors">
-          {author.username}
+        <p className="font-bold text-text-primary truncate group-hover:text-primary transition-colors
+                      flex items-center gap-1.5">
+          <span className="truncate">{author.username}</span>
+          {author.isPremium && <PremiumMark size={12} />}
         </p>
         <p className="text-xs text-text-muted mt-0.5">
           {author.publicTopics} ta mavzu
           {author.publicBooks > 0 && ` · ${author.publicBooks} ta kitob`}
+          {typeof author.saves === 'number' && author.saves > 0 && (
+            <span className="text-accent font-semibold"> · {author.saves} marta saqlangan</span>
+          )}
         </p>
       </div>
 

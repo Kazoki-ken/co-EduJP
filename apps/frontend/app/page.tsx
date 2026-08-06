@@ -19,6 +19,7 @@ import {
   Volume2,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { TierStrip } from '@/components/premium/SubscriptionCard';
 import { useDashboard } from '@/hooks/useDashboard';
 import { cn, leagueIcon } from '@/lib/utils';
 
@@ -250,6 +251,10 @@ function AuthenticatedDashboard() {
         dueCount={data?.dueTodayCount ?? 0}
         totalSaved={data?.totalSaved ?? 0}
       />
+
+      {/* Tier state, kept deliberately quiet so it sits under the review call
+          to action rather than competing with it. */}
+      <TierStrip />
 
       {/* ── Mastery + daily goals + word of the day ──────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -511,8 +516,11 @@ function ReviewCard({
         </div>
       </div>
 
+      {/* The combined mode is the review mode now. It needs no ?due=1: the
+          server already deals SRS-due words into a session before anything
+          else, so the rounds open with exactly what is waiting. */}
       <Link
-        href="/games/test?due=1"
+        href="/games/mixed"
         className="btn-primary flex items-center gap-2 text-sm px-5 py-3 shrink-0 shadow-glow
                    hover:-translate-y-0.5 transition-all group"
       >

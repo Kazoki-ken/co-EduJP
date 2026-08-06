@@ -16,7 +16,7 @@ type Step = 'setup' | 'play' | 'results';
 export default function MatchGamePage() {
   const GAME_TYPE: GameType = 'MATCH';
   const router = useRouter();
-  const { session, isLoading: sessionLoading, error: sessionError, fetchSession, reset: resetSession } = useGameSession();
+  const { session, isLoading: sessionLoading, error: sessionError, quotaExceeded, fetchSession, reset: resetSession } = useGameSession();
   const { result,  isLoading: submitLoading,  error: submitError,  submit,       reset: resetSubmit  } = useGameSubmit();
   const [step, setStep] = useState<Step>('setup');
 
@@ -55,7 +55,7 @@ export default function MatchGamePage() {
           <span className="text-text-muted">Natijalar saqlanmoqda…</span>
         </div>
       ) : step === 'setup' ? (
-        <GameSetup gameType={GAME_TYPE} isLoading={sessionLoading} error={sessionError} onStart={handleStart} />
+        <GameSetup gameType={GAME_TYPE} isLoading={sessionLoading} error={sessionError} quotaExceeded={quotaExceeded} onStart={handleStart} />
       ) : step === 'play' && session ? (
         <MatchGame session={session} onComplete={handleComplete} />
       ) : step === 'results' && result ? (

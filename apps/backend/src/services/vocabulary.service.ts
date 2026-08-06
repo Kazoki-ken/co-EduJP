@@ -1,5 +1,6 @@
 import prisma from '../lib/prisma';
 import { createError } from '../middleware/error.middleware';
+import { assertCanSaveWords } from './entitlement.service';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -458,6 +459,9 @@ export const toggleSaveWord = async (userId: string, wordId: string) => {
     });
     saved = false;
   } else {
+    // Only the saving direction is capped — unsaving always works, so a user
+    // at their ceiling can still tidy up their deck.
+    await assertCanSaveWords(userId, 1);
     await prisma.savedWord.create({ data: { userId, wordId } });
     saved = true;
   }
@@ -634,6 +638,10 @@ export const toggleSaveTopic = async (userId: string, topicId: string) => {
     };
   } else {
     // ── < 100% saved → FILL the missing words ────────────────────
+    // Checked against the number actually being added, not one at a time:
+    // saving a 60-word topic must not slip past a 500-word ceiling.
+    await assertCanSaveWords(userId, wordIds.length - existingSavedCount);
+
     await prisma.$transaction([
       prisma.savedWord.createMany({
         data: wordIds.map((wordId) => ({ userId, wordId })),

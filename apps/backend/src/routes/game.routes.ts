@@ -11,10 +11,10 @@ const router = Router();
 /**
  * GET  /api/games/session  — Generate anti-cheat game session
  *   Query params:
- *     type     (TEST | MATCH | WRITE | SHOOTER) default: TEST
+ *     type     (TEST | MATCH | WRITE | SHOOTER | BLOCKS | MIXED) default: TEST
  *     topicId  (optional CUID)
  *     bookId   (optional CUID)
- *     limit    (1–200, default 20)
+ *     limit    (1–200, default 20 — ignored by MIXED, which is always 20 rounds)
  *     dueOnly  ("true" to only return SRS-due words)
  */
 router.get('/session', authenticate, getGameSession);

@@ -3,6 +3,12 @@ import { createError } from '../middleware/error.middleware';
 import { BadgeType, GameType, League } from '@prisma/client';
 import { syncStreakAndDailyCounts } from './streak.service';
 import { isAnswerCorrect, type AnswerDirection } from '../utils/answerCheck';
+import {
+  buildMixedPlan,
+  askedWordIds as plannedWordIds,
+  MIXED_POOL_TARGET,
+} from '../utils/mixedPlan';
+import { consumeGameQuota, effectiveTier } from './entitlement.service';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -51,6 +57,8 @@ export interface GenerateSessionOptions {
   limit?: number;
   /** If true, only include words due for review right now */
   dueOnly?: boolean;
+  /** Client's `getTimezoneOffset()`, so the daily quota rolls over locally. */
+  timezoneOffset?: number;
 }
 
 export interface AnswerDto {
@@ -93,7 +101,18 @@ export const getCurrentWeekBounds = (): { start: Date; end: Date } => {
  * If the user has fewer than 4 saved words, a friendly error is thrown.
  */
 export const generateSession = async (opts: GenerateSessionOptions) => {
-  const limit = Math.min(opts.limit ?? 20, MAX_SESSION_WORDS);
+  // MIXED has no setup screen, so it ignores whatever the client asks for and
+  // always pulls the same pool size. The run is 20 rounds regardless; the pool
+  // only decides how much variety those rounds have.
+  // The daily allowance is spent here, at generation, and before any other
+  // work — a user who is out of games gets a clean 402 rather than a session
+  // they cannot submit, and a client that never submits cannot farm free ones.
+  await consumeGameQuota(opts.userId, opts.timezoneOffset ?? 0);
+
+  const limit =
+    opts.gameType === 'MIXED'
+      ? MIXED_POOL_TARGET
+      : Math.min(opts.limit ?? 20, MAX_SESSION_WORDS);
   const now = new Date();
   const MIN_WORDS = 4; // minimum for multiple-choice options
 
@@ -221,6 +240,11 @@ export const generateSession = async (opts: GenerateSessionOptions) => {
     gameType: opts.gameType,
     expiresAt: session.expiresAt,
     words: selectedWords,
+    // The client renders the plan but does not get to choose it — submitSession
+    // rebuilds the same rounds from the stored wordIds when grading.
+    ...(opts.gameType === 'MIXED' && {
+      rounds: buildMixedPlan(session.wordIds).rounds,
+    }),
   };
 };
 
@@ -287,6 +311,11 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
 
   const wordMap = new Map(words.map((w) => [w.id, w]));
 
+  // MIXED: rebuild the exact round plan the client was handed. It is derived
+  // from the stored word list alone, so this cannot drift from what was played.
+  const mixedPlan = session.gameType === 'MIXED' ? buildMixedPlan(sessionWordIds) : null;
+  const mixedWriteWords = mixedPlan ? new Set(mixedPlan.writeWordIds) : null;
+
   /**
    * Which way round a given word was asked.
    *
@@ -300,11 +329,18 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
    * letting the client declare it means a modified client cannot ask to be
    * graded in whichever direction happens to be easier — and because the server
    * shuffles the word order, the sequence still feels random to the player.
+   *
+   * MIXED works the same way through its round plan: the plan splits the pool
+   * into a WRITE bucket and the rest before dealing any round, so every word
+   * has exactly one direction for the whole run.
    */
   const directionFor = (wordId: string): AnswerDirection => {
     if (session.gameType === 'WRITE') return 'toJapanese';
     if (session.gameType === 'BLOCKS') {
       return sessionWordIds.indexOf(wordId) % 2 === 0 ? 'toMeaning' : 'toJapanese';
+    }
+    if (mixedWriteWords) {
+      return mixedWriteWords.has(wordId) ? 'toJapanese' : 'toMeaning';
     }
     return 'toMeaning';
   };
@@ -318,6 +354,11 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
    * both, letting the game drive the review schedule would flood a word with
    * repetitions the algorithm never asked for. All still earn XP, coins and
    * weekly stats.
+   *
+   * MIXED is deliberately NOT in this list. It is the dashboard's review mode,
+   * it runs a fixed 20 rounds, and its matching rounds are graded as recall
+   * (a failed round marks every word in it wrong), so it should move the SRS
+   * schedule exactly like TEST and WRITE do.
    */
   const affectsSrs =
     session.gameType !== 'MATCH' &&
@@ -347,10 +388,19 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
 
   const progressUpserts: Array<ReturnType<typeof prisma.userWordProgress.upsert>> = [];
 
+  /**
+   * The words this run actually asked about.
+   *
+   * For most modes that is the whole session. A MIXED run carries a pool of up
+   * to 40 words but only reaches the ones its 20 rounds dealt, so scoring it
+   * against the full pool would mark every unreached word wrong.
+   */
+  const askedWords = mixedPlan ? plannedWordIds(mixedPlan) : new Set(sessionWordIds);
+
   // Group answers by wordId to determine overall correctness per word
   const answersByWord = new Map<string, AnswerDto[]>();
   for (const answer of dto.answers) {
-    if (!sessionWordIds.includes(answer.wordId)) continue;
+    if (!askedWords.has(answer.wordId)) continue;
     if (!answersByWord.has(answer.wordId)) {
       answersByWord.set(answer.wordId, []);
     }
@@ -448,7 +498,7 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
   // the number of answers the client chose to send back. Grading against the
   // submitted answers let a client post a single correct answer for a 20-word
   // session and walk away with 100% accuracy and the Perfect Game badge.
-  const totalQuestions = sessionWordIds.length;
+  const totalQuestions = askedWords.size;
   const answeredCount = answersByWord.size;
   const accuracy =
     totalQuestions > 0
@@ -477,6 +527,9 @@ export const submitSession = async (userId: string, dto: SubmitSessionDto, timez
         dailyTestCount:  shouldResetDaily ? (session.gameType === 'TEST'  ? 1 : 0) : (session.gameType === 'TEST'  ? { increment: 1 } : undefined),
         dailyMatchCount: shouldResetDaily ? (session.gameType === 'MATCH' ? 1 : 0) : (session.gameType === 'MATCH' ? { increment: 1 } : undefined),
         dailyWriteCount: shouldResetDaily ? (session.gameType === 'WRITE' ? 1 : 0) : (session.gameType === 'WRITE' ? { increment: 1 } : undefined),
+        // dailyGameCount / dailyAiCount are NOT touched here — they are the
+        // quota counters, spent at generation time by entitlement.service and
+        // rolled over against their own quotaDate.
       },
     }),
 
@@ -700,6 +753,10 @@ export const getLeaderboard = async (league?: League) => {
         select: {
           id: true,
           username: true,
+          // Only to derive the badge below — the expiry date itself is billing
+          // information and never leaves the server on a public listing.
+          tier: true,
+          premiumUntil: true,
           profile: {
             select: { streak: true, coins: true, xp: true, league: true },
           },
@@ -714,6 +771,9 @@ export const getLeaderboard = async (league?: League) => {
     rank: index + 1,
     userId: s.userId,
     username: s.user.username,
+    // Computed, not read straight from the column: a lapsed subscription must
+    // stop showing the badge the moment it expires.
+    isPremium: effectiveTier(s.user) !== 'FREE',
     league: s.user.profile?.league,
     streak: s.user.profile?.streak ?? 0,
     weeklyCoins: s.coinsEarned,

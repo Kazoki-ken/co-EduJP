@@ -1,3 +1,64 @@
+// ─── Subscription ─────────────────────────────────────────────────────────────
+
+export type Tier = 'FREE' | 'PREMIUM';
+
+/** `null` on any numeric limit means unlimited. */
+export interface TierLimits {
+  dailyGames: number | null;
+  dailyAiMessages: number | null;
+  maxTopics: number | null;
+  maxWordsPerTopic: number | null;
+  maxSavedWords: number | null;
+  dailyTts: number | null;
+  canShare: boolean;
+}
+
+export interface Entitlements {
+  tier: Tier;
+  /** null for a lifetime grant or a free account. */
+  premiumUntil: string | null;
+  isPremium: boolean;
+  limits: TierLimits;
+  usage: {
+    gamesToday: number;
+    aiMessagesToday: number;
+    ttsToday: number;
+    topics: number;
+    savedWords: number;
+  };
+}
+
+export interface PremiumPlans {
+  /** Amounts in so'm; 0 means "not on sale yet" and is hidden by the UI. */
+  prices: { monthly: number; yearly: number; lifetime: number };
+  tiers: Record<Tier, { limits: TierLimits }>;
+  defaults: Record<Tier, TierLimits>;
+}
+
+export type PlanId = 'monthly' | 'yearly' | 'lifetime';
+
+export interface CheckoutResponse {
+  id: string;
+  plan: PlanId;
+  amount: number;
+  botUsername: string;
+  /** Telegram deep link that carries the purchase into the payment bot. */
+  deepLink: string;
+  expiresAt: string;
+}
+
+export interface PremiumGrant {
+  id: string;
+  tier: Tier;
+  expiresAt: string | null;
+  source: 'ADMIN' | 'PAYME' | 'CLICK';
+  amount: number | null;
+  note: string | null;
+  createdAt: string;
+  revokedAt: string | null;
+  grantedBy: { id: string; username: string } | null;
+}
+
 // ─── Shared API Response Types ────────────────────────────────────────────────
 
 export interface PaginatedMeta {
@@ -87,8 +148,12 @@ export interface CommunityAuthor {
   username: string;
   avatarUrl: string | null;
   createdAt: string;
+  /** Derived server-side; a lapsed subscription reads as false. */
+  isPremium: boolean;
   publicTopics: number;
   publicBooks: number;
+  /** Only present on the `sort=popular` listing: saves by other learners. */
+  saves?: number;
 }
 
 export interface CommunityProfile {
@@ -97,6 +162,7 @@ export interface CommunityProfile {
     username: string;
     avatarUrl: string | null;
     createdAt: string;
+    isPremium: boolean;
     streak: number;
     xp: number;
     league: string;
@@ -187,7 +253,17 @@ export interface WordProgress {
 
 // ─── Game Types ──────────────────────────────────────────────────────────────
 
-export type GameType = 'TEST' | 'MATCH' | 'WRITE' | 'SHOOTER' | 'BLOCKS';
+export type GameType = 'TEST' | 'MATCH' | 'WRITE' | 'SHOOTER' | 'BLOCKS' | 'MIXED';
+
+/** One round of a MIXED run. The server deals these; the client only renders. */
+export type MixedRoundKind = 'TEST' | 'MATCH' | 'WRITE';
+
+export interface MixedRound {
+  index: number;
+  kind: MixedRoundKind;
+  /** One word for TEST/WRITE, several for MATCH. */
+  wordIds: string[];
+}
 
 export interface SessionWord {
   id: string;
@@ -204,6 +280,8 @@ export interface GameSession {
   gameType: GameType;
   expiresAt: string;
   words: SessionWord[];
+  /** Present only for MIXED — the server's fixed 20-round plan. */
+  rounds?: MixedRound[];
 }
 
 export interface GameAnswer {
