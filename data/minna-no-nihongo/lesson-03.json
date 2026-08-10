@@ -1,0 +1,1047 @@
+[
+  {
+    "japaneseWord": "ここ",
+    "hiragana": "ここ",
+    "meaning": "bu yer, bu joy",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "⓪",
+    "exampleSentence": "ここは食堂です。(ここはしょくどうです。)",
+    "exampleTranslation": "Bu yer — oshxona.",
+    "additionalExamples": [
+      { "sentence": "ここはどこですか。(ここはどこですか。)", "translation": "Bu yer qayer?" },
+      { "sentence": "ここで待ってください。(ここでまってください。)", "translation": "Shu yerda kuting." }
+    ],
+    "synonyms": ["こちら"],
+    "antonyms": ["あそこ"],
+    "nuance": "こ・そ・あ・ど tizimining joy shakli: 「ここ」 so'zlovchi turgan joy. 2-darsdagi 「これ」 buyumni, 「ここ」 esa joyni ko'rsatadi.",
+    "compounds": [
+      { "word": "ここら", "hiragana": "ここら", "meaning": "shu atrof, shu yaqin" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "そこ",
+    "hiragana": "そこ",
+    "meaning": "u yer, o'sha joy (tinglovchiga yaqin)",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "exampleSentence": "そこは会議室です。(そこはかいぎしつです。)",
+    "exampleTranslation": "U yer — majlislar zali.",
+    "additionalExamples": [
+      { "sentence": "そこに座ってください。(そこにすわってください。)", "translation": "O'sha yerga o'tiring." },
+      { "sentence": "そこは何階ですか。(そこはなんがいですか。)", "translation": "U yer nechanchi qavat?" }
+    ],
+    "synonyms": ["そちら"],
+    "antonyms": ["ここ"],
+    "nuance": "Tinglovchiga yaqin joy. Telefonda suhbatdosh turgan joyni ham 「そちら」／「そこ」 deb aytiladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "あそこ",
+    "hiragana": "あそこ",
+    "meaning": "ana u yer, ana u joy (ikkalasidan ham uzoq)",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "あそこはトイレです。(あそこはといれです。)",
+    "exampleTranslation": "Ana u yer — hojatxona.",
+    "additionalExamples": [
+      { "sentence": "エレベーターはあそこです。(えれべーたーはあそこです。)", "translation": "Lift ana u yerda." },
+      { "sentence": "あそこで待ちましょう。(あそこでまちましょう。)", "translation": "Ana u yerda kutaylik." }
+    ],
+    "synonyms": ["あちら"],
+    "antonyms": ["ここ"],
+    "nuance": "Diqqat: qolgan shakllar こ・そ・あ・ど qolipiga to'liq mos tushadi, lekin bu so'z 「あこ」 emas, 「あそこ」 — istisno shakl.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "どこ",
+    "hiragana": "どこ",
+    "meaning": "qayer, qayerda",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "トイレはどこですか。(といれはどこですか。)",
+    "exampleTranslation": "Hojatxona qayerda?",
+    "additionalExamples": [
+      { "sentence": "事務所はどこですか。(じむしょはどこですか。)", "translation": "Ofis qayerda?" },
+      { "sentence": "どこで買いましたか。(どこでかいましたか。)", "translation": "Qayerdan sotib oldingiz?" }
+    ],
+    "synonyms": ["どちら"],
+    "antonyms": [],
+    "nuance": "So'roq shakli. Muloyimroq so'rash uchun 「どちら」 ishlatiladi: 「お国はどちらですか」 — \"Qayerdansiz?\".",
+    "compounds": [
+      { "word": "どこか", "hiragana": "どこか", "meaning": "qayerdadir" },
+      { "word": "どこも", "hiragana": "どこも", "meaning": "hech qayerda (inkor bilan)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "こちら",
+    "hiragana": "こちら",
+    "meaning": "bu yer, bu tomon (「ここ」ning hurmat shakli)",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "こちらは事務所です。(こちらはじむしょです。)",
+    "exampleTranslation": "Bu yer — idora.",
+    "additionalExamples": [
+      { "sentence": "こちらへどうぞ。(こちらへどうぞ。)", "translation": "Marhamat, bu yoqqa." },
+      { "sentence": "エレベーターはこちらです。(えれべーたーはこちらです。)", "translation": "Lift bu tomonda." }
+    ],
+    "synonyms": ["ここ"],
+    "antonyms": ["あちら"],
+    "nuance": "Uch vazifasi bor: hurmat bilan joyni ko'rsatish, yo'nalishni ko'rsatish va odamni tanishtirish — 1-darsdagi 「こちらは～さんです」 aynan shu.",
+    "compounds": [
+      { "word": "こちらこそ", "hiragana": "こちらこそ", "meaning": "aksincha, men ham" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "そちら",
+    "hiragana": "そちら",
+    "meaning": "u yer, o'sha tomon (「そこ」ning hurmat shakli)",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "そちらは会議室です。(そちらはかいぎしつです。)",
+    "exampleTranslation": "U yer — majlislar zali.",
+    "additionalExamples": [
+      { "sentence": "そちらの天気はどうですか。(そちらのてんきはどうですか。)", "translation": "U yoqda ob-havo qanday?" },
+      { "sentence": "そちらへ伺います。(そちらへうかがいます。)", "translation": "Sizning oldingizga boraman." }
+    ],
+    "synonyms": ["そこ"],
+    "antonyms": ["こちら"],
+    "nuance": "Telefon va xat-xabarda suhbatdoshning joyi yoki tashkilotini bildiradi: 「そちらの会社」 — \"sizning firmangiz\".",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "あちら",
+    "hiragana": "あちら",
+    "meaning": "ana u yer, ana u tomon (「あそこ」ning hurmat shakli)",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "お手洗いはあちらです。(おてあらいはあちらです。)",
+    "exampleTranslation": "Hojatxona ana u tomonda.",
+    "additionalExamples": [
+      { "sentence": "受付はあちらです。(うけつけはあちらです。)", "translation": "Qabulxona ana u tomonda." },
+      { "sentence": "あちらでお待ちください。(あちらでおまちください。)", "translation": "Ana u yerda kutib turing." }
+    ],
+    "synonyms": ["あそこ"],
+    "antonyms": ["こちら"],
+    "nuance": "Do'kon va mehmonxonalarda mijozga yo'l ko'rsatganda deyarli doim 「あちら」 ishlatiladi — 「あそこ」 biroz qo'pol eshitiladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "どちら",
+    "hiragana": "どちら",
+    "meaning": "qayer, qaysi tomon (「どこ」ning hurmat shakli)",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "お国はどちらですか。(おくにはどちらですか。)",
+    "exampleTranslation": "Qayer(lik)dansiz?",
+    "additionalExamples": [
+      { "sentence": "会社はどちらですか。(かいしゃはどちらですか。)", "translation": "Firmangiz qayerda?" },
+      { "sentence": "コーヒーと紅茶とどちらがいいですか。(こーひーとこうちゃとどちらがいいですか。)", "translation": "Qahva bilan choydan qaysi biri ma'qul?" }
+    ],
+    "synonyms": ["どこ"],
+    "antonyms": [],
+    "nuance": "Ikki vazifasi bor: 「どこ」ning muloyim shakli, va ikkitadan birini tanlashda \"qaysi biri\" degani. Ikkinchi ma'nosi keyingi darslarda batafsil o'rganiladi.",
+    "compounds": [
+      { "word": "どちらさま", "hiragana": "どちらさま", "meaning": "kim bo'ladilar (juda hurmatli)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "教室",
+    "hiragana": "きょうしつ",
+    "meaning": "sinf, auditoriya, o'quv xonasi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "教室は二階です。(きょうしつはにかいです。)",
+    "exampleTranslation": "Sinf ikkinchi qavatda.",
+    "additionalExamples": [
+      { "sentence": "教室で日本語を勉強します。(きょうしつでにほんごをべんきょうします。)", "translation": "Sinfda yapon tilini o'rganamiz." },
+      { "sentence": "この教室は広いです。(このきょうしつはひろいです。)", "translation": "Bu auditoriya keng." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「教（o'rgatmoq）」＋「室（xona）」. Kurs va to'garak ma'nosida ham keladi: 「料理教室」 — oshpazlik kursi.",
+    "compounds": [
+      { "word": "料理教室", "hiragana": "りょうりきょうしつ", "meaning": "oshpazlik kursi" },
+      { "word": "研究室", "hiragana": "けんきゅうしつ", "meaning": "ilmiy xona, laboratoriya" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "教", "meaning": "o'rgatmoq", "kunReading": "oshi", "onReading": "kyou", "strokes": 11 },
+      { "kanji": "室", "meaning": "xona", "kunReading": "muro", "onReading": "shitsu", "strokes": 9 }
+    ]
+  },
+  {
+    "japaneseWord": "食堂",
+    "hiragana": "しょくどう",
+    "meaning": "oshxona, yemakxona",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "食堂は地下一階です。(しょくどうはちかいっかいです。)",
+    "exampleTranslation": "Oshxona yer ostidagi birinchi qavatda.",
+    "additionalExamples": [
+      { "sentence": "食堂で昼ごはんを食べます。(しょくどうでひるごはんをたべます。)", "translation": "Oshxonada tushlik qilaman." },
+      { "sentence": "会社の食堂は安いです。(かいしゃのしょくどうはやすいです。)", "translation": "Firmaning oshxonasi arzon." }
+    ],
+    "synonyms": ["レストラン", "カフェテリア"],
+    "antonyms": ["台所"],
+    "nuance": "「食堂」 — ovqat yeyiladigan umumiy zal (maktab, firma) yoki oddiy arzon taomxona. Uydagi ovqat pishiriladigan joy esa 「台所（だいどころ）」.",
+    "compounds": [
+      { "word": "学生食堂", "hiragana": "がくせいしょくどう", "meaning": "talabalar oshxonasi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "食", "meaning": "yemoq, ovqat", "kunReading": "ta, ku", "onReading": "shoku", "strokes": 9 },
+      { "kanji": "堂", "meaning": "zal, katta xona", "kunReading": "-", "onReading": "dou", "strokes": 11 }
+    ]
+  },
+  {
+    "japaneseWord": "事務所",
+    "hiragana": "じむしょ",
+    "meaning": "idora, ofis",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "②",
+    "exampleSentence": "事務所は三階です。(じむしょはさんがいです。)",
+    "exampleTranslation": "Ofis uchinchi qavatda.",
+    "additionalExamples": [
+      { "sentence": "事務所で働いています。(じむしょではたらいています。)", "translation": "Ofisda ishlayman." },
+      { "sentence": "ここは弁護士の事務所です。(ここはべんごしのじむしょです。)", "translation": "Bu yer — advokat idorasi." }
+    ],
+    "synonyms": ["オフィス"],
+    "antonyms": [],
+    "nuance": "「事務（idoraviy ish）」＋「所（joy）」. 「オフィス」 zamonaviyroq eshitiladi; 「事務所」 esa advokatlik, buxgalteriya kabi kichik idoralar uchun ko'p ishlatiladi.",
+    "compounds": [
+      { "word": "事務", "hiragana": "じむ", "meaning": "idoraviy ish, kantselyariya ishi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "事", "meaning": "ish, hodisa", "kunReading": "koto", "onReading": "ji", "strokes": 8 },
+      { "kanji": "務", "meaning": "vazifa, xizmat", "kunReading": "tsuto", "onReading": "mu", "strokes": 11 },
+      { "kanji": "所", "meaning": "joy", "kunReading": "tokoro", "onReading": "sho", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "会議室",
+    "hiragana": "かいぎしつ",
+    "meaning": "majlislar zali, yig'ilish xonasi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "会議室は四階です。(かいぎしつはよんかいです。)",
+    "exampleTranslation": "Majlislar zali to'rtinchi qavatda.",
+    "additionalExamples": [
+      { "sentence": "会議室で会議があります。(かいぎしつでかいぎがあります。)", "translation": "Majlislar zalida yig'ilish bo'ladi." },
+      { "sentence": "会議室はどこですか。(かいぎしつはどこですか。)", "translation": "Majlislar zali qayerda?" }
+    ],
+    "synonyms": ["ミーティングルーム"],
+    "antonyms": [],
+    "nuance": "「会議（yig'ilish）」＋「室（xona）」 — xuddi 「教室」「研究室」 kabi qolipda yasalgan.",
+    "compounds": [
+      { "word": "会議", "hiragana": "かいぎ", "meaning": "yig'ilish, majlis" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "会", "meaning": "uchrashmoq, yig'in", "kunReading": "a", "onReading": "kai", "strokes": 6 },
+      { "kanji": "議", "meaning": "muhokama, maslahat", "kunReading": "-", "onReading": "gi", "strokes": 20 },
+      { "kanji": "室", "meaning": "xona", "kunReading": "muro", "onReading": "shitsu", "strokes": 9 }
+    ]
+  },
+  {
+    "japaneseWord": "受付",
+    "hiragana": "うけつけ",
+    "meaning": "qabulxona, ro'yxatga olish joyi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "受付は一階です。(うけつけはいっかいです。)",
+    "exampleTranslation": "Qabulxona birinchi qavatda.",
+    "additionalExamples": [
+      { "sentence": "受付で名前を書いてください。(うけつけでなまえをかいてください。)", "translation": "Qabulxonada ismingizni yozing." },
+      { "sentence": "受付の人に聞きました。(うけつけのひとにききました。)", "translation": "Qabulxonadagi kishidan so'radim." }
+    ],
+    "synonyms": ["フロント", "レセプション"],
+    "antonyms": [],
+    "nuance": "「受ける（qabul qilmoq）」＋「付ける」 dan yasalgan. Mehmonxonaning qabul stoli esa odatda 「フロント」 deyiladi.",
+    "compounds": [
+      { "word": "受付時間", "hiragana": "うけつけじかん", "meaning": "qabul vaqti" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "受", "meaning": "qabul qilmoq", "kunReading": "u", "onReading": "ju", "strokes": 8 },
+      { "kanji": "付", "meaning": "biriktirmoq, qo'shmoq", "kunReading": "tsu", "onReading": "fu", "strokes": 5 }
+    ]
+  },
+  {
+    "japaneseWord": "ロビー",
+    "hiragana": "ロビー",
+    "meaning": "dahliz, vestibyul (lobbi)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "ロビーで待っています。(ろびーでまっています。)",
+    "exampleTranslation": "Dahlizda kutib turaman.",
+    "additionalExamples": [
+      { "sentence": "ホテルのロビーは広いです。(ほてるのろびーはひろいです。)", "translation": "Mehmonxona vestibyuli keng." },
+      { "sentence": "ロビーは一階です。(ろびーはいっかいです。)", "translation": "Dahliz birinchi qavatda." }
+    ],
+    "synonyms": ["玄関"],
+    "antonyms": [],
+    "nuance": "Mehmonxona, teatr yoki katta idora binosining kirish zali. Uy kiraverishi esa 「玄関（げんかん）」 deyiladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "部屋",
+    "hiragana": "へや",
+    "meaning": "xona",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "②",
+    "exampleSentence": "私の部屋は二階です。(わたしのへやはにかいです。)",
+    "exampleTranslation": "Mening xonam ikkinchi qavatda.",
+    "additionalExamples": [
+      { "sentence": "部屋を掃除します。(へやをそうじします。)", "translation": "Xonani tozalayman." },
+      { "sentence": "この部屋は明るいです。(このへやはあかるいです。)", "translation": "Bu xona yorug'." }
+    ],
+    "synonyms": ["ルーム"],
+    "antonyms": [],
+    "nuance": "Maxsus o'qilish: 「部（bu）」＋「屋（ya）」 alohida o'qilmaydi, birgalikda 「へや」 deb o'qiladi — bunday o'qilishlar 熟字訓 deb ataladi.",
+    "compounds": [
+      { "word": "空き部屋", "hiragana": "あきべや", "meaning": "bo'sh xona" },
+      { "word": "部屋代", "hiragana": "へやだい", "meaning": "xona haqi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "部", "meaning": "qism, bo'lim", "kunReading": "-", "onReading": "bu", "strokes": 11 },
+      { "kanji": "屋", "meaning": "bino, do'kon", "kunReading": "ya", "onReading": "oku", "strokes": 9 }
+    ]
+  },
+  {
+    "japaneseWord": "トイレ",
+    "hiragana": "トイレ",
+    "meaning": "hojatxona, tualet",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "トイレはあそこです。(といれはあそこです。)",
+    "exampleTranslation": "Hojatxona ana u yerda.",
+    "additionalExamples": [
+      { "sentence": "すみません、トイレはどこですか。(すみません、といれはどこですか。)", "translation": "Kechirasiz, hojatxona qayerda?" },
+      { "sentence": "トイレは二階にもあります。(といれはにかいにもあります。)", "translation": "Hojatxona ikkinchi qavatda ham bor." }
+    ],
+    "synonyms": ["お手洗い", "化粧室"],
+    "antonyms": [],
+    "nuance": "「トイレ」 — kundalik neytral so'z. Muloyimroq shakli 「お手洗い（おてあらい）」, do'kon va restoranlarda esa 「化粧室（けしょうしつ）」 yozuvi uchraydi.",
+    "compounds": [
+      { "word": "トイレットペーパー", "hiragana": "トイレットペーパー", "meaning": "hojatxona qog'ozi" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "お手洗い",
+    "hiragana": "おてあらい",
+    "meaning": "hojatxona (muloyim shakli)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "お手洗いはあちらです。(おてあらいはあちらです。)",
+    "exampleTranslation": "Hojatxona ana u tomonda.",
+    "additionalExamples": [
+      { "sentence": "お手洗いをお借りしてもいいですか。(おてあらいをおかりしてもいいですか。)", "translation": "Hojatxonangizdan foydalansam bo'ladimi?" },
+      { "sentence": "お手洗いは受付の隣です。(おてあらいはうけつけのとなりです。)", "translation": "Hojatxona qabulxonaning yonida." }
+    ],
+    "synonyms": ["トイレ", "化粧室"],
+    "antonyms": [],
+    "nuance": "So'zma-so'z \"qo'l yuvish joyi\" — to'g'ridan-to'g'ri aytishdan qochish uchun paydo bo'lgan muloyim ibora. Mehmonda yoki rasmiy joyda shu shakl ma'qul.",
+    "compounds": [
+      { "word": "手を洗う", "hiragana": "てをあらう", "meaning": "qo'l yuvmoq" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "手", "meaning": "qo'l", "kunReading": "te", "onReading": "shu", "strokes": 4 },
+      { "kanji": "洗", "meaning": "yuvmoq", "kunReading": "ara", "onReading": "sen", "strokes": 9 }
+    ]
+  },
+  {
+    "japaneseWord": "階段",
+    "hiragana": "かいだん",
+    "meaning": "zina, narvon",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "階段はあそこです。(かいだんはあそこです。)",
+    "exampleTranslation": "Zina ana u yerda.",
+    "additionalExamples": [
+      { "sentence": "階段で二階へ行きます。(かいだんでにかいへいきます。)", "translation": "Zinadan ikkinchi qavatga chiqaman." },
+      { "sentence": "階段が急です。(かいだんがきゅうです。)", "translation": "Zina tik." }
+    ],
+    "synonyms": [],
+    "antonyms": ["エレベーター"],
+    "nuance": "「階（qavat）」＋「段（pog'ona）」. Eskalator — harakatlanuvchi zina — 「エスカレーター」 deyiladi.",
+    "compounds": [
+      { "word": "非常階段", "hiragana": "ひじょうかいだん", "meaning": "favqulodda zina" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "階", "meaning": "qavat, pog'ona", "kunReading": "-", "onReading": "kai", "strokes": 12 },
+      { "kanji": "段", "meaning": "pog'ona, daraja", "kunReading": "-", "onReading": "dan", "strokes": 9 }
+    ]
+  },
+  {
+    "japaneseWord": "エレベーター",
+    "hiragana": "エレベーター",
+    "meaning": "lift",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "エレベーターはあちらです。(えれべーたーはあちらです。)",
+    "exampleTranslation": "Lift ana u tomonda.",
+    "additionalExamples": [
+      { "sentence": "エレベーターで五階へ行きます。(えれべーたーでごかいへいきます。)", "translation": "Lift bilan beshinchi qavatga chiqaman." },
+      { "sentence": "エレベーターは故障です。(えれべーたーはこしょうです。)", "translation": "Lift ishdan chiqqan." }
+    ],
+    "synonyms": ["リフト"],
+    "antonyms": ["階段"],
+    "nuance": "Amerikacha \"elevator\" dan olingan. 「リフト」 yaponchada ko'proq chang'i ko'targichini bildiradi, oddiy bino lifti emas.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "エスカレーター",
+    "hiragana": "エスカレーター",
+    "meaning": "eskalator",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "④",
+    "exampleSentence": "エスカレーターはどこですか。(えすかれーたーはどこですか。)",
+    "exampleTranslation": "Eskalator qayerda?",
+    "additionalExamples": [
+      { "sentence": "エスカレーターで地下へ行きます。(えすかれーたーでちかへいきます。)", "translation": "Eskalator bilan yer ostiga tushaman." },
+      { "sentence": "そのエスカレーターは上りです。(そのえすかれーたーはのぼりです。)", "translation": "U eskalator yuqoriga chiqaradi." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Tokioda eskalatorda chap tomonda turiladi, o'ng tomon shoshayotganlar uchun bo'sh qoldiriladi; Osakada esa aksincha — o'ng tomonda turiladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "[お]国",
+    "hiragana": "[お]くに",
+    "meaning": "vatan, mamlakat",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "お国はどちらですか。(おくにはどちらですか。)",
+    "exampleTranslation": "Vataningiz qayer?",
+    "additionalExamples": [
+      { "sentence": "私の国はウズベキスタンです。(わたしのくにはうずべきすたんです。)", "translation": "Mening vatanim — O'zbekiston." },
+      { "sentence": "国へ帰ります。(くにへかえります。)", "translation": "Vatanimga qaytaman." }
+    ],
+    "synonyms": ["祖国", "出身"],
+    "antonyms": [],
+    "nuance": "Hurmat qo'shimchasi 「お」 faqat suhbatdoshning vatani haqida gapirganda qo'shiladi: 「お国はどちらですか」. O'z vatani haqida esa 「私の国」 deyiladi — 「私のお国」 noto'g'ri.",
+    "compounds": [
+      { "word": "外国", "hiragana": "がいこく", "meaning": "chet el" },
+      { "word": "国際", "hiragana": "こくさい", "meaning": "xalqaro" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "国", "meaning": "davlat, mamlakat", "kunReading": "kuni", "onReading": "koku", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "会社",
+    "hiragana": "かいしゃ",
+    "meaning": "firma, korxona, kompaniya",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "exampleSentence": "会社は東京です。(かいしゃはとうきょうです。)",
+    "exampleTranslation": "Firma Tokioda.",
+    "additionalExamples": [
+      { "sentence": "毎日会社へ行きます。(まいにちかいしゃへいきます。)", "translation": "Har kuni ishga (firmaga) boraman." },
+      { "sentence": "父の会社は大きいです。(ちちのかいしゃはおおきいです。)", "translation": "Otamning firmasi katta." }
+    ],
+    "synonyms": ["企業"],
+    "antonyms": [],
+    "nuance": "1-darsdagi 「会社員」 aynan shu so'zdan yasalgan. 「会社へ行く」 ko'pincha shunchaki \"ishga bormoq\" ma'nosida ishlatiladi.",
+    "compounds": [
+      { "word": "会社員", "hiragana": "かいしゃいん", "meaning": "firma xodimi" },
+      { "word": "本社", "hiragana": "ほんしゃ", "meaning": "bosh ofis" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "会", "meaning": "uchrashmoq, yig'in", "kunReading": "a", "onReading": "kai", "strokes": 6 },
+      { "kanji": "社", "meaning": "jamiyat, kompaniya", "kunReading": "yashiro", "onReading": "sha", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "うち",
+    "hiragana": "うち",
+    "meaning": "uy, o'z uyi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "exampleSentence": "うちは大阪です。(うちはおおさかです。)",
+    "exampleTranslation": "Uyimiz Osakada.",
+    "additionalExamples": [
+      { "sentence": "うちへ帰ります。(うちへかえります。)", "translation": "Uyga qaytaman." },
+      { "sentence": "うちの会社は新しいです。(うちのかいしゃはあたらしいです。)", "translation": "Bizning firmamiz yangi." }
+    ],
+    "synonyms": ["家"],
+    "antonyms": ["よそ"],
+    "nuance": "「うち」 — \"o'zimniki\" degan tuyg'u bilan: uy, oila, hatto o'z firmasi ham (「うちの会社」). Binoning o'zi sifatida esa 「家（いえ）」 ishlatiladi.",
+    "compounds": [
+      { "word": "うちの人", "hiragana": "うちのひと", "meaning": "erim (uydagi kishi)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "電話",
+    "hiragana": "でんわ",
+    "meaning": "telefon",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "exampleSentence": "電話は事務所にあります。(でんわはじむしょにあります。)",
+    "exampleTranslation": "Telefon ofisda.",
+    "additionalExamples": [
+      { "sentence": "電話番号は何番ですか。(でんわばんごうはなんばんですか。)", "translation": "Telefon raqamingiz nechchi?" },
+      { "sentence": "友達に電話します。(ともだちにでんわします。)", "translation": "Do'stimga qo'ng'iroq qilaman." }
+    ],
+    "synonyms": ["ケータイ"],
+    "antonyms": [],
+    "nuance": "「電（elektr）」＋「話（gap）」. 「電話する」 shaklida fe'l bo'lib \"qo'ng'iroq qilmoq\" ma'nosini beradi.",
+    "compounds": [
+      { "word": "電話番号", "hiragana": "でんわばんごう", "meaning": "telefon raqami" },
+      { "word": "携帯電話", "hiragana": "けいたいでんわ", "meaning": "mobil telefon" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "電", "meaning": "elektr, chaqmoq", "kunReading": "-", "onReading": "den", "strokes": 13 },
+      { "kanji": "話", "meaning": "gap, suhbat", "kunReading": "hanashi", "onReading": "wa", "strokes": 13 }
+    ]
+  },
+  {
+    "japaneseWord": "靴",
+    "hiragana": "くつ",
+    "meaning": "poyafzal, tufli",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "②",
+    "exampleSentence": "靴売り場は二階です。(くつうりばはにかいです。)",
+    "exampleTranslation": "Poyafzal rastasi ikkinchi qavatda.",
+    "additionalExamples": [
+      { "sentence": "この靴はイタリアのです。(このくつはいたりあのです。)", "translation": "Bu poyafzal Italiyaniki." },
+      { "sentence": "玄関で靴を脱ぎます。(げんかんでくつをぬぎます。)", "translation": "Kiraverishda poyafzalni yechaman." }
+    ],
+    "synonyms": ["シューズ"],
+    "antonyms": [],
+    "nuance": "Yaponiyada uyga, maktabga va ba'zi restoranlarga kirishda poyafzal yechiladi — shuning uchun 「靴を脱ぐ」 iborasi juda ko'p ishlatiladi.",
+    "compounds": [
+      { "word": "靴下", "hiragana": "くつした", "meaning": "paypoq" },
+      { "word": "運動靴", "hiragana": "うんどうぐつ", "meaning": "sport poyafzali" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "靴", "meaning": "poyafzal", "kunReading": "kutsu", "onReading": "ka", "strokes": 13 }
+    ]
+  },
+  {
+    "japaneseWord": "ネクタイ",
+    "hiragana": "ネクタイ",
+    "meaning": "bo'yinbog', galstuk",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "ネクタイ売り場は三階です。(ねくたいうりばはさんがいです。)",
+    "exampleTranslation": "Bo'yinbog' rastasi uchinchi qavatda.",
+    "additionalExamples": [
+      { "sentence": "このネクタイはいくらですか。(このねくたいはいくらですか。)", "translation": "Bu bo'yinbog' qancha turadi?" },
+      { "sentence": "父にネクタイをあげました。(ちちにねくたいをあげました。)", "translation": "Otamga bo'yinbog' sovg'a qildim." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Inglizcha \"necktie\" dan. Bog'lash uchun 「ネクタイをする／締める」 ishlatiladi, 「着る」 emas — kiyim fe'llari yaponchada buyumga qarab o'zgaradi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "ワイン",
+    "hiragana": "ワイン",
+    "meaning": "musallas, sharob (vino)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "これはフランスのワインです。(これはふらんすのわいんです。)",
+    "exampleTranslation": "Bu — Fransiya sharobi.",
+    "additionalExamples": [
+      { "sentence": "ワインを一本買いました。(わいんをいっぽんかいました。)", "translation": "Bir shisha sharob sotib oldim." },
+      { "sentence": "ワイン売り場は地下です。(わいんうりばはちかです。)", "translation": "Sharob rastasi yer ostida." }
+    ],
+    "synonyms": ["ぶどう酒"],
+    "antonyms": [],
+    "nuance": "Eski yaponcha nomi 「ぶどう酒（しゅ）」 hozir kam ishlatiladi. Shisha sanashda 「一本（いっぽん）」 sanoq qo'shimchasi keladi.",
+    "compounds": [
+      { "word": "赤ワイン", "hiragana": "あかワイン", "meaning": "qizil sharob" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "たばこ",
+    "hiragana": "たばこ",
+    "meaning": "tamaki, sigaret",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "たばこ売り場は一階です。(たばこうりばはいっかいです。)",
+    "exampleTranslation": "Tamaki rastasi birinchi qavatda.",
+    "additionalExamples": [
+      { "sentence": "ここでたばこを吸わないでください。(ここでたばこをすわないでください。)", "translation": "Bu yerda chekmang." },
+      { "sentence": "たばこはいくらですか。(たばこはいくらですか。)", "translation": "Tamaki qancha turadi?" }
+    ],
+    "synonyms": ["シガレット"],
+    "antonyms": [],
+    "nuance": "Portugalcha \"tabaco\" dan kirgan, lekin kana bilan yoziladi (ba'zan katakana 「タバコ」). Chekmoq — 「たばこを吸う（すう）」, so'zma-so'z \"tamakini so'rmoq\".",
+    "compounds": [
+      { "word": "禁煙", "hiragana": "きんえん", "meaning": "chekish taqiqlangan" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "売り場",
+    "hiragana": "うりば",
+    "meaning": "sotuv rastasi, savdo bo'limi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "靴売り場は何階ですか。(くつうりばはなんがいですか。)",
+    "exampleTranslation": "Poyafzal bo'limi nechanchi qavatda?",
+    "additionalExamples": [
+      { "sentence": "ワイン売り場は地下一階です。(わいんうりばはちかいっかいです。)", "translation": "Sharob bo'limi yer ostidagi birinchi qavatda." },
+      { "sentence": "この売り場は今セール中です。(このうりばはいませーるちゅうです。)", "translation": "Bu bo'limda hozir chegirma bor." }
+    ],
+    "synonyms": ["コーナー"],
+    "antonyms": [],
+    "nuance": "「売る（sotmoq）」＋「場（joy）」. Universamlarda buyum nomiga qo'shib ishlatiladi: 靴売り場, ネクタイ売り場, おもちゃ売り場.",
+    "compounds": [
+      { "word": "切符売り場", "hiragana": "きっぷうりば", "meaning": "chipta kassasi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "売", "meaning": "sotmoq", "kunReading": "u", "onReading": "bai", "strokes": 7 },
+      { "kanji": "場", "meaning": "joy, maydon", "kunReading": "ba", "onReading": "jou", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "地下",
+    "hiragana": "ちか",
+    "meaning": "yer osti, yerto'la",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "食堂は地下一階です。(しょくどうはちかいっかいです。)",
+    "exampleTranslation": "Oshxona yer ostidagi birinchi qavatda.",
+    "additionalExamples": [
+      { "sentence": "地下鉄で行きます。(ちかてつでいきます。)", "translation": "Metroda boraman." },
+      { "sentence": "駐車場は地下です。(ちゅうしゃじょうはちかです。)", "translation": "Avtoturargoh yer ostida." }
+    ],
+    "synonyms": [],
+    "antonyms": ["地上"],
+    "nuance": "Yaponiya universamlarida yer osti qavati odatda oziq-ovqat bo'limi bo'ladi va 「デパ地下」 deb ataladi. Yer osti qavatlari 地下一階, 地下二階 tartibida sanaladi.",
+    "compounds": [
+      { "word": "地下鉄", "hiragana": "ちかてつ", "meaning": "metro" },
+      { "word": "地下街", "hiragana": "ちかがい", "meaning": "yer osti savdo ko'chasi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "地", "meaning": "yer, zamin", "kunReading": "-", "onReading": "chi, ji", "strokes": 6 },
+      { "kanji": "下", "meaning": "past, ost", "kunReading": "shita, shimo", "onReading": "ka, ge", "strokes": 3 }
+    ]
+  },
+  {
+    "japaneseWord": "～階",
+    "hiragana": "～かい",
+    "meaning": "~-qavat (qavatlarni sanash qo'shimchasi)",
+    "partOfSpeech": "qo'shimcha",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "",
+    "exampleSentence": "事務所は三階です。(じむしょはさんがいです。)",
+    "exampleTranslation": "Ofis uchinchi qavatda.",
+    "additionalExamples": [
+      { "sentence": "一階に受付があります。(いっかいにうけつけがあります。)", "translation": "Birinchi qavatda qabulxona bor." },
+      { "sentence": "この建物は十階までです。(このたてものはじゅっかいまでです。)", "translation": "Bu bino o'ninchi qavatgacha." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "O'qilishi o'zgaradi: 1階＝いっかい, 3階＝さんがい, 6階＝ろっかい, 8階＝はっかい, 10階＝じゅっかい. Faqat 3 va 何 dan keyin 「がい」 bo'lishiga alohida e'tibor bering.",
+    "compounds": [
+      { "word": "一階", "hiragana": "いっかい", "meaning": "birinchi qavat" },
+      { "word": "三階", "hiragana": "さんがい", "meaning": "uchinchi qavat" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "階", "meaning": "qavat, pog'ona", "kunReading": "-", "onReading": "kai", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "何階",
+    "hiragana": "なんがい",
+    "meaning": "nechanchi qavat",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "靴売り場は何階ですか。(くつうりばはなんがいですか。)",
+    "exampleTranslation": "Poyafzal bo'limi nechanchi qavatda?",
+    "additionalExamples": [
+      { "sentence": "会議室は何階ですか。(かいぎしつはなんがいですか。)", "translation": "Majlislar zali nechanchi qavatda?" },
+      { "sentence": "何階へ行きますか。(なんがいへいきますか。)", "translation": "Nechanchi qavatga chiqasiz?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「なんかい」 emas, 「なんがい」 deb o'qiladi. Diqqat: 「何回（なんかい）」 boshqa so'z — u \"necha marta\" degani.",
+    "compounds": [
+      { "word": "何回", "hiragana": "なんかい", "meaning": "necha marta" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "何", "meaning": "nima, necha", "kunReading": "nani, nan", "onReading": "ka", "strokes": 7 },
+      { "kanji": "階", "meaning": "qavat, pog'ona", "kunReading": "-", "onReading": "kai", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "～円",
+    "hiragana": "～えん",
+    "meaning": "~iyena (Yaponiya pul birligi)",
+    "partOfSpeech": "qo'shimcha",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "",
+    "exampleSentence": "このネクタイは三千円です。(このねくたいはさんぜんえんです。)",
+    "exampleTranslation": "Bu bo'yinbog' uch ming iyena.",
+    "additionalExamples": [
+      { "sentence": "コーヒーは四百五十円です。(こーひーはよんひゃくごじゅうえんです。)", "translation": "Qahva to'rt yuz ellik iyena." },
+      { "sentence": "全部で一万円です。(ぜんぶでいちまんえんです。)", "translation": "Hammasi bo'lib o'n ming iyena." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「円」ning asl ma'nosi \"doira\" — dastlabki tangalar dumaloq bo'lgani uchun shunday atalgan. Belgisi ￥. Narx doim sondan keyin: 500円.",
+    "compounds": [
+      { "word": "円高", "hiragana": "えんだか", "meaning": "iyenaning qimmatlashuvi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "円", "meaning": "doira; iyena", "kunReading": "maru", "onReading": "en", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "いくら",
+    "hiragana": "いくら",
+    "meaning": "qancha, necha pul turadi",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "この時計はいくらですか。(このとけいはいくらですか。)",
+    "exampleTranslation": "Bu soat qancha turadi?",
+    "additionalExamples": [
+      { "sentence": "全部でいくらですか。(ぜんぶでいくらですか。)", "translation": "Hammasi bo'lib qancha?" },
+      { "sentence": "そのかばんはいくらでしたか。(そのかばんはいくらでしたか。)", "translation": "U sumka qancha turgan edi?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Narx so'rashning asosiy shakli. 1-darsdagi 「おいくつ」 (necha yosh) bilan adashtirmang — u yosh, bu esa pul haqida.",
+    "compounds": [
+      { "word": "いくらでも", "hiragana": "いくらでも", "meaning": "qancha bo'lsa ham" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "百",
+    "hiragana": "ひゃく",
+    "meaning": "yuz (100)",
+    "partOfSpeech": "son",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "②",
+    "exampleSentence": "これは百円です。(これはひゃくえんです。)",
+    "exampleTranslation": "Bu yuz iyena.",
+    "additionalExamples": [
+      { "sentence": "三百円ください。(さんびゃくえんください。)", "translation": "Uch yuz iyena bering." },
+      { "sentence": "八百円です。(はっぴゃくえんです。)", "translation": "Sakkiz yuz iyena." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Tovush o'zgarishlariga e'tibor bering: 300＝さんびゃく, 600＝ろっぴゃく, 800＝はっぴゃく. Qolganlari qoidaga muvofiq: 二百＝にひゃく.",
+    "compounds": [
+      { "word": "百円ショップ", "hiragana": "ひゃくえんショップ", "meaning": "yuz iyenalik do'kon" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "百", "meaning": "yuz (100)", "kunReading": "momo", "onReading": "hyaku", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "千",
+    "hiragana": "せん",
+    "meaning": "ming (1000)",
+    "partOfSpeech": "son",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "この本は千円です。(このほんはせんえんです。)",
+    "exampleTranslation": "Bu kitob ming iyena.",
+    "additionalExamples": [
+      { "sentence": "三千円でした。(さんぜんえんでした。)", "translation": "Uch ming iyena edi." },
+      { "sentence": "八千円は高いです。(はっせんえんはたかいです。)", "translation": "Sakkiz ming iyena qimmat." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Tovush o'zgarishlari: 3000＝さんぜん, 8000＝はっせん. 1000 esa oddiygina 「せん」 — 「いちせん」 deyilmaydi.",
+    "compounds": [
+      { "word": "千円札", "hiragana": "せんえんさつ", "meaning": "ming iyenalik banknot" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "千", "meaning": "ming (1000)", "kunReading": "chi", "onReading": "sen", "strokes": 3 }
+    ]
+  },
+  {
+    "japaneseWord": "万",
+    "hiragana": "まん",
+    "meaning": "o'n ming (10 000)",
+    "partOfSpeech": "son",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "このカメラは一万円です。(このかめらはいちまんえんです。)",
+    "exampleTranslation": "Bu fotoapparat o'n ming iyena.",
+    "additionalExamples": [
+      { "sentence": "五万円貸してください。(ごまんえんかしてください。)", "translation": "Ellik ming iyena qarz bering." },
+      { "sentence": "この自動車は二百万円です。(このじどうしゃはにひゃくまんえんです。)", "translation": "Bu avtomobil ikki million iyena." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Muhim farq: yaponchada katta sonlar to'rt xonadan sanaladi. 10 000 uchun 「いちまん」 deyish shart — 「まん」 yolg'iz ishlatilmaydi. 1 000 000 esa 「百万（ひゃくまん）」, ya'ni \"yuzta o'n ming\".",
+    "compounds": [
+      { "word": "百万", "hiragana": "ひゃくまん", "meaning": "million" },
+      { "word": "一万円札", "hiragana": "いちまんえんさつ", "meaning": "o'n ming iyenalik banknot" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "万", "meaning": "o'n ming; son-sanoqsiz", "kunReading": "yorozu", "onReading": "man, ban", "strokes": 3 }
+    ]
+  },
+  {
+    "japaneseWord": "すみません",
+    "hiragana": "すみません",
+    "meaning": "Kechirasiz. / Meni ma'zur tutasiz.",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "④",
+    "exampleSentence": "すみません、これはいくらですか。(すみません、これはいくらですか。)",
+    "exampleTranslation": "Kechirasiz, bu qancha turadi?",
+    "additionalExamples": [
+      { "sentence": "すみません、お手洗いはどこですか。(すみません、おてあらいはどこですか。)", "translation": "Kechirasiz, hojatxona qayerda?" },
+      { "sentence": "遅くなってすみません。(おそくなってすみません。)", "translation": "Kechikkanim uchun uzr." }
+    ],
+    "synonyms": ["失礼します", "ごめんなさい"],
+    "antonyms": [],
+    "nuance": "Uch vazifada: e'tibor tortish (\"kechirasiz\"), uzr so'rash va minnatdorchilik (\"ovora bo'ldingiz\"). Oxirgi ma'nosi o'zbek tiliga to'g'ridan-to'g'ri tarjima qilinmaydi.",
+    "compounds": [
+      { "word": "どうもすみません", "hiragana": "どうもすみません", "meaning": "juda uzr so'rayman" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "～でございます",
+    "hiragana": "～でございます",
+    "meaning": "~dir (「です」ning hurmat shakli)",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "",
+    "exampleSentence": "靴売り場は二階でございます。(くつうりばはにかいでございます。)",
+    "exampleTranslation": "Poyafzal bo'limi ikkinchi qavatdadir.",
+    "additionalExamples": [
+      { "sentence": "こちらが会議室でございます。(こちらがかいぎしつでございます。)", "translation": "Mana bu — majlislar zali." },
+      { "sentence": "はい、IMCでございます。(はい、あいえむしーでございます。)", "translation": "Ha, IMC firmasi tinglayapti." }
+    ],
+    "synonyms": ["です"],
+    "antonyms": [],
+    "nuance": "Xizmat ko'rsatish tili (敬語): sotuvchi, mehmonxona xodimi va operator mijozga shunday gapiradi. O'quvchi buni tushuna olishi kerak, lekin o'zi kundalik nutqda 「です」 ishlatgani ma'qul.",
+    "compounds": [
+      { "word": "ございます", "hiragana": "ございます", "meaning": "bor (「あります」ning hurmat shakli)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "[～を]見せてください",
+    "hiragana": "[～を]みせてください",
+    "meaning": "Iltimos, ~ni ko'rsating.",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "",
+    "exampleSentence": "そのネクタイを見せてください。(そのねくたいをみせてください。)",
+    "exampleTranslation": "O'sha bo'yinbog'ni ko'rsating.",
+    "additionalExamples": [
+      { "sentence": "これを見せてください。(これをみせてください。)", "translation": "Buni ko'rsating." },
+      { "sentence": "写真を見せてください。(しゃしんをみせてください。)", "translation": "Rasmni ko'rsating." }
+    ],
+    "synonyms": ["見せていただけますか"],
+    "antonyms": [],
+    "nuance": "Do'konda buyumni qo'lga olib ko'rmoqchi bo'lganda aytiladi. 「見る（ko'rmoq）」 emas, 「見せる（ko'rsatmoq）」 — orttirma nisbatdagi fe'l.",
+    "compounds": [
+      { "word": "見せる", "hiragana": "みせる", "meaning": "ko'rsatmoq" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "見", "meaning": "ko'rmoq", "kunReading": "mi", "onReading": "ken", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "じゃ",
+    "hiragana": "じゃ",
+    "meaning": "U holda. / Xo'sh. / Demak.",
+    "partOfSpeech": "bog'lovchi",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "じゃ、これをください。(じゃ、これをください。)",
+    "exampleTranslation": "Unda shuni bering.",
+    "additionalExamples": [
+      { "sentence": "じゃ、また明日。(じゃ、またあした。)", "translation": "Xo'sh, ertaga ko'rishguncha." },
+      { "sentence": "じゃ、始めましょう。(じゃ、はじめましょう。)", "translation": "Xo'sh, boshlaylik." }
+    ],
+    "synonyms": ["では", "それでは"],
+    "antonyms": [],
+    "nuance": "「では」ning erkin, og'zaki shakli. Rasmiy vaziyatda 「では」 yoki 「それでは」 ishlatiladi. Suhbatda qaror qabul qilishdan oldin keladi.",
+    "compounds": [
+      { "word": "じゃあね", "hiragana": "じゃあね", "meaning": "xayr (do'stona)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "[～を]ください",
+    "hiragana": "[～を]ください",
+    "meaning": "Iltimos, ~ni bering.",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "",
+    "exampleSentence": "じゃ、これをください。(じゃ、これをください。)",
+    "exampleTranslation": "Unda shuni bering.",
+    "additionalExamples": [
+      { "sentence": "コーヒーを二つください。(こーひーをふたつください。)", "translation": "Ikkita qahva bering." },
+      { "sentence": "この靴をください。(このくつをください。)", "translation": "Shu poyafzalni bering (sotib olaman)." }
+    ],
+    "synonyms": ["お願いします"],
+    "antonyms": [],
+    "nuance": "Do'konda \"shuni sotib olaman\" degani ham shu ibora bilan aytiladi. 「くださる」 — \"bermoq\"ning hurmat shakli, shundan yasalgan.",
+    "compounds": [
+      { "word": "ください", "hiragana": "ください", "meaning": "bering, iltimos" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "新大阪",
+    "hiragana": "しんおおさか",
+    "meaning": "Shin-Osaka (Osakadagi bekat nomi)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "",
+    "exampleSentence": "新大阪は大阪の駅です。(しんおおさかはおおさかのえきです。)",
+    "exampleTranslation": "Shin-Osaka — Osakadagi bekat.",
+    "additionalExamples": [
+      { "sentence": "新大阪から東京へ行きます。(しんおおさかからとうきょうへいきます。)", "translation": "Shin-Osakadan Tokioga boraman." },
+      { "sentence": "新大阪で新幹線に乗ります。(しんおおさかでしんかんせんにのります。)", "translation": "Shin-Osakada shinkansenga o'tiraman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Shinkansen (tezyurar poyezd) uchun qurilgan bekat, shuning uchun nomi oldida 「新（yangi）」 turadi. Xuddi shunday 「新横浜」「新神戸」 bekatlari ham bor.",
+    "compounds": [
+      { "word": "新幹線", "hiragana": "しんかんせん", "meaning": "shinkansen, tezyurar poyezd" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "新", "meaning": "yangi", "kunReading": "atara", "onReading": "shin", "strokes": 13 },
+      { "kanji": "大", "meaning": "katta", "kunReading": "oo", "onReading": "dai", "strokes": 3 },
+      { "kanji": "阪", "meaning": "qiyalik (Osaka nomida)", "kunReading": "saka", "onReading": "han", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "イタリア",
+    "hiragana": "イタリア",
+    "meaning": "Italiya",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "この靴はイタリアのです。(このくつはいたりあのです。)",
+    "exampleTranslation": "Bu poyafzal Italiyaniki.",
+    "additionalExamples": [
+      { "sentence": "イタリア料理が好きです。(いたりありょうりがすきです。)", "translation": "Italiya taomlarini yaxshi ko'raman." },
+      { "sentence": "彼はイタリア人です。(かれはいたりあじんです。)", "translation": "U italiyalik." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Qisqartmalarda 「伊（イ）」 belgisi ishlatiladi (日伊＝Yaponiya-Italiya).",
+    "compounds": [
+      { "word": "イタリア人", "hiragana": "イタリアじん", "meaning": "italiyalik" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "スイス",
+    "hiragana": "スイス",
+    "meaning": "Shveytsariya",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "この時計はスイスのです。(このとけいはすいすのです。)",
+    "exampleTranslation": "Bu soat Shveytsariyaniki.",
+    "additionalExamples": [
+      { "sentence": "スイスのチョコレートはおいしいです。(すいすのちょこれーとはおいしいです。)", "translation": "Shveytsariya shokoladi mazali." },
+      { "sentence": "スイスへ行きたいです。(すいすへいきたいです。)", "translation": "Shveytsariyaga bormoqchiman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Diqqat: 「スイス」 — Shveytsariya, 「スウェーデン」 — Shvetsiya. Katakanada ikkalasi o'xshash boshlangani uchun tez-tez adashtiriladi.",
+    "compounds": [
+      { "word": "スイス人", "hiragana": "スイスじん", "meaning": "shveytsariyalik" }
+    ],
+    "kanjiInfo": []
+  }
+]
