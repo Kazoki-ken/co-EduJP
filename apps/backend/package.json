@@ -10,7 +10,9 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -51,7 +53,8 @@
     "@types/uuid": "^9.0.8",
     "prisma": "^5.13.0",
     "tsx": "^4.8.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vitest": "^2.1.9"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

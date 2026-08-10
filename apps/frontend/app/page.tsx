@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { TierStrip } from '@/components/premium/SubscriptionCard';
+import { speakWord } from '@/lib/speak';
 import { useDashboard } from '@/hooks/useDashboard';
 import { cn, leagueIcon } from '@/lib/utils';
 
@@ -532,14 +533,7 @@ function ReviewCard({
 }
 
 function WordOfTheDay({ word }: { word: { id: string; japaneseWord: string; hiragana: string; meaning: string } }) {
-  const speak = () => {
-    const base = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
-    const text = word.hiragana || word.japaneseWord;
-    fetch(`${base}/tts?text=${encodeURIComponent(text)}&voice=ja-JP-NanamiNeural`)
-      .then((r) => r.blob())
-      .then((b) => new Audio(URL.createObjectURL(b)).play())
-      .catch(() => {});
-  };
+  const speak = () => { void speakWord(word); };
 
   return (
     <div className="card-glass p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-border/40">

@@ -54,6 +54,9 @@ export function useWords(params: WordListParams, options?: UseWordsOptions): Use
           ...(params.search   && { search:  params.search   }),
           ...(params.topicId  && { topicId: params.topicId  }),
           ...(params.bookId   && { bookId:  params.bookId   }),
+          // Slim rows when the caller only renders a result line — see
+          // WordListParams.compact.
+          ...(params.compact  && { compact: 'true'           }),
         },
         signal: abortRef.current.signal,
       });

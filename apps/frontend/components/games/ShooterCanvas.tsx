@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSafeTimeout } from '@/hooks/useSafeTimeout';
 import { useAuth } from '@/context/AuthContext';
 import {
   MAX_MULTIPLIER,
@@ -79,6 +80,7 @@ interface ShooterCanvasProps {
 }
 
 export function ShooterCanvas({ session, onComplete }: ShooterCanvasProps) {
+  const delay = useSafeTimeout();
   const { user } = useAuth();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -285,8 +287,8 @@ export function ShooterCanvas({ session, onComplete }: ShooterCanvasProps) {
       isNewHighestLevel,
     };
 
-    setTimeout(() => { setDone(true); completeRef.current(answers, stats); }, 700);
-  }, [session, user]);
+    delay(() => { setDone(true); completeRef.current(answers, stats); }, 700);
+  }, [session, user, delay]);
 
   // ── Pointer handler ──────────────────────────────────────────────────────
   const handlePointer = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {

@@ -8,9 +8,9 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { isAnswerCorrect } from '@/lib/answerCheck';
+import { speakWord as speak } from '@/lib/speak';
+import { useSafeTimeout } from '@/hooks/useSafeTimeout';
 import type { GameAnswer, GameSession, MixedRound, MixedRoundKind, SessionWord } from '@/lib/types';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
 
 /**
  * Lives inside a MATCH round. Running out does NOT end the run — it ends the
@@ -35,14 +35,6 @@ const ROUND_META: Record<MixedRoundKind, { label: string; Icon: LucideIcon; chip
     Icon: PenLine,
     chip: 'bg-red-500/15 text-red-300 border-red-500/30',
   },
-};
-
-const speak = (word: SessionWord) => {
-  const text = word.hiragana || word.japaneseWord;
-  fetch(`${API_BASE}/tts?text=${encodeURIComponent(text)}&voice=ja-JP-NanamiNeural`)
-    .then((res) => res.blob())
-    .then((blob) => new Audio(URL.createObjectURL(blob)).play())
-    .catch(() => {});
 };
 
 // ─── Orchestrator ─────────────────────────────────────────────────────────────
@@ -169,6 +161,7 @@ function TestRound({
   pool: SessionWord[];
   onDone: RoundDone;
 }) {
+  const delay = useSafeTimeout();
   const [options] = useState(() => buildOptions(word, pool));
   const [selected, setSelected] = useState<string | null>(null);
   const startedAt = useRef(Date.now());
@@ -182,7 +175,7 @@ function TestRound({
       answer: option,
       timeMs: Date.now() - startedAt.current,
     };
-    setTimeout(() => onDone([answer], correct), 900);
+    delay(() => onDone([answer], correct), 900);
   };
 
   return (
@@ -237,15 +230,16 @@ function TestRound({
 // ─── WRITE round — one word, type the Japanese ───────────────────────────────
 
 function WriteRound({ word, onDone }: { word: SessionWord; onDone: RoundDone }) {
+  const delay = useSafeTimeout();
   const [input, setInput] = useState('');
   const [state, setState] = useState<'idle' | 'correct' | 'wrong'>('idle');
   const startedAt = useRef(Date.now());
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const t = setTimeout(() => inputRef.current?.focus(), 100);
+    const t = delay(() => inputRef.current?.focus(), 100);
     return () => clearTimeout(t);
-  }, []);
+  }, [delay]);
 
   const handleSubmit = () => {
     if (state !== 'idle' || !input.trim()) return;
@@ -260,7 +254,7 @@ function WriteRound({ word, onDone }: { word: SessionWord; onDone: RoundDone }) 
       answer: input.trim(),
       timeMs: Date.now() - startedAt.current,
     };
-    setTimeout(() => onDone([answer], correct), 1300);
+    delay(() => onDone([answer], correct), 1300);
   };
 
   return (
@@ -362,6 +356,7 @@ interface Tile {
  * right are deliberately thrown away with the rest — the round is the unit.
  */
 function MatchRound({ words, onDone }: { words: SessionWord[]; onDone: RoundDone }) {
+  const delay = useSafeTimeout();
   const [tiles, setTiles] = useState<Tile[]>([]);
   const [selected, setSelected] = useState<Tile | null>(null);
   const [wrongPair, setWrongPair] = useState<[string, string] | null>(null);
@@ -402,8 +397,8 @@ function MatchRound({ words, onDone }: { words: SessionWord[]; onDone: RoundDone
       answer: '',
       timeMs: Date.now() - startedAt.current,
     }));
-    setTimeout(() => onDone(blanks, false), 1400);
-  }, [words, onDone]);
+    delay(() => onDone(blanks, false), 1400);
+  }, [words, onDone, delay]);
 
   const handleSelect = (tile: Tile) => {
     if (busy.current || tile.matched || failed) return;
@@ -431,7 +426,7 @@ function MatchRound({ words, onDone }: { words: SessionWord[]; onDone: RoundDone
       ];
 
       const cleared = solved.current.length >= words.length;
-      setTimeout(() => {
+      delay(() => {
         busy.current = false;
         if (cleared) onDone(solved.current, true);
       }, 320);
@@ -444,7 +439,7 @@ function MatchRound({ words, onDone }: { words: SessionWord[]; onDone: RoundDone
     const remaining = lives - 1;
     setLives(remaining);
 
-    setTimeout(() => {
+    delay(() => {
       setWrongPair(null);
       setSelected(null);
       busy.current = false;

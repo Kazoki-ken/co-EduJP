@@ -159,6 +159,8 @@ export const getWords = async (req: AuthenticatedRequest, res: Response): Promis
     search: req.query.search as string | undefined,
     topicId: req.query.topicId as string | undefined,
     bookId: req.query.bookId as string | undefined,
+    // Opt-in slim rows for list screens — see WordListQuery.compact.
+    compact: req.query.compact === 'true' || req.query.compact === '1',
   });
   res.json(result);
 };

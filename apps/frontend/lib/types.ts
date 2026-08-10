@@ -178,7 +178,11 @@ export interface WordTopic {
   topic: {
     id: string;
     name: string;
-    book: { id: string; title: string } | null;
+    /**
+     * Only the single-word endpoint sends this. The list endpoint used to ship
+     * it with every row and no screen ever read it, so it was dropped there.
+     */
+    book?: { id: string; title: string } | null;
   };
 }
 
@@ -212,11 +216,12 @@ export interface Word {
   japaneseWord: string;
   hiragana: string;
   meaning: string;
-  exampleSentence: string | null;
-  exampleTranslation: string | null;
-  createdAt: string;
   isSaved: boolean;
-  wordTopics: WordTopic[];
+  /** Absent on a `compact` listing, which sends only the four fields above. */
+  exampleSentence?: string | null;
+  exampleTranslation?: string | null;
+  createdAt?: string;
+  wordTopics?: WordTopic[];
 
   // Extended fields
   partOfSpeech?: string | null;
@@ -328,4 +333,9 @@ export interface WordListParams {
   bookId?: string;
   page?: number;
   limit?: number;
+  /**
+   * Asks for only the fields a result row shows. Roughly a third of the full
+   * payload — use it wherever the extended fields are not rendered.
+   */
+  compact?: boolean;
 }

@@ -45,6 +45,16 @@ export interface WordListQuery {
   search?: string;
   topicId?: string;
   bookId?: string;
+  /**
+   * Returns only what a result row shows: the word, its reading, its meaning
+   * and whether it is saved.
+   *
+   * The full shape carries every extended field — kanji breakdowns, compounds,
+   * example sentences — plus each topic the word belongs to. That is ~2.3 kB
+   * per row, and the search list displays none of it. Opt-in rather than the
+   * default so the detail card and the admin screens keep the full payload.
+   */
+  compact?: boolean;
 }
 
 // ─── Official-content Filters ────────────────────────────────────────────────
@@ -147,6 +157,60 @@ export const deleteBook = async (id: string) => {
 
 // ─── Topics ───────────────────────────────────────────────────────────────────
 
+/**
+ * How many words of each topic this learner has already saved.
+ *
+ * A topic counts as saved once every word in it is saved. Working that out
+ * used to mean loading each topic's full word list into Node — on the live
+ * dictionary that was 11 887 junction rows fetched, then fed back as an
+ * `IN (11 887 ids)` filter, all to produce one boolean per topic. It cost
+ * ~180 ms for a 9.6 kB response.
+ *
+ * The database can count instead. One grouped row per topic, regardless of how
+ * many words the topic holds.
+ */
+const savedCountsByTopic = async (
+  userId: string,
+  topicIds: string[],
+): Promise<Map<string, number>> => {
+  if (topicIds.length === 0) return new Map();
+
+  const rows = await prisma.$queryRaw<{ topicId: string; saved: number }[]>`
+    SELECT wt.topic_id AS "topicId", COUNT(*)::int AS "saved"
+    FROM word_topics wt
+    JOIN saved_words sw
+      ON sw.word_id = wt.word_id
+     AND sw.user_id = ${userId}
+    WHERE wt.topic_id = ANY(${topicIds})
+    GROUP BY wt.topic_id
+  `;
+
+  return new Map(rows.map((r) => [r.topicId, r.saved]));
+};
+
+/**
+ * Attaches `isSaved` to topics that already carry `_count.wordTopics`.
+ *
+ * An empty topic is never "saved": there is nothing in it to have saved, and
+ * reporting it complete would put a dead save button on the card.
+ */
+const withSavedFlag = async <T extends { id: string; _count: { wordTopics: number } }>(
+  topics: T[],
+  userId?: string,
+): Promise<(T & { isSaved: boolean })[]> => {
+  if (!userId) return topics.map((t) => ({ ...t, isSaved: false }));
+
+  const saved = await savedCountsByTopic(
+    userId,
+    topics.map((t) => t.id),
+  );
+
+  return topics.map((t) => ({
+    ...t,
+    isSaved: t._count.wordTopics > 0 && (saved.get(t.id) ?? 0) >= t._count.wordTopics,
+  }));
+};
+
 export const listTopics = async (bookId?: string, userId?: string) => {
   const topics = await prisma.topic.findMany({
     where: bookId ? { bookId, ...OFFICIAL_ONLY } : OFFICIAL_ONLY,
@@ -154,28 +218,10 @@ export const listTopics = async (bookId?: string, userId?: string) => {
     include: {
       _count: { select: { wordTopics: true } },
       book: { select: { id: true, title: true } },
-      wordTopics: { select: { wordId: true } },
     },
   });
 
-  if (!userId) {
-    return topics.map(({ wordTopics: _wt, ...t }) => ({ ...t, isSaved: false }));
-  }
-
-  // Fetch all saved word IDs for this user in one query
-  const allWordIds = topics.flatMap(t => t.wordTopics.map(wt => wt.wordId));
-  const savedWords = allWordIds.length > 0
-    ? await prisma.savedWord.findMany({
-        where: { userId, wordId: { in: allWordIds } },
-        select: { wordId: true },
-      })
-    : [];
-  const savedSet = new Set(savedWords.map(sw => sw.wordId));
-
-  return topics.map(({ wordTopics, ...t }) => ({
-    ...t,
-    isSaved: wordTopics.length > 0 && wordTopics.every(wt => savedSet.has(wt.wordId)),
-  }));
+  return withSavedFlag(topics, userId);
 };
 
 export const getTopicsByBook = async (bookId: string, userId?: string) => {
@@ -187,27 +233,10 @@ export const getTopicsByBook = async (bookId: string, userId?: string) => {
     orderBy: { name: 'asc' },
     include: {
       _count: { select: { wordTopics: true } },
-      wordTopics: { select: { wordId: true } },
     },
   });
 
-  if (!userId) {
-    return topics.map(({ wordTopics: _wt, ...t }) => ({ ...t, isSaved: false }));
-  }
-
-  const allWordIds = topics.flatMap(t => t.wordTopics.map(wt => wt.wordId));
-  const savedWords = allWordIds.length > 0
-    ? await prisma.savedWord.findMany({
-        where: { userId, wordId: { in: allWordIds } },
-        select: { wordId: true },
-      })
-    : [];
-  const savedSet = new Set(savedWords.map(sw => sw.wordId));
-
-  return topics.map(({ wordTopics, ...t }) => ({
-    ...t,
-    isSaved: wordTopics.length > 0 && wordTopics.every(wt => savedSet.has(wt.wordId)),
-  }));
+  return withSavedFlag(topics, userId);
 };
 
 export const createTopic = async (dto: CreateTopicDto) => {
@@ -263,23 +292,39 @@ export const listWords = async (userId: string | undefined, query: WordListQuery
     where.wordTopics = { some: { topic: { bookId: query.bookId } } };
   }
 
+  const savedWords = userId
+    ? ({ savedWords: { where: { userId }, select: { userId: true } } } as const)
+    : undefined;
+
   const [words, total] = await Promise.all([
-    prisma.word.findMany({
-      where,
-      skip,
-      take: limit,
-      orderBy: { createdAt: 'desc' },
-      include: {
-        wordTopics: {
-          include: {
-            topic: { include: { book: { select: { id: true, title: true } } } },
+    query.compact
+      ? prisma.word.findMany({
+          where,
+          skip,
+          take: limit,
+          orderBy: { createdAt: 'desc' },
+          select: {
+            id: true,
+            japaneseWord: true,
+            hiragana: true,
+            meaning: true,
+            ...savedWords,
           },
-        },
-        ...(userId && {
-          savedWords: { where: { userId }, select: { userId: true } },
+        })
+      : prisma.word.findMany({
+          where,
+          skip,
+          take: limit,
+          orderBy: { createdAt: 'desc' },
+          include: {
+            wordTopics: {
+              // Only `topic.name` is ever read from here. The nested book was
+              // shipped with every row of every word and displayed nowhere.
+              include: { topic: { select: { id: true, name: true } } },
+            },
+            ...savedWords,
+          },
         }),
-      },
-    }),
     prisma.word.count({ where }),
   ]);
 

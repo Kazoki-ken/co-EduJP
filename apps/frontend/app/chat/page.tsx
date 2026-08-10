@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User, Volume2, AlertCircle, Sparkles, RotateCcw } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { QuotaBar } from '@/components/premium/UpgradeNotice';
+import { speak } from '@/lib/speak';
+import { useSiteName } from '@/lib/siteConfig';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { getAccessToken } from '@/lib/api';
@@ -38,13 +40,7 @@ const SUGGESTIONS = [
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function playTts(text: string) {
-  const url = `${API_BASE}/tts?text=${encodeURIComponent(text)}&voice=ja-JP-NanamiNeural`;
-  fetch(url)
-    .then((r) => r.blob())
-    .then((b) => new Audio(URL.createObjectURL(b)).play())
-    .catch(() => {});
-}
+const playTts = (text: string) => { void speak(text); };
 
 function extractJapanese(text: string): string | null {
   const match = text.match(/[\u3040-\u30ff\u4e00-\u9fff]+/g);
@@ -127,12 +123,6 @@ export default function ChatPage() {
   const inputRef    = useRef<HTMLTextAreaElement>(null);
   const abortRef    = useRef<AbortController | null>(null);
 
-  useEffect(() => {
-    fetch(`${API_BASE}/config/public`)
-      .then(res => res.json())
-      .then(data => { if (data.site_name) setSiteName(data.site_name); })
-      .catch(() => {});
-  }, []);
 
   // Auto-scroll to bottom whenever messages change
   useEffect(() => {

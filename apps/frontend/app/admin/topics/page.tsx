@@ -512,7 +512,7 @@ export default function AdminTopicsPage() {
     const word = words.find((w) => w.id === wordId);
     if (!word) return;
 
-    const currentTopics = word.wordTopics.map((wt) => wt.topic.id);
+    const currentTopics = (word.wordTopics ?? []).map((wt) => wt.topic.id);
     let newTopicIds: string[];
 
     if (share) {
@@ -721,7 +721,7 @@ export default function AdminTopicsPage() {
                             )}
                           </div>
                           <span className="text-xs text-primary/80 font-bold bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
-                            {word.wordTopics[0]?.topic.name ? 'Mavzu' : 'SRS'}
+                            {(word.wordTopics ?? [])[0]?.topic.name ? 'Mavzu' : 'SRS'}
                           </span>
                         </div>
 

@@ -83,10 +83,10 @@ function WordFormModal({ word, books, topics, onClose, onSuccess }: WordFormModa
       setSynonymsText(word.synonyms?.join(', ') || '');
       setAntonymsText(word.antonyms?.join(', ') || '');
       setNuance(word.nuance || '');
-      setSelectedTopics(word.wordTopics.map((wt) => wt.topic.id));
+      setSelectedTopics((word.wordTopics ?? []).map((wt) => wt.topic.id));
       
       // Auto select book if topic has a book
-      const firstTopicId = word.wordTopics[0]?.topic.id;
+      const firstTopicId = (word.wordTopics ?? [])[0]?.topic.id;
       const matchedTopic = topics.find((t) => t.id === firstTopicId);
       if (matchedTopic?.bookId) {
         setSelectedBookId(matchedTopic.bookId);
@@ -998,9 +998,9 @@ export default function AdminWordsPage() {
                         {w.partOfSpeech || '—'}
                       </td>
                       <td className="px-4 py-3 hidden lg:table-cell text-text-muted text-xs">
-                        {w.wordTopics.length > 0 ? (
+                        {(w.wordTopics ?? []).length > 0 ? (
                           <div className="flex flex-wrap gap-1">
-                            {w.wordTopics.map((wt) => (
+                            {(w.wordTopics ?? []).map((wt) => (
                               <span key={wt.topic.id} className="bg-surface-2 px-1.5 py-0.5 rounded border border-border text-[10px]">
                                 {wt.topic.name}
                               </span>

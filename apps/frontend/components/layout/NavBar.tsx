@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { cn, leagueIcon } from '@/lib/utils';
+import { useSiteName } from '@/lib/siteConfig';
 
 // ─── Nav Items ────────────────────────────────────────────────────────────────
 
@@ -38,13 +39,7 @@ export function NavBar() {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [siteName, setSiteName] = useState('VocabJP');
-
-  useEffect(() => {
-    api.get<{ site_name?: string }>('/config/public')
-      .then(({ data }) => { if (data.site_name) setSiteName(data.site_name); })
-      .catch(() => {});
-  }, []);
+  const siteName = useSiteName();
 
   const handleLogout = async () => {
     setProfileOpen(false);

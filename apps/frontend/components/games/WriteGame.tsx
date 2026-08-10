@@ -4,10 +4,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, Send, CheckCircle, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useSafeTimeout } from '@/hooks/useSafeTimeout';
 import { isAnswerCorrect } from '@/lib/answerCheck';
+import { speakWord as speak } from '@/lib/speak';
 import type { GameSession, GameAnswer, SessionWord } from '@/lib/types';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
 
 type WriteState = 'idle' | 'correct' | 'wrong';
 
@@ -17,6 +17,7 @@ interface WriteGameProps {
 }
 
 export function WriteGame({ session, onComplete }: WriteGameProps) {
+  const delay = useSafeTimeout();
   const words      = session.words;
   const [index,    setIndex]    = useState(0);
   const [input,    setInput]    = useState('');
@@ -31,18 +32,10 @@ export function WriteGame({ session, onComplete }: WriteGameProps) {
     setInput('');
     setState('idle');
     startedAt.current = Date.now();
-    setTimeout(() => inputRef.current?.focus(), 100);
-  }, [index]);
+    delay(() => inputRef.current?.focus(), 100);
+  }, [index, delay]);
 
-  const handleTts = useCallback(async () => {
-    const url = `${API_BASE}/tts?text=${encodeURIComponent(currentWord.hiragana || currentWord.japaneseWord)}&voice=ja-JP-NanamiNeural`;
-    try {
-      const res   = await fetch(url);
-      const blob  = await res.blob();
-      const audio = new Audio(URL.createObjectURL(blob));
-      audio.play();
-    } catch {}
-  }, [currentWord]);
+  const handleTts = useCallback(() => speak(currentWord), [currentWord]);
 
   const handleSubmit = useCallback(() => {
     if (state !== 'idle' || !input.trim()) return;
@@ -60,14 +53,14 @@ export function WriteGame({ session, onComplete }: WriteGameProps) {
     const updatedAnswers = [...answers, newAnswer];
     setAnswers(updatedAnswers);
 
-    setTimeout(() => {
+    delay(() => {
       if (index + 1 >= words.length) {
         onComplete(updatedAnswers);
       } else {
         setIndex((i) => i + 1);
       }
     }, 1100);
-  }, [state, input, currentWord, index, words, answers, onComplete]);
+  }, [state, input, currentWord, index, words, answers, onComplete, delay]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') handleSubmit();

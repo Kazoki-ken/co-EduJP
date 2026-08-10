@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useSafeTimeout } from '@/hooks/useSafeTimeout';
 import { Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -64,6 +65,7 @@ interface BlockBlastGameProps {
 type Phase = 'playing' | 'question' | 'over';
 
 export function BlockBlastGame({ session, userId, onComplete }: BlockBlastGameProps) {
+  const delay = useSafeTimeout();
   const [grid, setGrid] = useState<Grid>(emptyGrid);
   const [tray, setTray] = useState<Shape[]>(() => randomTray(3));
   const [score, setScore] = useState(0);
@@ -127,8 +129,8 @@ export function BlockBlastGame({ session, userId, onComplete }: BlockBlastGamePr
   const addPopup = useCallback((text: string, accent = false) => {
     const id = ++popupId.current;
     setPopups((p) => [...p, { id, text, accent }]);
-    setTimeout(() => setPopups((p) => p.filter((x) => x.id !== id)), 900);
-  }, []);
+    delay(() => setPopups((p) => p.filter((x) => x.id !== id)), 900);
+  }, [delay]);
 
   // ── Question flow ────────────────────────────────────────────────────────
 
@@ -183,7 +185,7 @@ export function BlockBlastGame({ session, userId, onComplete }: BlockBlastGamePr
     } catch { /* ignore */ }
 
     setPhase('over');
-    setTimeout(() => {
+    delay(() => {
       onComplete(answersRef.current, {
         score: finalScore,
         lines,
@@ -196,7 +198,7 @@ export function BlockBlastGame({ session, userId, onComplete }: BlockBlastGamePr
         isNewHighScore,
       });
     }, 700);
-  }, [userId, lines, placed, bestCombo, perfectClears, onComplete]);
+  }, [userId, lines, placed, bestCombo, perfectClears, onComplete, delay]);
 
   // ── Placement ────────────────────────────────────────────────────────────
 
@@ -212,7 +214,7 @@ export function BlockBlastGame({ session, userId, onComplete }: BlockBlastGamePr
       for (const r of result.clearedRows) for (let c = 0; c < GRID; c++) marks.add(`${r}:${c}`);
       for (const c of result.clearedCols) for (let r = 0; r < GRID; r++) marks.add(`${r}:${c}`);
       setClearing(marks);
-      setTimeout(() => setClearing(new Set()), 260);
+      delay(() => setClearing(new Set()), 260);
 
       addPopup(`+${result.points}`, true);
       if (result.breakdown.comboMultiplier > 1) {
@@ -246,7 +248,7 @@ export function BlockBlastGame({ session, userId, onComplete }: BlockBlastGamePr
     }
 
     return true;
-  }, [grid, tray, score, combo, nextQuestion, finish, addPopup]);
+  }, [grid, tray, score, combo, nextQuestion, finish, addPopup, delay]);
 
   // ── Pointer drag ─────────────────────────────────────────────────────────
 

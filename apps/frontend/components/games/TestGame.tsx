@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, Loader2 } from 'lucide-react';
+import { Volume2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useSafeTimeout } from '@/hooks/useSafeTimeout';
+import { speakWord as speak } from '@/lib/speak';
 import type { GameSession, GameAnswer, SessionWord } from '@/lib/types';
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
 
 // Build 4 options: 1 correct + 3 distractors from session pool
 function buildOptions(word: SessionWord, pool: SessionWord[]): string[] {
@@ -33,6 +33,7 @@ interface TestGameProps {
 }
 
 export function TestGame({ session, onComplete }: TestGameProps) {
+  const delay = useSafeTimeout();
   const words       = session.words;
   const [index,     setIndex]     = useState(0);
   const [options,   setOptions]   = useState<string[]>([]);
@@ -64,25 +65,17 @@ export function TestGame({ session, onComplete }: TestGameProps) {
     ]);
 
     // Advance after a moment
-    setTimeout(() => {
+    delay(() => {
       if (index + 1 >= words.length) {
         onComplete([...answers, { wordId: currentWord.id, answer: option, timeMs }]);
       } else {
         setIndex((i) => i + 1);
       }
     }, 900);
-  }, [state, currentWord, index, words, answers, onComplete]);
+  }, [state, currentWord, index, words, answers, onComplete, delay]);
 
   // TTS
-  const handleTts = useCallback(async () => {
-    const url = `${API_BASE}/tts?text=${encodeURIComponent(currentWord.hiragana || currentWord.japaneseWord)}&voice=ja-JP-NanamiNeural`;
-    try {
-      const res   = await fetch(url);
-      const blob  = await res.blob();
-      const audio = new Audio(URL.createObjectURL(blob));
-      audio.play();
-    } catch {}
-  }, [currentWord]);
+  const handleTts = useCallback(() => speak(currentWord), [currentWord]);
 
   const progress = ((index) / words.length) * 100;
 

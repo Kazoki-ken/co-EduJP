@@ -84,7 +84,7 @@ export function WordCard({ word, isAuthenticated, onToggleSave }: WordCardProps)
   };
 
   // ── Topic Pills ───────────────────────────────────────────────────────────
-  const topics = word.wordTopics.map((wt) => wt.topic.name);
+  const topics = (word.wordTopics ?? []).map((wt) => wt.topic.name);
 
   return (
     <div className={cn(

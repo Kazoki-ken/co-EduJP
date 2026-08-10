@@ -23,18 +23,13 @@ import {
   Crown
 } from 'lucide-react';
 import { cn, leagueIcon } from '@/lib/utils';
+import { useSiteName } from '@/lib/siteConfig';
 
 export function AppLayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, isAuthenticated, isLoading, logout } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
-  const [siteName, setSiteName] = useState('VocabJP');
-
-  useEffect(() => {
-    api.get<{ site_name?: string }>('/config/public')
-      .then(({ data }) => { if (data.site_name) setSiteName(data.site_name); })
-      .catch(() => {});
-  }, []);
+  const siteName = useSiteName();
 
   const handleLogout = async () => {
     setProfileOpen(false);

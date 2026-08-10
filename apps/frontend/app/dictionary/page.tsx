@@ -198,7 +198,7 @@ export default function DictionaryPage() {
     error: wordsError,
     toggleSave: toggleSaveWord,
   } = useWords(
-    { search: wordsQuery, page: wordsPage, limit: 20 },
+    { search: wordsQuery, page: wordsPage, limit: 20, compact: true },
     { enabled: activeTab === 'words' && wordsQuery !== '' },
   );
 

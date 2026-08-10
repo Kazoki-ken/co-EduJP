@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Volume2, Lightbulb } from 'lucide-react';
+import { speak } from '@/lib/speak';
 import { cn } from '@/lib/utils';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
@@ -55,17 +56,9 @@ function KanaCell({ kana, romaji }: { kana: string; romaji: string }) {
   const isEmpty = kana.trim() === '';
   const [playing, setPlaying] = useState(false);
 
-  const playKana = async () => {
+  const playKana = () => {
     if (isEmpty || playing) return;
-    setPlaying(true);
-    try {
-      const url = `${API_BASE}/tts?text=${encodeURIComponent(kana)}&voice=ja-JP-NanamiNeural`;
-      const res  = await fetch(url);
-      const blob = await res.blob();
-      const audio = new Audio(URL.createObjectURL(blob));
-      audio.onended = () => setPlaying(false);
-      audio.play();
-    } catch { setPlaying(false); }
+    void speak(kana, { onStart: () => setPlaying(true), onEnd: () => setPlaying(false) });
   };
 
   if (isEmpty) return <div className="h-16" />;

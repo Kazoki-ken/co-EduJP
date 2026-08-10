@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSafeTimeout } from '@/hooks/useSafeTimeout';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -20,6 +21,7 @@ interface MatchGameProps {
 }
 
 export function MatchGame({ session, onComplete }: MatchGameProps) {
+  const delay = useSafeTimeout();
   const words = session.words;
   const startedAt = useRef<number>(Date.now());
   const ROUND_SIZE = 10;
@@ -92,7 +94,7 @@ export function MatchGame({ session, onComplete }: MatchGameProps) {
 
       const roundWordsCount = Math.min(ROUND_SIZE, words.length - (currentRound - 1) * ROUND_SIZE);
 
-      setTimeout(() => {
+      delay(() => {
         isAnimating.current = false;
         if (newMatched >= roundWordsCount) {
           if (currentRound < totalRounds) {
@@ -118,20 +120,20 @@ export function MatchGame({ session, onComplete }: MatchGameProps) {
       setLives((prev) => {
         const nextLives = prev - 1;
         if (nextLives <= 0) {
-          setTimeout(() => {
+          delay(() => {
             onComplete(updatedAnswers);
           }, 600);
         }
         return nextLives;
       });
 
-      setTimeout(() => {
+      delay(() => {
         setWrongPair(null);
         setSelectedA(null);
         isAnimating.current = false;
       }, 600);
     }
-  }, [selectedA, matched, words, answers, lives, currentRound, totalRounds, onComplete]);
+  }, [selectedA, matched, words, answers, lives, currentRound, totalRounds, onComplete, delay]);
 
   const progress = (((currentRound - 1) * ROUND_SIZE + matched) / words.length) * 100;
   const jpTiles  = tiles.filter((t) => t.side === 'jp');

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useSafeTimeout } from '@/hooks/useSafeTimeout';
 import { Check, RefreshCw, Send, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { isAnswerCorrect } from '@/lib/answerCheck';
@@ -62,6 +63,7 @@ interface BlockQuestionProps {
 }
 
 export function BlockQuestion({ question, onAnswer, onSkip, skipsLeft }: BlockQuestionProps) {
+  const delay = useSafeTimeout();
   const { word, kind, options } = question;
   const [typed, setTyped] = useState('');
   const [picked, setPicked] = useState<string | null>(null);
@@ -73,15 +75,15 @@ export function BlockQuestion({ question, onAnswer, onSkip, skipsLeft }: BlockQu
     setTyped('');
     setPicked(null);
     setVerdict('none');
-    if (kind === 'write') setTimeout(() => inputRef.current?.focus(), 80);
-  }, [question.word.id, question.index, kind]);
+    if (kind === 'write') delay(() => inputRef.current?.focus(), 80);
+  }, [question.word.id, question.index, kind, delay]);
 
   const settle = useCallback((raw: string, correct: boolean) => {
     setVerdict(correct ? 'correct' : 'wrong');
     // Hold the verdict on screen briefly so the answer registers before the
     // board takes over again.
-    setTimeout(() => onAnswer(raw, correct), correct ? 700 : 1500);
-  }, [onAnswer]);
+    delay(() => onAnswer(raw, correct), correct ? 700 : 1500);
+  }, [onAnswer, delay]);
 
   const submitTyped = useCallback(() => {
     if (verdict !== 'none' || !typed.trim()) return;
