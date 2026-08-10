@@ -339,11 +339,19 @@ model Word {
 model WordTopic {
   wordId  String @map("word_id")
   topicId String @map("topic_id")
+  // Position of the word inside this topic. A textbook lesson has a fixed
+  // word order, and `word.createdAt` cannot express it: a word that already
+  // existed in the dictionary keeps its old timestamp when a later lesson
+  // links to it, so it would sort into the wrong place. The order belongs to
+  // the link, not to the word — the same word can sit at a different position
+  // in another topic.
+  sortOrder Int @default(0) @map("sort_order")
 
   word  Word  @relation(fields: [wordId], references: [id], onDelete: Cascade)
   topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
   @@id([wordId, topicId])
+  @@index([topicId, sortOrder])
   @@map("word_topics")
 }
 

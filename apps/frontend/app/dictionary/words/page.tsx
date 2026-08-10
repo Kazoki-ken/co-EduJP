@@ -52,10 +52,14 @@ function WordsPageInner() {
   }, [filters, page, router]);
 
   // ── Word data ─────────────────────────────────────────────────────────
+  // Compact rows: the listing renders only the word, its reading and its
+  // meaning now that the details sit on the per-word page, so there is no
+  // reason to ship ~2.3 kB of kanji tables and examples per row.
   const { words, meta, isLoading, error, toggleSave } = useWords({
     ...filters,
     page,
     limit: 20,
+    compact: true,
   });
 
   const handleFiltersChange = (next: WordFiltersValue) => {

@@ -247,6 +247,23 @@ export const bulkUploadWords = async (
   // Local cache for resolved global topics (name -> topicId)
   const globalTopicCache = new Map<string, string>();
 
+  // Position each word takes inside its topic. Rows are numbered in file order
+  // — for a textbook that is the lesson's own order — and an upload into a
+  // topic that already holds words appends after them rather than interleaving.
+  const nextOrder = new Map<string, number>();
+  const takeOrder = async (topicId: string): Promise<number> => {
+    if (!nextOrder.has(topicId)) {
+      const last = await prisma.wordTopic.aggregate({
+        where: { topicId },
+        _max: { sortOrder: true },
+      });
+      nextOrder.set(topicId, (last._max.sortOrder ?? 0) + 1);
+    }
+    const order = nextOrder.get(topicId)!;
+    nextOrder.set(topicId, order + 1);
+    return order;
+  };
+
   // Process each row
   for (let i = 0; i < validRows.length; i++) {
     const row = validRows[i]!;
@@ -289,12 +306,11 @@ export const bulkUploadWords = async (
 
         if (topicsToLink.length > 0) {
           try {
-            await prisma.wordTopic.createMany({
-              data: topicsToLink.map((topicId) => ({
-                wordId: existingId,
-                topicId,
-              })),
-            });
+            const links = [];
+            for (const topicId of topicsToLink) {
+              links.push({ wordId: existingId, topicId, sortOrder: await takeOrder(topicId) });
+            }
+            await prisma.wordTopic.createMany({ data: links });
 
             // Add the new links to our memory set so we don't try to insert them again
             for (const topicId of topicsToLink) {
@@ -316,6 +332,11 @@ export const bulkUploadWords = async (
       // If it already exists in the dictionary and is already linked to the target topic(s), it is skipped
       result.skipped++;
       continue;
+    }
+
+    const newLinks = [];
+    for (const topicId of allTargetTopicIds) {
+      newLinks.push({ topicId, sortOrder: await takeOrder(topicId) });
     }
 
     try {
@@ -342,11 +363,7 @@ export const bulkUploadWords = async (
           nuance: row.nuance,
           compounds: row.compounds,
           homonyms: row.homonyms,
-          ...(allTargetTopicIds.length > 0 && {
-            wordTopics: {
-              create: allTargetTopicIds.map((topicId) => ({ topicId })),
-            },
-          }),
+          ...(newLinks.length > 0 && { wordTopics: { create: newLinks } }),
         },
       });
       result.created++;

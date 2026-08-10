@@ -296,6 +296,64 @@ export const listWords = async (userId: string | undefined, query: WordListQuery
     ? ({ savedWords: { where: { userId }, select: { userId: true } } } as const)
     : undefined;
 
+  const compactSelect = {
+    id: true,
+    japaneseWord: true,
+    hiragana: true,
+    meaning: true,
+    ...savedWords,
+  } as const;
+
+  const fullInclude = {
+    wordTopics: {
+      // Only `topic.name` is ever read from here. The nested book was
+      // shipped with every row of every word and displayed nowhere.
+      include: { topic: { select: { id: true, name: true } } },
+    },
+    ...savedWords,
+  } as const;
+
+  // Inside a single topic the order is the lesson's own order, held on the
+  // junction row (see WordTopic.sortOrder). That cannot be expressed as an
+  // `orderBy` on Word, so the query runs from the junction table instead.
+  // Every other listing — the whole dictionary, a book, a search — has no
+  // lesson to follow and stays newest-first.
+  if (query.topicId) {
+    const linkWhere = { topicId: query.topicId, word: where };
+
+    const linkPage = {
+      where: linkWhere,
+      skip,
+      take: limit,
+      orderBy: [{ sortOrder: 'asc' as const }, { word: { createdAt: 'asc' as const } }],
+    };
+
+    const [links, total] = await Promise.all([
+      query.compact
+        ? prisma.wordTopic.findMany({
+            ...linkPage,
+            select: { word: { select: compactSelect } },
+          })
+        : prisma.wordTopic.findMany({
+            ...linkPage,
+            select: { word: { include: fullInclude } },
+          }),
+      prisma.wordTopic.count({ where: linkWhere }),
+    ]);
+
+    const data = links.map((l) => {
+      const { savedWords, ...rest } = l.word as typeof l.word & {
+        savedWords?: { userId: string }[];
+      };
+      return { ...rest, isSaved: userId ? (savedWords?.length ?? 0) > 0 : false };
+    });
+
+    return {
+      data,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    };
+  }
+
   const [words, total] = await Promise.all([
     query.compact
       ? prisma.word.findMany({
@@ -303,27 +361,14 @@ export const listWords = async (userId: string | undefined, query: WordListQuery
           skip,
           take: limit,
           orderBy: { createdAt: 'desc' },
-          select: {
-            id: true,
-            japaneseWord: true,
-            hiragana: true,
-            meaning: true,
-            ...savedWords,
-          },
+          select: compactSelect,
         })
       : prisma.word.findMany({
           where,
           skip,
           take: limit,
           orderBy: { createdAt: 'desc' },
-          include: {
-            wordTopics: {
-              // Only `topic.name` is ever read from here. The nested book was
-              // shipped with every row of every word and displayed nowhere.
-              include: { topic: { select: { id: true, name: true } } },
-            },
-            ...savedWords,
-          },
+          include: fullInclude,
         }),
     prisma.word.count({ where }),
   ]);

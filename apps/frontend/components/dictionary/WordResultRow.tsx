@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+import Link from 'next/link';
 import { Volume2, Bookmark, BookmarkCheck, ChevronsRight, Loader2, Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Word } from '@/lib/types';
@@ -16,11 +17,9 @@ interface WordResultRowProps {
 /**
  * Compact single-line word result — used for the inline search results on
  * the dictionary landing page. Deliberately shows only the word, its reading,
- * the meaning and the quick actions, not the full detail view (JLPT level,
- * conjugation forms, kanji breakdown, examples, notes, ...) that WordCard
- * renders on /dictionary/words. That full view is meant to live behind a
- * per-word detail page later; the chevron here is a placeholder for that,
- * not yet wired to anything.
+ * the meaning and the quick actions. The full detail view (JLPT level,
+ * conjugation forms, kanji breakdown, examples, notes, ...) lives on
+ * /dictionary/words/[wordId], which the chevron opens.
  */
 export function WordResultRow({ word, isAuthenticated, onToggleSave }: WordResultRowProps) {
   const [showFurigana, setShowFurigana] = useState(true);
@@ -126,13 +125,15 @@ export function WordResultRow({ word, isAuthenticated, onToggleSave }: WordResul
           </button>
         )}
 
-        {/* Full word detail is a future page — placeholder affordance only. */}
-        <span
-          title="Batafsil ko'rish (tez orada)"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-accent"
+        {/* The full detail page this row always pointed at. */}
+        <Link
+          href={`/dictionary/words/${word.id}`}
+          title="So'z sahifasini ochish"
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-accent
+                     hover:bg-accent/10 transition-all"
         >
           <ChevronsRight size={18} />
-        </span>
+        </Link>
       </div>
     </div>
   );

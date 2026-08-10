@@ -199,7 +199,7 @@ export const listMyTopicWords = async (userId: string, topicId: string) => {
   const links = await prisma.wordTopic.findMany({
     where: { topicId },
     include: { word: true },
-    orderBy: { word: { createdAt: 'asc' } },
+    orderBy: [{ sortOrder: 'asc' }, { word: { createdAt: 'asc' } }],
   });
 
   return links.map((l) => l.word);
@@ -213,6 +213,12 @@ export const addWordToMyTopic = async (
   await ownedTopic(userId, topicId);
   await assertCanAddWord(userId, topicId);
 
+  // A hand-added word goes to the end of the topic, not the top.
+  const last = await prisma.wordTopic.aggregate({
+    where: { topicId },
+    _max: { sortOrder: true },
+  });
+
   return prisma.word.create({
     data: {
       japaneseWord: dto.japaneseWord,
@@ -222,7 +228,7 @@ export const addWordToMyTopic = async (
       exampleTranslation: dto.exampleTranslation ?? null,
       authorId: userId,
       isUserCreated: true,
-      wordTopics: { create: { topicId } },
+      wordTopics: { create: { topicId, sortOrder: (last._max.sortOrder ?? 0) + 1 } },
     },
   });
 };

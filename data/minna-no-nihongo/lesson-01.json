@@ -1,0 +1,1110 @@
+[
+  {
+    "japaneseWord": "私",
+    "hiragana": "わたし",
+    "meaning": "men",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "⓪",
+    "exampleSentence": "私はミラーです。(わたしはみらーです。)",
+    "exampleTranslation": "Men Millerman.",
+    "additionalExamples": [
+      { "sentence": "私は学生です。(わたしはがくせいです。)", "translation": "Men talabaman." },
+      { "sentence": "私はウズベキスタンから来ました。(わたしはうずべきすたんからきました。)", "translation": "Men O'zbekistondan kelganman." }
+    ],
+    "synonyms": ["僕", "わたくし", "俺"],
+    "antonyms": ["あなた"],
+    "nuance": "「わたし」 — jinsdan qat'i nazar ishlatiladigan neytral shakl. 「僕」 va 「俺」 faqat erkaklar nutqida (「俺」 — juda erkin), 「わたくし」 esa rasmiy vaziyatlarda qo'llanadi. Yaponchada ega kontekstdan tushunilsa, 「わたし」 ko'pincha tushirib qoldiriladi.",
+    "compounds": [
+      { "word": "私立", "hiragana": "しりつ", "meaning": "xususiy (maktab, universitet)" },
+      { "word": "私生活", "hiragana": "しせいかつ", "meaning": "shaxsiy hayot" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "私", "meaning": "men, shaxsiy", "kunReading": "watashi, watakushi", "onReading": "shi", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "私たち",
+    "hiragana": "わたしたち",
+    "meaning": "biz",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "④",
+    "exampleSentence": "私たちは日本語を勉強しています。(わたしたちはにほんごをべんきょうしています。)",
+    "exampleTranslation": "Biz yapon tilini o'rganyapmiz.",
+    "additionalExamples": [
+      { "sentence": "私たちは会社員です。(わたしたちはかいしゃいんです。)", "translation": "Biz firma xodimimiz." },
+      { "sentence": "私たちも行きます。(わたしたちもいきます。)", "translation": "Biz ham boramiz." }
+    ],
+    "synonyms": ["我々", "僕たち"],
+    "antonyms": ["あなたたち"],
+    "nuance": "「〜たち」 qo'shimchasi shaxsni bildiruvchi so'zlarga qo'shilib ko'plik yasaydi. 「我々（われわれ）」 rasmiy nutqda va nutqlarda ishlatiladi.",
+    "compounds": [
+      { "word": "私ども", "hiragana": "わたくしども", "meaning": "biz (juda kamtarona, ish muhitida)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "私", "meaning": "men, shaxsiy", "kunReading": "watashi", "onReading": "shi", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "あなた",
+    "hiragana": "あなた",
+    "meaning": "siz, sen",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "②",
+    "exampleSentence": "あなたは先生ですか。(あなたはせんせいですか。)",
+    "exampleTranslation": "Siz o'qituvchimisiz?",
+    "additionalExamples": [
+      { "sentence": "あなたのお名前は何ですか。(あなたのおなまえはなんですか。)", "translation": "Sizning ismingiz nima?" },
+      { "sentence": "あなたも日本人ですか。(あなたもにほんじんですか。)", "translation": "Siz ham yaponmisiz?" }
+    ],
+    "synonyms": ["君", "そちら"],
+    "antonyms": ["私"],
+    "nuance": "Yaponchada suhbatdoshga 「あなた」 emas, ismi bilan (masalan 「ミラーさん」) murojaat qilish odatiy. 「あなた」ni ko'p ishlatish sovuq yoki qo'pol tuyulishi mumkin. Er-xotin nutqida esa \"azizim\" ma'nosida keladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "あの人",
+    "hiragana": "あのひと",
+    "meaning": "u kishi, u (odam)",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "②",
+    "exampleSentence": "あの人は誰ですか。(あのひとはだれですか。)",
+    "exampleTranslation": "U kishi kim?",
+    "additionalExamples": [
+      { "sentence": "あの人はIMCの社員です。(あのひとはあいえむしーのしゃいんです。)", "translation": "U kishi IMC firmasining xodimi." },
+      { "sentence": "あの人もアメリカ人です。(あのひともあめりかじんです。)", "translation": "U kishi ham amerikalik." }
+    ],
+    "synonyms": ["あの方", "彼", "彼女"],
+    "antonyms": ["この人"],
+    "nuance": "「あの」 — so'zlovchidan ham, tinglovchidan ham uzoqdagi shaxs yoki narsani ko'rsatadi. Hurmatliroq shakli — 「あの方（かた）」.",
+    "compounds": [
+      { "word": "この人", "hiragana": "このひと", "meaning": "bu kishi" },
+      { "word": "その人", "hiragana": "そのひと", "meaning": "o'sha kishi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "人", "meaning": "odam, kishi", "kunReading": "hito", "onReading": "jin, nin", "strokes": 2 }
+    ]
+  },
+  {
+    "japaneseWord": "あの方",
+    "hiragana": "あのかた",
+    "meaning": "u kishi (hurmat shakli)",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "②",
+    "exampleSentence": "あの方はどなたですか。(あのかたはどなたですか。)",
+    "exampleTranslation": "U kishi kim bo'ladilar?",
+    "additionalExamples": [
+      { "sentence": "あの方は山田先生です。(あのかたはやまだせんせいです。)", "translation": "U kishi Yamada ustoz." },
+      { "sentence": "あの方は社長です。(あのかたはしゃちょうです。)", "translation": "U kishi kompaniya rahbari." }
+    ],
+    "synonyms": ["あの人"],
+    "antonyms": ["この方"],
+    "nuance": "「あの方」 — 「あの人」ning hurmat shakli. Mijoz, rahbar yoki yoshi ulug' kishi haqida gapirganda ishlatiladi. Savolida ham 「誰」 emas, 「どなた」 ishlatilgani ma'qul.",
+    "compounds": [
+      { "word": "この方", "hiragana": "このかた", "meaning": "bu kishi (hurmat)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "方", "meaning": "tomon, usul; kishi (hurmat)", "kunReading": "kata", "onReading": "hou", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "皆さん",
+    "hiragana": "みなさん",
+    "meaning": "hamma, sizlar, xonimlar va janoblar",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "②",
+    "exampleSentence": "皆さん、おはようございます。(みなさん、おはようございます。)",
+    "exampleTranslation": "Hammaga xayrli tong!",
+    "additionalExamples": [
+      { "sentence": "皆さんは学生ですか。(みなさんはがくせいですか。)", "translation": "Sizlar talabamisizlar?" },
+      { "sentence": "ご家族の皆さんによろしく。(ごかぞくのみなさんによろしく。)", "translation": "Oilangizdagi hammaga salom ayting." }
+    ],
+    "synonyms": ["皆様", "みんな"],
+    "antonyms": [],
+    "nuance": "「みんな」 — erkin nutqda, 「皆さん」 — muloyim murojaat, 「皆様（みなさま）」 — eng hurmatli shakl (rasmiy nutq va xatlarda).",
+    "compounds": [
+      { "word": "皆様", "hiragana": "みなさま", "meaning": "hurmatli hozir bo'lganlar (juda hurmatli)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "皆", "meaning": "hamma, barcha", "kunReading": "mina", "onReading": "kai", "strokes": 9 }
+    ]
+  },
+  {
+    "japaneseWord": "～さん",
+    "hiragana": "～さん",
+    "meaning": "janob, xonim (ism, familiya yoki kasbga qo'shiladigan hurmat qo'shimchasi)",
+    "partOfSpeech": "qo'shimcha",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "",
+    "exampleSentence": "ミラーさんは会社員です。(みらーさんはかいしゃいんです。)",
+    "exampleTranslation": "Janob Miller — firma xodimi.",
+    "additionalExamples": [
+      { "sentence": "田中さん、こちらへどうぞ。(たなかさん、こちらへどうぞ。)", "translation": "Tanaka-san, marhamat, bu yoqqa." },
+      { "sentence": "お医者さんに聞きました。(おいしゃさんにききました。)", "translation": "Shifokordan so'radim." }
+    ],
+    "synonyms": ["～様", "～氏"],
+    "antonyms": [],
+    "nuance": "O'z ismiga hech qachon qo'shilmaydi. 「～様（さま）」 — ancha hurmatli (mijozlar, xatlar), 「～氏（し）」 — matbuot uslubi. Ustozga 「先生」 qo'shiladi, 「さん」 emas.",
+    "compounds": [
+      { "word": "～様", "hiragana": "～さま", "meaning": "janob/xonim (juda hurmatli)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "～ちゃん",
+    "hiragana": "～ちゃん",
+    "meaning": "erkalash qo'shimchasi (odatda bolalarga va qiz bolalarga nisbatan)",
+    "partOfSpeech": "qo'shimcha",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "",
+    "exampleSentence": "ゆみちゃんは五歳です。(ゆみちゃんはごさいです。)",
+    "exampleTranslation": "Yumi-chan besh yoshda.",
+    "additionalExamples": [
+      { "sentence": "おばあちゃんは元気です。(おばあちゃんはげんきです。)", "translation": "Buvim sog'-salomat." },
+      { "sentence": "赤ちゃんが寝ています。(あかちゃんがねています。)", "translation": "Chaqaloq uxlayapti." }
+    ],
+    "synonyms": ["～くん"],
+    "antonyms": [],
+    "nuance": "「～さん」ning erkalash shakli. Yosh bolalar, yaqin do'stlar va oila a'zolariga nisbatan ishlatiladi; rasmiy muhitda yoki katta yoshli notanish kishiga qo'llanmaydi.",
+    "compounds": [
+      { "word": "赤ちゃん", "hiragana": "あかちゃん", "meaning": "chaqaloq" },
+      { "word": "お姉ちゃん", "hiragana": "おねえちゃん", "meaning": "opa (erkalab)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "～君",
+    "hiragana": "～くん",
+    "meaning": "erkalash/yaqinlik qo'shimchasi (odatda o'g'il bolalarga nisbatan)",
+    "partOfSpeech": "qo'shimcha",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "",
+    "exampleSentence": "たろう君は小学生です。(たろうくんはしょうがくせいです。)",
+    "exampleTranslation": "Taro-kun boshlang'ich sinf o'quvchisi.",
+    "additionalExamples": [
+      { "sentence": "山田君、ちょっと来てください。(やまだくん、ちょっときてください。)", "translation": "Yamada-kun, bir kelib keting." },
+      { "sentence": "田中君は私の友達です。(たなかくんはわたしのともだちです。)", "translation": "Tanaka-kun mening do'stim." }
+    ],
+    "synonyms": ["～ちゃん"],
+    "antonyms": [],
+    "nuance": "Asosan o'g'il bolalarga; ish joyida esa rahbar o'zidan kichik xodimga (jinsidan qat'i nazar) 「～君」 deyishi mumkin. O'zidan kattaga ishlatilmaydi.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "君", "meaning": "sen; hukmdor", "kunReading": "kimi", "onReading": "kun", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "～人",
+    "hiragana": "～じん",
+    "meaning": "millat/fuqarolikni bildiruvchi qo'shimcha (masalan: アメリカ人 — amerikalik)",
+    "partOfSpeech": "qo'shimcha",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "",
+    "exampleSentence": "私はウズベキスタン人です。(わたしはうずべきすたんじんです。)",
+    "exampleTranslation": "Men o'zbekistonlikman.",
+    "additionalExamples": [
+      { "sentence": "ミラーさんはアメリカ人です。(みらーさんはあめりかじんです。)", "translation": "Janob Miller — amerikalik." },
+      { "sentence": "あの人は日本人じゃありません。(あのひとはにほんじんじゃありません。)", "translation": "U kishi yapon emas." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Davlat nomiga qo'shiladi: アメリカ＋人＝アメリカ人. Diqqat: 「日本人」 — にほんじん, lekin 「一人」 — ひとり, 「二人」 — ふたり (bu yerda 人 boshqacha o'qiladi).",
+    "compounds": [
+      { "word": "外国人", "hiragana": "がいこくじん", "meaning": "chet ellik" },
+      { "word": "日本人", "hiragana": "にほんじん", "meaning": "yapon (millat)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "人", "meaning": "odam, kishi", "kunReading": "hito", "onReading": "jin, nin", "strokes": 2 }
+    ]
+  },
+  {
+    "japaneseWord": "先生",
+    "hiragana": "せんせい",
+    "meaning": "ustoz, muallim",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "③",
+    "exampleSentence": "山田さんは先生です。(やまださんはせんせいです。)",
+    "exampleTranslation": "Yamada ustoz (o'qituvchi).",
+    "additionalExamples": [
+      { "sentence": "先生、質問があります。(せんせい、しつもんがあります。)", "translation": "Ustoz, savolim bor." },
+      { "sentence": "田中先生は日本語の先生です。(たなかせんせいはにほんごのせんせいです。)", "translation": "Tanaka ustoz — yapon tili o'qituvchisi." }
+    ],
+    "synonyms": ["教師"],
+    "antonyms": ["学生", "生徒"],
+    "nuance": "「先生」 — boshqaga murojaat qilganda ishlatiladigan hurmat so'zi; o'z kasbini aytganda 「私は教師です」 deyiladi, 「私は先生です」 emas. Shifokor, huquqshunos va siyosatchilarga ham 「先生」 deb murojaat qilinadi.",
+    "compounds": [
+      { "word": "先週", "hiragana": "せんしゅう", "meaning": "o'tgan hafta" },
+      { "word": "一生", "hiragana": "いっしょう", "meaning": "butun umr" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "先", "meaning": "oldin, avval", "kunReading": "saki", "onReading": "sen", "strokes": 6 },
+      { "kanji": "生", "meaning": "hayot, tug'ilmoq", "kunReading": "i, u, ha", "onReading": "sei, shou", "strokes": 5 }
+    ]
+  },
+  {
+    "japaneseWord": "教師",
+    "hiragana": "きょうし",
+    "meaning": "o'qituvchi, domla (kasb nomi)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "私は日本語の教師です。(わたしはにほんごのきょうしです。)",
+    "exampleTranslation": "Men yapon tili o'qituvchisiman.",
+    "additionalExamples": [
+      { "sentence": "父は高校の教師です。(ちちはこうこうのきょうしです。)", "translation": "Otam o'rta maktab o'qituvchisi." },
+      { "sentence": "教師になりたいです。(きょうしになりたいです。)", "translation": "O'qituvchi bo'lmoqchiman." }
+    ],
+    "synonyms": ["先生"],
+    "antonyms": ["学生"],
+    "nuance": "「教師」 — kasbning neytral nomi, o'zi va oilasi haqida gapirganda ishlatiladi. Kimgadir murojaat qilganda esa 「先生」 deyiladi.",
+    "compounds": [
+      { "word": "教室", "hiragana": "きょうしつ", "meaning": "sinfxona, o'quv xonasi" },
+      { "word": "教育", "hiragana": "きょういく", "meaning": "ta'lim" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "教", "meaning": "o'rgatmoq", "kunReading": "oshi, oso", "onReading": "kyou", "strokes": 11 },
+      { "kanji": "師", "meaning": "ustoz, mutaxassis", "kunReading": "-", "onReading": "shi", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "学生",
+    "hiragana": "がくせい",
+    "meaning": "talaba",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "exampleSentence": "私は大学の学生です。(わたしはだいがくのがくせいです。)",
+    "exampleTranslation": "Men universitet talabasiman.",
+    "additionalExamples": [
+      { "sentence": "あの人も学生ですか。(あのひともがくせいですか。)", "translation": "U kishi ham talabami?" },
+      { "sentence": "学生じゃありません、会社員です。(がくせいじゃありません、かいしゃいんです。)", "translation": "Talaba emasman, firma xodimiman." }
+    ],
+    "synonyms": ["生徒", "大学生"],
+    "antonyms": ["先生", "教師"],
+    "nuance": "「学生」 odatda oliy o'quv yurti talabasiga nisbatan ishlatiladi; maktab o'quvchisi uchun 「生徒（せいと）」 yoki 「小学生」「中学生」「高校生」 aytiladi.",
+    "compounds": [
+      { "word": "大学生", "hiragana": "だいがくせい", "meaning": "universitet talabasi" },
+      { "word": "留学生", "hiragana": "りゅうがくせい", "meaning": "chet ellik talaba" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "学", "meaning": "o'rganish, ilm", "kunReading": "mana", "onReading": "gaku", "strokes": 8 },
+      { "kanji": "生", "meaning": "hayot, tug'ilmoq", "kunReading": "i, u, ha", "onReading": "sei, shou", "strokes": 5 }
+    ]
+  },
+  {
+    "japaneseWord": "会社員",
+    "hiragana": "かいしゃいん",
+    "meaning": "firma xodimi, korxona xodimi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "③",
+    "exampleSentence": "ミラーさんは会社員です。(みらーさんはかいしゃいんです。)",
+    "exampleTranslation": "Janob Miller — firma xodimi.",
+    "additionalExamples": [
+      { "sentence": "兄は会社員です。(あにはかいしゃいんです。)", "translation": "Akam firma xodimi." },
+      { "sentence": "会社員じゃありません。(かいしゃいんじゃありません。)", "translation": "Men firma xodimi emasman." }
+    ],
+    "synonyms": ["社員", "サラリーマン"],
+    "antonyms": ["学生"],
+    "nuance": "「会社員」 — umuman kompaniyada ishlovchi degani. 「社員」 esa aniq kompaniya nomi bilan keladi (IMCの社員). 「サラリーマン」 — oylik maosh oluvchi erkak xodim uchun so'zlashuv so'zi.",
+    "compounds": [
+      { "word": "会社", "hiragana": "かいしゃ", "meaning": "firma, kompaniya" },
+      { "word": "銀行員", "hiragana": "ぎんこういん", "meaning": "bank xodimi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "会", "meaning": "uchrashmoq, yig'in", "kunReading": "a", "onReading": "kai", "strokes": 6 },
+      { "kanji": "社", "meaning": "jamiyat, kompaniya", "kunReading": "yashiro", "onReading": "sha", "strokes": 7 },
+      { "kanji": "員", "meaning": "xodim, a'zo", "kunReading": "-", "onReading": "in", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "社員",
+    "hiragana": "しゃいん",
+    "meaning": "firma xodimi (aniq kompaniya nomi bilan ishlatiladi)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "ミラーさんはIMCの社員です。(みらーさんはあいえむしーのしゃいんです。)",
+    "exampleTranslation": "Janob Miller — IMC firmasining xodimi.",
+    "additionalExamples": [
+      { "sentence": "私はパワー電気の社員です。(わたしはぱわーでんきのしゃいんです。)", "translation": "Men \"Pawer Denki\" firmasining xodimiman." },
+      { "sentence": "社員は百人います。(しゃいんはひゃくにんいます。)", "translation": "Xodimlar soni yuz kishi." }
+    ],
+    "synonyms": ["会社員"],
+    "antonyms": [],
+    "nuance": "「社員」 oldidan qaysi kompaniya ekani aytiladi: 「IMCの社員」. Yolg'iz o'zi ishlatilganda kasbni emas, o'sha kompaniya xodimini bildiradi.",
+    "compounds": [
+      { "word": "社長", "hiragana": "しゃちょう", "meaning": "kompaniya rahbari" },
+      { "word": "新入社員", "hiragana": "しんにゅうしゃいん", "meaning": "yangi kelgan xodim" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "社", "meaning": "jamiyat, kompaniya", "kunReading": "yashiro", "onReading": "sha", "strokes": 7 },
+      { "kanji": "員", "meaning": "xodim, a'zo", "kunReading": "-", "onReading": "in", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "銀行員",
+    "hiragana": "ぎんこういん",
+    "meaning": "bank xodimi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "姉は銀行員です。(あねはぎんこういんです。)",
+    "exampleTranslation": "Opam bank xodimi.",
+    "additionalExamples": [
+      { "sentence": "あの方は銀行員ですか。(あのかたはぎんこういんですか。)", "translation": "U kishi bank xodimimi?" },
+      { "sentence": "銀行員になりたいです。(ぎんこういんになりたいです。)", "translation": "Bank xodimi bo'lmoqchiman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「銀行（bank）」＋「員（xodim）」. Xuddi shu qolipda 「会社員」「駅員（stansiya xodimi）」「店員（sotuvchi）」 yasaladi.",
+    "compounds": [
+      { "word": "銀行", "hiragana": "ぎんこう", "meaning": "bank" },
+      { "word": "店員", "hiragana": "てんいん", "meaning": "sotuvchi, do'kon xodimi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "銀", "meaning": "kumush", "kunReading": "shirogane", "onReading": "gin", "strokes": 14 },
+      { "kanji": "行", "meaning": "bormoq; muassasa", "kunReading": "i, yu", "onReading": "kou, gyou", "strokes": 6 },
+      { "kanji": "員", "meaning": "xodim, a'zo", "kunReading": "-", "onReading": "in", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "医者",
+    "hiragana": "いしゃ",
+    "meaning": "shifokor, doktor",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "父は医者です。(ちちはいしゃです。)",
+    "exampleTranslation": "Otam shifokor.",
+    "additionalExamples": [
+      { "sentence": "お医者さんに聞いてください。(おいしゃさんにきいてください。)", "translation": "Shifokordan so'rang." },
+      { "sentence": "あの人は病院の医者です。(あのひとはびょういんのいしゃです。)", "translation": "U kishi shifoxona shifokori." }
+    ],
+    "synonyms": ["ドクター", "医師"],
+    "antonyms": ["患者"],
+    "nuance": "Boshqa kishining kasbi sifatida aytganda muloyim shakl — 「お医者さん」. Rasmiy hujjatlarda 「医師（いし）」 ishlatiladi.",
+    "compounds": [
+      { "word": "歯医者", "hiragana": "はいしゃ", "meaning": "tish shifokori" },
+      { "word": "医学", "hiragana": "いがく", "meaning": "tibbiyot (fan)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "医", "meaning": "tibbiyot, davolamoq", "kunReading": "-", "onReading": "i", "strokes": 7 },
+      { "kanji": "者", "meaning": "kishi, shaxs", "kunReading": "mono", "onReading": "sha", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "研究者",
+    "hiragana": "けんきゅうしゃ",
+    "meaning": "tadqiqotchi, ilmiy izlanuvchi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "ワットさんは研究者です。(わっとさんはけんきゅうしゃです。)",
+    "exampleTranslation": "Janob Watt — tadqiqotchi.",
+    "additionalExamples": [
+      { "sentence": "彼は大学の研究者です。(かれはだいがくのけんきゅうしゃです。)", "translation": "U universitet tadqiqotchisi." },
+      { "sentence": "研究者になりたいです。(けんきゅうしゃになりたいです。)", "translation": "Tadqiqotchi bo'lmoqchiman." }
+    ],
+    "synonyms": ["学者"],
+    "antonyms": [],
+    "nuance": "「研究（tadqiqot）」＋「者（kishi）」. 「学者（がくしゃ）」 — olim, ko'proq nazariy sohaga nisbatan aytiladi.",
+    "compounds": [
+      { "word": "研究", "hiragana": "けんきゅう", "meaning": "tadqiqot, ilmiy ish" },
+      { "word": "研究室", "hiragana": "けんきゅうしつ", "meaning": "laboratoriya, ilmiy xona" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "研", "meaning": "charxlamoq, o'rganmoq", "kunReading": "to", "onReading": "ken", "strokes": 9 },
+      { "kanji": "究", "meaning": "chuqur o'rganmoq", "kunReading": "kiwa", "onReading": "kyuu", "strokes": 7 },
+      { "kanji": "者", "meaning": "kishi, shaxs", "kunReading": "mono", "onReading": "sha", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "エンジニア",
+    "hiragana": "エンジニア",
+    "meaning": "muhandis",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "私はエンジニアです。(わたしはえんじにあです。)",
+    "exampleTranslation": "Men muhandisman.",
+    "additionalExamples": [
+      { "sentence": "彼はIMCのエンジニアです。(かれはあいえむしーのえんじにあです。)", "translation": "U IMC firmasining muhandisi." },
+      { "sentence": "エンジニアの仕事は面白いです。(えんじにあのしごとはおもしろいです。)", "translation": "Muhandis ishi qiziqarli." }
+    ],
+    "synonyms": ["技師"],
+    "antonyms": [],
+    "nuance": "Inglizchadan o'zlashgan so'z (engineer), katakana bilan yoziladi. 「技師（ぎし）」 — eskiroq, rasmiy variant.",
+    "compounds": [
+      { "word": "システムエンジニア", "hiragana": "システムエンジニア", "meaning": "tizim muhandisi" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "大学",
+    "hiragana": "だいがく",
+    "meaning": "universitet, institut",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "exampleSentence": "私は大学の学生です。(わたしはだいがくのがくせいです。)",
+    "exampleTranslation": "Men universitet talabasiman.",
+    "additionalExamples": [
+      { "sentence": "さくら大学は有名です。(さくらだいがくはゆうめいです。)", "translation": "Sakura universiteti mashhur." },
+      { "sentence": "毎日大学へ行きます。(まいにちだいがくへいきます。)", "translation": "Har kuni universitetga boraman." }
+    ],
+    "synonyms": [],
+    "antonyms": ["小学校"],
+    "nuance": "「大学」 — bakalavr bosqichi. Magistratura va doktorantura uchun 「大学院（だいがくいん）」 ishlatiladi.",
+    "compounds": [
+      { "word": "大学院", "hiragana": "だいがくいん", "meaning": "magistratura, aspirantura" },
+      { "word": "大学生", "hiragana": "だいがくせい", "meaning": "universitet talabasi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "大", "meaning": "katta", "kunReading": "oo", "onReading": "dai, tai", "strokes": 3 },
+      { "kanji": "学", "meaning": "o'rganish, ilm", "kunReading": "mana", "onReading": "gaku", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "病院",
+    "hiragana": "びょういん",
+    "meaning": "shifoxona, kasalxona",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "あの人は病院の医者です。(あのひとはびょういんのいしゃです。)",
+    "exampleTranslation": "U kishi shifoxona shifokori.",
+    "additionalExamples": [
+      { "sentence": "病院はどこですか。(びょういんはどこですか。)", "translation": "Shifoxona qayerda?" },
+      { "sentence": "母は病院で働いています。(ははは びょういんで はたらいています。)", "translation": "Onam shifoxonada ishlaydi." }
+    ],
+    "synonyms": ["クリニック"],
+    "antonyms": [],
+    "nuance": "Diqqat: 「病院（びょういん）」 — shifoxona, 「美容院（びよういん）」 — sartaroshxona. Cho'ziq unliga e'tibor bering.",
+    "compounds": [
+      { "word": "病気", "hiragana": "びょうき", "meaning": "kasallik" },
+      { "word": "入院", "hiragana": "にゅういん", "meaning": "kasalxonaga yotish" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "病", "meaning": "kasallik", "kunReading": "yamai", "onReading": "byou", "strokes": 10 },
+      { "kanji": "院", "meaning": "muassasa, bino", "kunReading": "-", "onReading": "in", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "電気",
+    "hiragana": "でんき",
+    "meaning": "chiroq, elektr",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "電気をつけてください。(でんきをつけてください。)",
+    "exampleTranslation": "Chiroqni yoqing.",
+    "additionalExamples": [
+      { "sentence": "パワー電気の社員です。(ぱわーでんきのしゃいんです。)", "translation": "\"Pawer Denki\" firmasining xodimiman." },
+      { "sentence": "電気を消しました。(でんきをけしました。)", "translation": "Chiroqni o'chirdim." }
+    ],
+    "synonyms": ["ライト", "明かり"],
+    "antonyms": [],
+    "nuance": "Ikki ma'noda keladi: uydagi chiroq va umuman elektr energiyasi. Kompaniya nomlarida ham uchraydi (パワー電気).",
+    "compounds": [
+      { "word": "電車", "hiragana": "でんしゃ", "meaning": "elektropoyezd" },
+      { "word": "電話", "hiragana": "でんわ", "meaning": "telefon" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "電", "meaning": "elektr, chaqmoq", "kunReading": "-", "onReading": "den", "strokes": 13 },
+      { "kanji": "気", "meaning": "havo, ruh, kayfiyat", "kunReading": "-", "onReading": "ki, ke", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "誰",
+    "hiragana": "だれ",
+    "meaning": "kim",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "あの人は誰ですか。(あのひとはだれですか。)",
+    "exampleTranslation": "U kishi kim?",
+    "additionalExamples": [
+      { "sentence": "これは誰の傘ですか。(これはだれのかさですか。)", "translation": "Bu kimning soyaboni?" },
+      { "sentence": "誰も来ませんでした。(だれもきませんでした。)", "translation": "Hech kim kelmadi." }
+    ],
+    "synonyms": ["どなた"],
+    "antonyms": [],
+    "nuance": "「誰」 — odatiy shakl; hurmatli suhbatda 「どなた」 ishlatiladi. 「誰も＋inkor」 — \"hech kim\" ma'nosini beradi.",
+    "compounds": [
+      { "word": "誰か", "hiragana": "だれか", "meaning": "kimdir" },
+      { "word": "誰も", "hiragana": "だれも", "meaning": "hech kim (inkor bilan)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "誰", "meaning": "kim", "kunReading": "dare", "onReading": "sui", "strokes": 15 }
+    ]
+  },
+  {
+    "japaneseWord": "どなた",
+    "hiragana": "どなた",
+    "meaning": "kim (hurmat shakli)",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "あの方はどなたですか。(あのかたはどなたですか。)",
+    "exampleTranslation": "U kishi kim bo'ladilar?",
+    "additionalExamples": [
+      { "sentence": "失礼ですが、どなたですか。(しつれいですが、どなたですか。)", "translation": "Kechirasiz, siz kim bo'lasiz?" },
+      { "sentence": "どなたが山田さんですか。(どなたがやまださんですか。)", "translation": "Qaysi kishi Yamada-san bo'ladilar?" }
+    ],
+    "synonyms": ["誰"],
+    "antonyms": [],
+    "nuance": "「誰」ning hurmat shakli. Mijoz, mehmon yoki yoshi ulug' kishi haqida so'raganda 「どなた」 ishlatiladi, 「誰」 esa qo'pol eshitilishi mumkin.",
+    "compounds": [
+      { "word": "どなた様", "hiragana": "どなたさま", "meaning": "kim bo'ladilar (juda hurmatli)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "～歳",
+    "hiragana": "～さい",
+    "meaning": "~yosh (yoshni bildiruvchi sanoq qo'shimchasi)",
+    "partOfSpeech": "qo'shimcha",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "",
+    "exampleSentence": "私は二十歳です。(わたしははたちです。)",
+    "exampleTranslation": "Men yigirma yoshdaman.",
+    "additionalExamples": [
+      { "sentence": "娘は五歳です。(むすめはごさいです。)", "translation": "Qizim besh yoshda." },
+      { "sentence": "父は五十歳です。(ちちはごじゅっさいです。)", "translation": "Otam ellik yoshda." }
+    ],
+    "synonyms": ["～才"],
+    "antonyms": [],
+    "nuance": "Istisno o'qilishlar: 1歳＝いっさい, 8歳＝はっさい, 10歳＝じゅっさい, 20歳＝はたち. Kundalik yozuvda soddalashtirilgan 「才」 belgisi ham ishlatiladi.",
+    "compounds": [
+      { "word": "二十歳", "hiragana": "はたち", "meaning": "yigirma yosh (maxsus o'qilishi)" },
+      { "word": "何歳", "hiragana": "なんさい", "meaning": "necha yosh" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "歳", "meaning": "yosh, yil", "kunReading": "toshi", "onReading": "sai", "strokes": 13 }
+    ]
+  },
+  {
+    "japaneseWord": "何歳",
+    "hiragana": "なんさい",
+    "meaning": "necha yosh",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "あの子は何歳ですか。(あのこはなんさいですか。)",
+    "exampleTranslation": "Anavi bola necha yoshda?",
+    "additionalExamples": [
+      { "sentence": "テレサちゃんは何歳ですか。(てれさちゃんはなんさいですか。)", "translation": "Teresa-chan necha yoshda?" },
+      { "sentence": "お子さんは何歳ですか。(おこさんはなんさいですか。)", "translation": "Farzandingiz necha yoshda?" }
+    ],
+    "synonyms": ["おいくつ"],
+    "antonyms": [],
+    "nuance": "Bolalar va yaqin kishilarga nisbatan 「何歳」, katta yoshli yoki notanish kishiga esa 「おいくつですか」 deb so'raladi.",
+    "compounds": [
+      { "word": "何人", "hiragana": "なんにん", "meaning": "necha kishi" },
+      { "word": "何時", "hiragana": "なんじ", "meaning": "soat necha" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "何", "meaning": "nima, necha", "kunReading": "nani, nan", "onReading": "ka", "strokes": 7 },
+      { "kanji": "歳", "meaning": "yosh, yil", "kunReading": "toshi", "onReading": "sai", "strokes": 13 }
+    ]
+  },
+  {
+    "japaneseWord": "おいくつ",
+    "hiragana": "おいくつ",
+    "meaning": "necha yoshdasiz? (「何歳」ning hurmat shakli)",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "失礼ですが、おいくつですか。(しつれいですが、おいくつですか。)",
+    "exampleTranslation": "Kechirasiz, necha yoshdasiz?",
+    "additionalExamples": [
+      { "sentence": "お母さんはおいくつですか。(おかあさんはおいくつですか。)", "translation": "Onangiz necha yoshdalar?" },
+      { "sentence": "あの方はおいくつですか。(あのかたはおいくつですか。)", "translation": "U kishi necha yoshdalar?" }
+    ],
+    "synonyms": ["何歳"],
+    "antonyms": [],
+    "nuance": "「いくつ」 asli \"nechta\" degani; oldiga hurmat qo'shimchasi 「お」 qo'shilib yosh so'rashning muloyim shakliga aylanadi. Yosh so'rashdan oldin 「失礼ですが」 deyish odobli hisoblanadi.",
+    "compounds": [
+      { "word": "いくつ", "hiragana": "いくつ", "meaning": "nechta; necha yosh" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "はい",
+    "hiragana": "はい",
+    "meaning": "ha",
+    "partOfSpeech": "undov",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "①",
+    "exampleSentence": "はい、そうです。(はい、そうです。)",
+    "exampleTranslation": "Ha, shunday.",
+    "additionalExamples": [
+      { "sentence": "はい、学生です。(はい、がくせいです。)", "translation": "Ha, men talabaman." },
+      { "sentence": "はい、分かりました。(はい、わかりました。)", "translation": "Ha, tushundim." }
+    ],
+    "synonyms": ["ええ", "うん"],
+    "antonyms": ["いいえ"],
+    "nuance": "「はい」 — muloyim shakl. 「ええ」 biroz erkinroq, 「うん」 esa faqat yaqin kishilar bilan. Telefonda ismni tasdiqlashda ham 「はい」 ishlatiladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "いいえ",
+    "hiragana": "いいえ",
+    "meaning": "yo'q",
+    "partOfSpeech": "undov",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "③",
+    "exampleSentence": "いいえ、違います。(いいえ、ちがいます。)",
+    "exampleTranslation": "Yo'q, unday emas.",
+    "additionalExamples": [
+      { "sentence": "いいえ、学生じゃありません。(いいえ、がくせいじゃありません。)", "translation": "Yo'q, men talaba emasman." },
+      { "sentence": "いいえ、どういたしまして。(いいえ、どういたしまして。)", "translation": "Arzimaydi (javob sifatida)." }
+    ],
+    "synonyms": ["いや", "ううん"],
+    "antonyms": ["はい"],
+    "nuance": "Rahmatga javoban 「いいえ」 deyish \"arzimaydi\" ma'nosini beradi. 「いや」va「ううん」 — erkin nutq shakllari.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "失礼ですが",
+    "hiragana": "しつれいですが",
+    "meaning": "kechirasiz, ~ (savol berishdan oldin aytiladigan ibora)",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "",
+    "exampleSentence": "失礼ですが、お名前は？(しつれいですが、おなまえは？)",
+    "exampleTranslation": "Kechirasiz, ismingiz nima?",
+    "additionalExamples": [
+      { "sentence": "失礼ですが、どなたですか。(しつれいですが、どなたですか。)", "translation": "Kechirasiz, siz kim bo'lasiz?" },
+      { "sentence": "失礼ですが、お仕事は何ですか。(しつれいですが、おしごとはなんですか。)", "translation": "Kechirasiz, kasbingiz nima?" }
+    ],
+    "synonyms": ["すみませんが", "恐れ入りますが"],
+    "antonyms": [],
+    "nuance": "Shaxsiy savol (ism, yosh, kasb) berishdan oldin ishlatiladi — \"bezovta qilganim uchun uzr\" ma'nosida. Xonaga kirish yoki chiqishda esa 「失礼します」 deyiladi.",
+    "compounds": [
+      { "word": "失礼します", "hiragana": "しつれいします", "meaning": "ruxsat bering / xayr (rasmiy)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "失", "meaning": "yo'qotmoq", "kunReading": "ushina", "onReading": "shitsu", "strokes": 5 },
+      { "kanji": "礼", "meaning": "odob, ta'zim", "kunReading": "-", "onReading": "rei", "strokes": 5 }
+    ]
+  },
+  {
+    "japaneseWord": "お名前は？",
+    "hiragana": "おなまえは？",
+    "meaning": "Ismingiz nima?",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "",
+    "exampleSentence": "失礼ですが、お名前は？(しつれいですが、おなまえは？)",
+    "exampleTranslation": "Kechirasiz, ismingiz nima?",
+    "additionalExamples": [
+      { "sentence": "お名前は何ですか。(おなまえはなんですか。)", "translation": "Ismingiz nima?" },
+      { "sentence": "お名前を書いてください。(おなまえをかいてください。)", "translation": "Ismingizni yozing." }
+    ],
+    "synonyms": ["お名前は何ですか"],
+    "antonyms": [],
+    "nuance": "Boshqaning ismi haqida gapirganda hurmat qo'shimchasi 「お」 qo'shiladi: 「お名前」. O'z ismi haqida esa 「名前」 deyiladi. Jumla oxiri 「は？」 bilan tugashi — muloyim va qisqa so'rash usuli.",
+    "compounds": [
+      { "word": "名前", "hiragana": "なまえ", "meaning": "ism" },
+      { "word": "名刺", "hiragana": "めいし", "meaning": "vizitka" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "名", "meaning": "ism, nom", "kunReading": "na", "onReading": "mei, myou", "strokes": 6 },
+      { "kanji": "前", "meaning": "old, oldin", "kunReading": "mae", "onReading": "zen", "strokes": 9 }
+    ]
+  },
+  {
+    "japaneseWord": "初めまして",
+    "hiragana": "はじめまして",
+    "meaning": "Tanishganimdan xursandman (ilk uchrashuvda aytiladi)",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "④",
+    "exampleSentence": "初めまして、ミラーです。(はじめまして、みらーです。)",
+    "exampleTranslation": "Tanishganimdan xursandman, men Millerman.",
+    "additionalExamples": [
+      { "sentence": "初めまして。どうぞよろしくお願いします。(はじめまして。どうぞよろしくおねがいします。)", "translation": "Tanishganimdan xursandman. Iltimos, yaxshi munosabatda bo'ling." },
+      { "sentence": "初めまして、田中と申します。(はじめまして、たなかともうします。)", "translation": "Tanishganimdan xursandman, men Tanaka bo'laman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "So'zma-so'z \"birinchi marta\" degani. Faqat birinchi uchrashuvda aytiladi va odatda ketidan 「どうぞよろしくお願いします」 keladi.",
+    "compounds": [
+      { "word": "初めて", "hiragana": "はじめて", "meaning": "birinchi marta" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "初", "meaning": "birinchi, boshlanish", "kunReading": "haji, hatsu", "onReading": "sho", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "どうぞよろしくお願いします",
+    "hiragana": "どうぞよろしくおねがいします",
+    "meaning": "Tanishganimdan xursandman; iltimos, yaxshi munosabatda bo'ling",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "",
+    "exampleSentence": "初めまして、ミラーです。どうぞよろしくお願いします。(はじめまして、みらーです。どうぞよろしくおねがいします。)",
+    "exampleTranslation": "Tanishganimdan xursandman, men Millerman. Iltimos, yaxshi munosabatda bo'ling.",
+    "additionalExamples": [
+      { "sentence": "こちらこそ、よろしくお願いします。(こちらこそ、よろしくおねがいします。)", "translation": "Men ham tanishganimdan xursandman." },
+      { "sentence": "今日からよろしくお願いします。(きょうからよろしくおねがいします。)", "translation": "Bugundan boshlab birga ishlaymiz, iltimos e'tiboringizni ayamang." }
+    ],
+    "synonyms": ["よろしくお願いします", "よろしく"],
+    "antonyms": [],
+    "nuance": "O'zbek tiliga so'zma-so'z tarjima qilinmaydi — \"kelgusida menga yaxshi munosabatda bo'ling\" degan ma'noni bildiradi. Qisqa shakli 「よろしく」 do'stlar orasida, to'liq shakli esa rasmiy vaziyatda ishlatiladi.",
+    "compounds": [
+      { "word": "お願いします", "hiragana": "おねがいします", "meaning": "iltimos qilaman" },
+      { "word": "よろしく", "hiragana": "よろしく", "meaning": "salom ayting; tanishganimdan xursandman (erkin)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "願", "meaning": "iltimos qilmoq, tilamoq", "kunReading": "nega", "onReading": "gan", "strokes": 19 }
+    ]
+  },
+  {
+    "japaneseWord": "こちらは～さんです",
+    "hiragana": "こちらは～さんです",
+    "meaning": "Bu kishi janob / xonim ~ (tanishtirish iborasi)",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "",
+    "exampleSentence": "こちらはミラーさんです。(こちらはみらーさんです。)",
+    "exampleTranslation": "Bu kishi janob Miller.",
+    "additionalExamples": [
+      { "sentence": "こちらは山田さんです。IMCの社員です。(こちらはやまださんです。あいえむしーのしゃいんです。)", "translation": "Bu kishi Yamada-san. IMC firmasining xodimi." },
+      { "sentence": "こちらは私の友達のカリナさんです。(こちらはわたしのともだちのかりなさんです。)", "translation": "Bu kishi mening do'stim Karina." }
+    ],
+    "synonyms": ["この方は～さんです"],
+    "antonyms": [],
+    "nuance": "「こちら」 asli \"bu tomon\" degani, lekin odamni tanishtirganda hurmat bilan \"bu kishi\" ma'nosida ishlatiladi. 「この人は」 dan ancha muloyimroq.",
+    "compounds": [
+      { "word": "こちら", "hiragana": "こちら", "meaning": "bu tomon; bu kishi (hurmat)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "～から来ました",
+    "hiragana": "～からきました",
+    "meaning": "Men ~(davlat/joy nomi)dan kelganman",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "",
+    "exampleSentence": "アメリカから来ました。(あめりかからきました。)",
+    "exampleTranslation": "Men Amerikadan kelganman.",
+    "additionalExamples": [
+      { "sentence": "ウズベキスタンから来ました。(うずべきすたんからきました。)", "translation": "Men O'zbekistondan kelganman." },
+      { "sentence": "どこから来ましたか。(どこからきましたか。)", "translation": "Qayerdan kelgansiz?" }
+    ],
+    "synonyms": ["～の出身です"],
+    "antonyms": [],
+    "nuance": "「から」 — boshlanish nuqtasini ko'rsatuvchi yuklama. Kelib chiqishni bildirishning yana bir shakli — 「～の出身です（しゅっしんです）」, u ko'proq rasmiy tanishuvda ishlatiladi.",
+    "compounds": [
+      { "word": "来ます", "hiragana": "きます", "meaning": "kelmoq" },
+      { "word": "出身", "hiragana": "しゅっしん", "meaning": "kelib chiqish joyi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "来", "meaning": "kelmoq", "kunReading": "ku, ki, ko", "onReading": "rai", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "アメリカ",
+    "hiragana": "アメリカ",
+    "meaning": "Amerika, AQSH",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "ミラーさんはアメリカから来ました。(みらーさんはあめりかからきました。)",
+    "exampleTranslation": "Janob Miller Amerikadan kelgan.",
+    "additionalExamples": [
+      { "sentence": "私はアメリカ人です。(わたしはあめりかじんです。)", "translation": "Men amerikalikman." },
+      { "sentence": "来年アメリカへ行きます。(らいねんあめりかへいきます。)", "translation": "Kelasi yil Amerikaga boraman." }
+    ],
+    "synonyms": ["米国"],
+    "antonyms": [],
+    "nuance": "Rasmiy hujjatlarda va gazetalarda 「米国（べいこく）」 ishlatiladi. Kundalik nutqda esa doim 「アメリカ」.",
+    "compounds": [
+      { "word": "アメリカ人", "hiragana": "アメリカじん", "meaning": "amerikalik" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "イギリス",
+    "hiragana": "イギリス",
+    "meaning": "Angliya, Buyuk Britaniya",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "私はイギリスから来ました。(わたしはいぎりすからきました。)",
+    "exampleTranslation": "Men Angliyadan kelganman.",
+    "additionalExamples": [
+      { "sentence": "彼はイギリス人です。(かれはいぎりすじんです。)", "translation": "U inglizlik." },
+      { "sentence": "イギリスの車は高いです。(いぎりすのくるまはたかいです。)", "translation": "Angliya mashinalari qimmat." }
+    ],
+    "synonyms": ["英国"],
+    "antonyms": [],
+    "nuance": "So'z portugalcha \"Inglez\" dan o'zlashgan. Rasmiy uslubda 「英国（えいこく）」 deyiladi.",
+    "compounds": [
+      { "word": "イギリス人", "hiragana": "イギリスじん", "meaning": "inglizlik" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "インド",
+    "hiragana": "インド",
+    "meaning": "Hindiston",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "サントスさんはインドから来ました。(さんとすさんはいんどからきました。)",
+    "exampleTranslation": "Santos Hindistondan kelgan.",
+    "additionalExamples": [
+      { "sentence": "インド料理が好きです。(いんどりょうりがすきです。)", "translation": "Hind taomlarini yoqtiraman." },
+      { "sentence": "あの人はインド人です。(あのひとはいんどじんです。)", "translation": "U kishi hindistonlik." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「インド」 — Hindiston davlati; 「インドネシア」 bilan adashtirmang.",
+    "compounds": [
+      { "word": "インド人", "hiragana": "インドじん", "meaning": "hindistonlik" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "インドネシア",
+    "hiragana": "インドネシア",
+    "meaning": "Indoneziya",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "ワンさんはインドネシアから来ました。(わんさんはいんどねしあからきました。)",
+    "exampleTranslation": "Van Indoneziyadan kelgan.",
+    "additionalExamples": [
+      { "sentence": "インドネシアは暑いです。(いんどねしあはあついです。)", "translation": "Indoneziyada issiq." },
+      { "sentence": "彼女はインドネシア人です。(かのじょはいんどねしあじんです。)", "translation": "U (ayol) indoneziyalik." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Uzun katakana so'z; 「インド」 (Hindiston) dan farqlang.",
+    "compounds": [
+      { "word": "インドネシア人", "hiragana": "インドネシアじん", "meaning": "indoneziyalik" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "韓国",
+    "hiragana": "かんこく",
+    "meaning": "Janubiy Koreya",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "キムさんは韓国から来ました。(きむさんはかんこくからきました。)",
+    "exampleTranslation": "Kim Janubiy Koreyadan kelgan.",
+    "additionalExamples": [
+      { "sentence": "韓国語を勉強しています。(かんこくごをべんきょうしています。)", "translation": "Koreys tilini o'rganyapman." },
+      { "sentence": "韓国の料理は辛いです。(かんこくのりょうりはからいです。)", "translation": "Koreys taomlari achchiq." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「韓国」 — Janubiy Koreya. Shimoliy Koreya esa 「北朝鮮（きたちょうせん）」 deyiladi.",
+    "compounds": [
+      { "word": "韓国人", "hiragana": "かんこくじん", "meaning": "koreys (Janubiy Koreyadan)" },
+      { "word": "韓国語", "hiragana": "かんこくご", "meaning": "koreys tili" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "韓", "meaning": "Koreya", "kunReading": "-", "onReading": "kan", "strokes": 18 },
+      { "kanji": "国", "meaning": "davlat, mamlakat", "kunReading": "kuni", "onReading": "koku", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "タイ",
+    "hiragana": "タイ",
+    "meaning": "Tailand",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "タワポンさんはタイから来ました。(たわぽんさんはたいからきました。)",
+    "exampleTranslation": "Tawapon Tailanddan kelgan.",
+    "additionalExamples": [
+      { "sentence": "タイ料理はおいしいです。(たいりょうりはおいしいです。)", "translation": "Tailand taomlari mazali." },
+      { "sentence": "去年タイへ行きました。(きょねんたいへいきました。)", "translation": "O'tgan yili Tailandga bordim." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Omonimga e'tibor bering: 「タイ」 — Tailand, 「鯛（たい）」 — baliq turi, 「～たい」 — istak qo'shimchasi.",
+    "compounds": [
+      { "word": "タイ人", "hiragana": "タイじん", "meaning": "tailandlik" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "中国",
+    "hiragana": "ちゅうごく",
+    "meaning": "Xitoy",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "ワンさんは中国から来ました。(わんさんはちゅうごくからきました。)",
+    "exampleTranslation": "Van Xitoydan kelgan.",
+    "additionalExamples": [
+      { "sentence": "中国語が分かりますか。(ちゅうごくごがわかりますか。)", "translation": "Xitoy tilini tushunasizmi?" },
+      { "sentence": "中国は大きい国です。(ちゅうごくはおおきいくにです。)", "translation": "Xitoy — katta davlat." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「中（o'rta）」＋「国（davlat）」 — \"O'rta davlat\". Xitoy tili 「中国語」 deyiladi.",
+    "compounds": [
+      { "word": "中国人", "hiragana": "ちゅうごくじん", "meaning": "xitoylik" },
+      { "word": "中国語", "hiragana": "ちゅうごくご", "meaning": "xitoy tili" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "中", "meaning": "o'rta, ich", "kunReading": "naka", "onReading": "chuu", "strokes": 4 },
+      { "kanji": "国", "meaning": "davlat, mamlakat", "kunReading": "kuni", "onReading": "koku", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "ドイツ",
+    "hiragana": "ドイツ",
+    "meaning": "Olmoniya, Germaniya",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "シュミットさんはドイツから来ました。(しゅみっとさんはどいつからきました。)",
+    "exampleTranslation": "Shmidt Olmoniyadan kelgan.",
+    "additionalExamples": [
+      { "sentence": "ドイツ語を勉強しています。(どいつごをべんきょうしています。)", "translation": "Nemis tilini o'rganyapman." },
+      { "sentence": "ドイツの車は丈夫です。(どいつのくるまはじょうぶです。)", "translation": "Nemis mashinalari mustahkam." }
+    ],
+    "synonyms": ["独国"],
+    "antonyms": [],
+    "nuance": "So'z nemischa \"Deutsch\" dan o'zlashgan. Qisqartmalarda 「独（どく）」 belgisi ishlatiladi (日独＝Yaponiya-Germaniya).",
+    "compounds": [
+      { "word": "ドイツ人", "hiragana": "ドイツじん", "meaning": "nemis" },
+      { "word": "ドイツ語", "hiragana": "ドイツご", "meaning": "nemis tili" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "日本",
+    "hiragana": "にほん",
+    "meaning": "Yaponiya",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "②",
+    "exampleSentence": "私は日本から来ました。(わたしはにほんからきました。)",
+    "exampleTranslation": "Men Yaponiyadan kelganman.",
+    "additionalExamples": [
+      { "sentence": "日本語を勉強しています。(にほんごをべんきょうしています。)", "translation": "Yapon tilini o'rganyapman." },
+      { "sentence": "あの方は日本人です。(あのかたはにほんじんです。)", "translation": "U kishi yapon." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「にほん」 va 「にっぽん」 — ikkala o'qilishi ham to'g'ri. 「にっぽん」 rasmiyroq va sport tadbirlarida, pul birligida uchraydi.",
+    "compounds": [
+      { "word": "日本人", "hiragana": "にほんじん", "meaning": "yapon (millat)" },
+      { "word": "日本語", "hiragana": "にほんご", "meaning": "yapon tili" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi, jitsu", "strokes": 4 },
+      { "kanji": "本", "meaning": "asos, kitob", "kunReading": "moto", "onReading": "hon", "strokes": 5 }
+    ]
+  },
+  {
+    "japaneseWord": "フランス",
+    "hiragana": "フランス",
+    "meaning": "Fransiya",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "私はフランスから来ました。(わたしはふらんすからきました。)",
+    "exampleTranslation": "Men Fransiyadan kelganman.",
+    "additionalExamples": [
+      { "sentence": "フランス語は難しいです。(ふらんすごはむずかしいです。)", "translation": "Fransuz tili qiyin." },
+      { "sentence": "彼女はフランス人です。(かのじょはふらんすじんです。)", "translation": "U (ayol) fransuz." }
+    ],
+    "synonyms": ["仏国"],
+    "antonyms": [],
+    "nuance": "Qisqartmalarda 「仏（ふつ）」 belgisi ishlatiladi (日仏＝Yaponiya-Fransiya).",
+    "compounds": [
+      { "word": "フランス人", "hiragana": "フランスじん", "meaning": "fransuz" },
+      { "word": "フランス語", "hiragana": "フランスご", "meaning": "fransuz tili" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "ブラジル",
+    "hiragana": "ブラジル",
+    "meaning": "Braziliya",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "サントスさんはブラジルから来ました。(さんとすさんはぶらじるからきました。)",
+    "exampleTranslation": "Santos Braziliyadan kelgan.",
+    "additionalExamples": [
+      { "sentence": "ブラジルのコーヒーは有名です。(ぶらじるのこーひーはゆうめいです。)", "translation": "Braziliya qahvasi mashhur." },
+      { "sentence": "あの人はブラジル人です。(あのひとはぶらじるじんです。)", "translation": "U kishi braziliyalik." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Braziliyada yaponiyalik muhojirlar jamoasi katta bo'lgani uchun 「日系ブラジル人（yapon kelib chiqishli braziliyalik）」 iborasi ham tez-tez uchraydi.",
+    "compounds": [
+      { "word": "ブラジル人", "hiragana": "ブラジルじん", "meaning": "braziliyalik" }
+    ],
+    "kanjiInfo": []
+  }
+]
