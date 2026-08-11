@@ -17,6 +17,13 @@ const KNOWN_KEYS: { key: string; label: string; desc: string; sensitive: boolean
     placeholder: 'AIza…',
   },
   {
+    key:         'gemini_model',
+    label:       'Gemini Model',
+    desc:        "AI chat qaysi modelda ishlaydi. Bo'sh qoldirilsa: gemini-2.5-flash-lite (eng arzoni — $0.10/$0.40 per 1M token). Qimmatroq, ammo kuchliroq variant: gemini-3.1-flash-lite.",
+    sensitive:   false,
+    placeholder: 'gemini-2.5-flash-lite',
+  },
+  {
     key:         'site_name',
     label:       'Site Name',
     desc:        'Display name shown in metadata and emails.',

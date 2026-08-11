@@ -112,4 +112,46 @@
   .shadow-glow-accent {
     box-shadow: 0 0 16px rgba(245, 158, 11, 0.35);
   }
+
+  /* ── Sakura ──────────────────────────────────────────────────
+     One falling petal. The wrapper sets left/size/duration per petal;
+     the keyframes only describe the shared drift-and-spin path. */
+  .sakura-petal {
+    position: absolute;
+    top: -8%;
+    display: block;
+    background: linear-gradient(135deg, #ffd9e4 0%, #f7a8c0 55%, #e8879f 100%);
+    border-radius: 100% 0 100% 0;
+    animation-name: sakuraFall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    will-change: transform;
+  }
+
+  @keyframes sakuraFall {
+    from {
+      transform: translate3d(0, -10vh, 0) rotate(0deg);
+    }
+    to {
+      transform: translate3d(var(--drift, 40px), 110vh, 0) rotate(540deg);
+    }
+  }
+
+  /* Voice mode: the ring that swells with the microphone. */
+  @keyframes micPulse {
+    0%, 100% { transform: scale(1);    opacity: 0.55; }
+    50%      { transform: scale(1.35); opacity: 0;    }
+  }
+
+  .mic-ring {
+    animation: micPulse 1.6s ease-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sakura-petal,
+    .mic-ring {
+      animation: none;
+    }
+    .sakura-petal { display: none; }
+  }
 }

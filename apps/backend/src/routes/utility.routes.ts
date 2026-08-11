@@ -4,6 +4,7 @@ import { authenticate, optionalAuth } from '../middleware/auth.middleware';
 import {
   chatHandler,
   ttsHandler,
+  ttsDialogueHandler,
   ttsVoicesHandler,
   getPublicConfigHandler,
 } from '../controllers/utility.controller';
@@ -75,6 +76,15 @@ router.post('/chat', authenticate, chatLimiter, chatHandler);
 // visitors keep working — they simply fall under the IP limiter instead of a
 // per-account daily quota.
 router.get('/tts', optionalAuth, ttsLimiter, ttsHandler);
+
+/**
+ * GET /api/tts/dialogue?text=...&voice=uz-UZ-MadinaNeural&jaVoice=ja-JP-NanamiNeural
+ *
+ * Speaks one sentence of the AI tutor's reply, switching voices between the
+ * Uzbek explanation and the Japanese words inside it. Used by the voice mode of
+ * the chat page. Authentication required — this one is not public.
+ */
+router.get('/tts/dialogue', authenticate, ttsLimiter, ttsDialogueHandler);
 
 /**
  * GET /api/tts/voices

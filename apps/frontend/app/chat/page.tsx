@@ -2,16 +2,26 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Bot, User, Volume2, AlertCircle, Sparkles, RotateCcw } from 'lucide-react';
+import {
+  Send, User, Volume2, RotateCcw, Mic, MessageSquare, X, Square,
+} from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { QuotaBar } from '@/components/premium/UpgradeNotice';
+import { SenseiAvatar, SenseiMood } from '@/components/chat/SenseiAvatar';
+import { SakuraPetals } from '@/components/chat/SakuraPetals';
+import { SenseiVoice, SENSEI_VOICES } from '@/lib/senseiVoice';
+import { useSpeechRecognition, RecognitionLang } from '@/lib/useSpeechRecognition';
 import { speak } from '@/lib/speak';
-import { useSiteName } from '@/lib/siteConfig';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { getAccessToken } from '@/lib/api';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api';
+
+/** Speaking rate for the Uzbek explanation. The neural voice's own baseline is
+ *  slow enough to sound like an announcement; this is the setting that made the
+ *  tutor pleasant to listen to. */
+const SPEECH_RATE = '+25%';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -28,64 +38,90 @@ interface Message {
   error?:    boolean;
 }
 
-// ─── Suggestion chips ─────────────────────────────────────────────────────────
+type View = 'stage' | 'chat';
 
 const SUGGESTIONS = [
-  "🌸 Gapda 食べます so'zini qanday ishlataman?",
-  "🔤 は va が zarrachalari o'rtasidagi farq nima?",
-  "🃏 Ovqatga oid keng tarqalgan so'zlar bo'yicha test o'tkaza olasizmi?",
-  "🈳 大丈夫 nimani anglatadi va u qachon ishlatiladi?",
-  "📚 Menga 5 ta boshlang'ich darajadagi so'z bering",
+  "🌸 食べます so'zi bilan misol gap tuzing",
+  "🔤 見る va 観る so'zlarining farqi nima?",
+  "🃏 Ovqatga oid so'zlardan test o'tkazing",
+  "🈳 大丈夫 nimani anglatadi va qachon ishlatiladi?",
+  "💡 わすれる so'zini yodlash uchun hiyla bering",
 ];
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const playTts = (text: string) => { void speak(text); };
-
 function extractJapanese(text: string): string | null {
-  const match = text.match(/[\u3040-\u30ff\u4e00-\u9fff]+/g);
+  const match = text.match(/[぀-ヿ一-鿿]+/g);
   return match ? match.join('') : null;
 }
 
-// ─── Bubble Components ────────────────────────────────────────────────────────
+// ─── Round control ────────────────────────────────────────────────────────────
+
+/** The only chrome on the stage: circular, floating, no panel around it. */
+function RoundButton({
+  onClick, title, children, className,
+}: {
+  onClick: () => void; title: string; children: React.ReactNode; className?: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      aria-label={title}
+      className={cn(
+        'w-10 h-10 rounded-full flex items-center justify-center',
+        'bg-surface/70 backdrop-blur-md border border-border/70 text-text-secondary',
+        'hover:text-accent hover:border-accent/60 active:scale-95 transition-all',
+        className,
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+// ─── Chat-view bubbles ────────────────────────────────────────────────────────
 
 function UserBubble({ msg }: { msg: Message }) {
   return (
     <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
+      initial={{ opacity: 0, x: 20, scale: 0.96 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
       className="flex justify-end gap-2.5"
     >
-      <div className="max-w-[78%] bg-primary text-white rounded-2xl rounded-tr-sm px-4 py-3 shadow-glow-sm">
+      <div className="max-w-[78%] bg-primary-gradient text-white rounded-2xl rounded-br-sm px-4 py-3 shadow-glow-sm">
         <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
       </div>
-      <div className="w-7 h-7 rounded-full bg-primary/30 border border-primary/50
+      <div className="w-8 h-8 rounded-full bg-primary/25 border border-primary/50
                       flex items-center justify-center shrink-0 mt-0.5">
-        <User size={13} className="text-primary" />
+        <User size={14} className="text-primary" />
       </div>
     </motion.div>
   );
 }
 
-function AssistantBubble({ msg }: { msg: Message }) {
+function AssistantBubble({
+  msg, variant, onReplay,
+}: {
+  msg: Message; variant: 'madina' | 'sardor'; onReplay: (text: string) => void;
+}) {
   const japanese = extractJapanese(msg.content);
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
+      initial={{ opacity: 0, x: -20, scale: 0.96 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
       className="flex gap-2.5"
     >
-      <div className="w-7 h-7 rounded-full bg-violet-500/20 border border-violet-500/40
-                      flex items-center justify-center shrink-0 mt-0.5">
-        <Bot size={13} className="text-violet-400" />
-      </div>
-
+      <SenseiAvatar
+        mood={msg.isStreaming ? 'thinking' : 'idle'}
+        variant={variant}
+        size={34}
+        className="shrink-0 mt-0.5"
+      />
       <div className={cn(
-        'max-w-[78%] rounded-2xl rounded-tl-sm px-4 py-3',
+        'max-w-[78%] rounded-2xl rounded-bl-sm px-4 py-3 backdrop-blur-sm',
         msg.error
           ? 'bg-danger/10 border border-danger/30'
-          : 'bg-surface/80 border border-border',
+          : 'bg-surface/85 border border-border shadow-glass',
       )}>
         <p className={cn(
           'text-sm leading-relaxed whitespace-pre-wrap',
@@ -93,43 +129,62 @@ function AssistantBubble({ msg }: { msg: Message }) {
         )}>
           {msg.content}
           {msg.isStreaming && (
-            <span className="inline-block w-1.5 h-4 bg-primary ml-0.5 rounded-sm animate-pulse" />
+            <span className="inline-block w-1.5 h-4 bg-accent ml-0.5 rounded-sm animate-pulse" />
           )}
         </p>
 
-        {/* TTS button for messages with Japanese */}
-        {!msg.isStreaming && !msg.error && japanese && (
-          <button
-            onClick={() => playTts(japanese)}
-            className="mt-2 flex items-center gap-1 text-xs text-text-muted hover:text-primary transition-colors"
-          >
-            <Volume2 size={11} /> {"Yaponcha talaffuzni eshitish"}
-          </button>
+        {!msg.isStreaming && !msg.error && (
+          <div className="mt-2 flex items-center gap-3">
+            <button
+              onClick={() => onReplay(msg.content)}
+              className="flex items-center gap-1 text-xs text-text-muted hover:text-accent transition-colors"
+            >
+              <Volume2 size={11} /> {"Eshitish"}
+            </button>
+            {japanese && (
+              <button
+                onClick={() => void speak(japanese)}
+                className="flex items-center gap-1 text-xs text-text-muted hover:text-primary transition-colors"
+              >
+                🎌 {"Yaponcha"}
+              </button>
+            )}
+          </div>
         )}
       </div>
     </motion.div>
   );
 }
 
-// ─── Main Chat Page ────────────────────────────────────────────────────────────
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ChatPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const [siteName,  setSiteName]  = useState('VocabJP');
+
   const [messages,  setMessages]  = useState<Message[]>([]);
   const [input,     setInput]     = useState('');
   const [isBusy,    setIsBusy]    = useState(false);
-  const bottomRef   = useRef<HTMLDivElement>(null);
-  const inputRef    = useRef<HTMLTextAreaElement>(null);
-  const abortRef    = useRef<AbortController | null>(null);
+  const [view,      setView]      = useState<View>('stage');
+  const [voiceIdx,  setVoiceIdx]  = useState(0);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [sttLang,   setSttLang]   = useState<RecognitionLang>('uz-UZ');
+  const [notice,    setNotice]    = useState<string | null>(null);
 
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const inputRef  = useRef<HTMLTextAreaElement>(null);
+  const abortRef  = useRef<AbortController | null>(null);
+  const voiceRef  = useRef<SenseiVoice | null>(null);
 
-  // Auto-scroll to bottom whenever messages change
+  const sensei = SENSEI_VOICES[voiceIdx]!;
+  const variant: 'madina' | 'sardor' = voiceIdx === 0 ? 'madina' : 'sardor';
+
+  /** The single reply the stage shows — the stage is not a transcript. */
+  const lastAssistant = [...messages].reverse().find((m) => m.role === 'assistant');
+
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (view === 'chat') bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, view]);
 
-  // Build history array from existing messages (max 20 turns)
   const buildHistory = useCallback((): ChatTurn[] => {
     return messages
       .filter((m) => !m.error)
@@ -137,36 +192,55 @@ export default function ChatPage() {
       .map((m) => ({ role: m.role === 'assistant' ? 'model' : 'user', text: m.content }));
   }, [messages]);
 
+  const silence = useCallback(() => {
+    voiceRef.current?.stop();
+    voiceRef.current = null;
+    setIsSpeaking(false);
+  }, []);
+
+  const makeVoice = useCallback(() => new SenseiVoice({
+    voice: sensei.id,
+    jaVoice: sensei.jaVoice,
+    rate: SPEECH_RATE,
+    onSpeakingChange: setIsSpeaking,
+    onError: (m) => setNotice(m),
+  }), [sensei]);
+
   const sendMessage = useCallback(async (text: string) => {
     const trimmed = text.trim();
     if (!trimmed || isBusy) return;
+
+    // A new question interrupts the previous answer — nobody wants to wait out
+    // a paragraph they already decided to move on from.
+    voiceRef.current?.stop();
+    voiceRef.current = null;
+    setIsSpeaking(false);
+    setNotice(null);
     setInput('');
     setIsBusy(true);
 
-    const userMsg: Message = {
-      id:      crypto.randomUUID(),
-      role:    'user',
-      content: trimmed,
-    };
-
-    const assistantId  = crypto.randomUUID();
-    const assistantMsg: Message = {
-      id:          assistantId,
-      role:        'assistant',
-      content:     '',
-      isStreaming: true,
-    };
-
-    setMessages((prev) => [...prev, userMsg, assistantMsg]);
+    const userMsg: Message = { id: crypto.randomUUID(), role: 'user', content: trimmed };
+    const assistantId = crypto.randomUUID();
+    setMessages((prev) => [
+      ...prev,
+      userMsg,
+      { id: assistantId, role: 'assistant', content: '', isStreaming: true },
+    ]);
 
     abortRef.current = new AbortController();
+    const voice = makeVoice();
+    voiceRef.current = voice;
 
     try {
       const history = buildHistory();
 
       const res = await fetch(`${API_BASE}/chat`, {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getAccessToken() ?? ''}` },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getAccessToken() ?? ''}`,
+          'x-timezone-offset': String(new Date().getTimezoneOffset()),
+        },
         body:    JSON.stringify({ message: trimmed, history }),
         signal:  abortRef.current.signal,
         credentials: 'include',
@@ -208,45 +282,90 @@ export default function ChatPage() {
 
           if (!line.startsWith('data: ')) continue;
           const payload = line.replace(/^data: /, '').trim();
-          if (payload === '[DONE]') {
-            streamDone = true;
-            break;
-          }
+          if (payload === '[DONE]') { streamDone = true; break; }
 
           try {
             const { text: chunk } = JSON.parse(payload) as { text: string };
+            voice.feed(chunk);
             setMessages((prev) =>
-              prev.map((m) =>
-                m.id === assistantId
-                  ? { ...m, content: m.content + chunk }
-                  : m,
-              ),
+              prev.map((m) => m.id === assistantId ? { ...m, content: m.content + chunk } : m),
             );
           } catch {}
         }
       }
 
-
-      // Finalise: mark not streaming
+      voice.finish();
       setMessages((prev) =>
         prev.map((m) => m.id === assistantId ? { ...m, isStreaming: false } : m),
       );
     } catch (err: unknown) {
-      const errMsg = (err as Error)?.message ?? "Xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.";
-      if (errMsg !== 'AbortError') {
+      // A cancelled request rejects with name 'AbortError' — its *message* is
+      // browser-specific, so comparing the message left a red bubble behind on
+      // every reset.
+      const aborted = (err as Error)?.name === 'AbortError';
+      const errMsg = (err as Error)?.message || "Xatolik yuz berdi. Qaytadan urinib ko'ring.";
+      voice.stop();
+      if (!aborted) {
         setMessages((prev) =>
-          prev.map((m) =>
-            m.id === assistantId
-              ? { ...m, content: errMsg, isStreaming: false, error: true }
-              : m,
-          ),
+          prev.map((m) => m.id === assistantId
+            ? { ...m, content: errMsg, isStreaming: false, error: true }
+            : m),
         );
       }
     } finally {
       setIsBusy(false);
-      setTimeout(() => inputRef.current?.focus(), 100);
+      if (view === 'chat') setTimeout(() => inputRef.current?.focus(), 100);
     }
-  }, [isBusy, buildHistory]);
+  }, [isBusy, buildHistory, view, makeVoice]);
+
+  // ── Microphone: push-to-talk ──────────────────────────────────────────────
+  const {
+    isSupported: micSupported, isListening, interim, error: micError, start: startMic, stop: stopMic,
+  } = useSpeechRecognition({
+    lang: sttLang,
+    mode: 'hold',
+    onFinal: (transcript) => { void sendMessage(transcript); },
+  });
+
+  const holdStart = useCallback(() => {
+    if (isBusy || isListening) return;
+    // The tutor must stop talking before the mic opens, or its own voice goes
+    // straight back into the recogniser.
+    silence();
+    startMic();
+  }, [isBusy, isListening, silence, startMic]);
+
+  const holdEnd = useCallback(() => {
+    if (isListening) stopMic();
+  }, [isListening, stopMic]);
+
+  // Space bar is the desktop equivalent of holding the button. `repeat` guards
+  // against the key-repeat storm a held key produces.
+  useEffect(() => {
+    if (view !== 'stage' || !micSupported) return;
+
+    const isTypingTarget = (t: EventTarget | null) =>
+      t instanceof HTMLElement &&
+      (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.code !== 'Space' || e.repeat || isTypingTarget(e.target)) return;
+      e.preventDefault();
+      holdStart();
+    };
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.code !== 'Space' || isTypingTarget(e.target)) return;
+      e.preventDefault();
+      holdEnd();
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+    };
+  }, [view, micSupported, holdStart, holdEnd]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -257,81 +376,249 @@ export default function ChatPage() {
 
   const clearChat = () => {
     abortRef.current?.abort();
+    silence();
+    stopMic();
     setMessages([]);
     setIsBusy(false);
     setInput('');
+    setNotice(null);
   };
+
+  const replay = useCallback((text: string) => {
+    silence();
+    const v = makeVoice();
+    voiceRef.current = v;
+    v.feed(text);
+    v.finish();
+  }, [makeVoice, silence]);
+
+  useEffect(() => () => voiceRef.current?.stop(), []);
+
+  const mood: SenseiMood =
+    isListening  ? 'listening'
+    : isSpeaking ? 'speaking'
+    : isBusy     ? 'thinking'
+    : messages.length === 0 ? 'happy'
+    : 'idle';
 
   if (authLoading) return null;
   if (!isAuthenticated) {
     return (
       <div className="page-container py-24 text-center">
-        <Bot size={48} className="text-primary mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-text-primary mb-2">{"AI Repetitor bilan so'zlashuv"}</h2>
-        <p className="text-text-muted mb-6">{"Iltimos, AI repetitor bilan mashq qilish uchun tizimga kiring."}</p>
+        <SenseiAvatar mood="happy" variant="madina" size={110} className="mx-auto mb-5" />
+        <h2 className="text-2xl font-bold text-text-primary mb-2">{"AI Sensei bilan so'zlashuv"}</h2>
+        <p className="text-text-muted mb-6">{"Ustoz bilan mashq qilish uchun tizimga kiring."}</p>
         <Link href="/auth/login" className="btn-primary">{"Tizimga kirish"}</Link>
       </div>
     );
   }
 
-  return (
-    <div className="flex flex-col" style={{ height: 'calc(100vh - 64px)' }}>
-      {/* Free accounts see how many AI messages are left today. */}
-      <div className="shrink-0 px-4 pt-3">
-        <QuotaBar kind="ai" className="max-w-3xl mx-auto" />
-      </div>
+  // ── Stage: one character, one bubble, one button ──────────────────────────
+  if (view === 'stage') {
+    // While the button is held the bubble mirrors the learner, not the tutor —
+    // seeing the previous answer there made it look like the mic was ignored.
+    const bubbleText = isListening
+      ? (interim || 'Eshityapman…')
+      : lastAssistant?.content
+        || (isBusy ? '' : "Konnichiwa! Tugmani bosib turing va so'rang 🌸");
 
-      {/* ── Header ─────────────────────────────────────────────────── */}
-      <div className="shrink-0 border-b border-border/60 bg-surface/60 backdrop-blur-md px-4 py-3">
-        <div className="max-w-3xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-primary/20 border border-primary/40
-                            flex items-center justify-center">
-              <Sparkles size={16} className="text-primary" />
-            </div>
-            <div>
-              <h1 className="font-bold text-text-primary text-sm">{siteName} {"AI Repetitor"}</h1>
-              <p className="text-xs text-text-muted">{"Gemini tomonidan taqdim etilgan — faqat lug'at ustida ishlash"}</p>
-            </div>
-          </div>
+    return (
+      <div
+        className="relative flex flex-col items-center justify-between overflow-hidden select-none"
+        style={{ height: 'calc(100vh - 64px)' }}
+      >
+        <SakuraPetals count={16} />
+
+        {/* Floating controls — no bars, no panels */}
+        <div className="absolute top-4 right-4 z-20 flex gap-2">
           {messages.length > 0 && (
+            <RoundButton onClick={clearChat} title="Yangi suhbat">
+              <RotateCcw size={15} />
+            </RoundButton>
+          )}
+          <RoundButton onClick={() => { silence(); stopMic(); setView('chat'); }} title="Matnli suhbat">
+            <MessageSquare size={16} />
+          </RoundButton>
+        </div>
+
+        <div className="absolute top-4 left-4 z-20 flex gap-2">
+          <RoundButton
+            onClick={() => { silence(); setVoiceIdx((i) => (i + 1) % SENSEI_VOICES.length); }}
+            title="Ustozni almashtirish"
+          >
+            <span className="text-base leading-none">
+              {SENSEI_VOICES[(voiceIdx + 1) % SENSEI_VOICES.length]!.emoji}
+            </span>
+          </RoundButton>
+          <RoundButton
+            onClick={() => setSttLang((l) => (l === 'uz-UZ' ? 'ja-JP' : 'uz-UZ'))}
+            title={sttLang === 'uz-UZ' ? "O'zbekcha gapiryapman" : 'Yaponcha gapiryapman'}
+          >
+            <span className="text-base leading-none">{sttLang === 'uz-UZ' ? '🇺🇿' : '🇯🇵'}</span>
+          </RoundButton>
+        </div>
+
+        {/* Speech bubble + character */}
+        <div className="relative z-10 flex-1 w-full flex flex-col items-center justify-center gap-1 px-5">
+          <AnimatePresence mode="wait">
+            {(bubbleText || isBusy) && (
+              <motion.div
+                key={isListening ? 'listening' : lastAssistant?.id ?? 'hint'}
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                className="relative w-full max-w-md"
+              >
+                <div className={cn(
+                  'rounded-3xl px-5 py-4 backdrop-blur-md border max-h-[38vh] overflow-y-auto',
+                  lastAssistant?.error
+                    ? 'bg-danger/10 border-danger/40'
+                    : isListening
+                      ? 'bg-primary/10 border-primary/40'
+                      : 'bg-surface/85 border-border/80 shadow-glass',
+                )}>
+                  <p className={cn(
+                    'text-[15px] leading-relaxed whitespace-pre-wrap text-center',
+                    lastAssistant?.error ? 'text-danger'
+                      : isListening ? 'text-text-secondary italic'
+                      : 'text-text-primary',
+                  )}>
+                    {isBusy && !lastAssistant?.content ? (
+                      <span className="inline-flex gap-1.5 py-1">
+                        {[0, 1, 2].map((i) => (
+                          <motion.span
+                            key={i}
+                            className="w-2 h-2 rounded-full bg-accent inline-block"
+                            animate={{ opacity: [0.3, 1, 0.3], y: [0, -3, 0] }}
+                            transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.15 }}
+                          />
+                        ))}
+                      </span>
+                    ) : bubbleText}
+                    {lastAssistant?.isStreaming && (
+                      <span className="inline-block w-1.5 h-4 bg-accent ml-0.5 rounded-sm align-middle animate-pulse" />
+                    )}
+                  </p>
+                </div>
+
+                {/* Tail, pointing down at the character */}
+                <span className={cn(
+                  'absolute left-1/2 -translate-x-1/2 -bottom-2 w-4 h-4 rotate-45 border-r border-b backdrop-blur-md',
+                  lastAssistant?.error
+                    ? 'bg-danger/10 border-danger/40'
+                    : isListening
+                      ? 'bg-primary/10 border-primary/40'
+                      : 'bg-surface/85 border-border/80',
+                )} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <motion.div
+            animate={{ scale: isSpeaking ? [1, 1.02, 1] : 1 }}
+            transition={{ duration: 0.5, repeat: isSpeaking ? Infinity : 0 }}
+            className="mt-6"
+          >
+            <SenseiAvatar mood={mood} variant={variant} size={200} />
+          </motion.div>
+
+          {notice || micError ? (
+            <p className="mt-3 text-xs text-warning text-center max-w-xs">{notice ?? micError}</p>
+          ) : null}
+        </div>
+
+        {/* Push-to-talk */}
+        <div className="relative z-10 pb-8 flex flex-col items-center gap-3">
+          {isSpeaking && (
             <button
-              onClick={clearChat}
+              onClick={silence}
               className="flex items-center gap-1.5 text-xs text-text-muted hover:text-danger transition-colors"
             >
-              <RotateCcw size={12} /> {"Yangi suhbat"}
+              <Square size={10} /> {"To'xtatish"}
             </button>
+          )}
+
+          {!micSupported ? (
+            <p className="text-xs text-text-muted text-center max-w-[15rem]">
+              {"Bu brauzer ovozni qo'llab-quvvatlamaydi — Chrome yoki Edge'da oching."}
+            </p>
+          ) : (
+            <>
+              <div className="relative">
+                {isListening && (
+                  <span className="mic-ring absolute inset-0 rounded-full bg-primary" />
+                )}
+                <button
+                  onPointerDown={(e) => { e.preventDefault(); holdStart(); }}
+                  onPointerUp={holdEnd}
+                  onPointerLeave={holdEnd}
+                  onPointerCancel={holdEnd}
+                  onContextMenu={(e) => e.preventDefault()}
+                  disabled={isBusy}
+                  className={cn(
+                    'relative w-[72px] h-[72px] rounded-full flex items-center justify-center',
+                    'border-2 transition-all touch-none',
+                    isListening
+                      ? 'bg-primary border-primary text-white shadow-glow scale-110'
+                      : isBusy
+                        ? 'bg-surface-2 border-border text-text-muted cursor-not-allowed'
+                        : 'bg-surface-2/80 backdrop-blur-md border-accent/50 text-accent hover:border-accent hover:shadow-glow-accent active:scale-95',
+                  )}
+                >
+                  {isBusy
+                    ? <div className="w-5 h-5 border-2 border-text-muted/30 border-t-accent rounded-full animate-spin" />
+                    : <Mic size={26} />}
+                </button>
+              </div>
+
+              <p className="text-[11px] text-text-muted text-center">
+                {isListening
+                  ? "Gapiring… qo'yib yuborsangiz javob beradi"
+                  : isBusy ? "Ustoz o'ylayapti…" : "Bosib turing va gapiring · yoki Probel"}
+              </p>
+            </>
           )}
         </div>
       </div>
+    );
+  }
 
-      {/* ── Messages ───────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto px-4 py-6">
+  // ── Chat view: the full transcript, for reading and typing ────────────────
+  return (
+    <div className="relative flex flex-col overflow-hidden" style={{ height: 'calc(100vh - 64px)' }}>
+      <SakuraPetals count={8} />
+
+      <div className="absolute top-3 right-4 z-20 flex gap-2">
+        {messages.length > 0 && (
+          <RoundButton onClick={clearChat} title="Yangi suhbat">
+            <RotateCcw size={15} />
+          </RoundButton>
+        )}
+        <RoundButton onClick={() => { silence(); setView('stage'); }} title="Ovozli rejimga qaytish">
+          <X size={16} />
+        </RoundButton>
+      </div>
+
+      <div className="relative shrink-0 px-4 pt-4">
+        <QuotaBar kind="ai" className="max-w-3xl mx-auto pr-24" />
+      </div>
+
+      <div className="relative flex-1 overflow-y-auto px-4 py-5">
         <div className="max-w-3xl mx-auto space-y-5">
-          {/* Welcome */}
           {messages.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-8"
-            >
-              <div className="text-5xl mb-4">🤖</div>
-              <h2 className="text-xl font-bold text-text-primary mb-2">
-                {"こんにちは！ Keling, so'z boyligimizni oshiramiz."}
-              </h2>
-              <p className="text-text-muted text-sm max-w-sm mx-auto mb-7">
-                {"Men sizning so'z boyligingizni oshirishdagi hamrohingizman. Mendan so'zlarni tushuntirishni, test o'tkazishni yoki misollar keltirishni so'rang. Men umumiy tarjima yoki grammatika darslarida yordam bera olmayman."}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-6">
+              <SenseiAvatar mood="happy" variant={variant} size={96} className="mx-auto mb-4" />
+              <p className="text-text-muted text-sm max-w-sm mx-auto mb-6 leading-relaxed">
+                {"Yapon so'zlari bo'yicha ustozingizman. So'z ma'nosini so'rang yoki test o'tkazishimni ayting."}
               </p>
-
-              {/* Suggestion chips */}
               <div className="flex flex-wrap justify-center gap-2">
                 {SUGGESTIONS.map((s) => (
                   <button
                     key={s}
                     onClick={() => sendMessage(s)}
-                    className="text-xs px-3 py-2 rounded-xl border border-border
-                               text-text-muted hover:border-primary/50 hover:text-primary
-                               hover:bg-primary/5 transition-all"
+                    className="text-xs px-3 py-2 rounded-xl border border-border bg-surface/60
+                               text-text-muted hover:border-accent/50 hover:text-accent
+                               hover:bg-accent/5 transition-all"
                   >
                     {s}
                   </button>
@@ -340,12 +627,11 @@ export default function ChatPage() {
             </motion.div>
           )}
 
-          {/* Message list */}
           <AnimatePresence initial={false}>
             {messages.map((msg) =>
               msg.role === 'user'
                 ? <UserBubble key={msg.id} msg={msg} />
-                : <AssistantBubble key={msg.id} msg={msg} />
+                : <AssistantBubble key={msg.id} msg={msg} variant={variant} onReplay={replay} />
             )}
           </AnimatePresence>
 
@@ -353,21 +639,17 @@ export default function ChatPage() {
         </div>
       </div>
 
-      {/* ── Input ──────────────────────────────────────────────────── */}
-      <div className="shrink-0 border-t border-border/60 bg-surface/60 backdrop-blur-md p-4">
+      <div className="relative shrink-0 border-t border-border/50 bg-surface/60 backdrop-blur-md p-4">
         <div className="max-w-3xl mx-auto flex gap-3 items-end">
           <textarea
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="So'z haqida so'rang, misollar yoki test so'rang... (Yuborish uchun Enter)"
+            placeholder="So'z haqida so'rang… (Enter — yuborish)"
             rows={1}
             disabled={isBusy}
-            className={cn(
-              'input-field resize-none min-h-[44px] max-h-[120px] overflow-y-auto py-3 flex-1',
-              'leading-relaxed',
-            )}
+            className="input-field resize-none min-h-[44px] max-h-[120px] overflow-y-auto py-3 flex-1 leading-relaxed"
             style={{ height: 'auto' }}
             onInput={(e) => {
               const el = e.currentTarget;
@@ -387,13 +669,9 @@ export default function ChatPage() {
           >
             {isBusy
               ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              : <Send size={16} />
-            }
+              : <Send size={16} />}
           </button>
         </div>
-        <p className="text-center text-xs text-text-muted mt-2">
-          {"Yangi qator uchun Shift+Enter · Faqatgina lug'at ustida ishlash"}
-        </p>
       </div>
     </div>
   );

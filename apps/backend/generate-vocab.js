@@ -118,8 +118,11 @@ function saveProgress(lastTopicId, batch) {
 async function main() {
   const apiKey = await resolveApiKey();
   const genAI = new GoogleGenerativeAI(apiKey);
-  // Using flash model for speed and efficiency
-  const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash-lite' });
+  // Cheapest model that produces good vocabulary JSON. This script generates
+  // thousands of words in a run, so the model choice dominates its cost.
+  const model = genAI.getGenerativeModel({
+    model: process.env.GEMINI_MODEL?.trim() || 'gemini-2.5-flash-lite',
+  });
 
   const progress = loadProgress();
   const actualStartTopic = Math.max(startTopic, progress.lastTopicId);

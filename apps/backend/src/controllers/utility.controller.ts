@@ -1,8 +1,13 @@
 import { Response } from 'express';
 import { z } from 'zod';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { streamChat, ChatMessage, resolveGeminiApiKey } from '../services/gemini.service';
-import { synthesise, getJapaneseVoices } from '../services/tts.service';
+import {
+  streamChat,
+  ChatMessage,
+  resolveGeminiApiKey,
+  buildLearnerContext,
+} from '../services/gemini.service';
+import { synthesise, synthesiseDialogue, getJapaneseVoices } from '../services/tts.service';
 import { consumeChatQuota, consumeTtsQuota } from '../services/entitlement.service';
 
 // ─── Validation Schemas ───────────────────────────────────────────────────────
@@ -93,6 +98,11 @@ export const chatHandler = async (
     return;
   }
 
+  // ── 2b. What is this learner actually studying? ────────────────────────────
+  // Fetched before the headers go out so a slow query cannot stall the stream
+  // mid-flight. Never throws; an empty string just means a generic tutor.
+  const learnerContext = await buildLearnerContext(req.user!.id);
+
   // ── 3. Set SSE headers (only after key is confirmed valid) ─────────────────
   res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
   res.setHeader('Cache-Control', 'no-cache, no-transform');
@@ -124,6 +134,7 @@ export const chatHandler = async (
     },
     abortController.signal,
     apiKey,
+    learnerContext,
   );
 };
 
@@ -170,6 +181,57 @@ export const ttsHandler = async (
   res.setHeader('Content-Length', audioBuffer.length);
   res.setHeader('Cache-Control', 'public, max-age=86400'); // 24 h browser cache
   res.setHeader('Accept-Ranges', 'bytes');
+  res.send(audioBuffer);
+};
+
+// ─── 2b. Tutor Dialogue Speech ────────────────────────────────────────────────
+
+const DialogueQuerySchema = z.object({
+  text: z
+    .string()
+    .min(1, 'text query parameter is required')
+    .max(600, 'text must be 600 characters or fewer'),
+  /** Voice used for the Japanese runs. */
+  jaVoice: z.string().optional(),
+  /** Voice used for everything else (the Uzbek explanation). */
+  voice: z.string().optional(),
+  /** SSML speaking rate for the explanation, e.g. "+25%". Japanese is unaffected. */
+  rate: z.string().regex(/^[+-]\d{1,3}%$/, 'rate must look like "+25%"').optional(),
+});
+
+/**
+ * GET /api/tts/dialogue?text=...
+ *
+ * Speaks one tutor sentence, switching voices between the Uzbek explanation and
+ * the Japanese words inside it. Counts as ONE unit of the daily TTS allowance
+ * however many language switches the sentence contains — the alternative,
+ * calling /api/tts per fragment from the client, would spend a learner's whole
+ * day on a handful of replies.
+ */
+export const ttsDialogueHandler = async (
+  req: AuthenticatedRequest,
+  res: Response,
+): Promise<void> => {
+  const parsed = DialogueQuerySchema.safeParse(req.query);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.errors[0]?.message });
+    return;
+  }
+
+  const { text, jaVoice, voice, rate } = parsed.data;
+
+  if (req.user) {
+    const tz = req.headers['x-timezone-offset']
+      ? parseInt(req.headers['x-timezone-offset'] as string, 10)
+      : 0;
+    await consumeTtsQuota(req.user.id, Number.isNaN(tz) ? 0 : tz);
+  }
+
+  const audioBuffer = await synthesiseDialogue(text, jaVoice, voice, rate);
+
+  res.setHeader('Content-Type', 'audio/mpeg');
+  res.setHeader('Content-Length', audioBuffer.length);
+  res.setHeader('Cache-Control', 'private, max-age=3600');
   res.send(audioBuffer);
 };
 
