@@ -1,0 +1,1445 @@
+[
+  {
+    "japaneseWord": "起きます",
+    "hiragana": "おきます",
+    "meaning": "uyg'onmoq, turmoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "②",
+    "teForm": "起きて",
+    "taForm": "起きた",
+    "naiForm": "起きない",
+    "masuForm": "起きます",
+    "exampleSentence": "毎朝六時に起きます。(まいあさろくじにおきます。)",
+    "exampleTranslation": "Har kuni ertalab soat oltida turaman.",
+    "additionalExamples": [
+      { "sentence": "今日は七時に起きました。(きょうはしちじにおきました。)", "translation": "Bugun soat yettida turdim." },
+      { "sentence": "日曜日は早く起きません。(にちようびははやくおきません。)", "translation": "Yakshanba kuni erta turmayman." }
+    ],
+    "synonyms": ["目が覚める"],
+    "antonyms": ["寝ます"],
+    "nuance": "「起きる」 — uyqudan turish va o'rnidan qo'zg'alish. Ko'z ochilishi (ixtiyorsiz) esa 「目が覚める（めがさめる）」 deyiladi. Vaqt ko'rsatilganda 「に」 yuklamasi keladi: 六時に起きます.",
+    "compounds": [
+      { "word": "早起き", "hiragana": "はやおき", "meaning": "erta turish" },
+      { "word": "起こす", "hiragana": "おこす", "meaning": "uyg'otmoq" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "起", "meaning": "turmoq, boshlanmoq", "kunReading": "o", "onReading": "ki", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "寝ます",
+    "hiragana": "ねます",
+    "meaning": "uxlamoq, yotmoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "teForm": "寝て",
+    "taForm": "寝た",
+    "naiForm": "寝ない",
+    "masuForm": "寝ます",
+    "exampleSentence": "毎晩十一時に寝ます。(まいばんじゅういちじにねます。)",
+    "exampleTranslation": "Har kecha soat o'n birda uxlayman.",
+    "additionalExamples": [
+      { "sentence": "昨日は早く寝ました。(きのうははやくねました。)", "translation": "Kecha erta uxladim." },
+      { "sentence": "子どもはもう寝ています。(こどもはもうねています。)", "translation": "Bola allaqachon uxlayapti." }
+    ],
+    "synonyms": ["眠る"],
+    "antonyms": ["起きます"],
+    "nuance": "「寝る」 — yotish va uxlash; 「眠る（ねむる）」 esa aynan uyquga ketish. \"Yotdim, lekin uxlay olmadim\" — 「寝ましたが、眠れませんでした」 deb aytiladi.",
+    "compounds": [
+      { "word": "昼寝", "hiragana": "ひるね", "meaning": "kunduzgi uyqu" },
+      { "word": "寝坊", "hiragana": "ねぼう", "meaning": "uxlab qolish" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "寝", "meaning": "uxlamoq, yotmoq", "kunReading": "ne", "onReading": "shin", "strokes": 13 }
+    ]
+  },
+  {
+    "japaneseWord": "働きます",
+    "hiragana": "はたらきます",
+    "meaning": "ishlamoq, mehnat qilmoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "teForm": "働いて",
+    "taForm": "働いた",
+    "naiForm": "働かない",
+    "masuForm": "働きます",
+    "exampleSentence": "銀行で働いています。(ぎんこうではたらいています。)",
+    "exampleTranslation": "Bankda ishlayman.",
+    "additionalExamples": [
+      { "sentence": "九時から五時まで働きます。(くじからごじまではたらきます。)", "translation": "Soat to'qqizdan beshgacha ishlayman." },
+      { "sentence": "土曜日は働きません。(どようびははたらきません。)", "translation": "Shanba kuni ishlamayman." }
+    ],
+    "synonyms": ["勤める", "仕事をする"],
+    "antonyms": ["休みます"],
+    "nuance": "「働く」 — mehnat qilish jarayoni, joyi 「で」 bilan keladi. 「勤める（つとめる）」 esa muassasaga xizmatda bo'lish va 「に」 talab qiladi: 銀行に勤めています.",
+    "compounds": [
+      { "word": "共働き", "hiragana": "ともばたらき", "meaning": "er-xotinning ikkalasi ishlashi" },
+      { "word": "労働", "hiragana": "ろうどう", "meaning": "mehnat" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "働", "meaning": "ishlamoq", "kunReading": "hatara", "onReading": "dou", "strokes": 13 }
+    ]
+  },
+  {
+    "japaneseWord": "休みます",
+    "hiragana": "やすみます",
+    "meaning": "dam olmoq; ishga (darsga) bormaslik",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "③",
+    "teForm": "休んで",
+    "taForm": "休んだ",
+    "naiForm": "休まない",
+    "masuForm": "休みます",
+    "exampleSentence": "日曜日は休みます。(にちようびはやすみます。)",
+    "exampleTranslation": "Yakshanba kuni dam olaman.",
+    "additionalExamples": [
+      { "sentence": "昨日は会社を休みました。(きのうはかいしゃをやすみました。)", "translation": "Kecha ishga bormadim." },
+      { "sentence": "ちょっと休みましょう。(ちょっとやすみましょう。)", "translation": "Bir oz dam olaylik." }
+    ],
+    "synonyms": ["休憩する"],
+    "antonyms": ["働きます"],
+    "nuance": "Ikki ma'nosini yuklama ajratadi: 「休みます」 — dam olmoq, 「会社を休みます」 — ishga bormaslik (「を」 bilan). Qisqa tanaffus uchun 「休憩する（きゅうけいする）」 ham bor.",
+    "compounds": [
+      { "word": "休み", "hiragana": "やすみ", "meaning": "dam olish, ta'til" },
+      { "word": "休憩", "hiragana": "きゅうけい", "meaning": "tanaffus" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "休", "meaning": "dam olmoq", "kunReading": "yasu", "onReading": "kyuu", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "勉強します",
+    "hiragana": "べんきょうします",
+    "meaning": "dars qilmoq, o'qimoq, dars tayyorlamoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "teForm": "勉強して",
+    "taForm": "勉強した",
+    "naiForm": "勉強しない",
+    "masuForm": "勉強します",
+    "exampleSentence": "毎晩日本語を勉強します。(まいばんにほんごをべんきょうします。)",
+    "exampleTranslation": "Har kecha yapon tilini o'rganaman.",
+    "additionalExamples": [
+      { "sentence": "図書館で勉強しました。(としょかんでべんきょうしました。)", "translation": "Kutubxonada dars qildim." },
+      { "sentence": "今晩は勉強しません。(こんばんはべんきょうしません。)", "translation": "Bugun kechqurun dars qilmayman." }
+    ],
+    "synonyms": ["学ぶ", "習う"],
+    "antonyms": ["遊びます"],
+    "nuance": "「勉強する」 — mustaqil o'qish, mashq qilish. 「習う（ならう）」 esa ustozdan o'rganish. 「勉強」ning o'zi \"tirishqoqlik\" ma'nosini ham bildiradi; do'konda 「勉強します」 \"chegirma qilaman\" degani.",
+    "compounds": [
+      { "word": "勉強", "hiragana": "べんきょう", "meaning": "o'qish, ta'lim" },
+      { "word": "受験勉強", "hiragana": "じゅけんべんきょう", "meaning": "imtihonga tayyorgarlik" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "勉", "meaning": "tirishmoq", "kunReading": "-", "onReading": "ben", "strokes": 10 },
+      { "kanji": "強", "meaning": "kuchli", "kunReading": "tsuyo", "onReading": "kyou", "strokes": 11 }
+    ]
+  },
+  {
+    "japaneseWord": "終わります",
+    "hiragana": "おわります",
+    "meaning": "tugamoq, tamom bo'lmoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "teForm": "終わって",
+    "taForm": "終わった",
+    "naiForm": "終わらない",
+    "masuForm": "終わります",
+    "exampleSentence": "仕事は五時に終わります。(しごとはごじにおわります。)",
+    "exampleTranslation": "Ish soat beshda tugaydi.",
+    "additionalExamples": [
+      { "sentence": "授業は何時に終わりますか。(じゅぎょうはなんじにおわりますか。)", "translation": "Dars soat nechada tugaydi?" },
+      { "sentence": "会議はもう終わりました。(かいぎはもうおわりました。)", "translation": "Yig'ilish allaqachon tugadi." }
+    ],
+    "synonyms": ["済む"],
+    "antonyms": ["始まります"],
+    "nuance": "「終わります」 — o'zlik fe'l: narsaning o'zi tugaydi. Kimdir tugatsa 「終えます（おえます）」 ishlatiladi. Juftligi — 「始まります（はじまります）」.",
+    "compounds": [
+      { "word": "終わり", "hiragana": "おわり", "meaning": "oxiri, yakuni" },
+      { "word": "終電", "hiragana": "しゅうでん", "meaning": "oxirgi poyezd" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "終", "meaning": "tugamoq, oxir", "kunReading": "o", "onReading": "shuu", "strokes": 11 }
+    ]
+  },
+  {
+    "japaneseWord": "デパート",
+    "hiragana": "デパート",
+    "meaning": "univermag, savdo markazi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "②",
+    "exampleSentence": "デパートは十時から八時までです。(でぱーとはじゅうじからはちじまでです。)",
+    "exampleTranslation": "Univermag soat o'ndan sakkizgacha ishlaydi.",
+    "additionalExamples": [
+      { "sentence": "デパートで靴を買いました。(でぱーとでくつをかいました。)", "translation": "Univermagdan poyafzal sotib oldim." },
+      { "sentence": "デパートは日曜日も開いています。(でぱーとはにちようびもあいています。)", "translation": "Univermag yakshanba kuni ham ochiq." }
+    ],
+    "synonyms": ["百貨店"],
+    "antonyms": [],
+    "nuance": "Inglizcha \"department store\" dan qisqargan. Rasmiy nomi 「百貨店（ひゃっかてん）」. 3-darsdagi 「地下」 bilan birga 「デパ地下」 — univermagning yer ostidagi oziq-ovqat bo'limi.",
+    "compounds": [
+      { "word": "デパ地下", "hiragana": "デパちか", "meaning": "univermagning yer osti oziq-ovqat bo'limi" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "銀行",
+    "hiragana": "ぎんこう",
+    "meaning": "bank",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "銀行は九時から三時までです。(ぎんこうはくじからさんじまでです。)",
+    "exampleTranslation": "Bank soat to'qqizdan uchgacha ishlaydi.",
+    "additionalExamples": [
+      { "sentence": "銀行で働いています。(ぎんこうではたらいています。)", "translation": "Bankda ishlayman." },
+      { "sentence": "銀行は何時に終わりますか。(ぎんこうはなんじにおわりますか。)", "translation": "Bank soat nechada yopiladi?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「銀（kumush）」＋「行（muassasa）」. Yaponiyada banklar odatda 15:00 da yopiladi — shuning uchun darslikda bank ish vaqti misol sifatida ko'p keladi. 1-darsdagi 「銀行員」 shu so'zdan.",
+    "compounds": [
+      { "word": "銀行員", "hiragana": "ぎんこういん", "meaning": "bank xodimi" },
+      { "word": "銀行口座", "hiragana": "ぎんこうこうざ", "meaning": "bank hisobi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "銀", "meaning": "kumush", "kunReading": "shirogane", "onReading": "gin", "strokes": 14 },
+      { "kanji": "行", "meaning": "bormoq; muassasa", "kunReading": "i, yu", "onReading": "kou, gyou", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "郵便局",
+    "hiragana": "ゆうびんきょく",
+    "meaning": "pochta idorasi, pochta bo'limi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "③",
+    "exampleSentence": "郵便局は五時までです。(ゆうびんきょくはごじまでです。)",
+    "exampleTranslation": "Pochta soat beshgacha ishlaydi.",
+    "additionalExamples": [
+      { "sentence": "郵便局で手紙を出します。(ゆうびんきょくでてがみをだします。)", "translation": "Pochtadan xat jo'nataman." },
+      { "sentence": "郵便局はどこですか。(ゆうびんきょくはどこですか。)", "translation": "Pochta qayerda?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「郵便（pochta）」＋「局（idora）」. Yaponiyada pochta belgisi 〒 — bu 「テ」 harfidan olingan (逓信 so'zining birinchi bo'g'ini).",
+    "compounds": [
+      { "word": "郵便", "hiragana": "ゆうびん", "meaning": "pochta" },
+      { "word": "郵便番号", "hiragana": "ゆうびんばんごう", "meaning": "pochta indeksi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "郵", "meaning": "pochta", "kunReading": "-", "onReading": "yuu", "strokes": 11 },
+      { "kanji": "便", "meaning": "qulaylik, xabar", "kunReading": "tayo", "onReading": "bin, ben", "strokes": 9 },
+      { "kanji": "局", "meaning": "idora, bo'lim", "kunReading": "-", "onReading": "kyoku", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "図書館",
+    "hiragana": "としょかん",
+    "meaning": "kutubxona",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "②",
+    "exampleSentence": "図書館は月曜日が休みです。(としょかんはげつようびがやすみです。)",
+    "exampleTranslation": "Kutubxona dushanba kuni dam oladi.",
+    "additionalExamples": [
+      { "sentence": "図書館で勉強します。(としょかんでべんきょうします。)", "translation": "Kutubxonada dars qilaman." },
+      { "sentence": "図書館で本を借りました。(としょかんでほんをかりました。)", "translation": "Kutubxonadan kitob oldim." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「図書（kitoblar）」＋「館（bino）」. Diqqat: 「図」 bu yerda 「と」 deb o'qiladi (「ず」 emas). Xuddi shu 「館」 belgisi 「美術館」「大使館」 kabi binolarda takrorlanadi.",
+    "compounds": [
+      { "word": "図書", "hiragana": "としょ", "meaning": "kitoblar, adabiyot" },
+      { "word": "図書カード", "hiragana": "としょカード", "meaning": "kutubxona kartochkasi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "図", "meaning": "chizma, reja", "kunReading": "haka", "onReading": "to, zu", "strokes": 7 },
+      { "kanji": "書", "meaning": "yozmoq, kitob", "kunReading": "ka", "onReading": "sho", "strokes": 10 },
+      { "kanji": "館", "meaning": "katta bino, saroy", "kunReading": "yakata", "onReading": "kan", "strokes": 16 }
+    ]
+  },
+  {
+    "japaneseWord": "美術館",
+    "hiragana": "びじゅつかん",
+    "meaning": "badiiy san'at muzeyi, rasm galereyasi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "美術館は九時から四時までです。(びじゅつかんはくじからよじまでです。)",
+    "exampleTranslation": "Muzey soat to'qqizdan to'rtgacha ishlaydi.",
+    "additionalExamples": [
+      { "sentence": "日曜日に美術館へ行きます。(にちようびにびじゅつかんへいきます。)", "translation": "Yakshanba kuni muzeyga boraman." },
+      { "sentence": "この美術館は有名です。(このびじゅつかんはゆうめいです。)", "translation": "Bu muzey mashhur." }
+    ],
+    "synonyms": ["ギャラリー"],
+    "antonyms": [],
+    "nuance": "「美術（tasviriy san'at）」＋「館（bino）」 — aynan rasm va haykal muzeyi. Tarixiy yoki tabiiy muzey esa 「博物館（はくぶつかん）」 deyiladi.",
+    "compounds": [
+      { "word": "美術", "hiragana": "びじゅつ", "meaning": "tasviriy san'at" },
+      { "word": "博物館", "hiragana": "はくぶつかん", "meaning": "muzey (tarixiy, ilmiy)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "美", "meaning": "go'zal", "kunReading": "utsuku", "onReading": "bi", "strokes": 9 },
+      { "kanji": "術", "meaning": "san'at, mahorat", "kunReading": "-", "onReading": "jutsu", "strokes": 11 },
+      { "kanji": "館", "meaning": "katta bino, saroy", "kunReading": "yakata", "onReading": "kan", "strokes": 16 }
+    ]
+  },
+  {
+    "japaneseWord": "今",
+    "hiragana": "いま",
+    "meaning": "hozir, hozirgi vaqtda",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "①",
+    "exampleSentence": "今何時ですか。(いまなんじですか。)",
+    "exampleTranslation": "Hozir soat necha?",
+    "additionalExamples": [
+      { "sentence": "今四時半です。(いまよじはんです。)", "translation": "Hozir soat to'rt yarim." },
+      { "sentence": "今から行きます。(いまからいきます。)", "translation": "Hozir boraman." }
+    ],
+    "synonyms": ["現在"],
+    "antonyms": ["昔"],
+    "nuance": "「今」 vaqt so'zlaridan biri bo'lib, 「に」 yuklamasini olmaydi: 「今に行きます」 emas, shunchaki 「今行きます」. Rasmiy uslubda 「現在（げんざい）」 ishlatiladi.",
+    "compounds": [
+      { "word": "今日", "hiragana": "きょう", "meaning": "bugun" },
+      { "word": "今晩", "hiragana": "こんばん", "meaning": "bugun kechqurun" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "今", "meaning": "hozir", "kunReading": "ima", "onReading": "kon, kin", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "～時",
+    "hiragana": "～じ",
+    "meaning": "soat ~ (soatlarni bildiruvchi qo'shimcha)",
+    "partOfSpeech": "qo'shimcha",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "",
+    "exampleSentence": "今七時です。(いましちじです。)",
+    "exampleTranslation": "Hozir soat yetti.",
+    "additionalExamples": [
+      { "sentence": "九時から五時まで働きます。(くじからごじまではたらきます。)", "translation": "Soat to'qqizdan beshgacha ishlayman." },
+      { "sentence": "四時に会いましょう。(よじにあいましょう。)", "translation": "Soat to'rtda uchrashaylik." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Uchta istisno o'qilish yodlab olinadi: 4時＝よじ (よんじ emas), 7時＝しちじ, 9時＝くじ (きゅうじ emas). Qolganlari qoidaga muvofiq.",
+    "compounds": [
+      { "word": "何時", "hiragana": "なんじ", "meaning": "soat necha" },
+      { "word": "時間", "hiragana": "じかん", "meaning": "vaqt, soat (davomiylik)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "時", "meaning": "vaqt, soat", "kunReading": "toki", "onReading": "ji", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "～分",
+    "hiragana": "～ふん（～ぷん）",
+    "meaning": "~daqiqa",
+    "partOfSpeech": "qo'shimcha",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "",
+    "exampleSentence": "今七時五分です。(いましちじごふんです。)",
+    "exampleTranslation": "Hozir yettidan besh daqiqa o'tdi.",
+    "additionalExamples": [
+      { "sentence": "六時十分に起きます。(ろくじじゅっぷんにおきます。)", "translation": "Soat oltiyu o'n daqiqada turaman." },
+      { "sentence": "会議は三十分です。(かいぎはさんじゅっぷんです。)", "translation": "Yig'ilish o'ttiz daqiqa davom etadi." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「ふん」 va 「ぷん」 galma-gal keladi: 1分＝いっぷん, 2分＝にふん, 3分＝さんぷん, 4分＝よんぷん, 5分＝ごふん, 6分＝ろっぷん, 8分＝はっぷん, 10分＝じゅっぷん. Ya'ni 1, 3, 4, 6, 8, 10 dan keyin 「ぷん」.",
+    "compounds": [
+      { "word": "何分", "hiragana": "なんぷん", "meaning": "necha daqiqa" },
+      { "word": "半分", "hiragana": "はんぶん", "meaning": "yarim, yarmi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "分", "meaning": "daqiqa; bo'lmoq, qism", "kunReading": "wa", "onReading": "fun, bun", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "半",
+    "hiragana": "はん",
+    "meaning": "yarim (soatda: yarim soat)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "",
+    "exampleSentence": "今九時半です。(いまくじはんです。)",
+    "exampleTranslation": "Hozir soat to'qqiz yarim.",
+    "additionalExamples": [
+      { "sentence": "七時半に起きます。(しちじはんにおきます。)", "translation": "Soat yetti yarimda turaman." },
+      { "sentence": "一時間半かかります。(いちじかんはんかかります。)", "translation": "Bir yarim soat vaqt oladi." }
+    ],
+    "synonyms": ["三十分"],
+    "antonyms": [],
+    "nuance": "「九時半」 va 「九時三十分」 bir xil ma'noni beradi, birinchisi kundalik nutqda ko'proq. Diqqat: yaponchada \"yarim to'qqiz\" degan tuzilma yo'q — doim soatdan keyin qo'yiladi.",
+    "compounds": [
+      { "word": "半分", "hiragana": "はんぶん", "meaning": "yarmi" },
+      { "word": "半年", "hiragana": "はんとし", "meaning": "yarim yil" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "半", "meaning": "yarim", "kunReading": "naka", "onReading": "han", "strokes": 5 }
+    ]
+  },
+  {
+    "japaneseWord": "何時",
+    "hiragana": "なんじ",
+    "meaning": "soat necha",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "今何時ですか。(いまなんじですか。)",
+    "exampleTranslation": "Hozir soat necha?",
+    "additionalExamples": [
+      { "sentence": "毎朝何時に起きますか。(まいあさなんじにおきますか。)", "translation": "Har kuni ertalab soat nechada turasiz?" },
+      { "sentence": "銀行は何時からですか。(ぎんこうはなんじからですか。)", "translation": "Bank soat nechadan ochiladi?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Vaqtni so'rashning asosiy shakli. Ish boshlanish/tugash vaqtini so'rashda 「何時から」「何時まで」 juftligi ishlatiladi.",
+    "compounds": [
+      { "word": "何時間", "hiragana": "なんじかん", "meaning": "necha soat (davomiylik)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "何", "meaning": "nima, necha", "kunReading": "nani, nan", "onReading": "ka", "strokes": 7 },
+      { "kanji": "時", "meaning": "vaqt, soat", "kunReading": "toki", "onReading": "ji", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "何分",
+    "hiragana": "なんぷん",
+    "meaning": "necha daqiqa",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "今何時何分ですか。(いまなんじなんぷんですか。)",
+    "exampleTranslation": "Hozir soat necha-yu necha daqiqa?",
+    "additionalExamples": [
+      { "sentence": "駅まで何分かかりますか。(えきまでなんぷんかかりますか。)", "translation": "Bekatgacha necha daqiqa ketadi?" },
+      { "sentence": "あと何分ですか。(あとなんぷんですか。)", "translation": "Yana necha daqiqa qoldi?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「なんふん」 emas, 「なんぷん」 deb o'qiladi — 「～分」ning 「ぷん」 guruhiga kiradi.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "何", "meaning": "nima, necha", "kunReading": "nani, nan", "onReading": "ka", "strokes": 7 },
+      { "kanji": "分", "meaning": "daqiqa; qism", "kunReading": "wa", "onReading": "fun, bun", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "午前",
+    "hiragana": "ごぜん",
+    "meaning": "tushdan oldingi vaqt (tungi 12 dan kunduzgi 12 gacha)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "午前七時に起きます。(ごぜんしちじにおきます。)",
+    "exampleTranslation": "Tongi soat yettida turaman.",
+    "additionalExamples": [
+      { "sentence": "会議は午前十時からです。(かいぎはごぜんじゅうじからです。)", "translation": "Yig'ilish tushdan oldin soat o'ndan boshlanadi." },
+      { "sentence": "午前中は忙しいです。(ごぜんちゅうはいそがしいです。)", "translation": "Tushgacha bandman." }
+    ],
+    "synonyms": ["AM"],
+    "antonyms": ["午後"],
+    "nuance": "Diqqat: 「午前」 vaqtdan OLDIN qo'yiladi — 午前７時 (七時午前 emas). 「午前１時」 tungi soat 1 degani, ertalabki emas.",
+    "compounds": [
+      { "word": "午前中", "hiragana": "ごぜんちゅう", "meaning": "tushgacha bo'lgan vaqt ichida" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "午", "meaning": "tush payti", "kunReading": "uma", "onReading": "go", "strokes": 4 },
+      { "kanji": "前", "meaning": "old, oldin", "kunReading": "mae", "onReading": "zen", "strokes": 9 }
+    ]
+  },
+  {
+    "japaneseWord": "午後",
+    "hiragana": "ごご",
+    "meaning": "tushdan keyingi vaqt (kunduzgi 12 dan tungi 12 gacha)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "午後三時に会いましょう。(ごごさんじにあいましょう。)",
+    "exampleTranslation": "Kunduzgi soat uchda uchrashaylik.",
+    "additionalExamples": [
+      { "sentence": "午後九時に寝ます。(ごごくじにねます。)", "translation": "Kechki soat to'qqizda uxlayman." },
+      { "sentence": "午後から雨です。(ごごからあめです。)", "translation": "Tushdan keyin yomg'ir yog'adi." }
+    ],
+    "synonyms": ["PM"],
+    "antonyms": ["午前"],
+    "nuance": "「午後」 ham vaqtdan oldin keladi: 午後３時. Kundalik nutqda ko'pincha 24 soatlik hisob ishlatiladi (15時), rasmiy e'lonlarda esa 午前／午後 shakli uchraydi.",
+    "compounds": [
+      { "word": "午後から", "hiragana": "ごごから", "meaning": "tushdan keyin boshlab" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "午", "meaning": "tush payti", "kunReading": "uma", "onReading": "go", "strokes": 4 },
+      { "kanji": "後", "meaning": "keyin, orqa", "kunReading": "ato, nochi", "onReading": "go, kou", "strokes": 9 }
+    ]
+  },
+  {
+    "japaneseWord": "朝",
+    "hiragana": "あさ",
+    "meaning": "tong, ertalab",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "朝六時に起きます。(あさろくじにおきます。)",
+    "exampleTranslation": "Ertalab soat oltida turaman.",
+    "additionalExamples": [
+      { "sentence": "朝ごはんを食べません。(あさごはんをたべません。)", "translation": "Nonushta qilmayman." },
+      { "sentence": "今朝は寒かったです。(けさはさむかったです。)", "translation": "Bugun ertalab sovuq edi." }
+    ],
+    "synonyms": [],
+    "antonyms": ["晩", "夜"],
+    "nuance": "「朝」 — taxminan tong otishidan soat 10 gacha. 「今朝（けさ）」 maxsus o'qiladi — 「いまあさ」 emas.",
+    "compounds": [
+      { "word": "朝ごはん", "hiragana": "あさごはん", "meaning": "nonushta" },
+      { "word": "毎朝", "hiragana": "まいあさ", "meaning": "har tong" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "朝", "meaning": "tong, ertalab", "kunReading": "asa", "onReading": "chou", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "昼",
+    "hiragana": "ひる",
+    "meaning": "tush, kunduzi, tush payti",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "②",
+    "exampleSentence": "昼は食堂で食べます。(ひるはしょくどうでたべます。)",
+    "exampleTranslation": "Tushda oshxonada ovqatlanaman.",
+    "additionalExamples": [
+      { "sentence": "昼休みは一時間です。(ひるやすみはいちじかんです。)", "translation": "Tushlik tanaffusi bir soat." },
+      { "sentence": "昼ごはんを食べましたか。(ひるごはんをたべましたか。)", "translation": "Tushlik qildingizmi?" }
+    ],
+    "synonyms": ["日中"],
+    "antonyms": ["夜"],
+    "nuance": "Ikki ma'noda: kunduzgi yorug' vaqt va aynan tush payti (tushlik vaqti). 「昼ごはん」 — tushlik ovqati.",
+    "compounds": [
+      { "word": "昼ごはん", "hiragana": "ひるごはん", "meaning": "tushlik" },
+      { "word": "昼休み", "hiragana": "ひるやすみ", "meaning": "tushlik tanaffusi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "昼", "meaning": "kunduz, tush", "kunReading": "hiru", "onReading": "chuu", "strokes": 9 }
+    ]
+  },
+  {
+    "japaneseWord": "晩",
+    "hiragana": "ばん",
+    "meaning": "kech, kechqurun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "晩ごはんは七時です。(ばんごはんはしちじです。)",
+    "exampleTranslation": "Kechki ovqat soat yettida.",
+    "additionalExamples": [
+      { "sentence": "毎晩勉強します。(まいばんべんきょうします。)", "translation": "Har kecha dars qilaman." },
+      { "sentence": "今晩暇ですか。(こんばんひまですか。)", "translation": "Bugun kechqurun bo'shmisiz?" }
+    ],
+    "synonyms": ["夜"],
+    "antonyms": ["朝"],
+    "nuance": "「晩」 — kechki ovqat vaqtidan uxlashgacha bo'lgan payt; 「夜（よる）」 esa kengroq — butun tun. Shuning uchun 「晩ごはん」 bor, lekin 「夜ごはん」 kam ishlatiladi.",
+    "compounds": [
+      { "word": "晩ごはん", "hiragana": "ばんごはん", "meaning": "kechki ovqat" },
+      { "word": "今晩", "hiragana": "こんばん", "meaning": "bugun kechqurun" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "晩", "meaning": "kech, oqshom", "kunReading": "-", "onReading": "ban", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "夜",
+    "hiragana": "よる",
+    "meaning": "tun, kecha",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "夜十一時に寝ます。(よるじゅういちじにねます。)",
+    "exampleTranslation": "Kechasi soat o'n birda uxlayman.",
+    "additionalExamples": [
+      { "sentence": "夜は寒いです。(よるはさむいです。)", "translation": "Kechasi sovuq." },
+      { "sentence": "昨日の夜、電話しました。(きのうのよる、でんわしました。)", "translation": "Kecha kechasi qo'ng'iroq qildim." }
+    ],
+    "synonyms": ["晩"],
+    "antonyms": ["昼"],
+    "nuance": "「夜」 — quyosh botganidan tong otguncha bo'lgan butun vaqt. 「晩」 dan kengroq va ko'proq ishlatiladi.",
+    "compounds": [
+      { "word": "今夜", "hiragana": "こんや", "meaning": "bugun kechasi" },
+      { "word": "夜中", "hiragana": "よなか", "meaning": "yarim tun" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "夜", "meaning": "tun", "kunReading": "yoru, yo", "onReading": "ya", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "おととい",
+    "hiragana": "おととい",
+    "meaning": "o'tgan kuni, kechadan oldingi kun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "③",
+    "exampleSentence": "おととい休みました。(おとといやすみました。)",
+    "exampleTranslation": "O'tgan kuni dam oldim.",
+    "additionalExamples": [
+      { "sentence": "おととい映画を見ました。(おとといえいがをみました。)", "translation": "O'tgan kuni kino ko'rdim." },
+      { "sentence": "おとといは日曜日でした。(おとといはにちようびでした。)", "translation": "O'tgan kuni yakshanba edi." }
+    ],
+    "synonyms": ["一昨日"],
+    "antonyms": ["あさって"],
+    "nuance": "Kanji shakli 「一昨日」, lekin o'qilishi butunlay boshqacha — 「おととい」. Rasmiy nutqda 「いっさくじつ」 deb ham o'qiladi.",
+    "compounds": [
+      { "word": "おととし", "hiragana": "おととし", "meaning": "o'tgan yildan oldingi yil" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "きのう",
+    "hiragana": "きのう",
+    "meaning": "kecha",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "②",
+    "exampleSentence": "きのう勉強しました。(きのうべんきょうしました。)",
+    "exampleTranslation": "Kecha dars qildim.",
+    "additionalExamples": [
+      { "sentence": "きのうは働きませんでした。(きのうははたらきませんでした。)", "translation": "Kecha ishlamadim." },
+      { "sentence": "きのうの晩、何をしましたか。(きのうのばん、なにをしましたか。)", "translation": "Kecha kechqurun nima qildingiz?" }
+    ],
+    "synonyms": [],
+    "antonyms": ["あした"],
+    "nuance": "Kanji shakli 「昨日」 — bu ham maxsus o'qilish. Vaqt so'zi bo'lgani uchun 「に」 olmaydi: 「きのう行きました」.",
+    "compounds": [
+      { "word": "昨年", "hiragana": "さくねん", "meaning": "o'tgan yil (rasmiy)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "きょう",
+    "hiragana": "きょう",
+    "meaning": "bugun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "①",
+    "exampleSentence": "きょうは何曜日ですか。(きょうはなんようびですか。)",
+    "exampleTranslation": "Bugun haftaning qaysi kuni?",
+    "additionalExamples": [
+      { "sentence": "きょうは休みです。(きょうはやすみです。)", "translation": "Bugun dam olish kuni." },
+      { "sentence": "きょうの午後、銀行へ行きます。(きょうのごご、ぎんこうへいきます。)", "translation": "Bugun tushdan keyin bankka boraman." }
+    ],
+    "synonyms": ["本日"],
+    "antonyms": [],
+    "nuance": "Kanji shakli 「今日」 — 「いまひ」 emas, 「きょう」 deb o'qiladi. Rasmiy e'lonlarda 「本日（ほんじつ）」 ishlatiladi.",
+    "compounds": [
+      { "word": "今日中", "hiragana": "きょうじゅう", "meaning": "bugun ichida" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "あした",
+    "hiragana": "あした",
+    "meaning": "ertaga",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "③",
+    "exampleSentence": "あした働きます。(あしたはたらきます。)",
+    "exampleTranslation": "Ertaga ishlayman.",
+    "additionalExamples": [
+      { "sentence": "あしたは休みです。(あしたはやすみです。)", "translation": "Ertaga dam olish kuni." },
+      { "sentence": "じゃ、また あした。(じゃ、またあした。)", "translation": "Xo'sh, ertaga ko'rishguncha." }
+    ],
+    "synonyms": ["明日"],
+    "antonyms": ["きのう"],
+    "nuance": "Kanji shakli 「明日」 uchta o'qilishga ega: 「あした」 (kundalik), 「あす」 (biroz rasmiy), 「みょうにち」 (juda rasmiy).",
+    "compounds": [
+      { "word": "明後日", "hiragana": "あさって", "meaning": "indinga" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "あさって",
+    "hiragana": "あさって",
+    "meaning": "indinga, ertadan keyin",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "②",
+    "exampleSentence": "あさって美術館へ行きます。(あさってびじゅつかんへいきます。)",
+    "exampleTranslation": "Indinga muzeyga boraman.",
+    "additionalExamples": [
+      { "sentence": "あさっては金曜日です。(あさってはきんようびです。)", "translation": "Indinga juma." },
+      { "sentence": "あさってまで休みます。(あさってまでやすみます。)", "translation": "Indingacha dam olaman." }
+    ],
+    "synonyms": ["明後日"],
+    "antonyms": ["おととい"],
+    "nuance": "Kanji shakli 「明後日」. 「おととい ← きのう ← きょう → あした → あさって」 — bu besh so'z darsda birga yodlanadi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "けさ",
+    "hiragana": "けさ",
+    "meaning": "bugun ertalab, bugun tongda",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "けさ六時に起きました。(けさろくじにおきました。)",
+    "exampleTranslation": "Bugun ertalab soat oltida turdim.",
+    "additionalExamples": [
+      { "sentence": "けさは何も食べませんでした。(けさはなにもたべませんでした。)", "translation": "Bugun ertalab hech narsa yemadim." },
+      { "sentence": "けさの新聞を読みましたか。(けさのしんぶんをよみましたか。)", "translation": "Bugungi ertalabki gazetani o'qidingizmi?" }
+    ],
+    "synonyms": [],
+    "antonyms": ["今晩"],
+    "nuance": "Kanji shakli 「今朝」 — 「いまあさ」 emas, 「けさ」 deb o'qiladi. Xuddi shunday 「今晩＝こんばん」, 「今日＝きょう」 ham maxsus o'qiladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "今晩",
+    "hiragana": "こんばん",
+    "meaning": "bugun kechqurun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "今晩勉強します。(こんばんべんきょうします。)",
+    "exampleTranslation": "Bugun kechqurun dars qilaman.",
+    "additionalExamples": [
+      { "sentence": "今晩は暇です。(こんばんはひまです。)", "translation": "Bugun kechqurun bo'shman." },
+      { "sentence": "今晩、電話します。(こんばん、でんわします。)", "translation": "Bugun kechqurun qo'ng'iroq qilaman." }
+    ],
+    "synonyms": ["今夜"],
+    "antonyms": ["けさ"],
+    "nuance": "Salomlashuvdagi 「こんばんは」 ham shu so'zdan kelib chiqqan. 「今夜（こんや）」 bilan deyarli bir xil, 「今夜」 biroz kechroq vaqtni bildiradi.",
+    "compounds": [
+      { "word": "今夜", "hiragana": "こんや", "meaning": "bugun kechasi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "今", "meaning": "hozir", "kunReading": "ima", "onReading": "kon", "strokes": 4 },
+      { "kanji": "晩", "meaning": "kech, oqshom", "kunReading": "-", "onReading": "ban", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "休み",
+    "hiragana": "やすみ",
+    "meaning": "dam olish, ta'til, dam olish kuni",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "③",
+    "exampleSentence": "デパートは水曜日が休みです。(でぱーとはすいようびがやすみです。)",
+    "exampleTranslation": "Univermag chorshanba kuni dam oladi.",
+    "additionalExamples": [
+      { "sentence": "夏休みは八月です。(なつやすみははちがつです。)", "translation": "Yozgi ta'til avgustda." },
+      { "sentence": "あしたは休みですか。(あしたはやすみですか。)", "translation": "Ertaga dam olish kunimi?" }
+    ],
+    "synonyms": ["休日"],
+    "antonyms": ["仕事"],
+    "nuance": "「休みます」 fe'lidan yasalgan ot. Uch ma'noda: dam olish kuni, ta'til va ishga/darsga kelmaslik (「休みを取る」 — ta'til olmoq).",
+    "compounds": [
+      { "word": "夏休み", "hiragana": "なつやすみ", "meaning": "yozgi ta'til" },
+      { "word": "昼休み", "hiragana": "ひるやすみ", "meaning": "tushlik tanaffusi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "休", "meaning": "dam olmoq", "kunReading": "yasu", "onReading": "kyuu", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "昼休み",
+    "hiragana": "ひるやすみ",
+    "meaning": "tushlik tanaffusi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "昼休みは十二時から一時までです。(ひるやすみはじゅうにじからいちじまでです。)",
+    "exampleTranslation": "Tushlik tanaffusi o'n ikkidan birgacha.",
+    "additionalExamples": [
+      { "sentence": "昼休みに食堂へ行きます。(ひるやすみにしょくどうへいきます。)", "translation": "Tushlik tanaffusida oshxonaga boraman." },
+      { "sentence": "昼休みは一時間です。(ひるやすみはいちじかんです。)", "translation": "Tushlik tanaffusi bir soat." }
+    ],
+    "synonyms": ["ランチタイム"],
+    "antonyms": [],
+    "nuance": "「昼（tush）」＋「休み（dam）」. Yapon idoralarida odatda 12:00–13:00 orasida bo'ladi va bu vaqtda telefon qilish odobsiz hisoblanadi.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "昼", "meaning": "kunduz, tush", "kunReading": "hiru", "onReading": "chuu", "strokes": 9 },
+      { "kanji": "休", "meaning": "dam olmoq", "kunReading": "yasu", "onReading": "kyuu", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "毎朝",
+    "hiragana": "まいあさ",
+    "meaning": "har kuni ertalab, har tong",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "毎朝六時に起きます。(まいあさろくじにおきます。)",
+    "exampleTranslation": "Har kuni ertalab soat oltida turaman.",
+    "additionalExamples": [
+      { "sentence": "毎朝新聞を読みます。(まいあさしんぶんをよみます。)", "translation": "Har tong gazeta o'qiyman." },
+      { "sentence": "毎朝コーヒーを飲みます。(まいあさこーひーをのみます。)", "translation": "Har tong qahva ichaman." }
+    ],
+    "synonyms": [],
+    "antonyms": ["毎晩"],
+    "nuance": "「毎（har）」 qo'shimchasi vaqt so'zlariga qo'shiladi: 毎朝, 毎晩, 毎日, 毎週, 毎月, 毎年. Bunday so'zlar 「に」 olmaydi.",
+    "compounds": [
+      { "word": "毎週", "hiragana": "まいしゅう", "meaning": "har hafta" },
+      { "word": "毎年", "hiragana": "まいとし", "meaning": "har yil" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "毎", "meaning": "har", "kunReading": "-", "onReading": "mai", "strokes": 6 },
+      { "kanji": "朝", "meaning": "tong, ertalab", "kunReading": "asa", "onReading": "chou", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "毎晩",
+    "hiragana": "まいばん",
+    "meaning": "har kuni kechqurun, har kecha",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "毎晩十一時に寝ます。(まいばんじゅういちじにねます。)",
+    "exampleTranslation": "Har kecha soat o'n birda uxlayman.",
+    "additionalExamples": [
+      { "sentence": "毎晩日本語を勉強します。(まいばんにほんごをべんきょうします。)", "translation": "Har kecha yapon tilini o'rganaman." },
+      { "sentence": "毎晩テレビを見ます。(まいばんてれびをみます。)", "translation": "Har kecha televizor ko'raman." }
+    ],
+    "synonyms": [],
+    "antonyms": ["毎朝"],
+    "nuance": "Xuddi 「毎朝」 kabi 「に」 olmaydi. \"Har kecha\" ma'nosida 「毎夜（まいよ）」 ham bor, lekin kam ishlatiladi.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "毎", "meaning": "har", "kunReading": "-", "onReading": "mai", "strokes": 6 },
+      { "kanji": "晩", "meaning": "kech, oqshom", "kunReading": "-", "onReading": "ban", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "毎日",
+    "hiragana": "まいにち",
+    "meaning": "har kuni",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "毎日働きます。(まいにちはたらきます。)",
+    "exampleTranslation": "Har kuni ishlayman.",
+    "additionalExamples": [
+      { "sentence": "毎日勉強しています。(まいにちべんきょうしています。)", "translation": "Har kuni o'qiyapman." },
+      { "sentence": "毎日忙しいです。(まいにちいそがしいです。)", "translation": "Har kuni bandman." }
+    ],
+    "synonyms": ["日々"],
+    "antonyms": [],
+    "nuance": "「まいひ」 emas, 「まいにち」. Bu guruhdagi so'zlar orasida eng ko'p ishlatiladigani.",
+    "compounds": [
+      { "word": "毎日毎日", "hiragana": "まいにちまいにち", "meaning": "kundan-kunga, doim" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "毎", "meaning": "har", "kunReading": "-", "onReading": "mai", "strokes": 6 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "月曜日",
+    "hiragana": "げつようび",
+    "meaning": "dushanba",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "③",
+    "exampleSentence": "月曜日から働きます。(げつようびからはたらきます。)",
+    "exampleTranslation": "Dushanbadan boshlab ishlayman.",
+    "additionalExamples": [
+      { "sentence": "図書館は月曜日が休みです。(としょかんはげつようびがやすみです。)", "translation": "Kutubxona dushanba kuni dam oladi." },
+      { "sentence": "月曜日の朝は忙しいです。(げつようびのあさはいそがしいです。)", "translation": "Dushanba tongi band bo'ladi." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Hafta kunlari osmon jismlari nomidan olingan: 月 — Oy. 「月」 bu yerda 「げつ」 deb o'qiladi. Qisqartirib 「月」 deb ham yoziladi (jadvallar va e'lonlarda).",
+    "compounds": [
+      { "word": "曜日", "hiragana": "ようび", "meaning": "hafta kuni" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "月", "meaning": "oy (osmon jismi), oy (davr)", "kunReading": "tsuki", "onReading": "getsu, gatsu", "strokes": 4 },
+      { "kanji": "曜", "meaning": "hafta kuni", "kunReading": "-", "onReading": "you", "strokes": 18 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "火曜日",
+    "hiragana": "かようび",
+    "meaning": "seshanba",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "②",
+    "exampleSentence": "火曜日に会議があります。(かようびにかいぎがあります。)",
+    "exampleTranslation": "Seshanba kuni yig'ilish bo'ladi.",
+    "additionalExamples": [
+      { "sentence": "火曜日は休みません。(かようびはやすみません。)", "translation": "Seshanba kuni dam olmayman." },
+      { "sentence": "あしたは火曜日です。(あしたはかようびです。)", "translation": "Ertaga seshanba." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「火」 — Mars sayyorasi (yaponchada 火星). Kunlar tartibi: 月・火・水・木・金・土・日 — Oy, Mars, Merkuriy, Yupiter, Venera, Saturn, Quyosh.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "火", "meaning": "olov; Mars", "kunReading": "hi", "onReading": "ka", "strokes": 4 },
+      { "kanji": "曜", "meaning": "hafta kuni", "kunReading": "-", "onReading": "you", "strokes": 18 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "水曜日",
+    "hiragana": "すいようび",
+    "meaning": "chorshanba",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "③",
+    "exampleSentence": "デパートは水曜日が休みです。(でぱーとはすいようびがやすみです。)",
+    "exampleTranslation": "Univermag chorshanba kuni dam oladi.",
+    "additionalExamples": [
+      { "sentence": "水曜日の午後、時間がありますか。(すいようびのごご、じかんがありますか。)", "translation": "Chorshanba tushdan keyin vaqtingiz bormi?" },
+      { "sentence": "水曜日まで休みます。(すいようびまでやすみます。)", "translation": "Chorshanbagacha dam olaman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「水」 — Merkuriy (水星). Bu yerda 「すい」 deb o'qiladi, 「みず」 emas.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "水", "meaning": "suv; Merkuriy", "kunReading": "mizu", "onReading": "sui", "strokes": 4 },
+      { "kanji": "曜", "meaning": "hafta kuni", "kunReading": "-", "onReading": "you", "strokes": 18 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "木曜日",
+    "hiragana": "もくようび",
+    "meaning": "payshanba",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "③",
+    "exampleSentence": "木曜日に美術館へ行きます。(もくようびにびじゅつかんへいきます。)",
+    "exampleTranslation": "Payshanba kuni muzeyga boraman.",
+    "additionalExamples": [
+      { "sentence": "木曜日は何時に終わりますか。(もくようびはなんじにおわりますか。)", "translation": "Payshanba kuni soat nechada tugaydi?" },
+      { "sentence": "きょうは木曜日です。(きょうはもくようびです。)", "translation": "Bugun payshanba." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「木」 — Yupiter (木星). Bu yerda 「もく」 deb o'qiladi, 「き」 emas.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "木", "meaning": "daraxt; Yupiter", "kunReading": "ki", "onReading": "moku, boku", "strokes": 4 },
+      { "kanji": "曜", "meaning": "hafta kuni", "kunReading": "-", "onReading": "you", "strokes": 18 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "金曜日",
+    "hiragana": "きんようび",
+    "meaning": "juma",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "③",
+    "exampleSentence": "金曜日まで働きます。(きんようびまではたらきます。)",
+    "exampleTranslation": "Jumagacha ishlayman.",
+    "additionalExamples": [
+      { "sentence": "金曜日の晩、映画を見ます。(きんようびのばん、えいがをみます。)", "translation": "Juma kechqurun kino ko'raman." },
+      { "sentence": "会議は金曜日です。(かいぎはきんようびです。)", "translation": "Yig'ilish juma kuni." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「金」 — Venera (金星). Bu belgi \"oltin, pul\" ma'nosini ham bildiradi: 「お金（おかね）」 — pul.",
+    "compounds": [
+      { "word": "お金", "hiragana": "おかね", "meaning": "pul" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "金", "meaning": "oltin, pul; Venera", "kunReading": "kane", "onReading": "kin", "strokes": 8 },
+      { "kanji": "曜", "meaning": "hafta kuni", "kunReading": "-", "onReading": "you", "strokes": 18 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "土曜日",
+    "hiragana": "どようび",
+    "meaning": "shanba",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "②",
+    "exampleSentence": "土曜日は休みです。(どようびはやすみです。)",
+    "exampleTranslation": "Shanba kuni dam olish.",
+    "additionalExamples": [
+      { "sentence": "土曜日にデパートへ行きます。(どようびにでぱーとへいきます。)", "translation": "Shanba kuni univermagga boraman." },
+      { "sentence": "土曜日も働きますか。(どようびもはたらきますか。)", "translation": "Shanba kuni ham ishlaysizmi?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「土」 — Saturn (土星). 「土曜日」 va 「日曜日」 birgalikda 「週末（しゅうまつ）」 — hafta oxiri deyiladi.",
+    "compounds": [
+      { "word": "週末", "hiragana": "しゅうまつ", "meaning": "hafta oxiri" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "土", "meaning": "tuproq, yer; Saturn", "kunReading": "tsuchi", "onReading": "do, to", "strokes": 3 },
+      { "kanji": "曜", "meaning": "hafta kuni", "kunReading": "-", "onReading": "you", "strokes": 18 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "日曜日",
+    "hiragana": "にちようび",
+    "meaning": "yakshanba",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "③",
+    "exampleSentence": "日曜日は休みます。(にちようびはやすみます。)",
+    "exampleTranslation": "Yakshanba kuni dam olaman.",
+    "additionalExamples": [
+      { "sentence": "日曜日に友達と会います。(にちようびにともだちとあいます。)", "translation": "Yakshanba kuni do'stim bilan uchrashaman." },
+      { "sentence": "日曜日はデパートも開いています。(にちようびはでぱーともあいています。)", "translation": "Yakshanba kuni univermag ham ochiq." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「日」 — Quyosh (太陽). Hafta kuni bilan ish qilinganda 「に」 qo'yiladi: 「日曜日に行きます」, lekin mavzu qilinganda 「は」: 「日曜日は休みです」.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 },
+      { "kanji": "曜", "meaning": "hafta kuni", "kunReading": "-", "onReading": "you", "strokes": 18 }
+    ]
+  },
+  {
+    "japaneseWord": "何曜日",
+    "hiragana": "なんようび",
+    "meaning": "haftaning qaysi kuni",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "③",
+    "exampleSentence": "きょうは何曜日ですか。(きょうはなんようびですか。)",
+    "exampleTranslation": "Bugun haftaning qaysi kuni?",
+    "additionalExamples": [
+      { "sentence": "休みは何曜日ですか。(やすみはなんようびですか。)", "translation": "Dam olish kuningiz qaysi kun?" },
+      { "sentence": "会議は何曜日ですか。(かいぎはなんようびですか。)", "translation": "Yig'ilish qaysi kuni bo'ladi?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Diqqat: 「何曜日」 — qaysi kun, 「何日（なんにち）」 — oyning nechanchi sanasi. Ikkalasi boshqa savol.",
+    "compounds": [
+      { "word": "何日", "hiragana": "なんにち", "meaning": "nechanchi sana" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "何", "meaning": "nima, necha", "kunReading": "nani, nan", "onReading": "ka", "strokes": 7 },
+      { "kanji": "曜", "meaning": "hafta kuni", "kunReading": "-", "onReading": "you", "strokes": 18 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "番号",
+    "hiragana": "ばんごう",
+    "meaning": "raqam, nomer",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "③",
+    "exampleSentence": "電話番号は何番ですか。(でんわばんごうはなんばんですか。)",
+    "exampleTranslation": "Telefon raqamingiz nechchi?",
+    "additionalExamples": [
+      { "sentence": "番号を教えてください。(ばんごうをおしえてください。)", "translation": "Raqamni ayting." },
+      { "sentence": "この番号は違います。(このばんごうはちがいます。)", "translation": "Bu raqam noto'g'ri." }
+    ],
+    "synonyms": ["ナンバー"],
+    "antonyms": [],
+    "nuance": "「番号」 — raqamning o'zi (identifikator). Sanoq raqami sifatida 「～番（ばん）」 ishlatiladi: 一番, 二番.",
+    "compounds": [
+      { "word": "電話番号", "hiragana": "でんわばんごう", "meaning": "telefon raqami" },
+      { "word": "郵便番号", "hiragana": "ゆうびんばんごう", "meaning": "pochta indeksi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "番", "meaning": "navbat, raqam", "kunReading": "-", "onReading": "ban", "strokes": 12 },
+      { "kanji": "号", "meaning": "nomer, belgi", "kunReading": "-", "onReading": "gou", "strokes": 5 }
+    ]
+  },
+  {
+    "japaneseWord": "何番",
+    "hiragana": "なんばん",
+    "meaning": "nechanchi raqam",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "電話番号は何番ですか。(でんわばんごうはなんばんですか。)",
+    "exampleTranslation": "Telefon raqami nechchi?",
+    "additionalExamples": [
+      { "sentence": "部屋は何番ですか。(へやはなんばんですか。)", "translation": "Xona nechanchi raqamli?" },
+      { "sentence": "何番のバスですか。(なんばんのばすですか。)", "translation": "Nechanchi raqamli avtobus?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Telefon raqamini aytishda 「の」 chiziqcha o'rniga ishlatiladi: 「０９０の１２３４の５６７８」.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "何", "meaning": "nima, necha", "kunReading": "nani, nan", "onReading": "ka", "strokes": 7 },
+      { "kanji": "番", "meaning": "navbat, raqam", "kunReading": "-", "onReading": "ban", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "～から",
+    "hiragana": "～から",
+    "meaning": "~dan (boshlanish nuqtasi)",
+    "partOfSpeech": "zarracha",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "",
+    "exampleSentence": "銀行は九時からです。(ぎんこうはくじからです。)",
+    "exampleTranslation": "Bank soat to'qqizdan ochiladi.",
+    "additionalExamples": [
+      { "sentence": "月曜日から金曜日まで働きます。(げつようびからきんようびまではたらきます。)", "translation": "Dushanbadan jumagacha ishlayman." },
+      { "sentence": "アメリカから来ました。(あめりかからきました。)", "translation": "Amerikadan kelganman." }
+    ],
+    "synonyms": [],
+    "antonyms": ["～まで"],
+    "nuance": "Vaqt va joyning boshlanish nuqtasi. 1-darsdagi 「～から来ました」 ham shu yuklama. Keyingi darslarda 「から」 sabab bog'lovchisi sifatida ham keladi.",
+    "compounds": [
+      { "word": "これから", "hiragana": "これから", "meaning": "bundan keyin" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "～まで",
+    "hiragana": "～まで",
+    "meaning": "~gacha, ~ga qadar",
+    "partOfSpeech": "zarracha",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "",
+    "exampleSentence": "郵便局は五時までです。(ゆうびんきょくはごじまでです。)",
+    "exampleTranslation": "Pochta soat beshgacha ishlaydi.",
+    "additionalExamples": [
+      { "sentence": "九時から五時まで働きます。(くじからごじまではたらきます。)", "translation": "To'qqizdan beshgacha ishlayman." },
+      { "sentence": "駅まで歩きます。(えきまであるきます。)", "translation": "Bekatgacha piyoda yuraman." }
+    ],
+    "synonyms": [],
+    "antonyms": ["～から"],
+    "nuance": "Tugash nuqtasi. Ko'pincha 「から」 bilan juft keladi: 「～から～まで」. Diqqat: 「までに」 boshqa ma'no beradi — \"shu vaqtgacha (kechiktirmay)\".",
+    "compounds": [
+      { "word": "までに", "hiragana": "までに", "meaning": "~gacha (muddat)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "～と～",
+    "hiragana": "～と～",
+    "meaning": "~ bilan ~ (otlarni bog'lovchi)",
+    "partOfSpeech": "zarracha",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "",
+    "exampleSentence": "銀行と郵便局は休みです。(ぎんこうとゆうびんきょくはやすみです。)",
+    "exampleTranslation": "Bank bilan pochta dam oladi.",
+    "additionalExamples": [
+      { "sentence": "土曜日と日曜日は休みます。(どようびとにちようびはやすみます。)", "translation": "Shanba bilan yakshanba dam olaman." },
+      { "sentence": "本と辞書を買いました。(ほんとじしょをかいました。)", "translation": "Kitob bilan lug'at sotib oldim." }
+    ],
+    "synonyms": ["や"],
+    "antonyms": [],
+    "nuance": "「と」 — sanab o'tilganlar TO'LIQ ro'yxat degani. Agar \"va hokazo\" ma'nosi kerak bo'lsa, keyingi darslardagi 「や」 ishlatiladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "そちら",
+    "hiragana": "そちら",
+    "meaning": "sizda, siz tomonda",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "そちらは今何時ですか。(そちらはいまなんじですか。)",
+    "exampleTranslation": "Sizda hozir soat necha?",
+    "additionalExamples": [
+      { "sentence": "そちらの天気はどうですか。(そちらのてんきはどうですか。)", "translation": "Sizda ob-havo qanday?" },
+      { "sentence": "そちらは何曜日が休みですか。(そちらはなんようびがやすみですか。)", "translation": "Sizda qaysi kun dam olish?" }
+    ],
+    "synonyms": ["そこ"],
+    "antonyms": ["こちら"],
+    "nuance": "3-darsda joyni bildirgan edi; bu darsda telefon suhbatida \"siz turgan joy, sizning shahringiz/mamlakatingiz\" ma'nosida keladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "大変ですね",
+    "hiragana": "たいへんですね",
+    "meaning": "Qiyin bo'libdi-da. / Og'ir ekan.",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "",
+    "exampleSentence": "毎日十二時まで働きます。—大変ですね。(まいにちじゅうにじまではたらきます。—たいへんですね。)",
+    "exampleTranslation": "\"Har kuni o'n ikkigacha ishlayman.\" — \"Qiyin bo'libdi-da.\"",
+    "additionalExamples": [
+      { "sentence": "それは大変ですね。(それはたいへんですね。)", "translation": "Bu qiyin ekan-da." },
+      { "sentence": "試験ですか。大変ですね。(しけんですか。たいへんですね。)", "translation": "Imtihonmi? Og'ir ekan." }
+    ],
+    "synonyms": ["お疲れさまです"],
+    "antonyms": [],
+    "nuance": "Hamdardlik bildirish iborasi. 「大変」ning o'zi \"juda\" ma'nosini ham beradi: 「大変おいしいです」 — juda mazali. 「ね」 esa suhbatdosh bilan tuyg'uni bo'lishish yuklamasi.",
+    "compounds": [
+      { "word": "大変", "hiragana": "たいへん", "meaning": "qiyin, og'ir; juda" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "大", "meaning": "katta", "kunReading": "oo", "onReading": "dai, tai", "strokes": 3 },
+      { "kanji": "変", "meaning": "o'zgarish, g'alati", "kunReading": "ka", "onReading": "hen", "strokes": 9 }
+    ]
+  },
+  {
+    "japaneseWord": "えーと",
+    "hiragana": "えーと",
+    "meaning": "Xo'sh... (fikrni jamlash paytidagi ibora)",
+    "partOfSpeech": "undov",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "",
+    "exampleSentence": "えーと、電話番号は０９０の…。(えーと、でんわばんごうはぜろきゅうぜろの…。)",
+    "exampleTranslation": "Xo'sh, telefon raqami 090-...",
+    "additionalExamples": [
+      { "sentence": "えーと、三時からです。(えーと、さんじからです。)", "translation": "Xo'sh... soat uchdan boshlanadi." },
+      { "sentence": "えーと、何でしたか。(えーと、なんでしたか。)", "translation": "Xo'sh, nima edi u?" }
+    ],
+    "synonyms": ["あのう"],
+    "antonyms": [],
+    "nuance": "2-darsdagi 「あのう」 dan farqi: 「あのう」 — suhbatdoshga murojaat qilish uchun, 「えーと」 — javobni o'ylab, eslashga urinayotganda.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "お願いします",
+    "hiragana": "おねがいします",
+    "meaning": "Iltimos. / Iltimos qilaman.",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "",
+    "exampleSentence": "やまと美術館の電話番号をお願いします。(やまとびじゅつかんのでんわばんごうをおねがいします。)",
+    "exampleTranslation": "Yamato muzeyining telefon raqamini bering, iltimos.",
+    "additionalExamples": [
+      { "sentence": "コーヒーをお願いします。(こーひーをおねがいします。)", "translation": "Qahva bering, iltimos." },
+      { "sentence": "よろしくお願いします。(よろしくおねがいします。)", "translation": "Iltimos, e'tiboringizni ayamang." }
+    ],
+    "synonyms": ["ください"],
+    "antonyms": [],
+    "nuance": "1-darsdagi 「どうぞよろしくお願いします」 shu iboradan. 「ください」 dan muloyimroq: buyurtma berishda, xizmat so'rashda va telefonda ishlatiladi.",
+    "compounds": [
+      { "word": "願う", "hiragana": "ねがう", "meaning": "iltimos qilmoq, tilamoq" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "願", "meaning": "iltimos qilmoq, tilamoq", "kunReading": "nega", "onReading": "gan", "strokes": 19 }
+    ]
+  },
+  {
+    "japaneseWord": "かしこまりました",
+    "hiragana": "かしこまりました",
+    "meaning": "Tushundim. / Uqdim. (xizmat ko'rsatuvchining javobi)",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "",
+    "exampleSentence": "「コーヒーをお願いします。」「かしこまりました。」",
+    "exampleTranslation": "\"Qahva bering, iltimos.\" — \"Xo'p bo'ladi.\"",
+    "additionalExamples": [
+      { "sentence": "かしこまりました。少々お待ちください。(かしこまりました。しょうしょうおまちください。)", "translation": "Uqdim. Biroz kutib turing." },
+      { "sentence": "かしこまりました。すぐお持ちします。(かしこまりました。すぐおもちします。)", "translation": "Xo'p bo'ladi. Hozir olib kelaman." }
+    ],
+    "synonyms": ["承知しました", "分かりました"],
+    "antonyms": [],
+    "nuance": "Eng hurmatli \"tushundim\" shakli — restoran, do'kon va telefon operatorlari mijozga shunday javob beradi. Xodim rahbarga esa 「承知しました」, do'stlar orasida 「分かりました」 ishlatiladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "お問い合わせの番号",
+    "hiragana": "おといあわせのばんごう",
+    "meaning": "So'ralgan raqam; ma'lumot uchun telefon raqami",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "",
+    "exampleSentence": "お問い合わせの番号は０６の８７９９の１０１１です。",
+    "exampleTranslation": "So'ragan raqamingiz — 06-8799-1011.",
+    "additionalExamples": [
+      { "sentence": "お問い合わせの番号を確認します。(おといあわせのばんごうをかくにんします。)", "translation": "So'ralgan raqamni tekshiraman." },
+      { "sentence": "お問い合わせはこちらです。(おといあわせはこちらです。)", "translation": "Ma'lumot uchun bu yerga murojaat qiling." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Ma'lumot xizmati operatorining rasmiy iborasi. 「問い合わせる」 — so'rab bilmoq; oldidagi 「お」 mijozga hurmat bildiradi.",
+    "compounds": [
+      { "word": "問い合わせ", "hiragana": "といあわせ", "meaning": "so'rov, murojaat" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "問", "meaning": "so'ramoq, savol", "kunReading": "to", "onReading": "mon", "strokes": 11 },
+      { "kanji": "合", "meaning": "mos kelmoq, birlashmoq", "kunReading": "a", "onReading": "gou", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "[どうも]ありがとうございました",
+    "hiragana": "[どうも]ありがとうございました",
+    "meaning": "Katta rahmat (ish tugagandan keyin)",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "",
+    "exampleSentence": "どうもありがとうございました。(どうもありがとうございました。)",
+    "exampleTranslation": "Katta rahmat.",
+    "additionalExamples": [
+      { "sentence": "きのうはありがとうございました。(きのうはありがとうございました。)", "translation": "Kechagi yordamingiz uchun rahmat." },
+      { "sentence": "ご親切にありがとうございました。(ごしんせつにありがとうございました。)", "translation": "Mehribonligingiz uchun rahmat." }
+    ],
+    "synonyms": ["ありがとうございます"],
+    "antonyms": [],
+    "nuance": "2-darsdagi 「ありがとうございます」 dan farqi zamonda: ish TUGAGANDAN keyin o'tgan zamon shakli 「ございました」 ishlatiladi. Xizmat davom etayotganda esa hozirgi zamon shakli.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "ニューヨーク",
+    "hiragana": "ニューヨーク",
+    "meaning": "Nyu-York",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "ニューヨークは今何時ですか。(にゅーよーくはいまなんじですか。)",
+    "exampleTranslation": "Nyu-Yorkda hozir soat necha?",
+    "additionalExamples": [
+      { "sentence": "ニューヨークは午前三時です。(にゅーよーくはごぜんさんじです。)", "translation": "Nyu-Yorkda tungi soat uch." },
+      { "sentence": "友達はニューヨークにいます。(ともだちはにゅーよーくにいます。)", "translation": "Do'stim Nyu-Yorkda." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Bu darsda shaharlar vaqt farqini mashq qilish uchun keladi: 「ニューヨークは今何時ですか」 — Tokio bilan farqi 13-14 soat.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "ペキン",
+    "hiragana": "ペキン",
+    "meaning": "Pekin",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "ペキンは今午前十時です。(ぺきんはいまごぜんじゅうじです。)",
+    "exampleTranslation": "Pekinda hozir tushdan oldingi soat o'n.",
+    "additionalExamples": [
+      { "sentence": "ペキンは中国の首都です。(ぺきんはちゅうごくのしゅとです。)", "translation": "Pekin — Xitoyning poytaxti." },
+      { "sentence": "ペキンへ行きたいです。(ぺきんへいきたいです。)", "translation": "Pekinga bormoqchiman." }
+    ],
+    "synonyms": ["北京"],
+    "antonyms": [],
+    "nuance": "Kanji shakli 「北京」 (shimoliy poytaxt). Yaponchada xitoy shahar nomlari ba'zan katakana, ba'zan kanji bilan yoziladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "ロンドン",
+    "hiragana": "ロンドン",
+    "meaning": "London",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "ロンドンは今何時ですか。(ろんどんはいまなんじですか。)",
+    "exampleTranslation": "Londonda hozir soat necha?",
+    "additionalExamples": [
+      { "sentence": "ロンドンはイギリスの首都です。(ろんどんはいぎりすのしゅとです。)", "translation": "London — Angliyaning poytaxti." },
+      { "sentence": "ロンドンは午前二時です。(ろんどんはごぜんにじです。)", "translation": "Londonda tungi soat ikki." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "1-darsdagi 「イギリス」 bilan bog'lanadi. Tokio bilan vaqt farqi — 9 soat.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "バンコク",
+    "hiragana": "バンコク",
+    "meaning": "Bangkok",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "⓪",
+    "exampleSentence": "バンコクは今午前九時です。(ばんこくはいまごぜんくじです。)",
+    "exampleTranslation": "Bangkokda hozir tongi soat to'qqiz.",
+    "additionalExamples": [
+      { "sentence": "バンコクはタイの首都です。(ばんこくはたいのしゅとです。)", "translation": "Bangkok — Tailandning poytaxti." },
+      { "sentence": "バンコクは暑いです。(ばんこくはあついです。)", "translation": "Bangkokda issiq." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "1-darsdagi 「タイ」 ning poytaxti. Tokio bilan vaqt farqi — 2 soat.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "ロサンゼルス",
+    "hiragana": "ロサンゼルス",
+    "meaning": "Los-Anjeles",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "④",
+    "exampleSentence": "ロサンゼルスは今午後六時です。(ろさんぜるすはいまごごろくじです。)",
+    "exampleTranslation": "Los-Anjelesda hozir kechki soat olti.",
+    "additionalExamples": [
+      { "sentence": "ロサンゼルスはアメリカの町です。(ろさんぜるすはあめりかのまちです。)", "translation": "Los-Anjeles — Amerikadagi shahar." },
+      { "sentence": "ロサンゼルスへ行きました。(ろさんぜるすへいきました。)", "translation": "Los-Anjelesga bordim." }
+    ],
+    "synonyms": ["ロス"],
+    "antonyms": [],
+    "nuance": "Kundalik nutqda qisqartirib 「ロス」 deyiladi. Uzun katakana so'zlarni yaponlar shunday qisqartirishga moyil.",
+    "compounds": [],
+    "kanjiInfo": []
+  }
+]
