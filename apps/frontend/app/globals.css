@@ -137,6 +137,16 @@
     }
   }
 
+  /* Full height minus the app navbar.
+     Two declarations, not one: `100vh` on a phone is the viewport with the
+     browser chrome hidden, so the microphone button sat underneath the address
+     bar. `dvh` tracks the chrome; the `vh` line above it is the fallback for
+     browsers that do not know `dvh`. */
+  .chat-viewport {
+    height: calc(100vh - 64px);
+    height: calc(100dvh - 64px);
+  }
+
   /* Voice mode: the ring that swells with the microphone. */
   @keyframes micPulse {
     0%, 100% { transform: scale(1);    opacity: 0.55; }

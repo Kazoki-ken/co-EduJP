@@ -318,26 +318,68 @@ export default function ChatPage() {
     }
   }, [isBusy, buildHistory, view, makeVoice]);
 
-  // ── Microphone: push-to-talk ──────────────────────────────────────────────
+  // ── Microphone: hold to talk, or tap to lock ──────────────────────────────
+  /**
+   * Holding a button steady is awkward on a phone, and a locked mic is awkward
+   * on a desktop. The button does both: hold it and it releases on lift, tap it
+   * and it stays open until the next tap. `activeRef` rather than `isListening`
+   * decides which, because the recogniser reports its start asynchronously and
+   * a quick tap can outrun it.
+   */
+  const activeRef = useRef(false);
+  const pressStartRef = useRef(0);
+  const [isLocked, setIsLocked] = useState(false);
+
   const {
     isSupported: micSupported, isListening, interim, error: micError, start: startMic, stop: stopMic,
   } = useSpeechRecognition({
     lang: sttLang,
     mode: 'hold',
+    // Both fire on a normal turn; onStop also covers the paths onFinal never
+    // reaches, so the button can never be left looking like it is recording.
+    onStop: () => {
+      activeRef.current = false;
+      setIsLocked(false);
+    },
     onFinal: (transcript) => { void sendMessage(transcript); },
   });
 
   const holdStart = useCallback(() => {
-    if (isBusy || isListening) return;
+    if (isBusy || activeRef.current) return;
+    activeRef.current = true;
     // The tutor must stop talking before the mic opens, or its own voice goes
     // straight back into the recogniser.
     silence();
     startMic();
-  }, [isBusy, isListening, silence, startMic]);
+  }, [isBusy, silence, startMic]);
 
   const holdEnd = useCallback(() => {
-    if (isListening) stopMic();
-  }, [isListening, stopMic]);
+    if (!activeRef.current) return;
+    activeRef.current = false;
+    setIsLocked(false);
+    stopMic();
+  }, [stopMic]);
+
+  /** Short press = lock the mic open; long press = ordinary push-to-talk. */
+  const TAP_MS = 400;
+
+  const onMicPointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    // Capturing the pointer keeps every later event on this button. Without it
+    // a finger drifting a few pixels fired pointerleave and cut the recording
+    // off mid-word — the main reason hold-to-talk felt broken on phones.
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+    if (activeRef.current) { holdEnd(); return; }  // tap again to finish
+    pressStartRef.current = Date.now();
+    holdStart();
+  };
+
+  const onMicPointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
+    e.currentTarget.releasePointerCapture?.(e.pointerId);
+    if (!activeRef.current) return;
+    if (Date.now() - pressStartRef.current < TAP_MS) { setIsLocked(true); return; }
+    holdEnd();
+  };
 
   // Space bar is the desktop equivalent of holding the button. `repeat` guards
   // against the key-repeat storm a held key produces.
@@ -377,7 +419,7 @@ export default function ChatPage() {
   const clearChat = () => {
     abortRef.current?.abort();
     silence();
-    stopMic();
+    holdEnd();
     setMessages([]);
     setIsBusy(false);
     setInput('');
@@ -424,8 +466,7 @@ export default function ChatPage() {
 
     return (
       <div
-        className="relative flex flex-col items-center justify-between overflow-hidden select-none"
-        style={{ height: 'calc(100vh - 64px)' }}
+        className="chat-viewport relative flex flex-col items-center justify-between overflow-hidden select-none"
       >
         <SakuraPetals count={16} />
 
@@ -436,7 +477,7 @@ export default function ChatPage() {
               <RotateCcw size={15} />
             </RoundButton>
           )}
-          <RoundButton onClick={() => { silence(); stopMic(); setView('chat'); }} title="Matnli suhbat">
+          <RoundButton onClick={() => { silence(); holdEnd(); setView('chat'); }} title="Matnli suhbat">
             <MessageSquare size={16} />
           </RoundButton>
         </div>
@@ -549,15 +590,15 @@ export default function ChatPage() {
                   <span className="mic-ring absolute inset-0 rounded-full bg-primary" />
                 )}
                 <button
-                  onPointerDown={(e) => { e.preventDefault(); holdStart(); }}
-                  onPointerUp={holdEnd}
-                  onPointerLeave={holdEnd}
+                  onPointerDown={onMicPointerDown}
+                  onPointerUp={onMicPointerUp}
                   onPointerCancel={holdEnd}
                   onContextMenu={(e) => e.preventDefault()}
                   disabled={isBusy}
+                  style={{ WebkitTouchCallout: 'none', WebkitUserSelect: 'none' }}
                   className={cn(
-                    'relative w-[72px] h-[72px] rounded-full flex items-center justify-center',
-                    'border-2 transition-all touch-none',
+                    'relative w-[88px] h-[88px] rounded-full flex items-center justify-center',
+                    'border-2 transition-all touch-none select-none',
                     isListening
                       ? 'bg-primary border-primary text-white shadow-glow scale-110'
                       : isBusy
@@ -567,14 +608,16 @@ export default function ChatPage() {
                 >
                   {isBusy
                     ? <div className="w-5 h-5 border-2 border-text-muted/30 border-t-accent rounded-full animate-spin" />
-                    : <Mic size={26} />}
+                    : isLocked ? <Square size={24} fill="currentColor" />
+                    : <Mic size={28} />}
                 </button>
               </div>
 
-              <p className="text-[11px] text-text-muted text-center">
-                {isListening
-                  ? "Gapiring… qo'yib yuborsangiz javob beradi"
-                  : isBusy ? "Ustoz o'ylayapti…" : "Bosib turing va gapiring · yoki Probel"}
+              <p className="text-[11px] text-text-muted text-center max-w-[16rem]">
+                {isBusy ? "Ustoz o'ylayapti…"
+                  : isLocked ? "Gapiring… tugatgach yana bosing"
+                  : isListening ? "Gapiring… qo'yib yuborsangiz javob beradi"
+                  : "Bosib turing va gapiring · yoki bir marta bosing"}
               </p>
             </>
           )}
@@ -585,7 +628,7 @@ export default function ChatPage() {
 
   // ── Chat view: the full transcript, for reading and typing ────────────────
   return (
-    <div className="relative flex flex-col overflow-hidden" style={{ height: 'calc(100vh - 64px)' }}>
+    <div className="chat-viewport relative flex flex-col overflow-hidden">
       <SakuraPetals count={8} />
 
       <div className="absolute top-3 right-4 z-20 flex gap-2">
