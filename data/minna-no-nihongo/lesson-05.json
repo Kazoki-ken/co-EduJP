@@ -1,0 +1,1451 @@
+[
+  {
+    "japaneseWord": "行きます",
+    "hiragana": "いきます",
+    "meaning": "bormoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "⓪",
+    "teForm": "行って",
+    "taForm": "行った",
+    "naiForm": "行かない",
+    "masuForm": "行きます",
+    "exampleSentence": "あした京都へ行きます。(あしたきょうとへいきます。)",
+    "exampleTranslation": "Ertaga Kiotoga boraman.",
+    "additionalExamples": [
+      { "sentence": "電車で会社へ行きます。(でんしゃでかいしゃへいきます。)", "translation": "Ishga poyezdda boraman." },
+      { "sentence": "どこへ行きますか。(どこへいきますか。)", "translation": "Qayerga borasiz?" }
+    ],
+    "synonyms": ["向かう"],
+    "antonyms": ["来ます", "帰ります"],
+    "nuance": "Harakat so'zlovchidan uzoqlashadi. Yo'nalish 「へ」 yoki 「に」 bilan, transport 「で」 bilan beriladi. Diqqat: te-shakli 「行いて」 emas, istisno tarzda 「行って」.",
+    "compounds": [
+      { "word": "旅行", "hiragana": "りょこう", "meaning": "sayohat" },
+      { "word": "行き方", "hiragana": "いきかた", "meaning": "borish yo'li" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "行", "meaning": "bormoq, yurmoq", "kunReading": "i, yu, okona", "onReading": "kou, gyou", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "来ます",
+    "hiragana": "きます",
+    "meaning": "kelmoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "②",
+    "teForm": "来て",
+    "taForm": "来た",
+    "naiForm": "来ない",
+    "masuForm": "来ます",
+    "exampleSentence": "友達が日本へ来ます。(ともだちがにほんへきます。)",
+    "exampleTranslation": "Do'stim Yaponiyaga keladi.",
+    "additionalExamples": [
+      { "sentence": "来週両親が来ます。(らいしゅうりょうしんがきます。)", "translation": "Kelasi hafta ota-onam keladi." },
+      { "sentence": "バスはまだ来ません。(ばすはまだきません。)", "translation": "Avtobus hali kelmadi." }
+    ],
+    "synonyms": [],
+    "antonyms": ["行きます"],
+    "nuance": "Yaponchada 「する」 bilan birga eng qoidasiz ikki fe'ldan biri: 来ます（きます）, 来ない（こない）, 来た（きた） — o'zak har shaklda o'zgaradi. Kanji o'zgarmaydi, faqat o'qilishi.",
+    "compounds": [
+      { "word": "来週", "hiragana": "らいしゅう", "meaning": "kelasi hafta" },
+      { "word": "来年", "hiragana": "らいねん", "meaning": "kelasi yil" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "来", "meaning": "kelmoq", "kunReading": "ku, ki, ko", "onReading": "rai", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "帰ります",
+    "hiragana": "かえります",
+    "meaning": "qaytmoq, uyga qaytmoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "teForm": "帰って",
+    "taForm": "帰った",
+    "naiForm": "帰らない",
+    "masuForm": "帰ります",
+    "exampleSentence": "六時に うちへ帰ります。(ろくじにうちへかえります。)",
+    "exampleTranslation": "Soat oltida uyga qaytaman.",
+    "additionalExamples": [
+      { "sentence": "来月国へ帰ります。(らいげつくにへかえります。)", "translation": "Kelasi oy vatanimga qaytaman." },
+      { "sentence": "きのうは早く帰りました。(きのうははやくかえりました。)", "translation": "Kecha erta qaytdim." }
+    ],
+    "synonyms": ["戻る"],
+    "antonyms": ["出かけます"],
+    "nuance": "「帰る」 — o'z joyiga (uy, vatan) qaytish. Shunchaki orqaga qaytish esa 「戻る（もどる）」. Ko'rinishi 「-る」 bilan tugasa ham, bu birinchi guruh fe'li: 帰ります, 帰って.",
+    "compounds": [
+      { "word": "帰り", "hiragana": "かえり", "meaning": "qaytish, qaytish yo'li" },
+      { "word": "帰国", "hiragana": "きこく", "meaning": "vatanga qaytish" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "帰", "meaning": "qaytmoq", "kunReading": "kae", "onReading": "ki", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "学校",
+    "hiragana": "がっこう",
+    "meaning": "maktab, o'quv yurti",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "exampleSentence": "毎日学校へ行きます。(まいにちがっこうへいきます。)",
+    "exampleTranslation": "Har kuni maktabga boraman.",
+    "additionalExamples": [
+      { "sentence": "学校は八時半からです。(がっこうははちじはんからです。)", "translation": "Maktab soat sakkiz yarimdan boshlanadi." },
+      { "sentence": "日曜日は学校が休みです。(にちようびはがっこうがやすみです。)", "translation": "Yakshanba kuni maktab dam oladi." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「学（ilm）」＋「校（maktab）」. Bosqichlari: 小学校 (boshlang'ich), 中学校 (o'rta), 高校 (yuqori). Universitet esa 「大学」 — 「学校」 deyilmaydi.",
+    "compounds": [
+      { "word": "小学校", "hiragana": "しょうがっこう", "meaning": "boshlang'ich maktab" },
+      { "word": "高校", "hiragana": "こうこう", "meaning": "o'rta maxsus maktab" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "学", "meaning": "o'rganish, ilm", "kunReading": "mana", "onReading": "gaku", "strokes": 8 },
+      { "kanji": "校", "meaning": "maktab", "kunReading": "-", "onReading": "kou", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "スーパー",
+    "hiragana": "スーパー",
+    "meaning": "supermarket, oziq-ovqat do'koni",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "自転車でスーパーへ行きます。(じてんしゃですーぱーへいきます。)",
+    "exampleTranslation": "Supermarketga velosipedda boraman.",
+    "additionalExamples": [
+      { "sentence": "スーパーで牛乳を買いました。(すーぱーでぎゅうにゅうをかいました。)", "translation": "Supermarketdan sut sotib oldim." },
+      { "sentence": "スーパーは十時までです。(すーぱーはじゅうじまでです。)", "translation": "Supermarket soat o'ngacha ishlaydi." }
+    ],
+    "synonyms": ["スーパーマーケット"],
+    "antonyms": [],
+    "nuance": "\"Supermarket\" dan qisqargan. 4-darsdagi 「デパート」 dan farqi: 「スーパー」 — kundalik oziq-ovqat, 「デパート」 — ko'p qavatli univermag.",
+    "compounds": [
+      { "word": "コンビニ", "hiragana": "コンビニ", "meaning": "kechayu kunduz ishlaydigan do'kon" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "駅",
+    "hiragana": "えき",
+    "meaning": "vokzal, bekat (temir yo'l)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "駅まで歩いて行きます。(えきまであるいていきます。)",
+    "exampleTranslation": "Bekatgacha piyoda boraman.",
+    "additionalExamples": [
+      { "sentence": "駅で友達に会いました。(えきでともだちにあいました。)", "translation": "Bekatda do'stimni uchratdim." },
+      { "sentence": "次の駅で降ります。(つぎのえきでおります。)", "translation": "Keyingi bekatda tushaman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「駅」 faqat poyezd bekati. Avtobus bekati — 「バス停（ていりゅうじょ）」, metro bekati esa baribir 「駅」. Bekat xodimi — 「駅員（えきいん）」.",
+    "compounds": [
+      { "word": "駅員", "hiragana": "えきいん", "meaning": "bekat xodimi" },
+      { "word": "駅前", "hiragana": "えきまえ", "meaning": "bekat oldi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "駅", "meaning": "bekat", "kunReading": "-", "onReading": "eki", "strokes": 14 }
+    ]
+  },
+  {
+    "japaneseWord": "飛行機",
+    "hiragana": "ひこうき",
+    "meaning": "samolyot",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "②",
+    "exampleSentence": "飛行機で日本へ来ました。(ひこうきでにほんへきました。)",
+    "exampleTranslation": "Yaponiyaga samolyotda keldim.",
+    "additionalExamples": [
+      { "sentence": "飛行機は何時に着きますか。(ひこうきはなんじにつきますか。)", "translation": "Samolyot soat nechada qo'nadi?" },
+      { "sentence": "飛行機のチケットを買いました。(ひこうきのちけっとをかいました。)", "translation": "Samolyot chiptasini sotib oldim." }
+    ],
+    "synonyms": ["航空機"],
+    "antonyms": [],
+    "nuance": "「飛（uchmoq）」＋「行（yurmoq）」＋「機（mashina）」 — \"uchib yuradigan mashina\". Transport vositasi 「で」 bilan keladi: 飛行機で行きます.",
+    "compounds": [
+      { "word": "空港", "hiragana": "くうこう", "meaning": "aeroport" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "飛", "meaning": "uchmoq", "kunReading": "to", "onReading": "hi", "strokes": 9 },
+      { "kanji": "行", "meaning": "bormoq, yurmoq", "kunReading": "i, yu", "onReading": "kou", "strokes": 6 },
+      { "kanji": "機", "meaning": "mashina, mexanizm", "kunReading": "hata", "onReading": "ki", "strokes": 16 }
+    ]
+  },
+  {
+    "japaneseWord": "船",
+    "hiragana": "ふね",
+    "meaning": "kema, qayiq",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "船で北海道へ行きました。(ふねでほっかいどうへいきました。)",
+    "exampleTranslation": "Xokkaydoga kemada bordim.",
+    "additionalExamples": [
+      { "sentence": "船は九時に出ます。(ふねはくじにでます。)", "translation": "Kema soat to'qqizda jo'naydi." },
+      { "sentence": "大きい船が見えます。(おおきいふねがみえます。)", "translation": "Katta kema ko'rinyapti." }
+    ],
+    "synonyms": ["ボート"],
+    "antonyms": [],
+    "nuance": "「船」 — kattadan kichigigacha suv transporti. Kichik eshkakli qayiq uchun 「舟」 belgisi ham bor, katta kema uchun esa 「船」.",
+    "compounds": [
+      { "word": "船便", "hiragana": "ふなびん", "meaning": "dengiz pochtasi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "船", "meaning": "kema", "kunReading": "fune, funa", "onReading": "sen", "strokes": 11 }
+    ]
+  },
+  {
+    "japaneseWord": "電車",
+    "hiragana": "でんしゃ",
+    "meaning": "poyezd, elektropoyezd",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "exampleSentence": "電車で会社へ行きます。(でんしゃでかいしゃへいきます。)",
+    "exampleTranslation": "Ishga poyezdda boraman.",
+    "additionalExamples": [
+      { "sentence": "電車は八時に出ます。(でんしゃははちじにでます。)", "translation": "Poyezd soat sakkizda jo'naydi." },
+      { "sentence": "電車に傘を忘れました。(でんしゃにかさをわすれました。)", "translation": "Poyezdda soyabonimni unutib qoldirdim." }
+    ],
+    "synonyms": ["列車"],
+    "antonyms": [],
+    "nuance": "「電（elektr）」＋「車（arava）」. Yaponiyada shahar va shahar atrofi poyezdlari — 「電車」, uzoq masofa poyezdlari esa 「列車（れっしゃ）」 deyiladi.",
+    "compounds": [
+      { "word": "終電", "hiragana": "しゅうでん", "meaning": "oxirgi poyezd" },
+      { "word": "満員電車", "hiragana": "まんいんでんしゃ", "meaning": "to'la poyezd" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "電", "meaning": "elektr, chaqmoq", "kunReading": "-", "onReading": "den", "strokes": 13 },
+      { "kanji": "車", "meaning": "arava, mashina", "kunReading": "kuruma", "onReading": "sha", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "地下鉄",
+    "hiragana": "ちかてつ",
+    "meaning": "metro",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "地下鉄で美術館へ行きます。(ちかてつでびじゅつかんへいきます。)",
+    "exampleTranslation": "Muzeyga metroda boraman.",
+    "additionalExamples": [
+      { "sentence": "地下鉄のほうが速いです。(ちかてつのほうがはやいです。)", "translation": "Metro tezroq." },
+      { "sentence": "地下鉄の駅はどこですか。(ちかてつのえきはどこですか。)", "translation": "Metro bekati qayerda?" }
+    ],
+    "synonyms": ["メトロ"],
+    "antonyms": [],
+    "nuance": "3-darsdagi 「地下（yer osti）」＋「鉄（temir, ya'ni temir yo'l）」. To'liq shakli 「地下鉄道」 dan qisqargan.",
+    "compounds": [
+      { "word": "地下", "hiragana": "ちか", "meaning": "yer osti" },
+      { "word": "鉄道", "hiragana": "てつどう", "meaning": "temir yo'l" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "地", "meaning": "yer, zamin", "kunReading": "-", "onReading": "chi, ji", "strokes": 6 },
+      { "kanji": "下", "meaning": "past, ost", "kunReading": "shita", "onReading": "ka, ge", "strokes": 3 },
+      { "kanji": "鉄", "meaning": "temir", "kunReading": "-", "onReading": "tetsu", "strokes": 13 }
+    ]
+  },
+  {
+    "japaneseWord": "新幹線",
+    "hiragana": "しんかんせん",
+    "meaning": "shinkansen (tezyurar poyezd)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "新幹線で大阪へ行きます。(しんかんせんでおおさかへいきます。)",
+    "exampleTranslation": "Osakaga shinkansenda boraman.",
+    "additionalExamples": [
+      { "sentence": "新幹線は速いですが、高いです。(しんかんせんははやいですが、たかいです。)", "translation": "Shinkansen tez, lekin qimmat." },
+      { "sentence": "新幹線は新大阪に着きます。(しんかんせんはしんおおさかにつきます。)", "translation": "Shinkansen Shin-Osakaga keladi." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「新（yangi）」＋「幹線（asosiy yo'nalish）」. 1964-yilda ochilgan. 3-darsdagi 「新大阪」 aynan shu poyezd uchun qurilgan bekat.",
+    "compounds": [
+      { "word": "幹線", "hiragana": "かんせん", "meaning": "asosiy yo'l, magistral" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "新", "meaning": "yangi", "kunReading": "atara", "onReading": "shin", "strokes": 13 },
+      { "kanji": "幹", "meaning": "tana, asos", "kunReading": "miki", "onReading": "kan", "strokes": 13 },
+      { "kanji": "線", "meaning": "chiziq, yo'nalish", "kunReading": "-", "onReading": "sen", "strokes": 15 }
+    ]
+  },
+  {
+    "japaneseWord": "バス",
+    "hiragana": "バス",
+    "meaning": "avtobus",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "バスで学校へ行きます。(ばすでがっこうへいきます。)",
+    "exampleTranslation": "Maktabga avtobusda boraman.",
+    "additionalExamples": [
+      { "sentence": "バスはまだ来ません。(ばすはまだきません。)", "translation": "Avtobus hali kelmadi." },
+      { "sentence": "何番のバスですか。(なんばんのばすですか。)", "translation": "Nechanchi raqamli avtobus?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Diqqat: 「バス」 — avtobus, 「バス」 (vanna) va 「パス」 (o'tish, chipta) bilan adashtirmang — talaffuzdagi kichik farq ma'noni butunlay o'zgartiradi.",
+    "compounds": [
+      { "word": "バス停", "hiragana": "バスてい", "meaning": "avtobus bekati" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "タクシー",
+    "hiragana": "タクシー",
+    "meaning": "taksi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "タクシーで駅へ行きました。(たくしーでえきへいきました。)",
+    "exampleTranslation": "Bekatga taksida bordim.",
+    "additionalExamples": [
+      { "sentence": "タクシーを呼んでください。(たくしーをよんでください。)", "translation": "Taksi chaqirib bering." },
+      { "sentence": "タクシーは高いです。(たくしーはたかいです。)", "translation": "Taksi qimmat." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Yaponiyada taksi eshigi avtomatik ochiladi — yo'lovchi o'zi ochmaydi. Choychaqa berish odati ham yo'q.",
+    "compounds": [
+      { "word": "タクシー乗り場", "hiragana": "タクシーのりば", "meaning": "taksi to'xtash joyi" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "自転車",
+    "hiragana": "じてんしゃ",
+    "meaning": "velosiped",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "②",
+    "exampleSentence": "自転車でスーパーへ行きます。(じてんしゃですーぱーへいきます。)",
+    "exampleTranslation": "Supermarketga velosipedda boraman.",
+    "additionalExamples": [
+      { "sentence": "自転車を買いたいです。(じてんしゃをかいたいです。)", "translation": "Velosiped sotib olmoqchiman." },
+      { "sentence": "駅まで自転車で十分です。(えきまでじてんしゃでじゅっぷんです。)", "translation": "Bekatgacha velosipedda o'n daqiqa." }
+    ],
+    "synonyms": ["チャリ"],
+    "antonyms": [],
+    "nuance": "「自（o'zi）」＋「転（aylanmoq）」＋「車（arava）」. 2-darsdagi 「自動車」 bilan bir qolipda. Erkin nutqda 「チャリ」 deyiladi.",
+    "compounds": [
+      { "word": "自動車", "hiragana": "じどうしゃ", "meaning": "avtomobil" },
+      { "word": "駐輪場", "hiragana": "ちゅうりんじょう", "meaning": "velosiped turargohi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "自", "meaning": "o'zi", "kunReading": "mizuka", "onReading": "ji", "strokes": 6 },
+      { "kanji": "転", "meaning": "aylanmoq, ag'darmoq", "kunReading": "koro", "onReading": "ten", "strokes": 11 },
+      { "kanji": "車", "meaning": "arava, mashina", "kunReading": "kuruma", "onReading": "sha", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "歩いて",
+    "hiragana": "あるいて",
+    "meaning": "piyoda",
+    "partOfSpeech": "ravish",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "②",
+    "exampleSentence": "駅から歩いて帰ります。(えきからあるいてかえります。)",
+    "exampleTranslation": "Bekatdan piyoda qaytaman.",
+    "additionalExamples": [
+      { "sentence": "学校まで歩いて十五分です。(がっこうまであるいてじゅうごふんです。)", "translation": "Maktabgacha piyoda o'n besh daqiqa." },
+      { "sentence": "きょうは歩いて行きます。(きょうはあるいていきます。)", "translation": "Bugun piyoda boraman." }
+    ],
+    "synonyms": ["徒歩で"],
+    "antonyms": [],
+    "nuance": "Muhim istisno: boshqa transport 「で」 bilan keladi (電車で), lekin piyoda uchun 「歩いてで」 EMAS, shunchaki 「歩いて」 deyiladi. Bu 「歩く」 fe'lining te-shakli. Rasmiy yozuvda 「徒歩（とほ）」.",
+    "compounds": [
+      { "word": "歩く", "hiragana": "あるく", "meaning": "yurmoq, piyoda yurmoq" },
+      { "word": "散歩", "hiragana": "さんぽ", "meaning": "sayr" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "歩", "meaning": "yurmoq, qadam", "kunReading": "aru, ayu", "onReading": "ho", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "人",
+    "hiragana": "ひと",
+    "meaning": "odam, kishi, inson",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "⓪",
+    "exampleSentence": "あの人は友達です。(あのひとはともだちです。)",
+    "exampleTranslation": "U kishi — do'stim.",
+    "additionalExamples": [
+      { "sentence": "駅に人がたくさんいます。(えきにひとがたくさんいます。)", "translation": "Bekatda odam ko'p." },
+      { "sentence": "あの人と行きます。(あのひとといきます。)", "translation": "U kishi bilan boraman." }
+    ],
+    "synonyms": ["方"],
+    "antonyms": [],
+    "nuance": "Bir belgi uch xil o'qiladi: 「ひと」 (odam), 「じん」 (millat: 日本人), 「にん」 (sanoq: 三人). 1-darsdagi 「あの人」 va 「～人」 ham shundan.",
+    "compounds": [
+      { "word": "人々", "hiragana": "ひとびと", "meaning": "odamlar" },
+      { "word": "一人", "hiragana": "ひとり", "meaning": "bir kishi, yolg'iz" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "人", "meaning": "odam, kishi", "kunReading": "hito", "onReading": "jin, nin", "strokes": 2 }
+    ]
+  },
+  {
+    "japaneseWord": "友達",
+    "hiragana": "ともだち",
+    "meaning": "do'st, dugona, o'rtoq",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "exampleSentence": "友達と映画を見ます。(ともだちとえいがをみます。)",
+    "exampleTranslation": "Do'stim bilan kino ko'raman.",
+    "additionalExamples": [
+      { "sentence": "友達が日本へ来ます。(ともだちがにほんへきます。)", "translation": "Do'stim Yaponiyaga keladi." },
+      { "sentence": "彼は私の友達です。(かれはわたしのともだちです。)", "translation": "U mening do'stim." }
+    ],
+    "synonyms": ["友人"],
+    "antonyms": [],
+    "nuance": "「友達」 jinsdan qat'i nazar ishlatiladi. Rasmiy uslubda 「友人（ゆうじん）」. Kim bilan birga qilinishi 「と」 bilan beriladi: 友達と行きます.",
+    "compounds": [
+      { "word": "友人", "hiragana": "ゆうじん", "meaning": "do'st (rasmiy)" },
+      { "word": "親友", "hiragana": "しんゆう", "meaning": "yaqin do'st" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "友", "meaning": "do'st", "kunReading": "tomo", "onReading": "yuu", "strokes": 4 },
+      { "kanji": "達", "meaning": "ko'plik qo'shimchasi; yetishmoq", "kunReading": "-", "onReading": "tatsu", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "彼",
+    "hiragana": "かれ",
+    "meaning": "u (erkak kishi); yigiti",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "彼は先生です。(かれはせんせいです。)",
+    "exampleTranslation": "U — o'qituvchi.",
+    "additionalExamples": [
+      { "sentence": "彼と一緒に行きます。(かれといっしょにいきます。)", "translation": "U bilan birga boraman." },
+      { "sentence": "彼はまだ来ません。(かれはまだきません。)", "translation": "U hali kelmadi." }
+    ],
+    "synonyms": ["あの人"],
+    "antonyms": ["彼女"],
+    "nuance": "Ikki ma'nosi bor: \"u (erkak)\" va \"yigiti, sevgilisi\". Kundalik nutqda uchinchi shaxsni ko'proq ismi yoki 「あの人」 bilan atashadi.",
+    "compounds": [
+      { "word": "彼ら", "hiragana": "かれら", "meaning": "ular" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "彼", "meaning": "u, o'sha", "kunReading": "kare, kano", "onReading": "hi", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "彼女",
+    "hiragana": "かのじょ",
+    "meaning": "u (ayol kishi); qiz do'sti",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "彼女は学生です。(かのじょはがくせいです。)",
+    "exampleTranslation": "U — talaba.",
+    "additionalExamples": [
+      { "sentence": "彼女は来月国へ帰ります。(かのじょはらいげつくにへかえります。)", "translation": "U kelasi oy vataniga qaytadi." },
+      { "sentence": "彼女に会いました。(かのじょにあいました。)", "translation": "U bilan uchrashdim." }
+    ],
+    "synonyms": ["あの人"],
+    "antonyms": ["彼"],
+    "nuance": "「彼」＋「女」. Xuddi 「彼」 kabi ikki ma'noli: \"u (ayol)\" va \"qiz do'sti\". Kontekst ajratib beradi: 「彼女がいます」 — sevgilisi bor degani.",
+    "compounds": [
+      { "word": "彼女たち", "hiragana": "かのじょたち", "meaning": "ular (ayollar)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "彼", "meaning": "u, o'sha", "kunReading": "kare, kano", "onReading": "hi", "strokes": 8 },
+      { "kanji": "女", "meaning": "ayol", "kunReading": "onna", "onReading": "jo", "strokes": 3 }
+    ]
+  },
+  {
+    "japaneseWord": "家族",
+    "hiragana": "かぞく",
+    "meaning": "oila",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "家族と日本へ来ました。(かぞくとにほんへきました。)",
+    "exampleTranslation": "Oilam bilan Yaponiyaga keldim.",
+    "additionalExamples": [
+      { "sentence": "家族は五人です。(かぞくはごにんです。)", "translation": "Oilamiz besh kishi." },
+      { "sentence": "来月家族が来ます。(らいげつかぞくがきます。)", "translation": "Kelasi oy oilam keladi." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "O'z oilasi haqida 「家族」, boshqaning oilasi haqida hurmat bilan 「ご家族」 deyiladi — 1-darsdagi 「お名前」 bilan bir qoida.",
+    "compounds": [
+      { "word": "ご家族", "hiragana": "ごかぞく", "meaning": "oilangiz (hurmat)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "家", "meaning": "uy, oila", "kunReading": "ie, ya", "onReading": "ka", "strokes": 10 },
+      { "kanji": "族", "meaning": "urug', qavm", "kunReading": "-", "onReading": "zoku", "strokes": 11 }
+    ]
+  },
+  {
+    "japaneseWord": "一人で",
+    "hiragana": "ひとりで",
+    "meaning": "yolg'iz o'zi, yakka",
+    "partOfSpeech": "ravish",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "②",
+    "exampleSentence": "一人で京都へ行きます。(ひとりできょうとへいきます。)",
+    "exampleTranslation": "Kiotoga yolg'iz o'zim boraman.",
+    "additionalExamples": [
+      { "sentence": "一人で住んでいます。(ひとりですんでいます。)", "translation": "Yolg'iz yashayman." },
+      { "sentence": "一人で行きますか。(ひとりでいきますか。)", "translation": "Yolg'iz borasizmi?" }
+    ],
+    "synonyms": ["一人ぼっちで"],
+    "antonyms": ["みんなで"],
+    "nuance": "「一人」 maxsus o'qiladi — 「いちにん」 emas, 「ひとり」. Ikki kishi ham istisno: 「二人（ふたり）」. Uchinchisidan boshlab qoidaga qaytadi: 三人（さんにん）.",
+    "compounds": [
+      { "word": "一人", "hiragana": "ひとり", "meaning": "bir kishi" },
+      { "word": "二人", "hiragana": "ふたり", "meaning": "ikki kishi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "一", "meaning": "bir", "kunReading": "hito", "onReading": "ichi", "strokes": 1 },
+      { "kanji": "人", "meaning": "odam, kishi", "kunReading": "hito", "onReading": "jin, nin", "strokes": 2 }
+    ]
+  },
+  {
+    "japaneseWord": "先週",
+    "hiragana": "せんしゅう",
+    "meaning": "o'tgan hafta",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "先週京都へ行きました。(せんしゅうきょうとへいきました。)",
+    "exampleTranslation": "O'tgan hafta Kiotoga bordim.",
+    "additionalExamples": [
+      { "sentence": "先週は忙しかったです。(せんしゅうはいそがしかったです。)", "translation": "O'tgan hafta band edim." },
+      { "sentence": "先週の土曜日、映画を見ました。(せんしゅうのどようび、えいがをみました。)", "translation": "O'tgan shanba kuni kino ko'rdim." }
+    ],
+    "synonyms": [],
+    "antonyms": ["来週"],
+    "nuance": "Uchlik qoida: 先（o'tgan）・今（bu）・来（kelasi） + 週/月. Bu so'zlar vaqt bildirgani uchun 「に」 olmaydi: 「先週行きました」.",
+    "compounds": [
+      { "word": "週末", "hiragana": "しゅうまつ", "meaning": "hafta oxiri" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "先", "meaning": "oldin, avval", "kunReading": "saki", "onReading": "sen", "strokes": 6 },
+      { "kanji": "週", "meaning": "hafta", "kunReading": "-", "onReading": "shuu", "strokes": 11 }
+    ]
+  },
+  {
+    "japaneseWord": "今週",
+    "hiragana": "こんしゅう",
+    "meaning": "bu hafta",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "今週は休みません。(こんしゅうはやすみません。)",
+    "exampleTranslation": "Bu hafta dam olmayman.",
+    "additionalExamples": [
+      { "sentence": "今週の金曜日に会いましょう。(こんしゅうのきんようびにあいましょう。)", "translation": "Bu haftaning jumasida uchrashaylik." },
+      { "sentence": "今週は忙しいです。(こんしゅうはいそがしいです。)", "translation": "Bu hafta bandman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「今」 bu yerda 「こん」 deb o'qiladi — xuddi 「今晩（こんばん）」「今月（こんげつ）」 kabi. 「いま」 emas.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "今", "meaning": "hozir", "kunReading": "ima", "onReading": "kon", "strokes": 4 },
+      { "kanji": "週", "meaning": "hafta", "kunReading": "-", "onReading": "shuu", "strokes": 11 }
+    ]
+  },
+  {
+    "japaneseWord": "来週",
+    "hiragana": "らいしゅう",
+    "meaning": "kelasi hafta",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "来週友達が来ます。(らいしゅうともだちがきます。)",
+    "exampleTranslation": "Kelasi hafta do'stim keladi.",
+    "additionalExamples": [
+      { "sentence": "来週の月曜日から働きます。(らいしゅうのげつようびからはたらきます。)", "translation": "Kelasi hafta dushanbadan ishlayman." },
+      { "sentence": "来週まで待ってください。(らいしゅうまでまってください。)", "translation": "Kelasi haftagacha kuting." }
+    ],
+    "synonyms": [],
+    "antonyms": ["先週"],
+    "nuance": "「来」 kelajak vaqt so'zlarida 「らい」 deb o'qiladi: 来週, 来月, 来年. 「来ます（きます）」 fe'li bilan bir belgi.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "来", "meaning": "kelmoq, kelasi", "kunReading": "ku, ki", "onReading": "rai", "strokes": 7 },
+      { "kanji": "週", "meaning": "hafta", "kunReading": "-", "onReading": "shuu", "strokes": 11 }
+    ]
+  },
+  {
+    "japaneseWord": "先月",
+    "hiragana": "せんげつ",
+    "meaning": "o'tgan oy",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "先月日本へ来ました。(せんげつにほんへきました。)",
+    "exampleTranslation": "O'tgan oy Yaponiyaga keldim.",
+    "additionalExamples": [
+      { "sentence": "先月は雨が多かったです。(せんげつはあめがおおかったです。)", "translation": "O'tgan oy yomg'ir ko'p yog'di." },
+      { "sentence": "先月から勉強しています。(せんげつからべんきょうしています。)", "translation": "O'tgan oydan beri o'qiyapman." }
+    ],
+    "synonyms": [],
+    "antonyms": ["来月"],
+    "nuance": "「月」 bu yerda 「げつ」 — hafta kuni 「月曜日」 dagi kabi. Sana bildirganda esa 「がつ」 bo'ladi: 一月（いちがつ）.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "先", "meaning": "oldin, avval", "kunReading": "saki", "onReading": "sen", "strokes": 6 },
+      { "kanji": "月", "meaning": "oy", "kunReading": "tsuki", "onReading": "getsu, gatsu", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "今月",
+    "hiragana": "こんげつ",
+    "meaning": "bu oy",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "今月は忙しいです。(こんげつはいそがしいです。)",
+    "exampleTranslation": "Bu oy bandman.",
+    "additionalExamples": [
+      { "sentence": "今月の二十日は休みです。(こんげつのはつかはやすみです。)", "translation": "Bu oyning yigirmanchisi dam olish kuni." },
+      { "sentence": "今月国へ帰ります。(こんげつくにへかえります。)", "translation": "Bu oy vatanimga qaytaman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「今日（きょう）」「今週」「今月」「今年（ことし）」 — bu to'rtta so'zning har biri 「今」ni boshqacha o'qiydi, shuning uchun alohida yodlanadi.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "今", "meaning": "hozir", "kunReading": "ima", "onReading": "kon", "strokes": 4 },
+      { "kanji": "月", "meaning": "oy", "kunReading": "tsuki", "onReading": "getsu", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "来月",
+    "hiragana": "らいげつ",
+    "meaning": "kelasi oy",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "来月国へ帰ります。(らいげつくにへかえります。)",
+    "exampleTranslation": "Kelasi oy vatanimga qaytaman.",
+    "additionalExamples": [
+      { "sentence": "来月から新しい仕事です。(らいげつからあたらしいしごとです。)", "translation": "Kelasi oydan yangi ish boshlanadi." },
+      { "sentence": "来月家族が来ます。(らいげつかぞくがきます。)", "translation": "Kelasi oy oilam keladi." }
+    ],
+    "synonyms": [],
+    "antonyms": ["先月"],
+    "nuance": "「らいづき」 emas — 「らいげつ」. Uchlik: 先月・今月・来月.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "来", "meaning": "kelmoq, kelasi", "kunReading": "ku, ki", "onReading": "rai", "strokes": 7 },
+      { "kanji": "月", "meaning": "oy", "kunReading": "tsuki", "onReading": "getsu", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "去年",
+    "hiragana": "きょねん",
+    "meaning": "o'tgan yil",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "去年日本へ来ました。(きょねんにほんへきました。)",
+    "exampleTranslation": "O'tgan yili Yaponiyaga keldim.",
+    "additionalExamples": [
+      { "sentence": "去年の誕生日は日曜日でした。(きょねんのたんじょうびはにちようびでした。)", "translation": "O'tgan yilgi tug'ilgan kunim yakshanbaga to'g'ri kelgan edi." },
+      { "sentence": "去年から働いています。(きょねんからはたらいています。)", "translation": "O'tgan yildan beri ishlayman." }
+    ],
+    "synonyms": ["昨年"],
+    "antonyms": ["来年"],
+    "nuance": "Diqqat: hafta va oyda 「先」 ishlatiladi (先週・先月), lekin yilda 「先年」 EMAS — 「去年」 deyiladi. Rasmiy uslubda 「昨年（さくねん）」.",
+    "compounds": [
+      { "word": "一昨年", "hiragana": "おととし", "meaning": "o'tgan yildan oldingi yil" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "去", "meaning": "ketmoq, o'tmoq", "kunReading": "sa", "onReading": "kyo, ko", "strokes": 5 },
+      { "kanji": "年", "meaning": "yil", "kunReading": "toshi", "onReading": "nen", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "今年",
+    "hiragana": "ことし",
+    "meaning": "bu yil, joriy yil",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "今年国へ帰ります。(ことしくにへかえります。)",
+    "exampleTranslation": "Bu yil vatanimga qaytaman.",
+    "additionalExamples": [
+      { "sentence": "今年は忙しいです。(ことしはいそがしいです。)", "translation": "Bu yil bandman." },
+      { "sentence": "今年の夏は暑いです。(ことしのなつはあついです。)", "translation": "Bu yilgi yoz issiq." }
+    ],
+    "synonyms": ["本年"],
+    "antonyms": [],
+    "nuance": "「こんねん」 emas, 「ことし」 deb o'qiladi — bu guruhdagi eng ko'p adashtiriladigan so'z. Rasmiy nutqda 「本年（ほんねん）」.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "今", "meaning": "hozir", "kunReading": "ima", "onReading": "kon", "strokes": 4 },
+      { "kanji": "年", "meaning": "yil", "kunReading": "toshi", "onReading": "nen", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "来年",
+    "hiragana": "らいねん",
+    "meaning": "kelasi yil",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "来年大学へ行きます。(らいねんだいがくへいきます。)",
+    "exampleTranslation": "Kelasi yil universitetga boraman.",
+    "additionalExamples": [
+      { "sentence": "来年結婚します。(らいねんけっこんします。)", "translation": "Kelasi yil turmush quraman." },
+      { "sentence": "来年の三月に帰ります。(らいねんのさんがつにかえります。)", "translation": "Kelasi yil mart oyida qaytaman." }
+    ],
+    "synonyms": [],
+    "antonyms": ["去年"],
+    "nuance": "Uchlik yilda buziladi: 去年・今年・来年 — faqat oxirgisi 「来」 qolipiga mos.",
+    "compounds": [
+      { "word": "再来年", "hiragana": "さらいねん", "meaning": "kelasi yildan keyingi yil" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "来", "meaning": "kelmoq, kelasi", "kunReading": "ku, ki", "onReading": "rai", "strokes": 7 },
+      { "kanji": "年", "meaning": "yil", "kunReading": "toshi", "onReading": "nen", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "～月",
+    "hiragana": "～がつ",
+    "meaning": "~chi oy (yil oylarining nomi)",
+    "partOfSpeech": "qo'shimcha",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "",
+    "exampleSentence": "三月に日本へ来ました。(さんがつににほんへきました。)",
+    "exampleTranslation": "Mart oyida Yaponiyaga keldim.",
+    "additionalExamples": [
+      { "sentence": "誕生日は九月です。(たんじょうびはくがつです。)", "translation": "Tug'ilgan kunim sentabrda." },
+      { "sentence": "四月から新しい学校です。(しがつからあたらしいがっこうです。)", "translation": "Apreldan yangi maktabda o'qiyman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Uchta istisno: 4月＝しがつ (よんがつ emas), 7月＝しちがつ, 9月＝くがつ (きゅうがつ emas) — 「～時」 bilan bir xil uchlik. Yaponiyada o'quv va moliya yili aprelda boshlanadi.",
+    "compounds": [
+      { "word": "正月", "hiragana": "しょうがつ", "meaning": "Yangi yil bayrami" },
+      { "word": "何月", "hiragana": "なんがつ", "meaning": "qaysi oy" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "月", "meaning": "oy", "kunReading": "tsuki", "onReading": "gatsu, getsu", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "何月",
+    "hiragana": "なんがつ",
+    "meaning": "qaysi oy, nechanchi oy",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "誕生日は何月ですか。(たんじょうびはなんがつですか。)",
+    "exampleTranslation": "Tug'ilgan kuningiz qaysi oyda?",
+    "additionalExamples": [
+      { "sentence": "何月に国へ帰りますか。(なんがつにくにへかえりますか。)", "translation": "Qaysi oyda vataningizga qaytasiz?" },
+      { "sentence": "試験は何月ですか。(しけんはなんがつですか。)", "translation": "Imtihon qaysi oyda?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「何月」 — qaysi oy, 「何か月（なんかげつ）」 — necha oy davomida. Ikkalasi boshqa savol.",
+    "compounds": [
+      { "word": "何か月", "hiragana": "なんかげつ", "meaning": "necha oy (davomiylik)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "何", "meaning": "nima, necha", "kunReading": "nani, nan", "onReading": "ka", "strokes": 7 },
+      { "kanji": "月", "meaning": "oy", "kunReading": "tsuki", "onReading": "gatsu", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "一日",
+    "hiragana": "ついたち",
+    "meaning": "oyning birinchi sanasi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "④",
+    "exampleSentence": "四月一日に日本へ来ました。(しがつついたちににほんへきました。)",
+    "exampleTranslation": "Birinchi aprelda Yaponiyaga keldim.",
+    "additionalExamples": [
+      { "sentence": "一日から新しい仕事です。(ついたちからあたらしいしごとです。)", "translation": "Birinchi sanadan yangi ish boshlanadi." },
+      { "sentence": "一月一日は休みです。(いちがつついたちはやすみです。)", "translation": "Birinchi yanvar dam olish kuni." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Muhim farq: 「ついたち」 FAQAT oyning 1-sanasi degani. \"Bir kun\" ma'nosi esa 「いちにち」 deb o'qiladi — yozilishi bir xil, o'qilishi boshqa.",
+    "compounds": [
+      { "word": "一日中", "hiragana": "いちにちじゅう", "meaning": "kun bo'yi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "一", "meaning": "bir", "kunReading": "hito", "onReading": "ichi", "strokes": 1 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "二日",
+    "hiragana": "ふつか",
+    "meaning": "oyning ikkinchi sanasi; ikki kun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "五月二日は休みです。(ごがつふつかはやすみです。)",
+    "exampleTranslation": "Ikkinchi may dam olish kuni.",
+    "additionalExamples": [
+      { "sentence": "二日かかります。(ふつかかかります。)", "translation": "Ikki kun vaqt oladi." },
+      { "sentence": "二日に会いましょう。(ふつかにあいましょう。)", "translation": "Ikkinchi sanada uchrashaylik." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "2-sanadan 10-sanagacha qadimgi yaponcha sanoq ishlatiladi (hitotsu, futatsu... dan kelib chiqqan). Bu shakllar ham sanani, ham kun sonini bildiradi.",
+    "compounds": [
+      { "word": "二日酔い", "hiragana": "ふつかよい", "meaning": "ichgandan keyingi bosh og'rig'i" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "二", "meaning": "ikki", "kunReading": "futa", "onReading": "ni", "strokes": 2 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "三日",
+    "hiragana": "みっか",
+    "meaning": "oyning uchinchi sanasi; uch kun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "三日に京都へ行きます。(みっかにきょうとへいきます。)",
+    "exampleTranslation": "Uchinchi sanada Kiotoga boraman.",
+    "additionalExamples": [
+      { "sentence": "三日休みました。(みっかやすみました。)", "translation": "Uch kun dam oldim." },
+      { "sentence": "一月三日までお正月です。(いちがつみっかまでおしょうがつです。)", "translation": "Uchinchi yanvargacha Yangi yil bayrami." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「さんにち」 emas, 「みっか」. Yaponcha maqol 「三日坊主（みっかぼうず）」 — uch kunlik ishtiyoq, tez sovib qoladigan odam.",
+    "compounds": [
+      { "word": "三日坊主", "hiragana": "みっかぼうず", "meaning": "tez sovib qoluvchi odam" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "三", "meaning": "uch", "kunReading": "mi", "onReading": "san", "strokes": 3 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "四日",
+    "hiragana": "よっか",
+    "meaning": "oyning to'rtinchi sanasi; to'rt kun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "四日に帰ります。(よっかにかえります。)",
+    "exampleTranslation": "To'rtinchi sanada qaytaman.",
+    "additionalExamples": [
+      { "sentence": "四日かかりました。(よっかかかりました。)", "translation": "To'rt kun vaqt oldi." },
+      { "sentence": "七月四日はアメリカの祝日です。(しちがつよっかはあめりかのしゅくじつです。)", "translation": "To'rtinchi iyul — Amerikaning bayrami." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「よっか」 va 「ようか」 (8-sana) juda o'xshash eshitiladi — telefonda sana aytishda tez-tez adashtiriladi. Farqi: よっ**か** (4) va よ**う**か (8).",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "四", "meaning": "to'rt", "kunReading": "yo, yon", "onReading": "shi", "strokes": 5 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "五日",
+    "hiragana": "いつか",
+    "meaning": "oyning beshinchi sanasi; besh kun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "五日に友達が来ます。(いつかにともだちがきます。)",
+    "exampleTranslation": "Beshinchi sanada do'stim keladi.",
+    "additionalExamples": [
+      { "sentence": "五日休みます。(いつかやすみます。)", "translation": "Besh kun dam olaman." },
+      { "sentence": "五日までに終わります。(いつかまでにおわります。)", "translation": "Beshinchi sanagacha tugataman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Diqqat: 「五日（いつか）」 va \"qachondir\" ma'nosidagi 「いつか」 bir xil eshitiladi. Ikkinchisi bu darsdagi 「いつ（qachon）」 dan yasalgan.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "五", "meaning": "besh", "kunReading": "itsu", "onReading": "go", "strokes": 4 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "六日",
+    "hiragana": "むいか",
+    "meaning": "oyning oltinchi sanasi; olti kun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "六日に会議があります。(むいかにかいぎがあります。)",
+    "exampleTranslation": "Oltinchi sanada yig'ilish bo'ladi.",
+    "additionalExamples": [
+      { "sentence": "六日から仕事です。(むいかからしごとです。)", "translation": "Oltinchi sanadan ish boshlanadi." },
+      { "sentence": "六日間旅行しました。(むいかかんりょこうしました。)", "translation": "Olti kun sayohat qildim." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「ろくにち」 emas, 「むいか」. 「六」ning qadimgi o'qilishi 「む」 — 「六つ（むっつ）」 dagi kabi.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "六", "meaning": "olti", "kunReading": "mu", "onReading": "roku", "strokes": 4 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "七日",
+    "hiragana": "なのか",
+    "meaning": "oyning yettinchi sanasi; yetti kun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "七日に国へ帰ります。(なのかにくにへかえります。)",
+    "exampleTranslation": "Yettinchi sanada vatanimga qaytaman.",
+    "additionalExamples": [
+      { "sentence": "七日かかります。(なのかかかります。)", "translation": "Yetti kun vaqt oladi." },
+      { "sentence": "七月七日は七夕です。(しちがつなのかはたなばたです。)", "translation": "Yettinchi iyul — Tanabata bayrami." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「しちにち」 emas, 「なのか」. 7 iyul — Tanabata (yulduzlar bayrami), yaponlar tilak yozib bambukka osadigan kun.",
+    "compounds": [
+      { "word": "七夕", "hiragana": "たなばた", "meaning": "Tanabata bayrami" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "七", "meaning": "yetti", "kunReading": "nana", "onReading": "shichi", "strokes": 2 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "八日",
+    "hiragana": "ようか",
+    "meaning": "oyning sakkizinchi sanasi; sakkiz kun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "八日に東京へ行きます。(ようかにとうきょうへいきます。)",
+    "exampleTranslation": "Sakkizinchi sanada Tokioga boraman.",
+    "additionalExamples": [
+      { "sentence": "八日まで休みます。(ようかまでやすみます。)", "translation": "Sakkizinchi sanagacha dam olaman." },
+      { "sentence": "八日間かかりました。(ようかかんかかりました。)", "translation": "Sakkiz kun vaqt oldi." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「はちにち」 emas, 「ようか」. 4-sana 「よっか」 bilan chalkashmasligi uchun telefonda ko'pincha \"はちにちの ようか\" deb aniqlashtiriladi.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "八", "meaning": "sakkiz", "kunReading": "ya", "onReading": "hachi", "strokes": 2 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "九日",
+    "hiragana": "ここのか",
+    "meaning": "oyning to'qqizinchi sanasi; to'qqiz kun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "④",
+    "exampleSentence": "九日に試験があります。(ここのかにしけんがあります。)",
+    "exampleTranslation": "To'qqizinchi sanada imtihon bo'ladi.",
+    "additionalExamples": [
+      { "sentence": "九日から働きます。(ここのかからはたらきます。)", "translation": "To'qqizinchi sanadan ishlayman." },
+      { "sentence": "九日は水曜日です。(ここのかはすいようびです。)", "translation": "To'qqizinchi sana chorshanbaga to'g'ri keladi." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「きゅうにち」 emas, 「ここのか」 — sanalar orasidagi eng uzun o'qilish. 「九つ（ここのつ）」 dan kelib chiqqan.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "九", "meaning": "to'qqiz", "kunReading": "kokono", "onReading": "kyuu, ku", "strokes": 2 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "十日",
+    "hiragana": "とおか",
+    "meaning": "oyning o'ninchi sanasi; o'n kun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "十日に帰ります。(とおかにかえります。)",
+    "exampleTranslation": "O'ninchi sanada qaytaman.",
+    "additionalExamples": [
+      { "sentence": "十日かかります。(とおかかかります。)", "translation": "O'n kun vaqt oladi." },
+      { "sentence": "十日までに送ります。(とおかまでにおくります。)", "translation": "O'ninchi sanagacha jo'nataman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「じゅうにち」 emas, 「とおか」. Qadimgi sanoq shu yerda tugaydi: 11-sanadan boshlab oddiy 「～にち」 qoidasi ishlaydi (十一日＝じゅういちにち).",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "十", "meaning": "o'n", "kunReading": "too", "onReading": "juu", "strokes": 2 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "十四日",
+    "hiragana": "じゅうよっか",
+    "meaning": "oyning o'n to'rtinchi sanasi; o'n to'rt kun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "",
+    "exampleSentence": "十四日に会議があります。(じゅうよっかにかいぎがあります。)",
+    "exampleTranslation": "O'n to'rtinchi sanada yig'ilish bo'ladi.",
+    "additionalExamples": [
+      { "sentence": "二月十四日はバレンタインデーです。(にがつじゅうよっかはばれんたいんでーです。)", "translation": "O'n to'rtinchi fevral — Valentin kuni." },
+      { "sentence": "十四日まで休みです。(じゅうよっかまでやすみです。)", "translation": "O'n to'rtinchi sanagacha dam olish." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "11-sanadan keyin qoida oddiylashsa ham, 14 va 24 istisno bo'lib qoladi: ular 「よっか」 shaklini saqlaydi (じゅうよっか, にじゅうよっか).",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "十", "meaning": "o'n", "kunReading": "too", "onReading": "juu", "strokes": 2 },
+      { "kanji": "四", "meaning": "to'rt", "kunReading": "yo, yon", "onReading": "shi", "strokes": 5 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "二十日",
+    "hiragana": "はつか",
+    "meaning": "oyning yigirmanchi sanasi; yigirma kun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "二十日に国へ帰ります。(はつかにくにへかえります。)",
+    "exampleTranslation": "Yigirmanchi sanada vatanimga qaytaman.",
+    "additionalExamples": [
+      { "sentence": "今月の二十日は休みです。(こんげつのはつかはやすみです。)", "translation": "Bu oyning yigirmanchisi dam olish kuni." },
+      { "sentence": "二十日かかります。(はつかかかります。)", "translation": "Yigirma kun vaqt oladi." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「にじゅうにち」 emas, 「はつか」 — mutlaqo istisno o'qilish. 1-darsdagi 「二十歳（はたち）」 bilan bir ildizdan.",
+    "compounds": [
+      { "word": "二十歳", "hiragana": "はたち", "meaning": "yigirma yosh" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "二", "meaning": "ikki", "kunReading": "futa", "onReading": "ni", "strokes": 2 },
+      { "kanji": "十", "meaning": "o'n", "kunReading": "too", "onReading": "juu", "strokes": 2 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "二十四日",
+    "hiragana": "にじゅうよっか",
+    "meaning": "oyning yigirma to'rtinchi sanasi; yigirma to'rt kun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "",
+    "exampleSentence": "十二月二十四日はクリスマスイブです。(じゅうにがつにじゅうよっかはくりすますいぶです。)",
+    "exampleTranslation": "Yigirma to'rtinchi dekabr — Rojdestvo arafasi.",
+    "additionalExamples": [
+      { "sentence": "二十四日に友達が来ます。(にじゅうよっかにともだちがきます。)", "translation": "Yigirma to'rtinchi sanada do'stim keladi." },
+      { "sentence": "二十四日まで働きます。(にじゅうよっかまではたらきます。)", "translation": "Yigirma to'rtinchi sanagacha ishlayman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "14-sana kabi bu ham 「よっか」 shaklini saqlaydi. Ya'ni sanalarda 4 raqami har doim 「よっか」: 四日・十四日・二十四日.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "四", "meaning": "to'rt", "kunReading": "yo, yon", "onReading": "shi", "strokes": 5 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "～日",
+    "hiragana": "～にち",
+    "meaning": "~chi sana; ~kun (11-sanadan boshlab)",
+    "partOfSpeech": "qo'shimcha",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "",
+    "exampleSentence": "十二日に会いましょう。(じゅうににちにあいましょう。)",
+    "exampleTranslation": "O'n ikkinchi sanada uchrashaylik.",
+    "additionalExamples": [
+      { "sentence": "十五日は日曜日です。(じゅうごにちはにちようびです。)", "translation": "O'n beshinchi sana yakshanbaga to'g'ri keladi." },
+      { "sentence": "三十日まで休みです。(さんじゅうにちまでやすみです。)", "translation": "O'ttizinchi sanagacha dam olish." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "11-sanadan boshlab oddiy qoida: son + 「にち」. Istisnolar faqat 14, 20, 24. 1–10 esa butunlay qadimgi sanoq bilan o'qiladi.",
+    "compounds": [
+      { "word": "何日", "hiragana": "なんにち", "meaning": "nechanchi sana" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "何日",
+    "hiragana": "なんにち",
+    "meaning": "oyning nechanchi sanasi; necha kun",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "誕生日は何月何日ですか。(たんじょうびはなんがつなんにちですか。)",
+    "exampleTranslation": "Tug'ilgan kuningiz qaysi oyning nechanchi sanasi?",
+    "additionalExamples": [
+      { "sentence": "きょうは何日ですか。(きょうはなんにちですか。)", "translation": "Bugun oyning nechanchi sanasi?" },
+      { "sentence": "何日かかりますか。(なんにちかかりますか。)", "translation": "Necha kun vaqt oladi?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "4-darsdagi 「何曜日（qaysi kun）」 bilan farqi muhim: 「何日」 — oyning sanasi, 「何曜日」 — dushanba/seshanba.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "何", "meaning": "nima, necha", "kunReading": "nani, nan", "onReading": "ka", "strokes": 7 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "いつ",
+    "hiragana": "いつ",
+    "meaning": "qachon",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "いつ日本へ来ましたか。(いつにほんへきましたか。)",
+    "exampleTranslation": "Yaponiyaga qachon kelgansiz?",
+    "additionalExamples": [
+      { "sentence": "いつ国へ帰りますか。(いつくにへかえりますか。)", "translation": "Vataningizga qachon qaytasiz?" },
+      { "sentence": "いつでもいいです。(いつでもいいです。)", "translation": "Istalgan vaqt bo'laveradi." }
+    ],
+    "synonyms": ["何時"],
+    "antonyms": [],
+    "nuance": "Muhim qoida: 「いつ」 dan keyin 「に」 QO'YILMAYDI — 「いつに行きますか」 noto'g'ri, 「いつ行きますか」 to'g'ri.",
+    "compounds": [
+      { "word": "いつか", "hiragana": "いつか", "meaning": "qachondir" },
+      { "word": "いつも", "hiragana": "いつも", "meaning": "doim, har doim" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "誕生日",
+    "hiragana": "たんじょうび",
+    "meaning": "tug'ilgan kun",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "③",
+    "exampleSentence": "誕生日は九月十日です。(たんじょうびはくがつとおかです。)",
+    "exampleTranslation": "Tug'ilgan kunim o'ninchi sentabr.",
+    "additionalExamples": [
+      { "sentence": "誕生日はいつですか。(たんじょうびはいつですか。)", "translation": "Tug'ilgan kuningiz qachon?" },
+      { "sentence": "誕生日にプレゼントをもらいました。(たんじょうびにぷれぜんとをもらいました。)", "translation": "Tug'ilgan kunimda sovg'a oldim." }
+    ],
+    "synonyms": ["バースデー"],
+    "antonyms": [],
+    "nuance": "「誕生（tug'ilish）」＋「日（kun）」. Tabrik — 「お誕生日おめでとうございます」. Hurmat bilan 「お誕生日」 deyiladi.",
+    "compounds": [
+      { "word": "誕生", "hiragana": "たんじょう", "meaning": "tug'ilish" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "誕", "meaning": "tug'ilish", "kunReading": "-", "onReading": "tan", "strokes": 15 },
+      { "kanji": "生", "meaning": "hayot, tug'ilmoq", "kunReading": "i, u", "onReading": "sei, shou", "strokes": 5 },
+      { "kanji": "日", "meaning": "quyosh, kun", "kunReading": "hi, ka", "onReading": "nichi", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "普通",
+    "hiragana": "ふつう",
+    "meaning": "oddiy poyezd (har bekatda to'xtaydigan); odatdagi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "普通で行きます。(ふつうでいきます。)",
+    "exampleTranslation": "Oddiy poyezdda boraman.",
+    "additionalExamples": [
+      { "sentence": "普通は各駅に止まります。(ふつうはかくえきにとまります。)", "translation": "Oddiy poyezd har bekatda to'xtaydi." },
+      { "sentence": "普通の日は忙しいです。(ふつうのひはいそがしいです。)", "translation": "Oddiy kunlarda bandman." }
+    ],
+    "synonyms": ["各駅停車"],
+    "antonyms": ["急行", "特急"],
+    "nuance": "Ikki ma'noli: poyezd turi va \"oddiy, odatdagi\" sifati. Poyezd ma'nosida 「各駅停車（かくえきていしゃ）」 deb ham ataladi — har bekatda to'xtaydi.",
+    "compounds": [
+      { "word": "各駅停車", "hiragana": "かくえきていしゃ", "meaning": "har bekatda to'xtovchi poyezd" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "普", "meaning": "umumiy, oddiy", "kunReading": "-", "onReading": "fu", "strokes": 12 },
+      { "kanji": "通", "meaning": "o'tmoq, qatnamoq", "kunReading": "too, kayo", "onReading": "tsuu", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "急行",
+    "hiragana": "きゅうこう",
+    "meaning": "tezyurar poyezd (ba'zi bekatlarda to'xtaydi)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "急行で行きます。(きゅうこうでいきます。)",
+    "exampleTranslation": "Tezyurar poyezdda boraman.",
+    "additionalExamples": [
+      { "sentence": "急行は次の駅に止まりません。(きゅうこうはつぎのえきにとまりません。)", "translation": "Tezyurar poyezd keyingi bekatda to'xtamaydi." },
+      { "sentence": "急行のほうが速いです。(きゅうこうのほうがはやいです。)", "translation": "Tezyurar poyezd tezroq." }
+    ],
+    "synonyms": [],
+    "antonyms": ["普通"],
+    "nuance": "「急（shoshilinch）」＋「行（yurish）」. Tezlik tartibi: 普通 → 急行 → 特急. 「急行」 uchun qo'shimcha haq odatda olinmaydi, 「特急」 uchun esa olinadi.",
+    "compounds": [
+      { "word": "急ぐ", "hiragana": "いそぐ", "meaning": "shoshilmoq" },
+      { "word": "救急車", "hiragana": "きゅうきゅうしゃ", "meaning": "tez yordam mashinasi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "急", "meaning": "shoshilinch, tez", "kunReading": "iso", "onReading": "kyuu", "strokes": 9 },
+      { "kanji": "行", "meaning": "bormoq, yurmoq", "kunReading": "i, yu", "onReading": "kou", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "特急",
+    "hiragana": "とっきゅう",
+    "meaning": "ekspress poyezd (eng kam bekatda to'xtaydi)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "特急で大阪へ行きます。(とっきゅうでおおさかへいきます。)",
+    "exampleTranslation": "Osakaga ekspress poyezdda boraman.",
+    "additionalExamples": [
+      { "sentence": "特急は九時に出ます。(とっきゅうはくじにでます。)", "translation": "Ekspress soat to'qqizda jo'naydi." },
+      { "sentence": "特急券が必要です。(とっきゅうけんがひつようです。)", "translation": "Ekspress chiptasi kerak." }
+    ],
+    "synonyms": [],
+    "antonyms": ["普通"],
+    "nuance": "「特別急行」 dan qisqargan. Oddiy chiptadan tashqari 「特急券」 (ekspress uchun qo'shimcha chipta) sotib olish kerak.",
+    "compounds": [
+      { "word": "特別", "hiragana": "とくべつ", "meaning": "maxsus" },
+      { "word": "特急券", "hiragana": "とっきゅうけん", "meaning": "ekspress chiptasi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "特", "meaning": "maxsus", "kunReading": "-", "onReading": "toku", "strokes": 10 },
+      { "kanji": "急", "meaning": "shoshilinch, tez", "kunReading": "iso", "onReading": "kyuu", "strokes": 9 }
+    ]
+  },
+  {
+    "japaneseWord": "次の",
+    "hiragana": "つぎの",
+    "meaning": "keyingi, navbatdagi, kelasi",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "②",
+    "exampleSentence": "次の電車は九時です。(つぎのでんしゃはくじです。)",
+    "exampleTranslation": "Keyingi poyezd soat to'qqizda.",
+    "additionalExamples": [
+      { "sentence": "次の駅で降ります。(つぎのえきでおります。)", "translation": "Keyingi bekatda tushaman." },
+      { "sentence": "次のバスは何時ですか。(つぎのばすはなんじですか。)", "translation": "Keyingi avtobus soat nechada?" }
+    ],
+    "synonyms": ["今度の"],
+    "antonyms": ["前の"],
+    "nuance": "「次」 — ot, undan keyin 「の」 qo'shilib ot aniqlaydi. Bekatlarda e'lon shu shaklda beriladi: 「次は東京、東京です」.",
+    "compounds": [
+      { "word": "次", "hiragana": "つぎ", "meaning": "keyingi, navbat" },
+      { "word": "目次", "hiragana": "もくじ", "meaning": "mundarija" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "次", "meaning": "keyingi, navbat", "kunReading": "tsugi", "onReading": "ji", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "どういたしまして",
+    "hiragana": "どういたしまして",
+    "meaning": "Arzimaydi. / Hechqisi yo'q.",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "",
+    "exampleSentence": "「ありがとうございました。」「どういたしまして。」",
+    "exampleTranslation": "\"Rahmat.\" — \"Arzimaydi.\"",
+    "additionalExamples": [
+      { "sentence": "いいえ、どういたしまして。(いいえ、どういたしまして。)", "translation": "Yo'q, arzimaydi." },
+      { "sentence": "どういたしまして。また どうぞ。(どういたしまして。またどうぞ。)", "translation": "Arzimaydi. Yana keling." }
+    ],
+    "synonyms": ["いいえ", "とんでもないです"],
+    "antonyms": ["ありがとうございます"],
+    "nuance": "Minnatdorchilikka javob. 2-darsdagi 「いいえ」 ham shu ma'noda ishlatiladi. Yaqin kishilar orasida ko'proq 「ううん」 yoki 「いえいえ」 deyiladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "～番線",
+    "hiragana": "～ばんせん",
+    "meaning": "~chi yo'l (temir yo'l platformasi)",
+    "partOfSpeech": "qo'shimcha",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "",
+    "exampleSentence": "特急は三番線から出ます。(とっきゅうはさんばんせんからでます。)",
+    "exampleTranslation": "Ekspress uchinchi yo'ldan jo'naydi.",
+    "additionalExamples": [
+      { "sentence": "何番線ですか。(なんばんせんですか。)", "translation": "Nechanchi yo'ldan?" },
+      { "sentence": "二番線に電車が来ます。(にばんせんにでんしゃがきます。)", "translation": "Ikkinchi yo'lga poyezd kelyapti." }
+    ],
+    "synonyms": ["ホーム"],
+    "antonyms": [],
+    "nuance": "4-darsdagi 「番号」 dagi 「番」＋「線（yo'l, chiziq）」. Platformaning o'zi 「ホーム」 deyiladi (\"platform\" dan qisqargan).",
+    "compounds": [
+      { "word": "ホーム", "hiragana": "ホーム", "meaning": "platforma" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "番", "meaning": "navbat, raqam", "kunReading": "-", "onReading": "ban", "strokes": 12 },
+      { "kanji": "線", "meaning": "chiziq, yo'nalish", "kunReading": "-", "onReading": "sen", "strokes": 15 }
+    ]
+  },
+  {
+    "japaneseWord": "博多",
+    "hiragana": "はかた",
+    "meaning": "Hakata (Kyushudagi shahar, Fukuokaning markazi)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "",
+    "exampleSentence": "新幹線で博多へ行きます。(しんかんせんではかたへいきます。)",
+    "exampleTranslation": "Hakataga shinkansenda boraman.",
+    "additionalExamples": [
+      { "sentence": "博多は九州の町です。(はかたはきゅうしゅうのまちです。)", "translation": "Hakata — Kyushudagi shahar." },
+      { "sentence": "博多のラーメンは有名です。(はかたのらーめんはゆうめいです。)", "translation": "Hakata ramyani mashhur." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Tokaydo-Sanyo shinkansen yo'nalishining oxirgi bekati. Hakata ramyani (tonkotsu) butun Yaponiyada mashhur.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "博", "meaning": "keng, bilimdon", "kunReading": "-", "onReading": "haku, baku", "strokes": 12 },
+      { "kanji": "多", "meaning": "ko'p", "kunReading": "oo", "onReading": "ta", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "伏見",
+    "hiragana": "ふしみ",
+    "meaning": "Fushimi (Kiotodagi tuman)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "",
+    "exampleSentence": "伏見は京都にあります。(ふしみはきょうとにあります。)",
+    "exampleTranslation": "Fushimi Kiotoda joylashgan.",
+    "additionalExamples": [
+      { "sentence": "伏見へ行きました。(ふしみへいきました。)", "translation": "Fushimiga bordim." },
+      { "sentence": "伏見の神社は有名です。(ふしみのじんじゃはゆうめいです。)", "translation": "Fushimidagi ibodatxona mashhur." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Fushimi-Inari ibodatxonasi bilan mashhur — mingdan ortiq qizil torii darvozalari shu yerda. Sake ishlab chiqarish markazi ham.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "伏", "meaning": "yotmoq, bosh egmoq", "kunReading": "fu", "onReading": "fuku", "strokes": 6 },
+      { "kanji": "見", "meaning": "ko'rmoq", "kunReading": "mi", "onReading": "ken", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "甲子園",
+    "hiragana": "こうしえん",
+    "meaning": "Koshien (Osaka yaqinidagi shahar va stadion)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "③",
+    "exampleSentence": "甲子園へ行きました。(こうしえんへいきました。)",
+    "exampleTranslation": "Koshienga bordim.",
+    "additionalExamples": [
+      { "sentence": "甲子園で野球を見ます。(こうしえんでやきゅうをみます。)", "translation": "Koshienda beysbol ko'raman." },
+      { "sentence": "甲子園は兵庫県にあります。(こうしえんはひょうごけんにあります。)", "translation": "Koshien Hyogo prefekturasida." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Yaponiyaning eng mashhur beysbol stadioni. Har yozda maktablararo beysbol chempionati shu yerda o'tadi va butun mamlakat uni kuzatadi.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "甲", "meaning": "birinchi; qobiq", "kunReading": "-", "onReading": "kou, kan", "strokes": 5 },
+      { "kanji": "子", "meaning": "bola", "kunReading": "ko", "onReading": "shi, su", "strokes": 3 },
+      { "kanji": "園", "meaning": "bog', maydon", "kunReading": "sono", "onReading": "en", "strokes": 13 }
+    ]
+  },
+  {
+    "japaneseWord": "大阪城",
+    "hiragana": "おおさかじょう",
+    "meaning": "Osaka qal'asi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "",
+    "exampleSentence": "地下鉄で大阪城へ行きます。(ちかてつでおおさかじょうへいきます。)",
+    "exampleTranslation": "Osaka qal'asiga metroda boraman.",
+    "additionalExamples": [
+      { "sentence": "大阪城を見ました。(おおさかじょうをみました。)", "translation": "Osaka qal'asini ko'rdim." },
+      { "sentence": "大阪城は有名です。(おおさかじょうはゆうめいです。)", "translation": "Osaka qal'asi mashhur." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「城（しろ）」 — qal'a; nom tarkibida 「じょう」 deb o'qiladi. XVI asrda Toyotomi Hideyoshi qurdirgan, Osakaning asosiy ramzi.",
+    "compounds": [
+      { "word": "城", "hiragana": "しろ", "meaning": "qal'a" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "大", "meaning": "katta", "kunReading": "oo", "onReading": "dai", "strokes": 3 },
+      { "kanji": "阪", "meaning": "qiyalik (Osaka nomida)", "kunReading": "saka", "onReading": "han", "strokes": 7 },
+      { "kanji": "城", "meaning": "qal'a", "kunReading": "shiro", "onReading": "jou", "strokes": 9 }
+    ]
+  }
+]
