@@ -1,0 +1,1135 @@
+[
+  {
+    "japaneseWord": "切ります",
+    "hiragana": "きります",
+    "meaning": "kesmoq (pichoqda), qirqmoq (qaychida)",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "③",
+    "teForm": "切って",
+    "taForm": "切った",
+    "naiForm": "切らない",
+    "masuForm": "切ります",
+    "exampleSentence": "ナイフでパンを切ります。(ないふでぱんをきります。)",
+    "exampleTranslation": "Pichoq bilan nonni kesaman.",
+    "additionalExamples": [
+      { "sentence": "はさみで紙を切りました。(はさみでかみをきりました。)", "translation": "Qaychi bilan qog'ozni qirqdim." },
+      { "sentence": "野菜を小さく切ってください。(やさいをちいさくきってください。)", "translation": "Sabzavotni mayda qilib to'g'rang." }
+    ],
+    "synonyms": ["カットする"],
+    "antonyms": [],
+    "nuance": "Bu darsda 「で」 yuklamasining yangi vazifasi kiritiladi — vosita, ya'ni nima bilan qilinishi: 「ナイフで切ります」. Diqqat: 「切る」 ko'rinishi 「-る」 bilan tugasa ham, birinchi guruh fe'li (切ります, 切って).",
+    "compounds": [
+      { "word": "切符", "hiragana": "きっぷ", "meaning": "chipta" },
+      { "word": "大切", "hiragana": "たいせつ", "meaning": "muhim, qadrli" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "切", "meaning": "kesmoq", "kunReading": "ki", "onReading": "setsu, sai", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "送ります",
+    "hiragana": "おくります",
+    "meaning": "jo'natmoq, yubormoq; kuzatib qo'ymoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "teForm": "送って",
+    "taForm": "送った",
+    "naiForm": "送らない",
+    "masuForm": "送ります",
+    "exampleSentence": "友達に手紙を送ります。(ともだちにてがみをおくります。)",
+    "exampleTranslation": "Do'stimga xat jo'nataman.",
+    "additionalExamples": [
+      { "sentence": "国へ荷物を送りました。(くにへにもつをおくりました。)", "translation": "Vatanimga yuk jo'natdim." },
+      { "sentence": "メールで写真を送ります。(めーるでしゃしんをおくります。)", "translation": "Rasmni pochta orqali yuboraman." }
+    ],
+    "synonyms": ["出します"],
+    "antonyms": ["もらいます"],
+    "nuance": "Kimga — 「に」, qayerga — 「へ」, nima orqali — 「で」. Ikkinchi ma'nosi ham bor: mehmonni kuzatib qo'ymoq (「駅まで送ります」).",
+    "compounds": [
+      { "word": "見送り", "hiragana": "みおくり", "meaning": "kuzatib qo'yish" },
+      { "word": "送料", "hiragana": "そうりょう", "meaning": "yetkazib berish haqi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "送", "meaning": "jo'natmoq, kuzatmoq", "kunReading": "oku", "onReading": "sou", "strokes": 9 }
+    ]
+  },
+  {
+    "japaneseWord": "あげます",
+    "hiragana": "あげます",
+    "meaning": "bermoq, sovg'a qilmoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "teForm": "あげて",
+    "taForm": "あげた",
+    "naiForm": "あげない",
+    "masuForm": "あげます",
+    "exampleSentence": "友達に花をあげます。(ともだちにはなをあげます。)",
+    "exampleTranslation": "Do'stimga gul beraman.",
+    "additionalExamples": [
+      { "sentence": "母にプレゼントをあげました。(ははにぷれぜんとをあげました。)", "translation": "Onamga sovg'a berdim." },
+      { "sentence": "だれにあげますか。(だれにあげますか。)", "translation": "Kimga berasiz?" }
+    ],
+    "synonyms": ["差し上げます"],
+    "antonyms": ["もらいます"],
+    "nuance": "Muhim cheklov: 「あげます」 faqat MEN yoki men tomonimdan boshqaga berilganda ishlatiladi. Kimdir MENGA bergan bo'lsa 「あげます」 emas, 「くれます」 deyiladi (keyingi darsda). Hurmatli shakli — 「差し上げます」.",
+    "compounds": [
+      { "word": "差し上げます", "hiragana": "さしあげます", "meaning": "bermoq (hurmatli)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "もらいます",
+    "hiragana": "もらいます",
+    "meaning": "olmoq (birovdan)",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "teForm": "もらって",
+    "taForm": "もらった",
+    "naiForm": "もらわない",
+    "masuForm": "もらいます",
+    "exampleSentence": "友達に花をもらいました。(ともだちにはなをもらいました。)",
+    "exampleTranslation": "Do'stimdan gul oldim.",
+    "additionalExamples": [
+      { "sentence": "誕生日にプレゼントをもらいました。(たんじょうびにぷれぜんとをもらいました。)", "translation": "Tug'ilgan kunimda sovg'a oldim." },
+      { "sentence": "だれにもらいましたか。(だれにもらいましたか。)", "translation": "Kimdan oldingiz?" }
+    ],
+    "synonyms": ["いただきます"],
+    "antonyms": ["あげます"],
+    "nuance": "Kimdan olingani 「に」 bilan beriladi — o'zbekchadagi \"-dan\" ga aldanmang: 「友達**に**もらいました」. 「から」 ham mumkin, ayniqsa tashkilotdan olinganda. Kamtarona shakli — 「いただきます」.",
+    "compounds": [
+      { "word": "いただきます", "hiragana": "いただきます", "meaning": "olmoq (kamtarona)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "貸します",
+    "hiragana": "かします",
+    "meaning": "qarzga bermoq, berib turmoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "teForm": "貸して",
+    "taForm": "貸した",
+    "naiForm": "貸さない",
+    "masuForm": "貸します",
+    "exampleSentence": "友達にお金を貸しました。(ともだちにおかねをかしました。)",
+    "exampleTranslation": "Do'stimga pul qarz berdim.",
+    "additionalExamples": [
+      { "sentence": "傘を貸してください。(かさをかしてください。)", "translation": "Soyaboningizni berib turing." },
+      { "sentence": "辞書を貸しましょうか。(じしょをかしましょうか。)", "translation": "Lug'atimni berib turaymi?" }
+    ],
+    "synonyms": [],
+    "antonyms": ["借ります"],
+    "nuance": "Bu darsdagi eng chalkash juftlik: 「貸します」 — MEN beraman, 「借ります」 — MEN olaman. Yodlash usuli: 貸す — 「か**し**ます」 va \"shu menda edi\"; 借りる — 「か**り**ます」 va \"menga keldi\".",
+    "compounds": [
+      { "word": "貸し出し", "hiragana": "かしだし", "meaning": "ijaraga berish, kitob berish" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "貸", "meaning": "qarzga bermoq", "kunReading": "ka", "onReading": "tai", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "借ります",
+    "hiragana": "かります",
+    "meaning": "qarzga olmoq, olib turmoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "teForm": "借りて",
+    "taForm": "借りた",
+    "naiForm": "借りない",
+    "masuForm": "借ります",
+    "exampleSentence": "図書館で本を借りました。(としょかんでほんをかりました。)",
+    "exampleTranslation": "Kutubxonadan kitob oldim.",
+    "additionalExamples": [
+      { "sentence": "銀行にお金を借ります。(ぎんこうにおかねをかります。)", "translation": "Bankdan qarz olaman." },
+      { "sentence": "トイレを借りてもいいですか。(といれをかりてもいいですか。)", "translation": "Hojatxonangizdan foydalansam bo'ladimi?" }
+    ],
+    "synonyms": ["レンタルする"],
+    "antonyms": ["貸します"],
+    "nuance": "「貸します」ning ziddi. Diqqat: bu ikkinchi guruh fe'li (借りる → 借ります, 借りて), 「切る」 dan farqli. Kimdan olingani 「に」 yoki 「から」 bilan.",
+    "compounds": [
+      { "word": "借り", "hiragana": "かり", "meaning": "qarz, minnatdorchilik" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "借", "meaning": "qarzga olmoq", "kunReading": "ka", "onReading": "shaku", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "教えます",
+    "hiragana": "おしえます",
+    "meaning": "o'rgatmoq, saboq bermoq; aytib bermoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "teForm": "教えて",
+    "taForm": "教えた",
+    "naiForm": "教えない",
+    "masuForm": "教えます",
+    "exampleSentence": "先生は日本語を教えます。(せんせいはにほんごをおしえます。)",
+    "exampleTranslation": "Ustoz yapon tilidan dars beradi.",
+    "additionalExamples": [
+      { "sentence": "電話番号を教えてください。(でんわばんごうをおしえてください。)", "translation": "Telefon raqamingizni ayting." },
+      { "sentence": "友達に漢字を教えました。(ともだちにかんじをおしえました。)", "translation": "Do'stimga iyeroglif o'rgatdim." }
+    ],
+    "synonyms": [],
+    "antonyms": ["習います"],
+    "nuance": "Ikki ma'noli: dars bermoq va shunchaki ma'lumot aytib bermoq (「道を教えてください」 — yo'lni ko'rsating). 1-darsdagi 「教師」 va 3-darsdagi 「教室」 shu ildizdan.",
+    "compounds": [
+      { "word": "教室", "hiragana": "きょうしつ", "meaning": "sinfxona" },
+      { "word": "教師", "hiragana": "きょうし", "meaning": "o'qituvchi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "教", "meaning": "o'rgatmoq", "kunReading": "oshi, oso", "onReading": "kyou", "strokes": 11 }
+    ]
+  },
+  {
+    "japaneseWord": "習います",
+    "hiragana": "ならいます",
+    "meaning": "o'rganmoq, saboq olmoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "③",
+    "teForm": "習って",
+    "taForm": "習った",
+    "naiForm": "習わない",
+    "masuForm": "習います",
+    "exampleSentence": "先生に日本語を習います。(せんせいににほんごをならいます。)",
+    "exampleTranslation": "Ustozdan yapon tilini o'rganaman.",
+    "additionalExamples": [
+      { "sentence": "ピアノを習っています。(ぴあのをならっています。)", "translation": "Pianino o'rganyapman." },
+      { "sentence": "だれに習いましたか。(だれにならいましたか。)", "translation": "Kimdan o'rgandingiz?" }
+    ],
+    "synonyms": ["学びます"],
+    "antonyms": ["教えます"],
+    "nuance": "4-darsdagi 「勉強します」 dan farqi: 「習う」 — USTOZDAN o'rganish (kimdan — 「に」), 「勉強する」 — mustaqil o'qish. Shuning uchun 「独学で習う」 deyilmaydi.",
+    "compounds": [
+      { "word": "習慣", "hiragana": "しゅうかん", "meaning": "odat, urf" },
+      { "word": "練習", "hiragana": "れんしゅう", "meaning": "mashq" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "習", "meaning": "o'rganmoq, mashq qilmoq", "kunReading": "nara", "onReading": "shuu", "strokes": 11 }
+    ]
+  },
+  {
+    "japaneseWord": "かけます",
+    "hiragana": "かけます",
+    "meaning": "qo'ng'iroq qilmoq [電話を～]",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "②",
+    "teForm": "かけて",
+    "taForm": "かけた",
+    "naiForm": "かけない",
+    "masuForm": "かけます",
+    "exampleSentence": "友達に電話をかけます。(ともだちにでんわをかけます。)",
+    "exampleTranslation": "Do'stimga qo'ng'iroq qilaman.",
+    "additionalExamples": [
+      { "sentence": "国に電話をかけました。(くににでんわをかけました。)", "translation": "Vatanimga qo'ng'iroq qildim." },
+      { "sentence": "あとで電話をかけます。(あとででんわをかけます。)", "translation": "Keyinroq qo'ng'iroq qilaman." }
+    ],
+    "synonyms": ["電話します"],
+    "antonyms": [],
+    "nuance": "「かける」 juda ko'p ma'noli fe'l: 電話をかける (qo'ng'iroq), めがねをかける (ko'zoynak taqmoq), 音楽をかける (musiqa qo'ymoq), 時間をかける (vaqt sarflamoq). Bu darsda faqat telefon ma'nosi.",
+    "compounds": [
+      { "word": "電話", "hiragana": "でんわ", "meaning": "telefon" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "手",
+    "hiragana": "て",
+    "meaning": "qo'l",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "手で食べます。(てでたべます。)",
+    "exampleTranslation": "Qo'l bilan yeyman.",
+    "additionalExamples": [
+      { "sentence": "手を洗ってください。(てをあらってください。)", "translation": "Qo'lingizni yuving." },
+      { "sentence": "手が大きいですね。(てがおおきいですね。)", "translation": "Qo'lingiz katta ekan." }
+    ],
+    "synonyms": [],
+    "antonyms": ["足"],
+    "nuance": "「手」 yaponchada kaftdan yelkagacha bo'lgan qismni bildiradi — o'zbekchadagi \"qo'l\" bilan bir xil. 3-darsdagi 「お手洗い」 va 6-darsdagi 「手紙」 shu belgidan.",
+    "compounds": [
+      { "word": "手紙", "hiragana": "てがみ", "meaning": "xat" },
+      { "word": "上手", "hiragana": "じょうず", "meaning": "mohir, ustasi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "手", "meaning": "qo'l", "kunReading": "te", "onReading": "shu", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "はし",
+    "hiragana": "はし",
+    "meaning": "hashi (ovqat yeyishda ishlatiladigan cho'p)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "はしでごはんを食べます。(はしでごはんをたべます。)",
+    "exampleTranslation": "Hashi bilan ovqat yeyman.",
+    "additionalExamples": [
+      { "sentence": "はしを使えますか。(はしをつかえますか。)", "translation": "Hashidan foydalana olasizmi?" },
+      { "sentence": "はしをください。(はしをください。)", "translation": "Hashi bering." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Uchta omonim bor, faqat ohang bilan farqlanadi: 箸（はし①） — ovqat cho'pi, 橋（はし②） — ko'prik, 端（はし⓪） — chekka. Odob: hashini guruchga tik sanchish taqiqlanadi — bu dafn marosimini eslatadi.",
+    "compounds": [
+      { "word": "わりばし", "hiragana": "わりばし", "meaning": "bir martalik hashi" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "スプーン",
+    "hiragana": "スプーン",
+    "meaning": "qoshiq",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "②",
+    "exampleSentence": "スプーンでスープを飲みます。(すぷーんですーぷをのみます。)",
+    "exampleTranslation": "Qoshiq bilan sup ichaman.",
+    "additionalExamples": [
+      { "sentence": "スプーンをください。(すぷーんをください。)", "translation": "Qoshiq bering." },
+      { "sentence": "スプーンで食べてもいいです。(すぷーんでたべてもいいです。)", "translation": "Qoshiqda yesangiz ham bo'ladi." }
+    ],
+    "synonyms": ["さじ"],
+    "antonyms": [],
+    "nuance": "Eski yaponcha nomi 「さじ」 hozir asosan o'lchov ma'nosida qoladi: 「大さじ」 (osh qoshiq), 「小さじ」 (choy qoshiq) — retseptlarda uchraydi.",
+    "compounds": [
+      { "word": "大さじ", "hiragana": "おおさじ", "meaning": "osh qoshiq (o'lchov)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "ナイフ",
+    "hiragana": "ナイフ",
+    "meaning": "pichoq",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "ナイフでパンを切ります。(ないふでぱんをきります。)",
+    "exampleTranslation": "Pichoq bilan nonni kesaman.",
+    "additionalExamples": [
+      { "sentence": "ナイフとフォークで食べます。(ないふとふぉーくでたべます。)", "translation": "Pichoq va vilka bilan yeyman." },
+      { "sentence": "このナイフはよく切れます。(このないふはよくきれます。)", "translation": "Bu pichoq yaxshi kesadi." }
+    ],
+    "synonyms": ["包丁"],
+    "antonyms": [],
+    "nuance": "Stol pichog'i — 「ナイフ」, oshxonadagi katta pichoq esa 「包丁（ほうちょう）」 deyiladi; ikkalasi almashtirilmaydi.",
+    "compounds": [
+      { "word": "包丁", "hiragana": "ほうちょう", "meaning": "oshxona pichog'i" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "フォーク",
+    "hiragana": "フォーク",
+    "meaning": "sanchqi, vilka",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "フォークでサラダを食べます。(ふぉーくでさらだをたべます。)",
+    "exampleTranslation": "Vilka bilan salat yeyman.",
+    "additionalExamples": [
+      { "sentence": "フォークをください。(ふぉーくをください。)", "translation": "Vilka bering." },
+      { "sentence": "スプーンとフォークがあります。(すぷーんとふぉーくがあります。)", "translation": "Qoshiq va vilka bor." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「フォ」 tovushi qadimgi yaponchada yo'q edi — shuning uchun kichik 「ォ」 bilan yoziladi. Bunday yozuv faqat o'zlashma so'zlarda uchraydi (ファ, フィ, フェ, フォ).",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "はさみ",
+    "hiragana": "はさみ",
+    "meaning": "qaychi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "はさみで紙を切ります。(はさみでかみをきります。)",
+    "exampleTranslation": "Qaychi bilan qog'ozni qirqaman.",
+    "additionalExamples": [
+      { "sentence": "はさみを貸してください。(はさみをかしてください。)", "translation": "Qaychingizni berib turing." },
+      { "sentence": "はさみはどこですか。(はさみはどこですか。)", "translation": "Qaychi qayerda?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「はさむ（qisib ushlamoq）」 fe'lidan yasalgan. Kanji shakli 「鋏」 kam ishlatiladi, odatda kana bilan yoziladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "ファクス",
+    "hiragana": "ファクス",
+    "meaning": "faks",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "①",
+    "exampleSentence": "ファクスで書類を送ります。(ふぁくすでしょるいをおくります。)",
+    "exampleTranslation": "Hujjatni faks orqali jo'nataman.",
+    "additionalExamples": [
+      { "sentence": "ファクスをもらいました。(ふぁくすをもらいました。)", "translation": "Faks oldim." },
+      { "sentence": "ファクス番号を教えてください。(ふぁくすばんごうをおしえてください。)", "translation": "Faks raqamingizni ayting." }
+    ],
+    "synonyms": ["ＦＡＸ"],
+    "antonyms": [],
+    "nuance": "「ファックス」 shaklida ham yoziladi. Yaponiyada faks boshqa mamlakatlarga qaraganda ancha uzoq saqlanib qoldi — idoralarda hozir ham ishlatiladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "ワープロ",
+    "hiragana": "ワープロ",
+    "meaning": "matn protsessori (matn yozish mashinasi)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "⓪",
+    "exampleSentence": "ワープロでレポートを書きます。(わーぷろでれぽーとをかきます。)",
+    "exampleTranslation": "Hisobotni matn protsessorida yozaman.",
+    "additionalExamples": [
+      { "sentence": "ワープロを使いますか。(わーぷろをつかいますか。)", "translation": "Matn protsessoridan foydalanasizmi?" },
+      { "sentence": "ワープロで手紙を書きました。(わーぷろでてがみをかきました。)", "translation": "Xatni matn protsessorida yozdim." }
+    ],
+    "synonyms": ["パソコン"],
+    "antonyms": [],
+    "nuance": "「ワードプロセッサー」 dan qisqargan. 1980–90-yillarda keng tarqalgan alohida qurilma edi; hozir kompyuter bilan almashtirilgan, shuning uchun so'z ham eskirgan.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "パソコン",
+    "hiragana": "パソコン",
+    "meaning": "shaxsiy kompyuter",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "パソコンでレポートを書きます。(ぱそこんでれぽーとをかきます。)",
+    "exampleTranslation": "Hisobotni kompyuterda yozaman.",
+    "additionalExamples": [
+      { "sentence": "新しいパソコンを買いました。(あたらしいぱそこんをかいました。)", "translation": "Yangi kompyuter sotib oldim." },
+      { "sentence": "パソコンで映画を見ます。(ぱそこんでえいがをみます。)", "translation": "Kompyuterda kino ko'raman." }
+    ],
+    "synonyms": ["コンピューター"],
+    "antonyms": [],
+    "nuance": "「パーソナルコンピューター」 dan qisqargan — yaponcha qisqartirish odatiga yaxshi misol (uzun o'zlashmaning har qismidan ikki bo'g'in olinadi). 2-darsdagi 「コンピューター」 dan kundalik nutqda ko'proq ishlatiladi.",
+    "compounds": [
+      { "word": "ノートパソコン", "hiragana": "ノートパソコン", "meaning": "noutbuk" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "パンチ",
+    "hiragana": "パンチ",
+    "meaning": "perforator, teshik ochgich (kantselyariya)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "①",
+    "exampleSentence": "パンチで紙に穴を開けます。(ぱんちでかみにあなをあけます。)",
+    "exampleTranslation": "Perforator bilan qog'ozga teshik ochaman.",
+    "additionalExamples": [
+      { "sentence": "パンチを貸してください。(ぱんちをかしてください。)", "translation": "Perforatoringizni berib turing." },
+      { "sentence": "パンチは事務所にあります。(ぱんちはじむしょにあります。)", "translation": "Perforator ofisda." }
+    ],
+    "synonyms": ["穴あけパンチ"],
+    "antonyms": [],
+    "nuance": "Aniqroq nomi 「穴あけパンチ」. Diqqat: 「パンチ」 boks zarbasi ma'nosida ham keladi — kontekst ajratadi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "ホッチキス",
+    "hiragana": "ホッチキス",
+    "meaning": "stepler",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "①",
+    "exampleSentence": "ホッチキスで紙を留めます。(ほっちきすでかみをとめます。)",
+    "exampleTranslation": "Stepler bilan qog'ozlarni biriktiraman.",
+    "additionalExamples": [
+      { "sentence": "ホッチキスはありますか。(ほっちきすはありますか。)", "translation": "Stepler bormi?" },
+      { "sentence": "ホッチキスで留めてください。(ほっちきすでとめてください。)", "translation": "Stepler bilan biriktiring." }
+    ],
+    "synonyms": ["ステープラー"],
+    "antonyms": [],
+    "nuance": "Yaponiyaga birinchi steplerni olib kelgan amerika firmasi \"Hotchkiss\" nomidan olingan — inglizchada bunday so'z yo'q, u yerda \"stapler\" deyiladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "セロテープ",
+    "hiragana": "セロテープ",
+    "meaning": "skoch, yopishqoq lenta",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "③",
+    "exampleSentence": "セロテープで紙を貼ります。(せろてーぷでかみをはります。)",
+    "exampleTranslation": "Skoch bilan qog'ozni yopishtiraman.",
+    "additionalExamples": [
+      { "sentence": "セロテープを貸してください。(せろてーぷをかしてください。)", "translation": "Skochingizni berib turing." },
+      { "sentence": "セロテープで留めました。(せろてーぷでとめました。)", "translation": "Skoch bilan yopishtirdim." }
+    ],
+    "synonyms": ["テープ"],
+    "antonyms": [],
+    "nuance": "\"Cellophane tape\" dan. 2-darsdagi 「テープ」 (audio tasma) bilan bir so'zdan, lekin bu yerda yopishqoq lenta ma'nosida.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "消しゴム",
+    "hiragana": "けしゴム",
+    "meaning": "o'chirg'ich, rezinka",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "消しゴムで消します。(けしごむでけします。)",
+    "exampleTranslation": "O'chirg'ich bilan o'chiraman.",
+    "additionalExamples": [
+      { "sentence": "消しゴムを貸してください。(けしごむをかしてください。)", "translation": "O'chirg'ichingizni berib turing." },
+      { "sentence": "消しゴムはどこですか。(けしごむはどこですか。)", "translation": "O'chirg'ich qayerda?" }
+    ],
+    "synonyms": ["イレーサー"],
+    "antonyms": [],
+    "nuance": "「消す（o'chirmoq）」＋「ゴム（rezina）」 — kanji va katakana aralash yoziladi. Yaponiyada o'chirg'ichlar sifati bilan mashhur.",
+    "compounds": [
+      { "word": "消します", "hiragana": "けします", "meaning": "o'chirmoq" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "消", "meaning": "o'chirmoq, yo'q qilmoq", "kunReading": "ke, kie", "onReading": "shou", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "紙",
+    "hiragana": "かみ",
+    "meaning": "qog'oz",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "②",
+    "exampleSentence": "はさみで紙を切ります。(はさみでかみをきります。)",
+    "exampleTranslation": "Qaychi bilan qog'ozni qirqaman.",
+    "additionalExamples": [
+      { "sentence": "紙に名前を書いてください。(かみになまえをかいてください。)", "translation": "Qog'ozga ismingizni yozing." },
+      { "sentence": "紙をください。(かみをください。)", "translation": "Qog'oz bering." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Omonimlarga e'tibor bering: 紙（かみ②） — qog'oz, 髪（かみ②） — soch, 神（かみ①） — xudo. Yapon qog'ozi — 「和紙（わし）」.",
+    "compounds": [
+      { "word": "手紙", "hiragana": "てがみ", "meaning": "xat" },
+      { "word": "折り紙", "hiragana": "おりがみ", "meaning": "origami" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "紙", "meaning": "qog'oz", "kunReading": "kami", "onReading": "shi", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "花",
+    "hiragana": "はな",
+    "meaning": "gul",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "②",
+    "exampleSentence": "母に花をあげました。(ははにはなをあげました。)",
+    "exampleTranslation": "Onamga gul berdim.",
+    "additionalExamples": [
+      { "sentence": "庭に花がたくさんあります。(にわにはながたくさんあります。)", "translation": "Hovlida gul ko'p." },
+      { "sentence": "花をもらいました。(はなをもらいました。)", "translation": "Gul sovg'a qilishdi." }
+    ],
+    "synonyms": ["フラワー"],
+    "antonyms": [],
+    "nuance": "Omonim: 花（はな②） — gul, 鼻（はな⓪） — burun. 6-darsdagi 「お花見」 da 「花」 doim sakurani anglatadi.",
+    "compounds": [
+      { "word": "花見", "hiragana": "はなみ", "meaning": "sakura tomoshasi" },
+      { "word": "花火", "hiragana": "はなび", "meaning": "mushakbozlik" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "花", "meaning": "gul", "kunReading": "hana", "onReading": "ka", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "シャツ",
+    "hiragana": "シャツ",
+    "meaning": "ko'ylak (erkaklar ko'ylagi)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "父にシャツをあげます。(ちちにしゃつをあげます。)",
+    "exampleTranslation": "Otamga ko'ylak sovg'a qilaman.",
+    "additionalExamples": [
+      { "sentence": "白いシャツを買いました。(しろいしゃつをかいました。)", "translation": "Oq ko'ylak sotib oldim." },
+      { "sentence": "このシャツはいくらですか。(このしゃつはいくらですか。)", "translation": "Bu ko'ylak qancha turadi?" }
+    ],
+    "synonyms": ["ワイシャツ"],
+    "antonyms": [],
+    "nuance": "Rasmiy oq ko'ylak 「ワイシャツ」 deyiladi — bu \"white shirt\" ning yaponcha talaffuzidan kelib chiqqan, \"Y-shirt\" dan emas. Futbolka esa 「Tシャツ」.",
+    "compounds": [
+      { "word": "ワイシャツ", "hiragana": "ワイシャツ", "meaning": "rasmiy oq ko'ylak" },
+      { "word": "Ｔシャツ", "hiragana": "ティーシャツ", "meaning": "futbolka" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "プレゼント",
+    "hiragana": "プレゼント",
+    "meaning": "sovg'a, tuhfa, hadya",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "②",
+    "exampleSentence": "誕生日にプレゼントをもらいました。(たんじょうびにぷれぜんとをもらいました。)",
+    "exampleTranslation": "Tug'ilgan kunimda sovg'a oldim.",
+    "additionalExamples": [
+      { "sentence": "母にプレゼントをあげます。(ははにぷれぜんとをあげます。)", "translation": "Onamga sovg'a beraman." },
+      { "sentence": "クリスマスのプレゼントを買いました。(くりすますのぷれぜんとをかいました。)", "translation": "Rojdestvo sovg'asini sotib oldim." }
+    ],
+    "synonyms": ["贈り物", "お土産"],
+    "antonyms": [],
+    "nuance": "「プレゼント」 — tug'ilgan kun va bayram sovg'asi. 「お土産」 esa aynan safardan olib kelinadigan sovg'a — ikkalasi almashtirilmaydi.",
+    "compounds": [
+      { "word": "贈り物", "hiragana": "おくりもの", "meaning": "sovg'a (rasmiy)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "荷物",
+    "hiragana": "にもつ",
+    "meaning": "yuk, buyum, bagaj",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "国へ荷物を送ります。(くにへにもつをおくります。)",
+    "exampleTranslation": "Vatanimga yuk jo'nataman.",
+    "additionalExamples": [
+      { "sentence": "荷物が重いです。(にもつがおもいです。)", "translation": "Yuk og'ir." },
+      { "sentence": "荷物を持ちましょうか。(にもつをもちましょうか。)", "translation": "Yukingizni ko'tarishaymi?" }
+    ],
+    "synonyms": ["バゲージ"],
+    "antonyms": [],
+    "nuance": "「荷（yuk）」＋「物（narsa）」. Qo'l yuki ham, pochta posilkasi ham, sayohat chamadoni ham — hammasi 「荷物」.",
+    "compounds": [
+      { "word": "手荷物", "hiragana": "てにもつ", "meaning": "qo'l yuki" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "荷", "meaning": "yuk", "kunReading": "ni", "onReading": "ka", "strokes": 10 },
+      { "kanji": "物", "meaning": "narsa, buyum", "kunReading": "mono", "onReading": "butsu", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "お金",
+    "hiragana": "おかね",
+    "meaning": "pul",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "exampleSentence": "友達にお金を貸しました。(ともだちにおかねをかしました。)",
+    "exampleTranslation": "Do'stimga pul qarz berdim.",
+    "additionalExamples": [
+      { "sentence": "お金がありません。(おかねがありません。)", "translation": "Pulim yo'q." },
+      { "sentence": "銀行でお金を借ります。(ぎんこうでおかねをかります。)", "translation": "Bankdan qarz olaman." }
+    ],
+    "synonyms": ["現金"],
+    "antonyms": [],
+    "nuance": "Oldidagi 「お」 shu so'zdan deyarli ajralmas — 「金（かね）」 yolg'iz ishlatilsa qo'polroq eshitiladi. 4-darsdagi 「金曜日」 dagi 「金」 esa 「きん」 (oltin) deb o'qiladi.",
+    "compounds": [
+      { "word": "金曜日", "hiragana": "きんようび", "meaning": "juma" },
+      { "word": "お金持ち", "hiragana": "おかねもち", "meaning": "boy odam" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "金", "meaning": "oltin, pul", "kunReading": "kane", "onReading": "kin", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "切符",
+    "hiragana": "きっぷ",
+    "meaning": "chipta",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "駅で切符を買います。(えきできっぷをかいます。)",
+    "exampleTranslation": "Bekatdan chipta sotib olaman.",
+    "additionalExamples": [
+      { "sentence": "切符を見せてください。(きっぷをみせてください。)", "translation": "Chiptangizni ko'rsating." },
+      { "sentence": "新幹線の切符をもらいました。(しんかんせんのきっぷをもらいました。)", "translation": "Shinkansen chiptasini oldim." }
+    ],
+    "synonyms": ["チケット"],
+    "antonyms": [],
+    "nuance": "「切符」 asosan transport chiptasi. Konsert yoki kino chiptasi uchun 「チケット」 ishlatiladi. 3-darsdagi 「切符売り場」 — kassa.",
+    "compounds": [
+      { "word": "切符売り場", "hiragana": "きっぷうりば", "meaning": "chipta kassasi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "切", "meaning": "kesmoq", "kunReading": "ki", "onReading": "setsu", "strokes": 4 },
+      { "kanji": "符", "meaning": "belgi, tamg'a", "kunReading": "-", "onReading": "fu", "strokes": 11 }
+    ]
+  },
+  {
+    "japaneseWord": "クリスマス",
+    "hiragana": "クリスマス",
+    "meaning": "Rojdestvo (Krismas)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "クリスマスにプレゼントをもらいました。(くりすますにぷれぜんとをもらいました。)",
+    "exampleTranslation": "Rojdestvoda sovg'a oldim.",
+    "additionalExamples": [
+      { "sentence": "クリスマスは十二月二十五日です。(くりすますはじゅうにがつにじゅうごにちです。)", "translation": "Rojdestvo — yigirma beshinchi dekabr." },
+      { "sentence": "クリスマスカードを送ります。(くりすますかーどをおくります。)", "translation": "Rojdestvo tabrigini yuboraman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Yaponiyada diniy emas, ko'ngilochar bayram sifatida nishonlanadi va ko'proq juftliklar uchun romantik kun hisoblanadi. Oilaviy bayram esa Yangi yil — 「お正月」.",
+    "compounds": [
+      { "word": "クリスマスイブ", "hiragana": "クリスマスイブ", "meaning": "Rojdestvo arafasi" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "父",
+    "hiragana": "ちち",
+    "meaning": "otam, dadam (o'z otasi haqida)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "②",
+    "exampleSentence": "父は銀行員です。(ちちはぎんこういんです。)",
+    "exampleTranslation": "Otam bank xodimi.",
+    "additionalExamples": [
+      { "sentence": "父にシャツをあげました。(ちちにしゃつをあげました。)", "translation": "Otamga ko'ylak sovg'a qildim." },
+      { "sentence": "父は五十歳です。(ちちはごじゅっさいです。)", "translation": "Otam ellik yoshda." }
+    ],
+    "synonyms": ["お父さん"],
+    "antonyms": ["母"],
+    "nuance": "Muhim qoida: BOSHQAGA o'z otasi haqida gapirganda 「父」, otasining o'ziga murojaat qilganda va boshqaning otasi haqida 「お父さん」 deyiladi. Bu yapon tilidagi \"ichki/tashqi\" (uchi/soto) tushunchasining asosi.",
+    "compounds": [
+      { "word": "父母", "hiragana": "ふぼ", "meaning": "ota-ona (rasmiy)" },
+      { "word": "祖父", "hiragana": "そふ", "meaning": "bobom" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "父", "meaning": "ota", "kunReading": "chichi", "onReading": "fu", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "母",
+    "hiragana": "はは",
+    "meaning": "onam, oyim (o'z onasi haqida)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "母は病院で働いています。(はははびょういんではたらいています。)",
+    "exampleTranslation": "Onam shifoxonada ishlaydi.",
+    "additionalExamples": [
+      { "sentence": "母に花をあげます。(ははにはなをあげます。)", "translation": "Onamga gul beraman." },
+      { "sentence": "母から手紙をもらいました。(ははからてがみをもらいました。)", "translation": "Onamdan xat oldim." }
+    ],
+    "synonyms": ["お母さん"],
+    "antonyms": ["父"],
+    "nuance": "「父」 bilan bir qoida: o'z onasi haqida boshqaga aytganda 「母」. Diqqat: 「母は」 deyilganda uchta 「は」 ketma-ket keladi — 「ははは」, bu to'g'ri.",
+    "compounds": [
+      { "word": "母国語", "hiragana": "ぼこくご", "meaning": "ona tili" },
+      { "word": "祖母", "hiragana": "そぼ", "meaning": "buvim" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "母", "meaning": "ona", "kunReading": "haha", "onReading": "bo", "strokes": 5 }
+    ]
+  },
+  {
+    "japaneseWord": "お父さん",
+    "hiragana": "おとうさん",
+    "meaning": "ota, dada; ~ning otasi (hurmat shakli)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "②",
+    "exampleSentence": "お父さんはお元気ですか。(おとうさんはおげんきですか。)",
+    "exampleTranslation": "Otangiz yaxshi yuribdilarmi?",
+    "additionalExamples": [
+      { "sentence": "お父さん、いってきます。(おとうさん、いってきます。)", "translation": "Dada, men ketdim." },
+      { "sentence": "ミラーさんのお父さんは医者です。(みらーさんのおとうさんはいしゃです。)", "translation": "Janob Millerning otasi shifokor." }
+    ],
+    "synonyms": ["父"],
+    "antonyms": ["お母さん"],
+    "nuance": "Ikki holatda ishlatiladi: boshqaning otasi haqida va o'z otasiga murojaat qilganda. Lekin boshqaga o'z otasi haqida gapirganda 「お父さん」 emas, 「父」 deyiladi.",
+    "compounds": [
+      { "word": "おじいさん", "hiragana": "おじいさん", "meaning": "bobo" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "父", "meaning": "ota", "kunReading": "chichi, tou", "onReading": "fu", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "お母さん",
+    "hiragana": "おかあさん",
+    "meaning": "ona, oyi; ~ning onasi (hurmat shakli)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "②",
+    "exampleSentence": "お母さんはおいくつですか。(おかあさんはおいくつですか。)",
+    "exampleTranslation": "Onangiz necha yoshdalar?",
+    "additionalExamples": [
+      { "sentence": "お母さん、ごはんは何ですか。(おかあさん、ごはんはなんですか。)", "translation": "Oyi, ovqatga nima bor?" },
+      { "sentence": "田中さんのお母さんに会いました。(たなかさんのおかあさんにあいました。)", "translation": "Tanaka-sanning onasi bilan uchrashdim." }
+    ],
+    "synonyms": ["母"],
+    "antonyms": ["お父さん"],
+    "nuance": "「お父さん」 bilan bir qoida. Oila a'zolari uchun ikki qatorli tizim bor: 父／お父さん, 母／お母さん, 兄／お兄さん — birinchisi o'zi haqida, ikkinchisi hurmat bilan.",
+    "compounds": [
+      { "word": "おばあさん", "hiragana": "おばあさん", "meaning": "buvi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "母", "meaning": "ona", "kunReading": "haha, kaa", "onReading": "bo", "strokes": 5 }
+    ]
+  },
+  {
+    "japaneseWord": "もう",
+    "hiragana": "もう",
+    "meaning": "allaqachon, ~ib bo'ldi; endi",
+    "partOfSpeech": "ravish",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "もう昼ごはんを食べましたか。(もうひるごはんをたべましたか。)",
+    "exampleTranslation": "Tushlik qilib bo'ldingizmi?",
+    "additionalExamples": [
+      { "sentence": "はい、もう食べました。(はい、もうたべました。)", "translation": "Ha, yeb bo'ldim." },
+      { "sentence": "もう九時ですね。(もうくじですね。)", "translation": "Soat to'qqiz bo'libdi-ku." }
+    ],
+    "synonyms": ["すでに"],
+    "antonyms": ["まだ"],
+    "nuance": "「もう」 doim O'TGAN zamon bilan: 「もう食べました」. Inkor javobi esa 「もう食べませんでした」 EMAS, balki 「いいえ、まだです」 bo'ladi — bu darsning eng ko'p xato qilinadigan joyi.",
+    "compounds": [
+      { "word": "もう一度", "hiragana": "もういちど", "meaning": "yana bir marta" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "まだ",
+    "hiragana": "まだ",
+    "meaning": "hali, hanuz (~magan)",
+    "partOfSpeech": "ravish",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "いいえ、まだです。(いいえ、まだです。)",
+    "exampleTranslation": "Yo'q, hali yo'q.",
+    "additionalExamples": [
+      { "sentence": "まだ宿題をしていません。(まだしゅくだいをしていません。)", "translation": "Hali uy vazifasini qilmadim." },
+      { "sentence": "バスはまだ来ません。(ばすはまだきません。)", "translation": "Avtobus hali kelmadi." }
+    ],
+    "synonyms": [],
+    "antonyms": ["もう"],
+    "nuance": "「もう」 ning ziddi va doim INKOR bilan keladi. Qisqa javobi 「まだです」 — juda ko'p ishlatiladi. Ijobiy gapda esa \"hanuz, hamon\" ma'nosini beradi: 「まだ雨が降っています」.",
+    "compounds": [
+      { "word": "まだまだ", "hiragana": "まだまだ", "meaning": "hali ancha, hali erta" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "これから",
+    "hiragana": "これから",
+    "meaning": "endi, bundan buyon, hozirdan boshlab",
+    "partOfSpeech": "ravish",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "これから昼ごはんを食べます。(これからひるごはんをたべます。)",
+    "exampleTranslation": "Endi tushlik qilaman.",
+    "additionalExamples": [
+      { "sentence": "これから会議があります。(これからかいぎがあります。)", "translation": "Hozir yig'ilish boshlanadi." },
+      { "sentence": "これからもよろしくお願いします。(これからもよろしくおねがいします。)", "translation": "Bundan keyin ham hamkorligimiz davom etsin." }
+    ],
+    "synonyms": ["今から"],
+    "antonyms": ["今まで"],
+    "nuance": "2-darsdagi 「これ」＋4-darsdagi 「から」. 1-darsdagi 「これからお世話になります」 shu so'zdan. Ikki ma'noli: \"hoziroq\" va \"kelajakda\".",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "すてきですね",
+    "hiragana": "すてきですね",
+    "meaning": "Buncha chiroyli! / Ajoyib ekan.",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "",
+    "exampleSentence": "そのシャツ、すてきですね。(そのしゃつ、すてきですね。)",
+    "exampleTranslation": "Bu ko'ylagingiz juda chiroyli ekan!",
+    "additionalExamples": [
+      { "sentence": "すてきな庭ですね。(すてきなにわですね。)", "translation": "Qanday chiroyli hovli!" },
+      { "sentence": "そのかばん、すてきですね。(そのかばん、すてきですね。)", "translation": "Bu sumkangiz zo'r ekan." }
+    ],
+    "synonyms": ["きれいですね", "いいですね"],
+    "antonyms": [],
+    "nuance": "Maqtov iborasi — mehmon uy egasining narsalarini maqtaganda ishlatiladi. 「きれい」 ko'zga chiroyli, 「すてき」 esa did va uslubga qoyil qolishni bildiradi.",
+    "compounds": [
+      { "word": "すてき", "hiragana": "すてき", "meaning": "ajoyib, chiroyli" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "ごめんください",
+    "hiragana": "ごめんください",
+    "meaning": "Hoy, kim bor? (birovnikiga kirganda aytiladi)",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "",
+    "exampleSentence": "ごめんください。—はい、どなたですか。",
+    "exampleTranslation": "\"Hoy, kim bor?\" — \"Ha, kim bo'lasiz?\"",
+    "additionalExamples": [
+      { "sentence": "ごめんください。ミラーです。(ごめんください。みらーです。)", "translation": "Uydamisizlar? Men Millerman." },
+      { "sentence": "ごめんください。—いらっしゃい。", "translation": "\"Kim bor?\" — \"Xush kelibsiz.\"" }
+    ],
+    "synonyms": ["すみません"],
+    "antonyms": [],
+    "nuance": "Eshik oldida turib, uy egasini chaqirish uchun. 「ごめんなさい」 (kechirasiz) bilan adashtirmang — o'xshash bo'lsa ham, ma'nosi butunlay boshqa.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "いらっしゃい",
+    "hiragana": "いらっしゃい",
+    "meaning": "Xush kelibsiz.",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "",
+    "exampleSentence": "いらっしゃい。どうぞお上がりください。",
+    "exampleTranslation": "Xush kelibsiz. Ichkariga marhamat.",
+    "additionalExamples": [
+      { "sentence": "いらっしゃい。よく来ましたね。(いらっしゃい。よくきましたね。)", "translation": "Xush kelibsiz. Kelganingiz yaxshi bo'ldi." },
+      { "sentence": "いらっしゃいませ。(いらっしゃいませ。)", "translation": "Xush kelibsiz (do'konda)." }
+    ],
+    "synonyms": ["ようこそ"],
+    "antonyms": [],
+    "nuance": "Uy egasining mehmonga aytadigan so'zi. Do'kon va restoranlarda esa to'liq shakli 「いらっしゃいませ」 ishlatiladi — u mijozga aytiladi va javob talab qilmaydi.",
+    "compounds": [
+      { "word": "いらっしゃいませ", "hiragana": "いらっしゃいませ", "meaning": "xush kelibsiz (do'konda)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "どうぞお上がりください",
+    "hiragana": "どうぞおあがりください",
+    "meaning": "Ichkariga marhamat.",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "",
+    "exampleSentence": "どうぞお上がりください。(どうぞおあがりください。)",
+    "exampleTranslation": "Marhamat, ichkariga kiring.",
+    "additionalExamples": [
+      { "sentence": "さあ、どうぞお上がりください。(さあ、どうぞおあがりください。)", "translation": "Qani, marhamat, kiring." },
+      { "sentence": "どうぞお上がりください。—失礼します。", "translation": "\"Marhamat, kiring.\" — \"Bezovta qildim.\"" }
+    ],
+    "synonyms": ["どうぞお入りください"],
+    "antonyms": [],
+    "nuance": "「上がる」 — \"ko'tarilmoq\" degani. Yapon uyida kiraverish (玄関) past, yashash qismi baland bo'ladi va u yerga poyafzalsiz \"ko'tarilinadi\" — shuning uchun 「入る」 emas, 「上がる」 ishlatiladi.",
+    "compounds": [
+      { "word": "玄関", "hiragana": "げんかん", "meaning": "uyning kiraverishi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "上", "meaning": "yuqori, ust", "kunReading": "ue, a, nobo", "onReading": "jou", "strokes": 3 }
+    ]
+  },
+  {
+    "japaneseWord": "失礼します",
+    "hiragana": "しつれいします",
+    "meaning": "Bezovta qildim. / Ruxsat bering. (kirish va chiqishda)",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "",
+    "exampleSentence": "失礼します。(しつれいします。)",
+    "exampleTranslation": "Ruxsat bersangiz (kiraman).",
+    "additionalExamples": [
+      { "sentence": "お先に失礼します。(おさきにしつれいします。)", "translation": "Sizdan oldin ketaman (ishdan chiqayotganda)." },
+      { "sentence": "では、失礼します。(では、しつれいします。)", "translation": "Xo'p, men boray." }
+    ],
+    "synonyms": ["おじゃまします"],
+    "antonyms": [],
+    "nuance": "1-darsdagi 「失礼ですが」 bilan bir ildizdan. Uch holatda: xonaga kirganda, chiqib ketayotganda va telefonni tugatishda. Mehmon uyga kirayotganda 「おじゃまします」 ham deydi.",
+    "compounds": [
+      { "word": "お先に失礼します", "hiragana": "おさきにしつれいします", "meaning": "sizdan oldin ketaman" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "失", "meaning": "yo'qotmoq", "kunReading": "ushina", "onReading": "shitsu", "strokes": 5 },
+      { "kanji": "礼", "meaning": "odob, ta'zim", "kunReading": "-", "onReading": "rei", "strokes": 5 }
+    ]
+  },
+  {
+    "japaneseWord": "[～は]いかがですか",
+    "hiragana": "[～は]いかがですか",
+    "meaning": "~ga xushingiz qalay? / ~ olasizmi?",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "",
+    "exampleSentence": "コーヒーはいかがですか。(こーひーはいかがですか。)",
+    "exampleTranslation": "Qahva olasizmi?",
+    "additionalExamples": [
+      { "sentence": "お茶はいかがですか。(おちゃはいかがですか。)", "translation": "Choy ichasizmi?" },
+      { "sentence": "もう一杯いかがですか。(もういっぱいいかがですか。)", "translation": "Yana bir piyola olasizmi?" }
+    ],
+    "synonyms": ["どうですか"],
+    "antonyms": [],
+    "nuance": "「どうですか」 ning hurmatli shakli. Mehmonga taom yoki ichimlik taklif qilishda ishlatiladi. Javob: 「はい、いただきます」 yoki muloyim rad — 「いいえ、けっこうです」.",
+    "compounds": [
+      { "word": "いかが", "hiragana": "いかが", "meaning": "qanday (hurmatli)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "いただきます",
+    "hiragana": "いただきます",
+    "meaning": "(ovqatdan oldin aytiladigan ibora); olaman, yeyman (kamtarona)",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "",
+    "exampleSentence": "いただきます。(いただきます。)",
+    "exampleTranslation": "Bismillo (ovqat oldidan).",
+    "additionalExamples": [
+      { "sentence": "じゃ、いただきます。(じゃ、いただきます。)", "translation": "Unda, boshlaymiz." },
+      { "sentence": "コーヒーをいただきます。(こーひーをいただきます。)", "translation": "Qahva olsam (bo'ladimi)." }
+    ],
+    "synonyms": ["もらいます"],
+    "antonyms": ["ごちそうさまでした"],
+    "nuance": "So'zma-so'z \"kamtarlik bilan qabul qilaman\" — nafaqat oshpazga, balki jonning o'ziga ham minnatdorchilik. Ovqatdan keyin esa 「ごちそうさまでした」 deyiladi. 「もらいます」ning kamtarona shakli sifatida ham ishlatiladi.",
+    "compounds": [
+      { "word": "ごちそうさまでした", "hiragana": "ごちそうさまでした", "meaning": "rahmat (ovqatdan keyin)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "旅行",
+    "hiragana": "りょこう",
+    "meaning": "sayohat, safar (～する — sayohat qilmoq)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "来月ヨーロッパを旅行します。(らいげつよーろっぱをりょこうします。)",
+    "exampleTranslation": "Kelasi oy Yevropaga sayohat qilaman.",
+    "additionalExamples": [
+      { "sentence": "旅行はどうでしたか。(りょこうはどうでしたか。)", "translation": "Sayohat qanday o'tdi?" },
+      { "sentence": "家族と旅行しました。(かぞくとりょこうしました。)", "translation": "Oilam bilan sayohat qildim." }
+    ],
+    "synonyms": ["トラベル", "旅"],
+    "antonyms": [],
+    "nuance": "「旅（たび）」 dan farqi: 「旅行」 — rejalashtirilgan, aniq maqsadli safar; 「旅」 esa she'riyroq, sarguzashtli sayohat. 5-darsdagi 「行きます」 dagi 「行」 shu yerda ham bor.",
+    "compounds": [
+      { "word": "旅行会社", "hiragana": "りょこうがいしゃ", "meaning": "sayohat agentligi" },
+      { "word": "新婚旅行", "hiragana": "しんこんりょこう", "meaning": "asal oyi safari" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "旅", "meaning": "safar, sayohat", "kunReading": "tabi", "onReading": "ryo", "strokes": 10 },
+      { "kanji": "行", "meaning": "bormoq, yurmoq", "kunReading": "i, yu", "onReading": "kou", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "お土産",
+    "hiragana": "おみやげ",
+    "meaning": "safardan olib kelinadigan sovg'a; mehmonga borganda olib boriladigan hadya",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "これは京都のお土産です。(これはきょうとのおみやげです。)",
+    "exampleTranslation": "Bu — Kiotodan olib kelgan sovg'am.",
+    "additionalExamples": [
+      { "sentence": "旅行のお土産を買いました。(りょこうのおみやげをかいました。)", "translation": "Sayohatdan sovg'a sotib oldim." },
+      { "sentence": "お土産をどうぞ。(おみやげをどうぞ。)", "translation": "Marhamat, sovg'ani oling." }
+    ],
+    "synonyms": ["プレゼント"],
+    "antonyms": [],
+    "nuance": "Maxsus o'qilish: 「どさん」 emas, 「みやげ」. Yaponiyada safardan qaytgach hamkasblarga 「お土産」 (odatda mahalliy shirinlik) olib kelish deyarli majburiy odob hisoblanadi.",
+    "compounds": [
+      { "word": "土産物屋", "hiragana": "みやげものや", "meaning": "sovg'alar do'koni" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "土", "meaning": "tuproq, yer", "kunReading": "tsuchi", "onReading": "do", "strokes": 3 },
+      { "kanji": "産", "meaning": "ishlab chiqarish, tug'ilish", "kunReading": "u", "onReading": "san", "strokes": 11 }
+    ]
+  },
+  {
+    "japaneseWord": "ヨーロッパ",
+    "hiragana": "ヨーロッパ",
+    "meaning": "Yevropa, Ovro'pa",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "来月ヨーロッパへ行きます。(らいげつよーろっぱへいきます。)",
+    "exampleTranslation": "Kelasi oy Yevropaga boraman.",
+    "additionalExamples": [
+      { "sentence": "ヨーロッパを旅行しました。(よーろっぱをりょこうしました。)", "translation": "Yevropa bo'ylab sayohat qildim." },
+      { "sentence": "ヨーロッパのお土産です。(よーろっぱのおみやげです。)", "translation": "Bu — Yevropadan olib kelgan sovg'a." }
+    ],
+    "synonyms": ["欧州"],
+    "antonyms": ["アジア"],
+    "nuance": "Portugalcha \"Europa\" dan o'zlashgan. Rasmiy va gazeta tilida 「欧州（おうしゅう）」 ishlatiladi.",
+    "compounds": [
+      { "word": "アジア", "hiragana": "アジア", "meaning": "Osiyo" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "スペイン",
+    "hiragana": "スペイン",
+    "meaning": "Ispaniya",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "②",
+    "exampleSentence": "スペインへ旅行しました。(すぺいんへりょこうしました。)",
+    "exampleTranslation": "Ispaniyaga sayohat qildim.",
+    "additionalExamples": [
+      { "sentence": "スペイン語を習っています。(すぺいんごをならっています。)", "translation": "Ispan tilini o'rganyapman." },
+      { "sentence": "これはスペインのワインです。(これはすぺいんのわいんです。)", "translation": "Bu — Ispaniya sharobi." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "2-darsdagi 「～語」 qolipida: 「スペイン語」 — ispan tili. Qisqartmalarda 「西（せい）」 belgisi ishlatiladi.",
+    "compounds": [
+      { "word": "スペイン語", "hiragana": "スペインご", "meaning": "ispan tili" }
+    ],
+    "kanjiInfo": []
+  }
+]
