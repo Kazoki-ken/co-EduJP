@@ -40,8 +40,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // No `dark` class on <html>: the server renders the default (light) palette
+  // and THEME_INIT_SCRIPT adds `dark` back before first paint for anyone who
+  // picked it.
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="uz" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>

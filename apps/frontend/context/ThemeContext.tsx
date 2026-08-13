@@ -14,15 +14,17 @@ export type Theme = 'light' | 'dark';
 const STORAGE_KEY = 'vocabjp-theme';
 
 /* Runs before React hydrates so the first paint already has the right
-   palette — otherwise a saved light theme flashes dark for a frame.
-   Kept in sync with STORAGE_KEY above. */
+   palette — otherwise a saved dark theme flashes light for a frame.
+   Kept in sync with STORAGE_KEY above.
+
+   Light is the product's own look, so it is the default for everyone who has
+   not chosen otherwise. The OS preference is deliberately not consulted: most
+   phones ship with dark mode on, which meant first-time visitors were greeted
+   by the secondary theme. Dark stays one tap away and is remembered. */
 export const THEME_INIT_SCRIPT = `
 (function () {
   try {
-    var t = localStorage.getItem('${STORAGE_KEY}');
-    if (t !== 'light' && t !== 'dark') {
-      t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-    }
+    var t = localStorage.getItem('${STORAGE_KEY}') === 'dark' ? 'dark' : 'light';
     document.documentElement.classList.toggle('dark', t === 'dark');
     document.documentElement.style.colorScheme = t;
   } catch (e) {}
@@ -40,7 +42,7 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 export function ThemeProvider({ children }: { children: ReactNode }) {
   // The inline script already picked a theme; read it back rather than
   // guessing, so the provider and the DOM never disagree.
-  const [theme, setThemeState] = useState<Theme>('dark');
+  const [theme, setThemeState] = useState<Theme>('light');
 
   useEffect(() => {
     setThemeState(
