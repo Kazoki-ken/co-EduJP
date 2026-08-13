@@ -110,10 +110,6 @@ export function SenseiAvatar({ mood, variant = 'madina', size = 128, className }
             </linearGradient>
           </defs>
 
-          {/* ── Haori collar: the detail that turns an animal into a teacher ── */}
-          <path d="M34 126 L70 104 L106 126 Z" fill={c.collar} />
-          <path d="M52 126 L70 115 L88 126 Z" fill={c.trim} opacity="0.9" />
-
           {/* ── Ears ─────────────────────────────────────────────────────────
               They twitch forward while the microphone is open — the clearest
               signal at avatar size that the tutor is actually listening. */}
