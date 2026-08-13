@@ -20,7 +20,8 @@ import {
   LayoutDashboard,
   Library,
   ChevronRight,
-  Crown
+  Crown,
+  GraduationCap
 } from 'lucide-react';
 import { cn, leagueIcon } from '@/lib/utils';
 import { useSiteName } from '@/lib/siteConfig';
@@ -63,23 +64,30 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // Authenticated Sidebar/Bottom-Nav Layout
+  // Authenticated Sidebar/Bottom-Nav Layout.
+  // Profile and Premium deliberately sit outside this list — they are pinned
+  // to the bottom of the sidebar rather than mixed into the main navigation.
   const navItems = [
     { href: '/', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/dictionary', label: "Lug'at & Mavzular", icon: BookOpen },
+    { href: '/jlpt', label: 'JLPT', icon: GraduationCap },
     { href: '/library', label: "Mening lug'atim", icon: Library },
     { href: '/games', label: "Mashg'ulot & O'yinlar", icon: Gamepad2 },
     { href: '/chat', label: "AI Suhbatdosh", icon: MessageCircle },
     { href: '/leaderboard', label: 'Reyting', icon: Trophy },
     { href: '/tools', label: 'Uskunalar', icon: Wrench },
-    { href: '/premium', label: 'Premium', icon: Crown },
+  ];
+
+  /** Pinned to the sidebar footer — still needs a page title in the header. */
+  const footerNavItems = [
     { href: '/profile', label: 'Mening Profilim', icon: User },
+    { href: '/premium', label: 'Premium', icon: Crown },
   ];
 
   return (
     <div className="min-h-screen bg-background text-text-primary flex">
       {/* ─── 1. Desktop Sidebar ────────────────────────────────────────── */}
-      <aside className="hidden lg:flex flex-col fixed top-0 bottom-0 left-0 w-64 bg-surface border-r border-border/60 z-40">
+      <aside className="hidden lg:flex flex-col fixed top-0 bottom-0 left-0 w-56 bg-surface border-r border-border/60 z-40">
         {/* Brand logo */}
         <div className="h-16 flex items-center px-6 border-b border-border/60">
           <Link href="/" className="flex items-center gap-2 group">
@@ -91,7 +99,7 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Navigation list */}
-        <nav className="flex-1 py-6 px-4 space-y-1.5 overflow-y-auto">
+        <nav className="flex-1 py-6 px-3 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
@@ -100,15 +108,15 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-semibold transition-all duration-200 group',
+                  'flex items-center justify-between gap-1 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-200 group',
                   active
                     ? 'bg-primary/15 text-primary border border-primary/20 shadow-glow-sm'
                     : 'text-text-secondary hover:text-text-primary hover:bg-surface-2'
                 )}
               >
-                <div className="flex items-center gap-3">
-                  <Icon size={18} className={cn('transition-transform group-hover:scale-110', active ? 'text-primary' : 'text-text-muted group-hover:text-text-primary')} />
-                  <span>{item.label}</span>
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <Icon size={17} className={cn('transition-transform group-hover:scale-110', active ? 'text-primary' : 'text-text-muted group-hover:text-text-primary')} />
+                  <span className="truncate">{item.label}</span>
                 </div>
                 {active && <ChevronRight size={14} className="text-primary" />}
               </Link>
@@ -119,20 +127,56 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
             <Link
               href="/admin"
               className={cn(
-                'flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold transition-all duration-200 group',
+                'flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-200 group',
                 pathname.startsWith('/admin')
                   ? 'bg-accent/15 text-accent border border-accent/20 shadow-glow-accent'
                   : 'text-text-secondary hover:text-text-primary hover:bg-surface-2'
               )}
             >
-              <Settings size={18} className="text-text-muted group-hover:text-text-primary" />
-              <span>Admin paneli</span>
+              <Settings size={17} className="text-text-muted group-hover:text-text-primary shrink-0" />
+              <span className="truncate">Admin paneli</span>
             </Link>
           )}
         </nav>
 
         {/* Footer of Sidebar */}
         <div className="p-4 border-t border-border/60 space-y-2">
+          {/* Profile — pinned here rather than in the main nav list */}
+          <Link
+            href="/profile"
+            className={cn(
+              'flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-200 group',
+              pathname.startsWith('/profile')
+                ? 'bg-primary/15 text-primary'
+                : 'text-text-secondary hover:text-text-primary hover:bg-surface-2',
+            )}
+          >
+            <User
+              size={18}
+              className={cn(
+                'transition-transform group-hover:scale-110',
+                pathname.startsWith('/profile') ? 'text-primary' : 'text-text-muted group-hover:text-text-primary',
+              )}
+            />
+            <span className="truncate">Mening Profilim</span>
+          </Link>
+
+          {/* Premium — the one call-to-action in the sidebar, so it carries
+              the accent gradient instead of the muted nav styling. Already
+              subscribed users get a plain status link instead of a pitch. */}
+          <Link
+            href="/premium"
+            className={cn(
+              'flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-[13px] font-bold transition-all duration-200',
+              user.entitlements?.isPremium
+                ? 'bg-accent/15 text-accent border border-accent/30 hover:bg-accent/20'
+                : 'bg-accent-gradient text-white hover:shadow-glow-accent active:scale-[0.98]',
+            )}
+          >
+            <Crown size={16} />
+            <span>{user.entitlements?.isPremium ? 'Premium faol' : 'Premium olish'}</span>
+          </Link>
+
           {/* User profile preview */}
           <div className="flex items-center gap-3 p-2 rounded-xl bg-surface-2/40">
             <div className="w-9 h-9 rounded-full bg-primary/25 border border-primary/40 flex items-center justify-center font-bold text-primary text-sm uppercase">
@@ -170,10 +214,10 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* ─── 2. Main Page Layout (Header + Content) ────────────────────────── */}
-      <div className="flex-1 flex flex-col lg:pl-64 min-w-0 pb-16 lg:pb-0">
+      <div className="flex-1 flex flex-col lg:pl-56 min-w-0 pb-16 lg:pb-0">
         
         {/* Top Header */}
-        <header className="fixed top-0 right-0 left-0 lg:left-64 h-16 bg-background/80 backdrop-blur-xl border-b border-border/60 z-30 flex items-center justify-between px-4 sm:px-6">
+        <header className="fixed top-0 right-0 left-0 lg:left-56 h-16 bg-background/80 backdrop-blur-xl border-b border-border/60 z-30 flex items-center justify-between px-4 sm:px-6">
           {/* Mobile Logo / Page Title */}
           <div className="flex items-center gap-3">
             <Link href="/" className="lg:hidden flex items-center gap-1.5 group">
@@ -185,7 +229,10 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
             
             {/* Page title on Desktop */}
             <span className="hidden lg:inline text-xs font-bold bg-surface-2 border border-border/40 text-text-muted px-2.5 py-1 rounded-full uppercase tracking-wider">
-              {pathname === '/' ? 'Bosh sahifa' : navItems.find((i) => pathname.startsWith(i.href) && i.href !== '/')?.label || 'Ilova'}
+              {pathname === '/'
+                ? 'Bosh sahifa'
+                : [...navItems, ...footerNavItems].find((i) => pathname.startsWith(i.href) && i.href !== '/')?.label ||
+                  (pathname.startsWith('/admin') ? 'Admin paneli' : 'Ilova')}
             </span>
           </div>
 
@@ -270,7 +317,7 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
 
       {/* ─── 3. Mobile Bottom Navigation Bar ────────────────────────── */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface/90 backdrop-blur-xl border-t border-border/60 z-40 flex items-center justify-around px-2 pb-safe">
-        {navItems.filter(item => ['/', '/dictionary', '/games', '/chat', '/profile'].includes(item.href)).map((item) => {
+        {[...navItems, ...footerNavItems].filter(item => ['/', '/dictionary', '/games', '/chat', '/profile'].includes(item.href)).map((item) => {
           const Icon = item.icon;
           const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
           return (

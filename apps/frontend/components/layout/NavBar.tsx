@@ -16,6 +16,7 @@ import {
   LogOut,
   Settings,
   Flame,
+  GraduationCap,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { cn, leagueIcon } from '@/lib/utils';
@@ -27,6 +28,7 @@ import { ThemeToggleButton } from '@/components/layout/ThemeToggle';
 const NAV_ITEMS = [
   { href: '/',             label: 'Bosh sahifa', icon: BookOpen   },
   { href: '/dictionary',   label: "Lug'at",      icon: BookOpen   },
+  { href: '/jlpt',         label: 'JLPT',        icon: GraduationCap },
   { href: '/games',        label: "O'yinlar",    icon: Gamepad2   },
   { href: '/leaderboard',  label: 'Reyting',     icon: Trophy     },
   { href: '/chat',         label: "Sun'iy idrok", icon: MessageCircle },
