@@ -1052,6 +1052,31 @@
     ]
   },
   {
+    "japaneseWord": "何",
+    "hiragana": "なに",
+    "meaning": "nima",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "①",
+    "exampleSentence": "何を食べますか。(なにをたべますか。)",
+    "exampleTranslation": "Nima yeysiz?",
+    "additionalExamples": [
+      { "sentence": "日曜日に何をしましたか。(にちようびになにをしましたか。)", "translation": "Yakshanba kuni nima qildingiz?" },
+      { "sentence": "何を飲みますか。(なにをのみますか。)", "translation": "Nima ichasiz?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Bu darsda 「を」 bilan keladi va shunda doim 「なに」 deb o'qiladi: 何を食べますか. 2-darsdagi qoida esa 「です」 va sanoq qo'shimchalari oldidan 「なん」: 何ですか, 何時.",
+    "compounds": [
+      { "word": "何か", "hiragana": "なにか", "meaning": "nimadir" },
+      { "word": "何も", "hiragana": "なにも", "meaning": "hech narsa (inkor bilan)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "何", "meaning": "nima, necha", "kunReading": "nani, nan", "onReading": "ka", "strokes": 7 }
+    ]
+  },
+  {
     "japaneseWord": "一緒に",
     "hiragana": "いっしょに",
     "meaning": "birga, birgalikda",
