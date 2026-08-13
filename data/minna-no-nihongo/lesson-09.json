@@ -1,0 +1,1258 @@
+[
+  {
+    "japaneseWord": "わかります",
+    "hiragana": "わかります",
+    "meaning": "tushunmoq, anglamoq",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "④",
+    "teForm": "わかって",
+    "taForm": "わかった",
+    "naiForm": "わからない",
+    "masuForm": "わかります",
+    "exampleSentence": "日本語がわかります。(にほんごがわかります。)",
+    "exampleTranslation": "Yapon tilini tushunaman.",
+    "additionalExamples": [
+      { "sentence": "この漢字がわかりません。(このかんじがわかりません。)", "translation": "Bu iyeroglifni tushunmayapman." },
+      { "sentence": "意味がよくわかりました。(いみがよくわかりました。)", "translation": "Ma'nosini yaxshi tushundim." }
+    ],
+    "synonyms": ["理解します"],
+    "antonyms": [],
+    "nuance": "Bu darsning asosiy qoidasi: 「わかります」 「を」 emas, **「が」** oladi — 「日本語**が**わかります」. 7-darsdagi 「わかりました」 shu fe'ldan; \"tushunyapman\" ma'nosida ham o'tgan zamon ishlatiladi.",
+    "compounds": [
+      { "word": "分かりやすい", "hiragana": "わかりやすい", "meaning": "tushunarli" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "分", "meaning": "bo'lmoq, tushunmoq", "kunReading": "wa", "onReading": "bun, fun", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "あります",
+    "hiragana": "あります",
+    "meaning": "bor bo'lmoq, mavjud bo'lmoq (jonsiz narsalar)",
+    "partOfSpeech": "fe'l",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "③",
+    "teForm": "あって",
+    "taForm": "あった",
+    "naiForm": "ない",
+    "masuForm": "あります",
+    "exampleSentence": "時間がありますか。(じかんがありますか。)",
+    "exampleTranslation": "Vaqtingiz bormi?",
+    "additionalExamples": [
+      { "sentence": "お金がありません。(おかねがありません。)", "translation": "Pulim yo'q." },
+      { "sentence": "あした約束があります。(あしたやくそくがあります。)", "translation": "Ertaga uchrashuvim bor." }
+    ],
+    "synonyms": ["ございます"],
+    "antonyms": ["ありません"],
+    "nuance": "「あります」 — jonsiz narsalar va voqealar uchun; jonli mavjudotlar uchun 「います」 ishlatiladi (10-darsda). Diqqat: inkori qoidasiz — 「あらない」 emas, **「ない」**. Hurmatli shakli 3-darsdagi 「ございます」.",
+    "compounds": [
+      { "word": "ございます", "hiragana": "ございます", "meaning": "bor (hurmatli)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "好き[な]",
+    "hiragana": "すき[な]",
+    "meaning": "yoqtirgan, sevimli, yoqadi",
+    "partOfSpeech": "na-sifat",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "②",
+    "exampleSentence": "音楽が好きです。(おんがくがすきです。)",
+    "exampleTranslation": "Musiqani yaxshi ko'raman.",
+    "additionalExamples": [
+      { "sentence": "どんな料理が好きですか。(どんなりょうりがすきですか。)", "translation": "Qanaqa taomlarni yoqtirasiz?" },
+      { "sentence": "好きな歌を歌います。(すきなうたをうたいます。)", "translation": "Sevimli qo'shig'imni aytaman." }
+    ],
+    "synonyms": ["大好き"],
+    "antonyms": ["嫌い"],
+    "nuance": "Yoqtirilayotgan narsa **「が」** bilan keladi — 「音楽**が**好きです」, 「を」 emas. Bu darsdagi to'rt sifat (好き・嫌い・上手・下手) va 「わかります・あります」 hammasi 「が」 talab qiladi.",
+    "compounds": [
+      { "word": "大好き", "hiragana": "だいすき", "meaning": "juda yaxshi ko'raman" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "好", "meaning": "yoqtirmoq, yaxshi ko'rmoq", "kunReading": "su, kono", "onReading": "kou", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "嫌い[な]",
+    "hiragana": "きらい[な]",
+    "meaning": "yoqtirmagan, yomon ko'rgan",
+    "partOfSpeech": "na-sifat",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "私は納豆が嫌いです。(わたしはなっとうがきらいです。)",
+    "exampleTranslation": "Men nattoni yoqtirmayman.",
+    "additionalExamples": [
+      { "sentence": "勉強が嫌いです。(べんきょうがきらいです。)", "translation": "O'qishni yoqtirmayman." },
+      { "sentence": "嫌いな食べ物はありません。(きらいなたべものはありません。)", "translation": "Yoqtirmaydigan taomim yo'q." }
+    ],
+    "synonyms": ["大嫌い"],
+    "antonyms": ["好き"],
+    "nuance": "Muhim tuzoq: 「嫌い」 「い」 bilan tugasa ham **na-sifat** — 8-darsdagi 「きれい」 kabi. 「嫌くない」 emas, 「嫌いじゃない」. Yaponlar to'g'ridan-to'g'ri 「嫌い」 deyishdan qochib, 「あまり好きじゃありません」 deyishni afzal ko'radi.",
+    "compounds": [
+      { "word": "大嫌い", "hiragana": "だいきらい", "meaning": "juda yomon ko'raman" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "嫌", "meaning": "yoqtirmaslik, nafrat", "kunReading": "kira, iya", "onReading": "ken", "strokes": 13 }
+    ]
+  },
+  {
+    "japaneseWord": "上手[な]",
+    "hiragana": "じょうず[な]",
+    "meaning": "mohir, usta, epli",
+    "partOfSpeech": "na-sifat",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "③",
+    "exampleSentence": "ミラーさんは日本語が上手です。(みらーさんはにほんごがじょうずです。)",
+    "exampleTranslation": "Janob Miller yapon tilida yaxshi gapiradi.",
+    "additionalExamples": [
+      { "sentence": "料理が上手ですね。(りょうりがじょうずですね。)", "translation": "Ovqat pishirishga ustasiz-ku." },
+      { "sentence": "上手な絵ですね。(じょうずなえですね。)", "translation": "Chiroyli chizilgan rasm ekan." }
+    ],
+    "synonyms": ["得意"],
+    "antonyms": ["下手"],
+    "nuance": "Muhim odob qoidasi: **o'zi haqida 「上手です」 deyilmaydi** — maqtanchoqlik hisoblanadi. O'z mahoratini aytish uchun 「得意（とくい）」 ishlatiladi. Boshqani maqtash uchun esa 「上手」 juda mos.",
+    "compounds": [
+      { "word": "得意", "hiragana": "とくい", "meaning": "usta (o'zi haqida)" },
+      { "word": "上手", "hiragana": "うわて", "meaning": "yuqori tomon (boshqa o'qilish)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "上", "meaning": "yuqori, ust", "kunReading": "ue, a", "onReading": "jou", "strokes": 3 },
+      { "kanji": "手", "meaning": "qo'l", "kunReading": "te", "onReading": "shu", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "下手[な]",
+    "hiragana": "へた[な]",
+    "meaning": "epsiz, no'noq, mahoratsiz",
+    "partOfSpeech": "na-sifat",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "②",
+    "exampleSentence": "私は歌が下手です。(わたしはうたがへたです。)",
+    "exampleTranslation": "Men qo'shiq aytishni bilmayman.",
+    "additionalExamples": [
+      { "sentence": "字が下手です。(じがへたです。)", "translation": "Xatim chiroyli emas." },
+      { "sentence": "下手ですが、好きです。(へたですが、すきです。)", "translation": "Uddalay olmayman-u, lekin yoqtiraman." }
+    ],
+    "synonyms": ["苦手"],
+    "antonyms": ["上手"],
+    "nuance": "「上手」 ning aksi: **o'zi haqida aytish odobli**, boshqaga nisbatan aytish qo'pol. Boshqaning kamchiligini yumshoq aytish uchun 「あまり上手じゃありません」 deyiladi. 「苦手（にがて）」 — \"qiynalaman, yoqmaydi\" degan yumshoqroq shakl.",
+    "compounds": [
+      { "word": "苦手", "hiragana": "にがて", "meaning": "qiynalaman, uddasidan chiqolmayman" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "下", "meaning": "past, ost", "kunReading": "shita, sa", "onReading": "ka, ge", "strokes": 3 },
+      { "kanji": "手", "meaning": "qo'l", "kunReading": "te", "onReading": "shu", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "料理",
+    "hiragana": "りょうり",
+    "meaning": "ovqat, taom; ovqat pishirish",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "日本料理が好きです。(にほんりょうりがすきです。)",
+    "exampleTranslation": "Yapon taomlarini yaxshi ko'raman.",
+    "additionalExamples": [
+      { "sentence": "母は料理が上手です。(ははは りょうりが じょうずです。)", "translation": "Onam ovqat pishirishga usta." },
+      { "sentence": "毎日料理をします。(まいにちりょうりをします。)", "translation": "Har kuni ovqat pishiraman." }
+    ],
+    "synonyms": ["食べ物"],
+    "antonyms": [],
+    "nuance": "8-darsdagi 「食べ物」 dan farqi: 「料理」 — tayyorlangan taom yoki pishirish jarayoni; 「食べ物」 — umuman yegulik. Milliy taom nomlarida: 日本料理, 中国料理, イタリア料理.",
+    "compounds": [
+      { "word": "料理します", "hiragana": "りょうりします", "meaning": "ovqat pishirmoq" },
+      { "word": "手料理", "hiragana": "てりょうり", "meaning": "uy taomi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "料", "meaning": "material, haq", "kunReading": "-", "onReading": "ryou", "strokes": 10 },
+      { "kanji": "理", "meaning": "mantiq, tartib", "kunReading": "-", "onReading": "ri", "strokes": 11 }
+    ]
+  },
+  {
+    "japaneseWord": "飲み物",
+    "hiragana": "のみもの",
+    "meaning": "ichimlik",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "③",
+    "exampleSentence": "冷たい飲み物が好きです。(つめたいのみものがすきです。)",
+    "exampleTranslation": "Sovuq ichimliklarni yaxshi ko'raman.",
+    "additionalExamples": [
+      { "sentence": "飲み物は何がいいですか。(のみものはなにがいいですか。)", "translation": "Ichimlikdan nima olasiz?" },
+      { "sentence": "飲み物を買いました。(のみものをかいました。)", "translation": "Ichimlik sotib oldim." }
+    ],
+    "synonyms": ["ドリンク"],
+    "antonyms": ["食べ物"],
+    "nuance": "6-darsdagi 「飲みます」 dan yasalgan — masu-o'zagiga 「物」 qo'shiladi. 8-darsdagi 「食べ物」 bilan bir qolipda va doim juftlikda o'rganiladi.",
+    "compounds": [
+      { "word": "食べ物", "hiragana": "たべもの", "meaning": "yegulik" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "飲", "meaning": "ichmoq", "kunReading": "no", "onReading": "in", "strokes": 12 },
+      { "kanji": "物", "meaning": "narsa, buyum", "kunReading": "mono", "onReading": "butsu", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "スポーツ",
+    "hiragana": "スポーツ",
+    "meaning": "sport",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "②",
+    "exampleSentence": "スポーツが好きです。(すぽーつがすきです。)",
+    "exampleTranslation": "Sportni yaxshi ko'raman.",
+    "additionalExamples": [
+      { "sentence": "どんなスポーツをしますか。(どんなすぽーつをしますか。)", "translation": "Qanaqa sport bilan shug'ullanasiz?" },
+      { "sentence": "スポーツは体にいいです。(すぽーつはからだにいいです。)", "translation": "Sport sog'liq uchun foydali." }
+    ],
+    "synonyms": ["運動"],
+    "antonyms": [],
+    "nuance": "Yaponcha muqobili 「運動（うんどう）」 — u ko'proq \"jismoniy mashq\" ma'nosida. Musobaqa va o'yin turlari uchun 「スポーツ」 ishlatiladi.",
+    "compounds": [
+      { "word": "スポーツをします", "hiragana": "スポーツをします", "meaning": "sport bilan shug'ullanmoq" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "野球",
+    "hiragana": "やきゅう",
+    "meaning": "beysbol",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "野球が好きです。(やきゅうがすきです。)",
+    "exampleTranslation": "Beysbolni yaxshi ko'raman.",
+    "additionalExamples": [
+      { "sentence": "日曜日に野球をします。(にちようびにやきゅうをします。)", "translation": "Yakshanba kuni beysbol o'ynayman." },
+      { "sentence": "野球の試合を見ました。(やきゅうのしあいをみました。)", "translation": "Beysbol o'yinini ko'rdim." }
+    ],
+    "synonyms": ["ベースボール"],
+    "antonyms": [],
+    "nuance": "「野（dala）」＋「球（to'p）」. Yaponiyaning eng mashhur sporti; 5-darsdagi 「甲子園」 aynan maktab beysbol chempionati o'tadigan stadion.",
+    "compounds": [
+      { "word": "野球場", "hiragana": "やきゅうじょう", "meaning": "beysbol stadioni" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "野", "meaning": "dala, yovvoyi", "kunReading": "no", "onReading": "ya", "strokes": 11 },
+      { "kanji": "球", "meaning": "to'p, shar", "kunReading": "tama", "onReading": "kyuu", "strokes": 11 }
+    ]
+  },
+  {
+    "japaneseWord": "ダンス",
+    "hiragana": "ダンス",
+    "meaning": "raqs",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "ダンスが上手ですね。(だんすがじょうずですね。)",
+    "exampleTranslation": "Raqsga ustasiz-ku.",
+    "additionalExamples": [
+      { "sentence": "ダンスを習っています。(だんすをならっています。)", "translation": "Raqs o'rganyapman." },
+      { "sentence": "ダンスは下手です。(だんすはへたです。)", "translation": "Raqsga uddam yo'q." }
+    ],
+    "synonyms": ["踊り"],
+    "antonyms": [],
+    "nuance": "Yaponcha muqobili 「踊り（おどり）」 — u ko'proq an'anaviy raqsni bildiradi; zamonaviy va bal raqslari uchun 「ダンス」.",
+    "compounds": [
+      { "word": "ダンスをします", "hiragana": "ダンスをします", "meaning": "raqsga tushmoq" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "音楽",
+    "hiragana": "おんがく",
+    "meaning": "musiqa",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "音楽が好きです。(おんがくがすきです。)",
+    "exampleTranslation": "Musiqani yaxshi ko'raman.",
+    "additionalExamples": [
+      { "sentence": "毎晩音楽を聞きます。(まいばんおんがくをききます。)", "translation": "Har kecha musiqa tinglayman." },
+      { "sentence": "どんな音楽が好きですか。(どんなおんがくがすきですか。)", "translation": "Qanaqa musiqani yoqtirasiz?" }
+    ],
+    "synonyms": ["ミュージック"],
+    "antonyms": [],
+    "nuance": "「音（tovush）」＋「楽（zavq）」. 8-darsdagi 「楽しい」 dagi 「楽」 shu belgidan — bu yerda 「がく」 deb o'qiladi.",
+    "compounds": [
+      { "word": "音楽会", "hiragana": "おんがくかい", "meaning": "musiqa kechasi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "音", "meaning": "tovush, ovoz", "kunReading": "oto", "onReading": "on", "strokes": 9 },
+      { "kanji": "楽", "meaning": "musiqa; zavq", "kunReading": "tano", "onReading": "gaku, raku", "strokes": 13 }
+    ]
+  },
+  {
+    "japaneseWord": "歌",
+    "hiragana": "うた",
+    "meaning": "qo'shiq",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "②",
+    "exampleSentence": "日本の歌が好きです。(にほんのうたがすきです。)",
+    "exampleTranslation": "Yapon qo'shiqlarini yaxshi ko'raman.",
+    "additionalExamples": [
+      { "sentence": "歌が上手ですね。(うたがじょうずですね。)", "translation": "Yaxshi kuylaysiz-ku." },
+      { "sentence": "カラオケで歌を歌いました。(からおけでうたをうたいました。)", "translation": "Karaokeda qo'shiq aytdim." }
+    ],
+    "synonyms": ["ソング"],
+    "antonyms": [],
+    "nuance": "Fe'li o'zak bilan bir xil: 「歌を歌う（うたをうたう）」 — \"qo'shiqni qo'shiq qilmoq\" kabi eshitiladi, lekin bu to'g'ri va odatiy ibora.",
+    "compounds": [
+      { "word": "歌います", "hiragana": "うたいます", "meaning": "qo'shiq aytmoq" },
+      { "word": "歌手", "hiragana": "かしゅ", "meaning": "qo'shiqchi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "歌", "meaning": "qo'shiq, kuylamoq", "kunReading": "uta", "onReading": "ka", "strokes": 14 }
+    ]
+  },
+  {
+    "japaneseWord": "クラシック",
+    "hiragana": "クラシック",
+    "meaning": "klassik musiqa, mumtoz",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "クラシックが好きです。(くらしっくがすきです。)",
+    "exampleTranslation": "Klassik musiqani yaxshi ko'raman.",
+    "additionalExamples": [
+      { "sentence": "クラシックのコンサートへ行きます。(くらしっくのこんさーとへいきます。)", "translation": "Klassik musiqa konsertiga boraman." },
+      { "sentence": "クラシック音楽を聞きます。(くらしっくおんがくをききます。)", "translation": "Klassik musiqa tinglayman." }
+    ],
+    "synonyms": ["クラシック音楽"],
+    "antonyms": ["ポップス"],
+    "nuance": "Yaponchada 「クラシック」 yolg'iz o'zi \"klassik musiqa\" degani; to'liq shakli 「クラシック音楽」. Kiyimda esa \"klassik uslub\" ma'nosini beradi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "ジャズ",
+    "hiragana": "ジャズ",
+    "meaning": "jaz",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "①",
+    "exampleSentence": "ジャズが好きですか。(じゃずがすきですか。)",
+    "exampleTranslation": "Jazni yoqtirasizmi?",
+    "additionalExamples": [
+      { "sentence": "ジャズのコンサートがあります。(じゃずのこんさーとがあります。)", "translation": "Jaz konserti bo'ladi." },
+      { "sentence": "ジャズはあまり聞きません。(じゃずはあまりききません。)", "translation": "Jazni kam tinglayman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Yaponiyada jaz kafelari (ジャズ喫茶) XX asrda o'ziga xos madaniyat bo'lgan — mijozlar jimgina o'tirib faqat musiqa tinglashgan.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "コンサート",
+    "hiragana": "コンサート",
+    "meaning": "konsert",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "あしたコンサートがあります。(あしたこんさーとがあります。)",
+    "exampleTranslation": "Ertaga konsert bo'ladi.",
+    "additionalExamples": [
+      { "sentence": "コンサートのチケットを買いました。(こんさーとのちけっとをかいました。)", "translation": "Konsert chiptasini sotib oldim." },
+      { "sentence": "一緒にコンサートへ行きませんか。(いっしょにこんさーとへいきませんか。)", "translation": "Birga konsertga bormaymizmi?" }
+    ],
+    "synonyms": ["音楽会"],
+    "antonyms": [],
+    "nuance": "Yaponcha muqobili 「音楽会（おんがくかい）」 — u ko'proq klassik yoki maktab konsertiga nisbatan ishlatiladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "カラオケ",
+    "hiragana": "カラオケ",
+    "meaning": "karaoke",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "カラオケが好きです。(からおけがすきです。)",
+    "exampleTranslation": "Karaokeni yaxshi ko'raman.",
+    "additionalExamples": [
+      { "sentence": "友達とカラオケへ行きました。(ともだちとからおけへいきました。)", "translation": "Do'stlarim bilan karaokega bordim." },
+      { "sentence": "カラオケで歌を歌います。(からおけでうたをうたいます。)", "translation": "Karaokeda qo'shiq aytaman." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Yaponcha 「空（から — bo'sh）」＋ 「オーケストラ」 ning qisqartmasi 「オケ」 — ya'ni \"bo'sh orkestr\" (ovozsiz musiqa). Yaponiyada ixtiro qilingan va dunyoga tarqalgan so'z.",
+    "compounds": [
+      { "word": "カラオケボックス", "hiragana": "カラオケボックス", "meaning": "karaoke xonasi" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "歌舞伎",
+    "hiragana": "かぶき",
+    "meaning": "kabuki (an'anaviy yapon teatri)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "⓪",
+    "exampleSentence": "歌舞伎を見たいです。(かぶきをみたいです。)",
+    "exampleTranslation": "Kabuki tomosha qilmoqchiman.",
+    "additionalExamples": [
+      { "sentence": "歌舞伎はおもしろいですか。(かぶきはおもしろいですか。)", "translation": "Kabuki qiziqarlimi?" },
+      { "sentence": "歌舞伎のチケットは高いです。(かぶきのちけっとはたかいです。)", "translation": "Kabuki chiptasi qimmat." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「歌（qo'shiq）」＋「舞（raqs）」＋「伎（mahorat）」. XVII asrdan beri davom etadi; barcha rollarni, jumladan ayol rollarini ham (女形／おやま), erkaklar ijro etadi.",
+    "compounds": [
+      { "word": "歌舞伎座", "hiragana": "かぶきざ", "meaning": "Kabukiza teatri (Tokio)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "歌", "meaning": "qo'shiq", "kunReading": "uta", "onReading": "ka", "strokes": 14 },
+      { "kanji": "舞", "meaning": "raqs", "kunReading": "ma", "onReading": "bu", "strokes": 15 },
+      { "kanji": "伎", "meaning": "mahorat, san'at", "kunReading": "-", "onReading": "gi, ki", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "絵",
+    "hiragana": "え",
+    "meaning": "rasm, surat (chizilgan)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "絵が上手ですね。(えがじょうずですね。)",
+    "exampleTranslation": "Chiroyli chizasiz-ku.",
+    "additionalExamples": [
+      { "sentence": "美術館で絵を見ました。(びじゅつかんでえをみました。)", "translation": "Muzeyda rasmlarni ko'rdim." },
+      { "sentence": "子どもの絵はおもしろいです。(こどものえはおもしろいです。)", "translation": "Bolalarning rasmi qiziq bo'ladi." }
+    ],
+    "synonyms": ["絵画"],
+    "antonyms": ["写真"],
+    "nuance": "6-darsdagi 「写真」 dan farqi: 「絵」 — qo'lda chizilgan, 「写真」 — kamera bilan olingan. Rasm chizmoq — 「絵をかく」, bu yerda 「描く」 kanjisi ishlatiladi.",
+    "compounds": [
+      { "word": "絵はがき", "hiragana": "えはがき", "meaning": "manzarali otkritka" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "絵", "meaning": "rasm, tasvir", "kunReading": "-", "onReading": "e, kai", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "字",
+    "hiragana": "じ",
+    "meaning": "harf, belgi, yozuv",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "字が上手ですね。(じがじょうずですね。)",
+    "exampleTranslation": "Xatingiz chiroyli ekan.",
+    "additionalExamples": [
+      { "sentence": "この字が読めません。(このじがよめません。)", "translation": "Bu harfni o'qiy olmayman." },
+      { "sentence": "小さい字は見にくいです。(ちいさいじはみにくいです。)", "translation": "Mayda yozuvni ko'rish qiyin." }
+    ],
+    "synonyms": ["文字"],
+    "antonyms": [],
+    "nuance": "「字が上手」 — qo'lyozma chiroyli degani (xattotlik ma'nosida). To'liq shakli 「文字（もじ）」 — u ko'proq yozuv tizimi ma'nosida ishlatiladi.",
+    "compounds": [
+      { "word": "文字", "hiragana": "もじ", "meaning": "harf, yozuv belgisi" },
+      { "word": "名字", "hiragana": "みょうじ", "meaning": "familiya" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "字", "meaning": "harf, belgi", "kunReading": "aza", "onReading": "ji", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "漢字",
+    "hiragana": "かんじ",
+    "meaning": "kanji, iyeroglif",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "漢字は難しいです。(かんじはむずかしいです。)",
+    "exampleTranslation": "Iyerogliflar qiyin.",
+    "additionalExamples": [
+      { "sentence": "漢字が少しわかります。(かんじがすこしわかります。)", "translation": "Iyerogliflarni bir oz tushunaman." },
+      { "sentence": "毎日漢字を勉強します。(まいにちかんじをべんきょうします。)", "translation": "Har kuni iyeroglif o'rganaman." }
+    ],
+    "synonyms": [],
+    "antonyms": ["ひらがな", "かたかな"],
+    "nuance": "「漢（Xitoy, Xan sulolasi）」＋「字（belgi）」 — \"Xitoy belgilari\". Kundalik foydalanish uchun rasman 2136 ta belgi belgilangan (常用漢字).",
+    "compounds": [
+      { "word": "漢字辞典", "hiragana": "かんじじてん", "meaning": "iyerogliflar lug'ati" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "漢", "meaning": "Xitoy (Xan)", "kunReading": "-", "onReading": "kan", "strokes": 13 },
+      { "kanji": "字", "meaning": "harf, belgi", "kunReading": "aza", "onReading": "ji", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "ひらがな",
+    "hiragana": "ひらがな",
+    "meaning": "hiragana (yapon alifbosi)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "ひらがなで書いてください。(ひらがなでかいてください。)",
+    "exampleTranslation": "Hiraganada yozing.",
+    "additionalExamples": [
+      { "sentence": "ひらがなはわかります。(ひらがなはわかります。)", "translation": "Hiraganani tushunaman." },
+      { "sentence": "子どもは ひらがなから習います。(こどもはひらがなからならいます。)", "translation": "Bolalar hiraganadan boshlab o'rganadi." }
+    ],
+    "synonyms": [],
+    "antonyms": ["かたかな"],
+    "nuance": "「平（oddiy, tekis）」＋「仮名（yordamchi belgi）」. Yumaloq shaklli, yaponcha so'zlar va grammatik qo'shimchalar uchun ishlatiladi.",
+    "compounds": [
+      { "word": "仮名", "hiragana": "かな", "meaning": "kana (hiragana va katakana)" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "かたかな",
+    "hiragana": "かたかな",
+    "meaning": "katakana (yapon alifbosi)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "③",
+    "exampleSentence": "名前をかたかなで書きます。(なまえをかたかなでかきます。)",
+    "exampleTranslation": "Ismimni katakanada yozaman.",
+    "additionalExamples": [
+      { "sentence": "かたかなは難しいです。(かたかなはむずかしいです。)", "translation": "Katakana qiyin." },
+      { "sentence": "外国の言葉はかたかなで書きます。(がいこくのことばはかたかなでかきます。)", "translation": "Chet so'zlari katakanada yoziladi." }
+    ],
+    "synonyms": [],
+    "antonyms": ["ひらがな"],
+    "nuance": "「片（yarim, bo'lak）」＋「仮名」 — belgilar iyerogliflarning bir bo'lagidan olingani uchun shunday atalgan. O'zlashma so'zlar, chet el nomlari va tovush taqlidlari uchun ishlatiladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "ローマ字",
+    "hiragana": "ローマじ",
+    "meaning": "romaji, lotin yozuvi",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "⓪",
+    "exampleSentence": "ローマ字で書いてください。(ろーまじでかいてください。)",
+    "exampleTranslation": "Lotin harflarida yozing.",
+    "additionalExamples": [
+      { "sentence": "ローマ字は読みやすいです。(ろーまじはよみやすいです。)", "translation": "Lotin yozuvini o'qish oson." },
+      { "sentence": "駅の名前はローマ字もあります。(えきのなまえはろーまじもあります。)", "translation": "Bekat nomlari lotin yozuvida ham bor." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「ローマ（Rim）」＋「字（belgi）」 — katakana va kanji aralash yoziladi. Yaponlar kompyuterda matn yozganda ham romaji orqali kiritadi.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "字", "meaning": "harf, belgi", "kunReading": "aza", "onReading": "ji", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "細かいお金",
+    "hiragana": "こまかいおかね",
+    "meaning": "mayda pul, chaqa",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "",
+    "exampleSentence": "細かいお金がありますか。(こまかいおかねがありますか。)",
+    "exampleTranslation": "Mayda pulingiz bormi?",
+    "additionalExamples": [
+      { "sentence": "すみません、細かいお金がありません。(すみません、こまかいおかねがありません。)", "translation": "Kechirasiz, maydam yo'q." },
+      { "sentence": "細かいお金に替えてください。(こまかいおかねにかえてください。)", "translation": "Maydalab bering." }
+    ],
+    "synonyms": ["小銭"],
+    "antonyms": [],
+    "nuance": "「細かい（mayda）」＋7-darsdagi 「お金」. Qisqa shakli 「小銭（こぜに）」. Yaponiyada naqd pul ko'p ishlatilgani uchun bu ibora kundalik nutqda tez-tez uchraydi.",
+    "compounds": [
+      { "word": "小銭", "hiragana": "こぜに", "meaning": "chaqa, mayda pul" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "細", "meaning": "ingichka, mayda", "kunReading": "hoso, koma", "onReading": "sai", "strokes": 11 },
+      { "kanji": "金", "meaning": "oltin, pul", "kunReading": "kane", "onReading": "kin", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "チケット",
+    "hiragana": "チケット",
+    "meaning": "chipta (konsert, tomosha)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "コンサートのチケットがあります。(こんさーとのちけっとがあります。)",
+    "exampleTranslation": "Konsert chiptam bor.",
+    "additionalExamples": [
+      { "sentence": "チケットを二枚買いました。(ちけっとをにまいかいました。)", "translation": "Ikkita chipta sotib oldim." },
+      { "sentence": "チケットはいくらですか。(ちけっとはいくらですか。)", "translation": "Chipta qancha turadi?" }
+    ],
+    "synonyms": ["切符"],
+    "antonyms": [],
+    "nuance": "7-darsdagi 「切符」 dan farqi: 「切符」 — transport chiptasi, 「チケット」 — konsert, teatr, kino va samolyot chiptasi.",
+    "compounds": [
+      { "word": "チケット売り場", "hiragana": "チケットうりば", "meaning": "chipta kassasi" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "時間",
+    "hiragana": "じかん",
+    "meaning": "vaqt",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "⓪",
+    "exampleSentence": "時間がありませんから、行きません。(じかんがありませんから、いきません。)",
+    "exampleTranslation": "Vaqtim yo'qligi uchun bormayman.",
+    "additionalExamples": [
+      { "sentence": "時間がありますか。(じかんがありますか。)", "translation": "Vaqtingiz bormi?" },
+      { "sentence": "二時間かかりました。(にじかんかかりました。)", "translation": "Ikki soat vaqt oldi." }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "4-darsdagi 「～時（soat necha）」 dan farqi: 「時間」 — vaqtning o'zi yoki davomiyligi (necha soat). 「三時」 — soat uch, 「三時間」 — uch soat davomida.",
+    "compounds": [
+      { "word": "時間割", "hiragana": "じかんわり", "meaning": "dars jadvali" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "時", "meaning": "vaqt, soat", "kunReading": "toki", "onReading": "ji", "strokes": 10 },
+      { "kanji": "間", "meaning": "oraliq, orasi", "kunReading": "aida, ma", "onReading": "kan", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "用事",
+    "hiragana": "ようじ",
+    "meaning": "yumush, zarur ish",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "あした用事がありますから、行きません。(あしたようじがありますから、いきません。)",
+    "exampleTranslation": "Ertaga ishim borligi uchun bormayman.",
+    "additionalExamples": [
+      { "sentence": "ちょっと用事があります。(ちょっとようじがあります。)", "translation": "Biroz ishim bor." },
+      { "sentence": "用事が終わりました。(ようじがおわりました。)", "translation": "Yumushim tugadi." }
+    ],
+    "synonyms": ["仕事"],
+    "antonyms": [],
+    "nuance": "「用事」 — kichik, shaxsiy yumush (bankka borish, kimnidir kutish). 8-darsdagi 「仕事」 esa kasbiy ish. Taklifni muloyim rad qilishda 「用事がありますから…」 juda ko'p ishlatiladi.",
+    "compounds": [
+      { "word": "用", "hiragana": "よう", "meaning": "yumush, ehtiyoj" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "用", "meaning": "foydalanish, yumush", "kunReading": "mochi", "onReading": "you", "strokes": 5 },
+      { "kanji": "事", "meaning": "ish, hodisa", "kunReading": "koto", "onReading": "ji", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "約束",
+    "hiragana": "やくそく",
+    "meaning": "va'da; kelishilgan uchrashuv",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "友達と約束があります。(ともだちとやくそくがあります。)",
+    "exampleTranslation": "Do'stim bilan uchrashuvim bor.",
+    "additionalExamples": [
+      { "sentence": "約束の時間に遅れました。(やくそくのじかんにおくれました。)", "translation": "Kelishilgan vaqtga kechikdim." },
+      { "sentence": "約束を守ります。(やくそくをまもります。)", "translation": "Va'damda turaman." }
+    ],
+    "synonyms": ["アポイント"],
+    "antonyms": [],
+    "nuance": "Ikki ma'noli: bergan va'da va kimdir bilan kelishilgan uchrashuv. Fe'l shakli 「約束します」. Yaponiyada va'dani buzish juda jiddiy qabul qilinadi.",
+    "compounds": [
+      { "word": "約束します", "hiragana": "やくそくします", "meaning": "va'da bermoq" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "約", "meaning": "va'da, taxminan", "kunReading": "-", "onReading": "yaku", "strokes": 9 },
+      { "kanji": "束", "meaning": "bog'lam, bog'lamoq", "kunReading": "taba", "onReading": "soku", "strokes": 7 }
+    ]
+  },
+  {
+    "japaneseWord": "ご主人",
+    "hiragana": "ごしゅじん",
+    "meaning": "eringiz, xo'jayiningiz (boshqaning eri)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "②",
+    "exampleSentence": "ご主人はお元気ですか。(ごしゅじんはおげんきですか。)",
+    "exampleTranslation": "Eringiz yaxshi yuribdilarmi?",
+    "additionalExamples": [
+      { "sentence": "ご主人のお仕事は何ですか。(ごしゅじんのおしごとはなんですか。)", "translation": "Eringizning kasbi nima?" },
+      { "sentence": "ご主人によろしく。(ごしゅじんによろしく。)", "translation": "Eringizga salom ayting." }
+    ],
+    "synonyms": [],
+    "antonyms": ["奥さん"],
+    "nuance": "7-darsdagi 「父／お父さん」 qoidasining davomi: boshqaning eri — 「ご主人」, o'z eri — 「夫」 yoki 「主人」. 「ご主人」 ni o'z eriga nisbatan ishlatish xato.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "主", "meaning": "asosiy, xo'jayin", "kunReading": "nushi, omo", "onReading": "shu", "strokes": 5 },
+      { "kanji": "人", "meaning": "odam, kishi", "kunReading": "hito", "onReading": "jin, nin", "strokes": 2 }
+    ]
+  },
+  {
+    "japaneseWord": "夫",
+    "hiragana": "おっと",
+    "meaning": "erim (o'z eri haqida)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "夫は会社員です。(おっとはかいしゃいんです。)",
+    "exampleTranslation": "Erim firma xodimi.",
+    "additionalExamples": [
+      { "sentence": "夫と一緒に行きます。(おっとといっしょにいきます。)", "translation": "Erim bilan birga boraman." },
+      { "sentence": "夫は料理が上手です。(おっとはりょうりがじょうずです。)", "translation": "Erim ovqat pishirishga usta." }
+    ],
+    "synonyms": ["主人"],
+    "antonyms": ["妻"],
+    "nuance": "「夫」 — neytral va zamonaviy shakl, rasmiy hujjatlarda ham ishlatiladi. 「主人」 esa \"xo'jayin\" ma'nosidan kelib chiqqani uchun ba'zilar undan qochadi.",
+    "compounds": [
+      { "word": "夫婦", "hiragana": "ふうふ", "meaning": "er-xotin" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "夫", "meaning": "er, erkak", "kunReading": "otto", "onReading": "fu", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "主人",
+    "hiragana": "しゅじん",
+    "meaning": "erim, xo'jayinim (o'z eri haqida)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "主人は銀行で働いています。(しゅじんはぎんこうではたらいています。)",
+    "exampleTranslation": "Erim bankda ishlaydi.",
+    "additionalExamples": [
+      { "sentence": "主人は今、家にいません。(しゅじんはいま、いえにいません。)", "translation": "Erim hozir uyda yo'q." },
+      { "sentence": "主人と旅行しました。(しゅじんとりょこうしました。)", "translation": "Erim bilan sayohat qildik." }
+    ],
+    "synonyms": ["夫"],
+    "antonyms": ["家内"],
+    "nuance": "「夫」 bilan bir ma'no, lekin biroz an'anaviyroq ohangda. Diqqat: 「主人」 do'kon yoki restoran egasi ma'nosida ham keladi — 「店の主人」.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "主", "meaning": "asosiy, xo'jayin", "kunReading": "nushi, omo", "onReading": "shu", "strokes": 5 },
+      { "kanji": "人", "meaning": "odam, kishi", "kunReading": "hito", "onReading": "jin, nin", "strokes": 2 }
+    ]
+  },
+  {
+    "japaneseWord": "奥さん",
+    "hiragana": "おくさん",
+    "meaning": "xotiningiz, ayolingiz (boshqaning xotini)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "奥さんはお元気ですか。(おくさんはおげんきですか。)",
+    "exampleTranslation": "Xotiningiz yaxshi yuribdilarmi?",
+    "additionalExamples": [
+      { "sentence": "奥さんは日本語が上手ですね。(おくさんはにほんごがじょうずですね。)", "translation": "Xotiningiz yapon tilida yaxshi gapiradi-ku." },
+      { "sentence": "奥さんによろしく。(おくさんによろしく。)", "translation": "Xotiningizga salom ayting." }
+    ],
+    "synonyms": [],
+    "antonyms": ["ご主人"],
+    "nuance": "「奥（uyning ichkarisi）」 dan kelib chiqqan — qadimda ayol uyning ichki qismida bo'lgani uchun. O'z xotini haqida 「奥さん」 deyilmaydi, 「妻」 yoki 「家内」 ishlatiladi.",
+    "compounds": [
+      { "word": "奥", "hiragana": "おく", "meaning": "ichkari, tub" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "奥", "meaning": "ichkari, tub", "kunReading": "oku", "onReading": "ou", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "妻",
+    "hiragana": "つま",
+    "meaning": "xotinim (o'z xotini haqida)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "妻は先生です。(つまはせんせいです。)",
+    "exampleTranslation": "Xotinim o'qituvchi.",
+    "additionalExamples": [
+      { "sentence": "妻と一緒に来ました。(つまといっしょにきました。)", "translation": "Xotinim bilan birga keldim." },
+      { "sentence": "妻は音楽が好きです。(つまはおんがくがすきです。)", "translation": "Xotinim musiqani yaxshi ko'radi." }
+    ],
+    "synonyms": ["家内"],
+    "antonyms": ["夫"],
+    "nuance": "「夫」 kabi neytral va rasmiy shakl — hujjatlarda ham shu ishlatiladi. Hozirgi yosh avlod 「家内」 dan ko'ra 「妻」 ni afzal ko'radi.",
+    "compounds": [
+      { "word": "夫妻", "hiragana": "ふさい", "meaning": "er-xotin (rasmiy)" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "妻", "meaning": "xotin", "kunReading": "tsuma", "onReading": "sai", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "家内",
+    "hiragana": "かない",
+    "meaning": "xotinim (o'z xotini haqida, an'anaviy shakl)",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "①",
+    "exampleSentence": "家内は今、買い物に行っています。(かないはいま、かいものにいっています。)",
+    "exampleTranslation": "Xotinim hozir xarid qilgani ketgan.",
+    "additionalExamples": [
+      { "sentence": "家内も一緒に行きます。(かないもいっしょにいきます。)", "translation": "Xotinim ham birga boradi." },
+      { "sentence": "家内は料理が好きです。(かないはりょうりがすきです。)", "translation": "Xotinim ovqat pishirishni yoqtiradi." }
+    ],
+    "synonyms": ["妻"],
+    "antonyms": ["主人"],
+    "nuance": "So'zma-so'z \"uy ichidagi\" — ayolning uyda bo'lishi tabiiy sanalgan davrdan qolgan. Shu sababli hozir eskirgan va ba'zan noo'rin hisoblanadi; 「妻」 xavfsizroq tanlov.",
+    "compounds": [],
+    "kanjiInfo": [
+      { "kanji": "家", "meaning": "uy, oila", "kunReading": "ie, ya", "onReading": "ka", "strokes": 10 },
+      { "kanji": "内", "meaning": "ichkari, ich", "kunReading": "uchi", "onReading": "nai", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "子ども",
+    "hiragana": "こども",
+    "meaning": "bola, farzand",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "⓪",
+    "exampleSentence": "子どもが二人います。(こどもがふたりいます。)",
+    "exampleTranslation": "Ikkita farzandim bor.",
+    "additionalExamples": [
+      { "sentence": "子どもは音楽が好きです。(こどもはおんがくがすきです。)", "translation": "Bolam musiqani yaxshi ko'radi." },
+      { "sentence": "子どもの時、よく遊びました。(こどものとき、よくあそびました。)", "translation": "Bolaligimda ko'p o'ynardim." }
+    ],
+    "synonyms": ["お子さん"],
+    "antonyms": ["大人"],
+    "nuance": "Boshqaning farzandi haqida hurmat bilan 「お子さん」 deyiladi — bu darsdagi 「ご主人／夫」 juftligi bilan bir qoida. Ziddi 「大人（おとな）」.",
+    "compounds": [
+      { "word": "お子さん", "hiragana": "おこさん", "meaning": "farzandingiz (hurmat)" },
+      { "word": "子どもたち", "hiragana": "こどもたち", "meaning": "bolalar" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "子", "meaning": "bola", "kunReading": "ko", "onReading": "shi, su", "strokes": 3 }
+    ]
+  },
+  {
+    "japaneseWord": "よく",
+    "hiragana": "よく",
+    "meaning": "tez-tez, ko'p; yaxshi",
+    "partOfSpeech": "ravish",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "よく映画を見ます。(よくえいがをみます。)",
+    "exampleTranslation": "Tez-tez kino ko'raman.",
+    "additionalExamples": [
+      { "sentence": "日本語がよくわかります。(にほんごがよくわかります。)", "translation": "Yapon tilini yaxshi tushunaman." },
+      { "sentence": "よく勉強しますね。(よくべんきょうしますね。)", "translation": "Ko'p o'qiysiz-ku." }
+    ],
+    "synonyms": ["しばしば"],
+    "antonyms": ["あまり", "全然"],
+    "nuance": "Ikki ma'noli: chastota (\"tez-tez\") va daraja (\"yaxshi\"). 8-darsdagi 「いい」 ning ravish shakli ham shu — よい → よく. Chastota tartibi: いつも → よく → ときどき → あまり → 全然.",
+    "compounds": [
+      { "word": "よくない", "hiragana": "よくない", "meaning": "yaxshi emas" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "だいたい",
+    "hiragana": "だいたい",
+    "meaning": "asosan, deyarli, taxminan",
+    "partOfSpeech": "ravish",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "日本語がだいたいわかります。(にほんごがだいたいわかります。)",
+    "exampleTranslation": "Yapon tilini asosan tushunaman.",
+    "additionalExamples": [
+      { "sentence": "宿題はだいたい終わりました。(しゅくだいはだいたいおわりました。)", "translation": "Uy vazifasi deyarli tugadi." },
+      { "sentence": "だいたい一時間かかります。(だいたいいちじかんかかります。)", "translation": "Taxminan bir soat vaqt oladi." }
+    ],
+    "synonyms": ["ほとんど", "約"],
+    "antonyms": [],
+    "nuance": "Kanji shakli 「大体」 — \"katta tana, umumiy ko'rinish\". Miqdor oldida \"taxminan\" ma'nosini beradi: 「だいたい三十分」.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "たくさん",
+    "hiragana": "たくさん",
+    "meaning": "ko'p, mo'l",
+    "partOfSpeech": "ravish",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "③",
+    "exampleSentence": "漢字をたくさん習いました。(かんじをたくさんならいました。)",
+    "exampleTranslation": "Ko'p iyeroglif o'rgandim.",
+    "additionalExamples": [
+      { "sentence": "友達がたくさんいます。(ともだちがたくさんいます。)", "translation": "Do'stlarim ko'p." },
+      { "sentence": "たくさん食べてください。(たくさんたべてください。)", "translation": "Ko'proq yeng." }
+    ],
+    "synonyms": ["いっぱい", "多く"],
+    "antonyms": ["少し"],
+    "nuance": "「たくさん」 sanaladigan va sanalmaydigan narsalarga birdek ishlatiladi. Erkin nutqda 「いっぱい」 ham keladi — 8-darsdagi 「一杯（bir piyola）」 bilan bir so'z, lekin bu yerda \"to'la\" ma'nosida.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "少し",
+    "hiragana": "すこし",
+    "meaning": "ozgina, biroz, kam",
+    "partOfSpeech": "ravish",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "②",
+    "exampleSentence": "日本語が少しわかります。(にほんごがすこしわかります。)",
+    "exampleTranslation": "Yapon tilini bir oz tushunaman.",
+    "additionalExamples": [
+      { "sentence": "少し休みましょう。(すこしやすみましょう。)", "translation": "Bir oz dam olaylik." },
+      { "sentence": "お金が少しあります。(おかねがすこしあります。)", "translation": "Bir oz pulim bor." }
+    ],
+    "synonyms": ["ちょっと"],
+    "antonyms": ["たくさん"],
+    "nuance": "6-darsdagi 「ちょっと」 dan farqi: 「少し」 neytral va rasmiyroq, 「ちょっと」 esa erkin nutqda va muloyim rad javobi sifatida ishlatiladi.",
+    "compounds": [
+      { "word": "少ない", "hiragana": "すくない", "meaning": "kam, oz" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "少", "meaning": "kam, oz", "kunReading": "suko, suku", "onReading": "shou", "strokes": 4 }
+    ]
+  },
+  {
+    "japaneseWord": "全然",
+    "hiragana": "ぜんぜん",
+    "meaning": "umuman ~ emas, mutlaqo ~ emas (inkor bilan)",
+    "partOfSpeech": "ravish",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "⓪",
+    "exampleSentence": "英語が全然わかりません。(えいごがぜんぜんわかりません。)",
+    "exampleTranslation": "Ingliz tilini umuman tushunmayman.",
+    "additionalExamples": [
+      { "sentence": "お酒は全然飲みません。(おさけはぜんぜんのみません。)", "translation": "Ichkilikni umuman ichmayman." },
+      { "sentence": "時間が全然ありません。(じかんがぜんぜんありません。)", "translation": "Vaqtim umuman yo'q." }
+    ],
+    "synonyms": ["まったく"],
+    "antonyms": ["いつも", "よく"],
+    "nuance": "8-darsdagi 「あまり」 kabi doim INKOR bilan keladi, lekin kuchliroq: 「あまり」 — \"unchalik emas\", 「全然」 — \"umuman yo'q\". Chastota shkalasining eng quyi nuqtasi.",
+    "compounds": [
+      { "word": "全部", "hiragana": "ぜんぶ", "meaning": "hammasi" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "全", "meaning": "butun, hamma", "kunReading": "matta", "onReading": "zen", "strokes": 6 },
+      { "kanji": "然", "meaning": "shunday, holat", "kunReading": "-", "onReading": "zen, nen", "strokes": 12 }
+    ]
+  },
+  {
+    "japaneseWord": "早く",
+    "hiragana": "はやく",
+    "meaning": "erta, barvaqt",
+    "partOfSpeech": "ravish",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "けさ早く起きました。(けさはやくおきました。)",
+    "exampleTranslation": "Bugun ertalab erta turdim.",
+    "additionalExamples": [
+      { "sentence": "早く寝てください。(はやくねてください。)", "translation": "Erta uxlang." },
+      { "sentence": "早く帰りたいです。(はやくかえりたいです。)", "translation": "Erta qaytmoqchiman." }
+    ],
+    "synonyms": [],
+    "antonyms": ["遅く"],
+    "nuance": "「早い」 (erta) ning ravish shakli — VAQT haqida. Tezlik haqida esa boshqa kanji ishlatiladi: 「速く」. Ikkalasi 「はやく」 deb o'qiladi.",
+    "compounds": [
+      { "word": "早い", "hiragana": "はやい", "meaning": "erta" },
+      { "word": "早起き", "hiragana": "はやおき", "meaning": "erta turish" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "早", "meaning": "erta", "kunReading": "haya", "onReading": "sou", "strokes": 6 }
+    ]
+  },
+  {
+    "japaneseWord": "速く",
+    "hiragana": "はやく",
+    "meaning": "tez, shoshilinch (harakat tezligi)",
+    "partOfSpeech": "ravish",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "新幹線は速く走ります。(しんかんせんははやくはしります。)",
+    "exampleTranslation": "Shinkansen tez yuradi.",
+    "additionalExamples": [
+      { "sentence": "速く歩いてください。(はやくあるいてください。)", "translation": "Tezroq yuring." },
+      { "sentence": "彼は速く話します。(かれははやくはなします。)", "translation": "U tez gapiradi." }
+    ],
+    "synonyms": [],
+    "antonyms": ["遅く"],
+    "nuance": "「早く」 bilan bir xil o'qiladi, lekin ma'nosi boshqa: 「早く」 — vaqt (erta), 「速く」 — tezlik (tez). 5-darsdagi 「特急」「急行」 tezlik ma'nosida shu tushunchaga bog'liq.",
+    "compounds": [
+      { "word": "速い", "hiragana": "はやい", "meaning": "tez" },
+      { "word": "速度", "hiragana": "そくど", "meaning": "tezlik" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "速", "meaning": "tez, shoshilinch", "kunReading": "haya", "onReading": "soku", "strokes": 10 }
+    ]
+  },
+  {
+    "japaneseWord": "～から",
+    "hiragana": "～から",
+    "meaning": "~ chunki, ~ligi uchun (sabab)",
+    "partOfSpeech": "bog'lovchi",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "",
+    "exampleSentence": "時間がありませんから、行きません。(じかんがありませんから、いきません。)",
+    "exampleTranslation": "Vaqtim yo'qligi uchun bormayman.",
+    "additionalExamples": [
+      { "sentence": "きょうは忙しいですから、あしたにしましょう。(きょうはいそがしいですから、あしたにしましょう。)", "translation": "Bugun bandman, shuning uchun ertaga qilaylik." },
+      { "sentence": "どうして行きませんか。—用事がありますから。", "translation": "\"Nega bormaysiz?\" — \"Ishim borligi uchun.\"" }
+    ],
+    "synonyms": ["ので"],
+    "antonyms": [],
+    "nuance": "4-darsda 「から」 \"~dan\" (boshlanish nuqtasi) edi; bu darsda SABAB bog'lovchisi. Sabab OLDIN, natija KEYIN keladi — o'zbek tilidagi tartib bilan bir xil. 「どうして」 savoliga javob ham 「～から」 bilan tugaydi.",
+    "compounds": [
+      { "word": "ですから", "hiragana": "ですから", "meaning": "shuning uchun" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "どうして",
+    "hiragana": "どうして",
+    "meaning": "nima uchun, nega",
+    "partOfSpeech": "olmosh",
+    "jlptLevel": "N5",
+    "frequency": "Top 500",
+    "pitchAccent": "①",
+    "exampleSentence": "どうして行きませんか。(どうしていきませんか。)",
+    "exampleTranslation": "Nega bormaysiz?",
+    "additionalExamples": [
+      { "sentence": "どうして日本語を勉強しますか。(どうしてにほんごをべんきょうしますか。)", "translation": "Nega yapon tilini o'rganyapsiz?" },
+      { "sentence": "どうしてですか。(どうしてですか。)", "translation": "Nima uchun?" }
+    ],
+    "synonyms": ["なぜ", "なんで"],
+    "antonyms": [],
+    "nuance": "Uch shakl bor: 「どうして」 — neytral, 「なぜ」 — rasmiy va yozma, 「なんで」 — erkin nutq. Javob doim 「～から」 bilan tugaydi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "残念です[ね]",
+    "hiragana": "ざんねんです[ね]",
+    "meaning": "Afsus. / Achinarli ekan.",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "③",
+    "exampleSentence": "行けませんか。残念ですね。(いけませんか。ざんねんですね。)",
+    "exampleTranslation": "Bora olmaysizmi? Afsus.",
+    "additionalExamples": [
+      { "sentence": "それは残念ですね。(それはざんねんですね。)", "translation": "Bu achinarli ekan." },
+      { "sentence": "残念ですが、行けません。(ざんねんですが、いけません。)", "translation": "Afsuski, bora olmayman." }
+    ],
+    "synonyms": ["惜しい"],
+    "antonyms": [],
+    "nuance": "Taklif rad etilganda javob sifatida ishlatiladi. O'zi rad etayotgan tomon esa 「残念ですが…」 deb boshlaydi — bu muloyimlikni oshiradi.",
+    "compounds": [
+      { "word": "残念", "hiragana": "ざんねん", "meaning": "afsus, achinish" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "残", "meaning": "qolmoq, qoldiq", "kunReading": "noko", "onReading": "zan", "strokes": 10 },
+      { "kanji": "念", "meaning": "fikr, tuyg'u", "kunReading": "-", "onReading": "nen", "strokes": 8 }
+    ]
+  },
+  {
+    "japaneseWord": "すみません",
+    "hiragana": "すみません",
+    "meaning": "Kechirasiz; rahmat (ovora bo'ldingiz)",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 100",
+    "pitchAccent": "④",
+    "exampleSentence": "すみません、時間がありませんから。(すみません、じかんがありませんから。)",
+    "exampleTranslation": "Kechirasiz, vaqtim yo'qligi uchun (bora olmayman).",
+    "additionalExamples": [
+      { "sentence": "すみません、また今度お願いします。(すみません、またこんどおねがいします。)", "translation": "Kechirasiz, boshqa safar bo'lsin." },
+      { "sentence": "どうもすみません。(どうもすみません。)", "translation": "Juda uzr so'rayman." }
+    ],
+    "synonyms": ["ごめんなさい", "失礼します"],
+    "antonyms": [],
+    "nuance": "3-darsda e'tibor tortish uchun o'rganilgan edi; bu darsda taklifni RAD ETISHDA uzr sifatida keladi. Rad javobi odatda uch qismdan iborat: 「すみません」＋ sabab (～から) ＋ 「また今度お願いします」.",
+    "compounds": [
+      { "word": "どうもすみません", "hiragana": "どうもすみません", "meaning": "juda uzr so'rayman" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "もしもし",
+    "hiragana": "もしもし",
+    "meaning": "Allo (telefonda)",
+    "partOfSpeech": "undov",
+    "jlptLevel": "N5",
+    "frequency": "Top 2000",
+    "pitchAccent": "①",
+    "exampleSentence": "もしもし、ミラーですが。(もしもし、みらーですが。)",
+    "exampleTranslation": "Allo, men Millerman.",
+    "additionalExamples": [
+      { "sentence": "もしもし、聞こえますか。(もしもし、きこえますか。)", "translation": "Allo, eshityapsizmi?" },
+      { "sentence": "もしもし、田中さんのお宅ですか。(もしもし、たなかさんのおたくですか。)", "translation": "Allo, Tanakalarning uyimi?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "「申します（もうします — aytaman）」 ning takrorlangan qisqartmasidan kelib chiqqan. Faqat telefonda ishlatiladi; ish qo'ng'irog'ida esa 「もしもし」 emas, darhol 「お世話になっております」 deyish odobli.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "ああ",
+    "hiragana": "ああ",
+    "meaning": "A! / Ha-ya (tushunganda yoki eslaganda)",
+    "partOfSpeech": "undov",
+    "jlptLevel": "N5",
+    "frequency": "Top 1000",
+    "pitchAccent": "①",
+    "exampleSentence": "ああ、ミラーさんですか。(ああ、みらーさんですか。)",
+    "exampleTranslation": "A, janob Millermisiz?",
+    "additionalExamples": [
+      { "sentence": "ああ、そうですか。(ああ、そうですか。)", "translation": "A, shundaymi?" },
+      { "sentence": "ああ、わかりました。(ああ、わかりました。)", "translation": "A, tushundim." }
+    ],
+    "synonyms": ["あ"],
+    "antonyms": [],
+    "nuance": "Tushunish, eslash yoki hayratni bildiradi. Qisqa 「あ」 — to'satdan payqash, cho'ziq 「ああ」 — tushunish yoki xotira.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "いっしょにいかがですか",
+    "hiragana": "いっしょにいかがですか",
+    "meaning": "Birga (bormaysizmi)? / Birga qilmaymizmi?",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "",
+    "exampleSentence": "あした、いっしょにいかがですか。(あした、いっしょにいかがですか。)",
+    "exampleTranslation": "Ertaga birga borsak-chi?",
+    "additionalExamples": [
+      { "sentence": "コンサートへ いっしょにいかがですか。(こんさーとへいっしょにいかがですか。)", "translation": "Konsertga birga bormaymizmi?" },
+      { "sentence": "食事、いっしょにいかがですか。(しょくじ、いっしょにいかがですか。)", "translation": "Birga ovqatlansak-chi?" }
+    ],
+    "synonyms": ["いっしょに行きませんか"],
+    "antonyms": [],
+    "nuance": "6-darsdagi 「一緒に」 ＋ 7-darsdagi 「いかがですか」. Taklifning eng muloyim shakli; 「～ませんか」 dan ham hurmatliroq eshitiladi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "[～は]ちょっと…",
+    "hiragana": "[～は]ちょっと…",
+    "meaning": "~ biroz qiyin... (muloyim rad javobi)",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "",
+    "exampleSentence": "あしたはちょっと…。(あしたはちょっと…。)",
+    "exampleTranslation": "Ertaga biroz qiyin-da...",
+    "additionalExamples": [
+      { "sentence": "その日はちょっと…。(そのひはちょっと…。)", "translation": "U kuni biroz noqulay..." },
+      { "sentence": "すみません、今日はちょっと…。(すみません、きょうはちょっと…。)", "translation": "Kechirasiz, bugun biroz..." }
+    ],
+    "synonyms": ["残念ですが"],
+    "antonyms": ["いいですね"],
+    "nuance": "Yapon muloqotining muhim xususiyati: **gap ataylab tugatilmaydi**. 「行きません」 deb ochiq rad etish qo'pol hisoblanadi, shuning uchun 「ちょっと…」 bilan to'xtaladi. Suhbatdosh buni aniq \"yo'q\" deb tushunadi.",
+    "compounds": [],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "だめですか",
+    "hiragana": "だめですか",
+    "meaning": "Bo'lmaydimi? / Iloji yo'qmi?",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "",
+    "exampleSentence": "あしたはちょっと…。—だめですか。",
+    "exampleTranslation": "\"Ertaga biroz qiyin...\" — \"Bo'lmaydimi?\"",
+    "additionalExamples": [
+      { "sentence": "写真はだめですか。(しゃしんはだめですか。)", "translation": "Rasmga olish mumkin emasmi?" },
+      { "sentence": "だめです。(だめです。)", "translation": "Mumkin emas." }
+    ],
+    "synonyms": ["いけませんか"],
+    "antonyms": ["いいですか"],
+    "nuance": "「だめ」 — \"yaramaydi, mumkin emas\". Rad javobidan keyin bir marta so'rash odatiy, lekin ikkinchi marta qistash qo'pol hisoblanadi.",
+    "compounds": [
+      { "word": "だめ", "hiragana": "だめ", "meaning": "yaramaydi, mumkin emas" }
+    ],
+    "kanjiInfo": []
+  },
+  {
+    "japaneseWord": "また今度お願いします",
+    "hiragana": "またこんどおねがいします",
+    "meaning": "Boshqa safar. / Keyingi safar bo'lsin.",
+    "partOfSpeech": "ibora",
+    "jlptLevel": "N5",
+    "frequency": "Top 5000",
+    "pitchAccent": "",
+    "exampleSentence": "残念ですが、また今度お願いします。(ざんねんですが、またこんどおねがいします。)",
+    "exampleTranslation": "Afsuski, boshqa safar bo'lsin.",
+    "additionalExamples": [
+      { "sentence": "きょうはちょっと…。また今度お願いします。", "translation": "Bugun biroz qiyin... Keyingi safar bo'lsin." },
+      { "sentence": "また今度誘ってください。(またこんどさそってください。)", "translation": "Keyingi safar ham taklif qiling." }
+    ],
+    "synonyms": ["また今度"],
+    "antonyms": [],
+    "nuance": "Rad javobini yumshatuvchi ibora — \"bu safar yo'q, lekin munosabatimiz davom etsin\" degan ma'noni beradi. 「今度（こんど）」 ham \"bu safar\", ham \"keyingi safar\" degani; kontekst ajratadi.",
+    "compounds": [
+      { "word": "今度", "hiragana": "こんど", "meaning": "bu safar; keyingi safar" }
+    ],
+    "kanjiInfo": [
+      { "kanji": "今", "meaning": "hozir", "kunReading": "ima", "onReading": "kon", "strokes": 4 },
+      { "kanji": "度", "meaning": "marta, daraja", "kunReading": "tabi", "onReading": "do", "strokes": 9 }
+    ]
+  },
+  {
+    "japaneseWord": "小沢征爾",
+    "hiragana": "おざわせいじ",
+    "meaning": "Ozava Seyji (1935–2024), taniqli yapon dirijori",
+    "partOfSpeech": "ot",
+    "jlptLevel": "N5",
+    "frequency": "Boshqa",
+    "pitchAccent": "",
+    "exampleSentence": "小沢征爾のコンサートへ行きました。(おざわせいじのこんさーとへいきました。)",
+    "exampleTranslation": "Ozava Seyjining konsertiga bordim.",
+    "additionalExamples": [
+      { "sentence": "小沢征爾は有名な音楽家です。(おざわせいじはゆうめいなおんがくかです。)", "translation": "Ozava Seyji — mashhur musiqachi." },
+      { "sentence": "小沢征爾を知っていますか。(おざわせいじをしっていますか。)", "translation": "Ozava Seyjini bilasizmi?" }
+    ],
+    "synonyms": [],
+    "antonyms": [],
+    "nuance": "Boston simfonik orkestrini 29 yil boshqargan, Vena davlat operasi bosh dirijori bo'lgan. Yaponiyani jahon klassik musiqasida tanitgan shaxs.",
+    "compounds": [
+      { "word": "音楽家", "hiragana": "おんがくか", "meaning": "musiqachi" }
+    ],
+    "kanjiInfo": []
+  }
+]
