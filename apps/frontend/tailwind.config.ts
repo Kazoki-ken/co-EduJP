@@ -1,5 +1,11 @@
 import type { Config } from "tailwindcss";
 
+/* Every colour below reads a CSS variable that holds a bare `R G B` triple.
+   The two themes live in app/globals.css: `:root` is light, `.dark` is the
+   original dark palette. Writing them as `rgb(var(--x) / <alpha-value>)`
+   keeps Tailwind's opacity modifiers (`bg-surface/80`) working. */
+const rgb = (v: string) => `rgb(var(${v}) / <alpha-value>)`;
+
 const config: Config = {
   darkMode: "class",
   content: [
@@ -11,34 +17,34 @@ const config: Config = {
     extend: {
       colors: {
         // ── Japanese Traditional Design System ─────────────────────────
-        background: "#161514",     // Sumi Black / Charcoal
-        surface:    "#1f1d1c",     // Warm Dark Ash
-        "surface-2": "#2a2725",    // Lighter Charcoal
-        border:     "#3a3532",     // Warm Stone Border
+        background: rgb("--c-background"),
+        surface:    rgb("--c-surface"),
+        "surface-2": rgb("--c-surface-2"),
+        border:     rgb("--c-border"),
 
-        primary:    "#e83929",     // Shu-iro (Vermilion Red)
-        "primary-hover": "#f05a4f",
-        "primary-glow": "rgba(232,57,41,0.35)",
+        primary:    rgb("--c-primary"),      // Shu-iro (Vermilion Red)
+        "primary-hover": rgb("--c-primary-hover"),
+        "primary-glow": "var(--c-primary-glow)",
 
-        accent:     "#f2a900",     // Yamabuki (Gold)
-        "accent-hover": "#ffc107",
-        "accent-glow": "rgba(242,169,0,0.3)",
+        accent:     rgb("--c-accent"),       // Yamabuki (Gold)
+        "accent-hover": rgb("--c-accent-hover"),
+        "accent-glow": "var(--c-accent-glow)",
 
-        success:    "#2d7a47",     // Matcha / Bamboo Green
-        warning:    "#e67e22",     // Mikan / Orange
-        danger:     "#c0392b",     // Tsubaki / Camellia Red
+        success:    rgb("--c-success"),      // Matcha / Bamboo Green
+        warning:    rgb("--c-warning"),      // Mikan / Orange
+        danger:     rgb("--c-danger"),       // Tsubaki / Camellia Red
 
         // ── League Palette ───────────────────────────────────
-        bronze:     "#cd7f32",
-        silver:     "#c0c0c0",
-        gold:       "#ffd700",
-        platinum:   "#e5e4e2",
-        diamond:    "#b9f2ff",
+        bronze:     rgb("--c-bronze"),
+        silver:     rgb("--c-silver"),
+        gold:       rgb("--c-gold"),
+        platinum:   rgb("--c-platinum"),
+        diamond:    rgb("--c-diamond"),
 
         // ── Text Scale ───────────────────────────────────────
-        "text-primary":   "#faf9f6",   // Washi paper white
-        "text-secondary": "#b3aba2",   // Golden sand grey
-        "text-muted":     "#736c64",   // Stone grey
+        "text-primary":   rgb("--c-text-primary"),
+        "text-secondary": rgb("--c-text-secondary"),
+        "text-muted":     rgb("--c-text-muted"),
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
@@ -51,20 +57,16 @@ const config: Config = {
         "2xl": "1.5rem",
       },
       boxShadow: {
-        glow:        "0 0 20px rgba(232,57,41,0.4)",
-        "glow-sm":   "0 0 10px rgba(232,57,41,0.3)",
-        "glow-accent": "0 0 20px rgba(242,169,0,0.4)",
-        glass:       "0 8px 32px rgba(0,0,8,0.5)",
+        glow:        "var(--shadow-glow)",
+        "glow-sm":   "var(--shadow-glow-sm)",
+        "glow-accent": "var(--shadow-glow-accent)",
+        glass:       "var(--shadow-glass)",
       },
       backgroundImage: {
-        "space-gradient":
-          "radial-gradient(ellipse at top, #3c1e1e 0%, #161514 60%)",
-        "primary-gradient":
-          "linear-gradient(135deg, #e83929 0%, #b82216 100%)",
-        "accent-gradient":
-          "linear-gradient(135deg, #f2a900 0%, #c48200 100%)",
-        "card-gradient":
-          "linear-gradient(135deg, rgba(31,29,28,0.9) 0%, rgba(42,39,37,0.6) 100%)",
+        "space-gradient":   "var(--gradient-space)",
+        "primary-gradient": "var(--gradient-primary)",
+        "accent-gradient":  "var(--gradient-accent)",
+        "card-gradient":    "var(--gradient-card)",
       },
       animation: {
         "pulse-glow": "pulseGlow 2s ease-in-out infinite",
@@ -76,8 +78,8 @@ const config: Config = {
       },
       keyframes: {
         pulseGlow: {
-          "0%, 100%": { boxShadow: "0 0 10px rgba(232,57,41,0.3)" },
-          "50%":      { boxShadow: "0 0 25px rgba(232,57,41,0.7)" },
+          "0%, 100%": { boxShadow: "var(--shadow-glow-sm)" },
+          "50%":      { boxShadow: "var(--shadow-glow)" },
         },
         float: {
           "0%, 100%": { transform: "translateY(0)" },

@@ -20,6 +20,7 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { cn, leagueIcon } from '@/lib/utils';
 import { useSiteName } from '@/lib/siteConfig';
+import { ThemeToggleButton } from '@/components/layout/ThemeToggle';
 
 // ─── Nav Items ────────────────────────────────────────────────────────────────
 
@@ -154,9 +155,12 @@ export function NavBar() {
                     />
                     <div className="absolute right-0 top-full mt-2 w-52 z-50
                                     card-glass border border-border/80 animate-slide-in">
-                      <div className="px-4 py-3 border-b border-border">
-                        <p className="text-sm font-semibold text-text-primary">{user.username}</p>
-                        <p className="text-xs text-text-muted">{user.email}</p>
+                      <div className="flex items-start justify-between gap-2 px-4 py-3 border-b border-border">
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-text-primary truncate">{user.username}</p>
+                          <p className="text-xs text-text-muted truncate">{user.email}</p>
+                        </div>
+                        <ThemeToggleButton className="-mr-1 shrink-0 border border-border" />
                       </div>
                       <div className="py-1">
                         <Link
@@ -192,6 +196,7 @@ export function NavBar() {
             </>
           ) : (
             <div className="flex items-center gap-2">
+              <ThemeToggleButton />
               <Link href="/auth/login" className="btn-ghost text-sm py-2 px-4">
                 Kirish
               </Link>

@@ -237,7 +237,7 @@ export default function GamesPage() {
                 <GameIcon Icon={game.Icon} gradient={game.gradient} />
 
                 <div className="flex-1">
-                  <h3 className="text-lg font-bold text-text-primary group-hover:text-white
+                  <h3 className="text-lg font-bold text-text-primary group-hover:text-primary
                                  transition-colors mb-1.5">
                     {game.title}
                   </h3>

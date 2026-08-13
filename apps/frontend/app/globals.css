@@ -5,10 +5,105 @@
 @tailwind utilities;
 
 /* ── CSS Variables ───────────────────────────────────────────── */
+/* Colour tokens are bare `R G B` triples so Tailwind can apply opacity
+   modifiers to them (see tailwind.config.ts). `:root` holds the light
+   theme; `.dark` on <html> swaps in the original dark palette. */
 :root {
   --font-inter: 'Inter', system-ui, sans-serif;
   --nav-height: 64px;
+
+  /* ── Light theme — washi paper ─────────────────────────────── */
+  --c-background:     250 247 242;   /* Washi / warm paper       */
+  --c-surface:        255 255 255;   /* Card white               */
+  --c-surface-2:      243 238 230;   /* Soft sand                */
+  --c-border:         224 215 202;   /* Warm stone border        */
+
+  --c-primary:        209 43 28;     /* Shu-iro, darkened for AA */
+  --c-primary-hover:  184 34 22;
+  --c-primary-glow:   rgba(209, 43, 28, 0.22);
+
+  --c-accent:         176 118 0;     /* Yamabuki, darkened       */
+  --c-accent-hover:   146 97 0;
+  --c-accent-glow:    rgba(176, 118, 0, 0.2);
+
+  --c-success:        31 107 58;
+  --c-warning:        180 83 9;
+  --c-danger:         179 43 31;
+
+  --c-bronze:         168 100 31;
+  --c-silver:         110 116 124;
+  --c-gold:           176 129 8;
+  --c-platinum:       122 134 148;
+  --c-diamond:        14 116 144;
+
+  --c-text-primary:   28 25 23;      /* Sumi ink                 */
+  --c-text-secondary: 87 83 78;
+  --c-text-muted:     138 129 119;
+
+  --shadow-glow:        0 0 20px rgba(209, 43, 28, 0.22);
+  --shadow-glow-sm:     0 0 10px rgba(209, 43, 28, 0.16);
+  --shadow-glow-accent: 0 0 20px rgba(176, 118, 0, 0.22);
+  --shadow-glass:       0 8px 28px rgba(80, 60, 45, 0.12);
+
+  --gradient-space:   radial-gradient(ellipse at top, #fdeee9 0%, #faf7f2 60%);
+  --gradient-primary: linear-gradient(135deg, #d12b1c 0%, #a81f13 100%);
+  --gradient-accent:  linear-gradient(135deg, #b07600 0%, #8a5c00 100%);
+  --gradient-card:    linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(243,238,230,0.75) 100%);
+
+  --c-scrollbar-track: #f0eae1;
+  --c-skeleton-base:   #ece5da;
+  --c-skeleton-shine:  #f8f4ee;
+  --c-selection-text:  #1c1917;
 }
+
+/* ── Dark theme — sumi charcoal (the original palette) ───────── */
+.dark {
+  --c-background:     22 21 20;
+  --c-surface:        31 29 28;
+  --c-surface-2:      42 39 37;
+  --c-border:         58 53 50;
+
+  --c-primary:        232 57 41;
+  --c-primary-hover:  240 90 79;
+  --c-primary-glow:   rgba(232, 57, 41, 0.35);
+
+  --c-accent:         242 169 0;
+  --c-accent-hover:   255 193 7;
+  --c-accent-glow:    rgba(242, 169, 0, 0.3);
+
+  --c-success:        45 122 71;
+  --c-warning:        230 126 34;
+  --c-danger:         192 57 43;
+
+  --c-bronze:         205 127 50;
+  --c-silver:         192 192 192;
+  --c-gold:           255 215 0;
+  --c-platinum:       229 228 226;
+  --c-diamond:        185 242 255;
+
+  --c-text-primary:   250 249 246;
+  --c-text-secondary: 179 171 162;
+  --c-text-muted:     115 108 100;
+
+  --shadow-glow:        0 0 20px rgba(232, 57, 41, 0.4);
+  --shadow-glow-sm:     0 0 10px rgba(232, 57, 41, 0.3);
+  --shadow-glow-accent: 0 0 20px rgba(242, 169, 0, 0.4);
+  --shadow-glass:       0 8px 32px rgba(0, 0, 8, 0.5);
+
+  --gradient-space:   radial-gradient(ellipse at top, #3c1e1e 0%, #161514 60%);
+  --gradient-primary: linear-gradient(135deg, #e83929 0%, #b82216 100%);
+  --gradient-accent:  linear-gradient(135deg, #f2a900 0%, #c48200 100%);
+  --gradient-card:    linear-gradient(135deg, rgba(31,29,28,0.9) 0%, rgba(42,39,37,0.6) 100%);
+
+  --c-scrollbar-track: #161514;
+  --c-skeleton-base:   #1f1d1c;
+  --c-skeleton-shine:  #3a3532;
+  --c-selection-text:  #faf9f6;
+}
+
+/* The browser's own widgets (form controls, scrollbars) follow this. */
+:root      { color-scheme: light; }
+.dark      { color-scheme: dark;  }
 
 /* ── Base Reset ──────────────────────────────────────────────── */
 @layer base {
@@ -24,20 +119,20 @@
 
   body {
     @apply bg-background text-text-primary font-sans antialiased;
-    background-image: radial-gradient(ellipse at top, #3c1e1e 0%, #161514 60%);
+    background-image: var(--gradient-space);
     background-attachment: fixed;
     min-height: 100vh;
   }
 
   /* Custom scrollbar — Japanese traditional theme */
   ::-webkit-scrollbar        { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track  { background: #161514; }
-  ::-webkit-scrollbar-thumb  { background: #e83929; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #f05a4f; }
+  ::-webkit-scrollbar-track  { background: var(--c-scrollbar-track); }
+  ::-webkit-scrollbar-thumb  { background: rgb(var(--c-primary)); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgb(var(--c-primary-hover)); }
 
   ::selection {
-    background-color: rgba(232, 57, 41, 0.4);
-    color: #faf9f6;
+    background-color: rgb(var(--c-primary) / 0.35);
+    color: var(--c-selection-text);
   }
 
   /* Focus ring */
@@ -104,13 +199,18 @@
   }
 
   .skeleton {
-    background: linear-gradient(90deg, #1f1d1c 25%, #3a3532 50%, #1f1d1c 75%);
+    background: linear-gradient(
+      90deg,
+      var(--c-skeleton-base) 25%,
+      var(--c-skeleton-shine) 50%,
+      var(--c-skeleton-base) 75%
+    );
     background-size: 800px 100%;
     animation: shimmer 1.5s infinite linear;
   }
 
   .shadow-glow-accent {
-    box-shadow: 0 0 16px rgba(245, 158, 11, 0.35);
+    box-shadow: var(--shadow-glow-accent);
   }
 
   /* ── Sakura ──────────────────────────────────────────────────

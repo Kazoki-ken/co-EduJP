@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
+import { ThemeProvider, THEME_INIT_SCRIPT } from '@/context/ThemeContext';
 import { AppLayoutShell } from '@/components/layout/AppLayoutShell';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
@@ -34,13 +35,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className={`${inter.variable} font-sans antialiased flex flex-col min-h-screen`}>
         <GoogleOAuthProvider clientId="156336295197-pjb6ocbui8t994dhdg4nv827a22f8e84.apps.googleusercontent.com">
-          <AuthProvider>
-            <AppLayoutShell>
-              {children}
-            </AppLayoutShell>
-          </AuthProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <AppLayoutShell>
+                {children}
+              </AppLayoutShell>
+            </AuthProvider>
+          </ThemeProvider>
         </GoogleOAuthProvider>
       </body>
     </html>

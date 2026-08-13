@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { cn, leagueIcon } from '@/lib/utils';
 import { useSiteName } from '@/lib/siteConfig';
+import { ThemeToggleButton } from './ThemeToggle';
 
 export function AppLayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -155,6 +156,7 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
                 }[user.profile?.league ?? 'BRONZE'] ?? (user.profile?.league ?? 'BRONZE')} ligasi
               </p>
             </div>
+            <ThemeToggleButton className="shrink-0 p-1.5" size={16} />
           </div>
 
           <button
@@ -222,9 +224,12 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
                   <div className="absolute right-0 top-full mt-2 w-52 z-50 card-glass border border-border/80 animate-slide-in">
-                    <div className="px-4 py-3 border-b border-border/50">
-                      <p className="text-sm font-semibold text-text-primary truncate">{user.username}</p>
-                      <p className="text-xs text-text-muted truncate">{user.email}</p>
+                    <div className="flex items-start justify-between gap-2 px-4 py-3 border-b border-border/50">
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-text-primary truncate">{user.username}</p>
+                        <p className="text-xs text-text-muted truncate">{user.email}</p>
+                      </div>
+                      <ThemeToggleButton className="-mr-1 shrink-0 border border-border" />
                     </div>
                     <div className="py-1">
                       <Link
