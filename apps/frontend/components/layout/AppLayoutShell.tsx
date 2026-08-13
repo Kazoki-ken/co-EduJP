@@ -53,8 +53,17 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
     );
   }
 
+  // Login and signup are deliberately chrome-free: the navbar's own "Kirish /
+  // Boshlash" buttons and the footer links are exits from the one flow the
+  // page is trying to finish.
+  const isAuthRoute = pathname.startsWith('/auth');
+
   // Guest Layout (unauthenticated)
   if (!isAuthenticated || !user) {
+    if (isAuthRoute) {
+      return <main className="flex-1">{children}</main>;
+    }
+
     return (
       <>
         <NavBar />

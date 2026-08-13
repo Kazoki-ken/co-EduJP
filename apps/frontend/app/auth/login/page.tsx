@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { useGoogleLogin } from '@react-oauth/google';
 import { Mail, Lock, ArrowRight, Loader2, AlertCircle, Phone, Send } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import SetupProfileModal from '@/components/auth/SetupProfileModal';
 import api from '@/lib/api';
 
@@ -155,12 +156,20 @@ export default function LoginPage() {
 
   return (
     <>
-      <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 py-12">
         {/* Background ambient effects */}
-        <div className="fixed inset-0 pointer-events-none -z-10">
-          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] mix-blend-screen animate-pulse-glow" />
-          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent/10 rounded-full blur-[100px] mix-blend-screen" />
+        <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/12 rounded-full blur-[120px]" />
+          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent/10 rounded-full blur-[100px]" />
         </div>
+
+        {/* The app chrome is hidden on /auth, so the way back home lives here. */}
+        <Link href="/" className="flex items-center gap-2 mb-8 group">
+          <span className="text-xl">🎌</span>
+          <span className="font-black text-text-primary group-hover:text-primary transition-colors">
+            {'Bosh sahifa'}
+          </span>
+        </Link>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -190,6 +199,61 @@ export default function LoginPage() {
               <p className="text-sm">{error}</p>
             </motion.div>
           )}
+
+          {/* Google first — one tap for anyone who signed up that way. */}
+          <button
+            type="button"
+            id="google-signin-btn"
+            onClick={() => { setGoogleLoading(true); handleGoogleLogin(); }}
+            disabled={googleLoading}
+            className="w-full flex items-center justify-center gap-3 py-3.5 px-5 rounded-xl
+                       border border-border bg-surface-2/60 hover:bg-surface-2
+                       hover:border-primary/40 transition-all duration-200
+                       disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.99]"
+          >
+            {googleLoading ? (
+              <Loader2 className="animate-spin text-text-muted" size={20} />
+            ) : (
+              <GoogleIcon />
+            )}
+            <span className="text-sm font-bold text-text-primary">
+              {googleLoading ? 'Yuklanmoqda...' : 'Google bilan kirish'}
+            </span>
+          </button>
+
+          <div className="flex items-center gap-3 my-6">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-text-muted text-xs">yoki</span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+
+          {/* Method switch */}
+          <div className="grid grid-cols-2 gap-1 p-1 rounded-xl bg-surface-2/60 border border-border/60 mb-6">
+            {([
+              { id: 'PHONE' as const, label: 'Telefon', icon: Phone },
+              { id: 'EMAIL' as const, label: 'Email', icon: Mail },
+            ]).map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => {
+                  setAuthMode(id);
+                  setError('');
+                  setPassword('');
+                  setShowPasswordInput(false);
+                }}
+                className={cn(
+                  'flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-bold transition-all',
+                  authMode === id
+                    ? 'bg-surface text-text-primary shadow-glass border border-border/60'
+                    : 'text-text-muted hover:text-text-secondary',
+                )}
+              >
+                <Icon size={15} />
+                {label}
+              </button>
+            ))}
+          </div>
 
           {authMode === 'PHONE' ? (
             !phoneToken ? (
@@ -351,73 +415,9 @@ export default function LoginPage() {
             </form>
           )}
 
-          {/* Divider */}
-          <div className="flex items-center gap-3 my-6">
-            <div className="flex-1 h-px bg-border" />
-            <span className="text-text-muted text-xs">yoki</span>
-            <div className="flex-1 h-px bg-border" />
-          </div>
-
-          <div className="space-y-3">
-            {/* Toggle Mode Button */}
-            <button
-              type="button"
-              onClick={() => {
-                setAuthMode(authMode === 'PHONE' ? 'EMAIL' : 'PHONE');
-                setError('');
-                setPassword('');
-                setShowPasswordInput(false);
-              }}
-              className="w-full flex items-center justify-center gap-2 py-3.5 px-5 rounded-xl border transition-all duration-200 text-sm font-semibold text-text-secondary hover:text-text-primary"
-              style={{
-                background: 'rgba(255,255,255,0.05)',
-                borderColor: 'rgba(255,255,255,0.12)',
-              }}
-            >
-              {authMode === 'PHONE' ? <Mail size={18} /> : <Phone size={18} />}
-              {authMode === 'PHONE' ? 'Email va Parol orqali kirish' : 'Telefon raqam orqali kirish'}
-            </button>
-
-            {/* Custom Glass Google Button */}
-            <motion.button
-              type="button"
-              id="google-signin-btn"
-              onClick={() => { setGoogleLoading(true); handleGoogleLogin(); }}
-              disabled={googleLoading}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center justify-center gap-3 py-3.5 px-5 rounded-xl border transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed relative overflow-hidden group"
-              style={{
-                background: 'rgba(255,255,255,0.05)',
-                borderColor: 'rgba(255,255,255,0.12)',
-                backdropFilter: 'blur(8px)',
-              }}
-            >
-              <motion.div
-                className="absolute inset-0 pointer-events-none"
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                style={{ background: 'radial-gradient(ellipse at center, rgba(124,58,237,0.12) 0%, transparent 70%)' }}
-              />
-              <motion.div
-                className="absolute inset-0 rounded-xl pointer-events-none"
-                whileHover={{ boxShadow: '0 0 0 1px rgba(124,58,237,0.5), 0 0 24px rgba(124,58,237,0.15)' }}
-                transition={{ duration: 0.2 }}
-              />
-              {googleLoading ? (
-                <Loader2 className="animate-spin text-text-muted relative z-10" size={20} />
-              ) : (
-                <span className="relative z-10"><GoogleIcon /></span>
-              )}
-              <span className="text-sm font-semibold text-text-secondary group-hover:text-text-primary transition-colors relative z-10">
-                {googleLoading ? 'Yuklanmoqda...' : 'Google bilan kirish'}
-              </span>
-            </motion.button>
-          </div>
-
           <p className="text-center text-sm text-text-muted mt-8">
             {"Hisobingiz yo'qmi?"}{' '}
-            <Link href="/auth/register" className="text-primary font-semibold hover:text-primary-light transition-colors">
+            <Link href="/auth/register" className="text-primary font-bold hover:text-primary-hover transition-colors">
               {"Ro'yxatdan o'tish"}
             </Link>
           </p>

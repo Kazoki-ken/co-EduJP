@@ -138,8 +138,10 @@ function UsernameStep({
 
 function PasswordStep({
   onNext,
+  onSkip,
 }: {
   onNext: () => void;
+  onSkip: () => void;
 }) {
   const { setPassword } = useAuth();
   const [password, setPasswordInput] = useState('');
@@ -192,7 +194,7 @@ function PasswordStep({
         </motion.div>
         <h2 className="text-2xl font-extrabold text-text-primary mb-2">Parol o'rnating</h2>
         <p className="text-text-muted text-sm">
-          Kelgusida tizimga parol orqali kirish uchun parol yarating
+          {"Ixtiyoriy — parolsiz ham Google orqali kirib turaverasiz"}
         </p>
       </div>
 
@@ -291,6 +293,16 @@ function PasswordStep({
             </>
           )}
         </button>
+
+        {/* A Google account already has a working way in, so forcing a second
+            credential here only cost signups. */}
+        <button
+          type="button"
+          onClick={onSkip}
+          className="block mx-auto text-xs text-text-muted hover:text-primary transition-colors"
+        >
+          {"Hozircha o'tkazib yuborish"}
+        </button>
       </form>
     </motion.div>
   );
@@ -322,11 +334,24 @@ export default function SetupProfileModal({ onClose }: { onClose: () => void }) 
         transition={{ type: 'spring', bounce: 0.3 }}
         className="w-full max-w-md card-glass p-8 relative z-10"
       >
+        {/* Two dots rather than a bare modal: knowing there is exactly one more
+            screen is the difference between finishing and closing the tab. */}
+        <div className="flex items-center justify-center gap-1.5 mb-6">
+          {(['USERNAME', 'PASSWORD'] as const).map((s) => (
+            <span
+              key={s}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                step === s ? 'w-7 bg-primary' : 'w-1.5 bg-border'
+              }`}
+            />
+          ))}
+        </div>
+
         <AnimatePresence mode="wait">
           {step === 'USERNAME' ? (
             <UsernameStep key="step1" onNext={() => setStep('PASSWORD')} />
           ) : (
-            <PasswordStep key="step2" onNext={onClose} />
+            <PasswordStep key="step2" onNext={onClose} onSkip={onClose} />
           )}
         </AnimatePresence>
       </motion.div>

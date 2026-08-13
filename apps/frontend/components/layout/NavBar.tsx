@@ -2,21 +2,19 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import api from '@/lib/api';
+import { useState } from 'react';
 import {
   BookOpen,
-  Gamepad2,
-  Trophy,
+  Compass,
+  Crown,
+  HelpCircle,
+  Sparkles,
   User,
-  MessageCircle,
-  Wrench,
   Menu,
   X,
   LogOut,
   Settings,
   Flame,
-  GraduationCap,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { cn, leagueIcon } from '@/lib/utils';
@@ -25,14 +23,22 @@ import { ThemeToggleButton } from '@/components/layout/ThemeToggle';
 
 // ─── Nav Items ────────────────────────────────────────────────────────────────
 
+/**
+ * This navbar is rendered for signed-out visitors only (AppLayoutShell swaps in
+ * the sidebar once you are logged in), so it advertises the product rather than
+ * listing the app's sections. Games, leagues, AI and tools all need an account,
+ * so linking them from here only produced login walls; they are presented as
+ * content on the landing page instead.
+ *
+ * `Lug'at` stays because the dictionary is genuinely browsable while logged out.
+ * The rest are anchors into the landing page sections.
+ */
 const NAV_ITEMS = [
-  { href: '/',             label: 'Bosh sahifa', icon: BookOpen   },
-  { href: '/dictionary',   label: "Lug'at",      icon: BookOpen   },
-  { href: '/jlpt',         label: 'JLPT',        icon: GraduationCap },
-  { href: '/games',        label: "O'yinlar",    icon: Gamepad2   },
-  { href: '/leaderboard',  label: 'Reyting',     icon: Trophy     },
-  { href: '/chat',         label: "Sun'iy idrok", icon: MessageCircle },
-  { href: '/tools',        label: 'Uskunalar',   icon: Wrench     },
+  { href: '/dictionary',        label: "Lug'at",          icon: BookOpen },
+  { href: '/#imkoniyatlar',     label: 'Imkoniyatlar',    icon: Sparkles },
+  { href: '/#qanday-ishlaydi',  label: 'Qanday ishlaydi', icon: Compass },
+  { href: '/#tariflar',         label: 'Tariflar',        icon: Crown },
+  { href: '/#savollar',         label: 'Savollar',        icon: HelpCircle },
 ];
 
 // ─── NavBar ───────────────────────────────────────────────────────────────────
@@ -199,7 +205,9 @@ export function NavBar() {
           ) : (
             <div className="flex items-center gap-2">
               <ThemeToggleButton />
-              <Link href="/auth/login" className="btn-ghost text-sm py-2 px-4">
+              {/* On a phone the ghost button competes with the hamburger for
+                  the same strip, so it moves into the dropdown below. */}
+              <Link href="/auth/login" className="btn-ghost text-sm py-2 px-4 hidden sm:inline-flex">
                 Kirish
               </Link>
               <Link href="/auth/register" className="btn-primary text-sm py-2 px-4">
@@ -243,6 +251,27 @@ export function NavBar() {
               </Link>
             );
           })}
+
+          {/* Guest actions — the ghost "Kirish" is hidden in the top strip on
+              phones, so it lives here instead. */}
+          {!isAuthenticated && (
+            <div className="flex gap-2 pt-3 border-t border-border/60 mt-2 sm:hidden">
+              <Link
+                href="/auth/login"
+                onClick={() => setMenuOpen(false)}
+                className="btn-ghost flex-1 text-sm text-center"
+              >
+                Kirish
+              </Link>
+              <Link
+                href="/auth/register"
+                onClick={() => setMenuOpen(false)}
+                className="btn-primary flex-1 text-sm text-center"
+              >
+                Boshlash
+              </Link>
+            </div>
+          )}
 
           {/* Mobile stats */}
           {isAuthenticated && user && (

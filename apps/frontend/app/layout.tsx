@@ -12,19 +12,26 @@ const inter = Inter({
   display: 'swap',
 });
 
+/* The landing page is the first thing a visitor sees, and it is written in
+   Uzbek — the search snippet and share preview should match it. */
 export const metadata: Metadata = {
   title: {
-    default: 'VocabJP — Japanese Vocabulary SRS',
+    default: "VocabJP — Yapon tili so'zlarini o'rganish platformasi",
     template: '%s | VocabJP',
   },
   description:
-    'Master Japanese vocabulary with spaced-repetition, interactive games, AI practice, and a live league system.',
-  keywords: ['Japanese', 'vocabulary', 'SRS', 'flashcards', 'language learning', 'kanji'],
+    "Yaponcha so'z boyligini oraliqli takrorlash (SRS), 6 xil o'yin, AI suhbatdosh va JLPT N5–N1 darajalari bilan o'rganing. Ro'yxatdan o'tish bepul.",
+  keywords: [
+    'yapon tili', "yaponcha so'zlar", 'JLPT', 'SRS', 'kanji', 'hiragana',
+    "yapon tilini o'rganish", 'Japanese vocabulary',
+  ],
   authors: [{ name: 'VocabJP' }],
   openGraph: {
-    title: 'VocabJP — Japanese Vocabulary SRS',
-    description: 'Master Japanese vocabulary with AI-powered spaced repetition.',
+    title: "VocabJP — Yapon tili so'zlarini o'rganish platformasi",
+    description:
+      "Oraliqli takrorlash, o'yinlar va AI amaliyoti bilan yaponcha so'zlarni unutmaydigan qilib o'rganing.",
     type: 'website',
+    locale: 'uz_UZ',
   },
 };
 
