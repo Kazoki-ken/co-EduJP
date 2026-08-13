@@ -4,8 +4,8 @@ import {
   type TextInput as TextInputType,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { BlurView } from 'expo-blur';
-import { Ionicons } from '@expo/vector-icons';
+import { GlassView as BlurView } from '../components/GlassView';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/RootStack';
@@ -162,7 +162,18 @@ export default function LoginScreen({ navigation }: Props) {
 
   const startPolling = (token: string) => {
     setIsPolling(true);
+    // Cheksiz so'rov yubormaslik uchun chegara: 3 soniyada bir marta, 3 daqiqa.
+    let attempts = 0;
+    const MAX_ATTEMPTS = 60; // 60 x 3s = 3 daqiqa
+
     pollingInterval.current = setInterval(async () => {
+      if (++attempts > MAX_ATTEMPTS) {
+        if (pollingInterval.current) clearInterval(pollingInterval.current);
+        setIsPolling(false);
+        setPhoneToken(null);
+        setError("Tasdiqlash vaqti tugadi. Iltimos, qaytadan urinib ko'ring.");
+        return;
+      }
       try {
         const { data } = await apiClient.get(`/auth/phone/status/${token}`);
         if (data.status === 'VERIFIED') {

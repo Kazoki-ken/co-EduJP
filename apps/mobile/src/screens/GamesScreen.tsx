@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, RefreshControl,
 } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { GlassView as BlurView } from '../components/GlassView';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { GamesStackParamList } from '../navigation/GamesStack';

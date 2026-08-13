@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import {
   View, Text, TouchableOpacity, ActivityIndicator,
-  Animated, Dimensions, BackHandler,
+  Animated, Dimensions, BackHandler, Platform,
 } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { GlassView as BlurView } from '../components/GlassView';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { GamesStackParamList } from '../navigation/GamesStack';
@@ -30,26 +30,79 @@ function buildOptions(word: SessionWord, pool: SessionWord[]): string[] {
 }
 
 // ── Starfield background ─────────────────────────────────────────
-function Star({ x, y, size, opacity }: { x: number; y: number; size: number; opacity: number }) {
-  const twinkle = useRef(new Animated.Value(opacity)).current;
-  useEffect(() => {
-    const delay = Math.random() * 2000;
-    Animated.loop(Animated.sequence([
-      Animated.timing(twinkle, { toValue: opacity * 0.2, duration: 1200, delay, useNativeDriver: true }),
-      Animated.timing(twinkle, { toValue: opacity, duration: 1200, useNativeDriver: true }),
-    ])).start();
-  }, []);
-  return (
-    <Animated.View style={{ position: 'absolute', left: x, top: y,
-      width: size, height: size, borderRadius: size / 2,
-      backgroundColor: '#fff', opacity: twinkle }} />
-  );
-}
+//
+// OPTIMIZATSIYA: ilgari har bir yulduz o'zining Animated.Value va cheksiz
+// Animated.loop iga ega edi — 60 ta yulduz = 60 ta parallel animatsiya,
+// va ularning hech biri unmount da to'xtamasdi.
+//
+// Endi 3 ta umumiy animatsiya qiymati bor, yulduzlar ularni bo'lishib oladi
+// (index % 3). Miltillash tasodifiy ko'rinishda qoladi, lekin animatsiya
+// tugunlari soni 60 dan 3 ga tushdi.
+const TWINKLE_PHASES = 3;
 
-const STARS = Array.from({ length: 60 }, (_, i) => ({
+// Androidda yulduz soni kamroq — budjet qurilmalarda har bir View qimmat.
+const STAR_COUNT = Platform.OS === 'android' ? 28 : 60;
+
+const STARS = Array.from({ length: STAR_COUNT }, (_, i) => ({
   id: i, x: Math.random() * SCREEN_W, y: Math.random() * SCREEN_H,
   size: Math.random() * 2 + 0.5, opacity: Math.random() * 0.6 + 0.2,
 }));
+
+/** 3 ta umumiy miltillash animatsiyasi. Unmount da to'xtaydi. */
+function useTwinklePhases() {
+  const phases = useRef(
+    Array.from({ length: TWINKLE_PHASES }, () => new Animated.Value(1)),
+  ).current;
+
+  useEffect(() => {
+    const loops = phases.map((value, i) =>
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(value, {
+            toValue: 0.2,
+            duration: 1200,
+            delay: i * 650,          // fazalarni siljitamiz — bir vaqtda miltillamaydi
+            useNativeDriver: true,
+          }),
+          Animated.timing(value, { toValue: 1, duration: 1200, useNativeDriver: true }),
+        ]),
+      ),
+    );
+    loops.forEach(l => l.start());
+    return () => {
+      loops.forEach(l => l.stop());
+      phases.forEach(v => v.stopAnimation());
+    };
+  }, [phases]);
+
+  return phases;
+}
+
+const Star = React.memo(function Star({
+  x, y, size, opacity, phase,
+}: {
+  x: number; y: number; size: number; opacity: number; phase: Animated.Value;
+}) {
+  return (
+    <Animated.View style={{ position: 'absolute', left: x, top: y,
+      width: size, height: size, borderRadius: size / 2,
+      backgroundColor: '#fff',
+      // Yulduzning o'z yorqinligi umumiy faza bilan ko'paytiriladi
+      opacity: Animated.multiply(phase, opacity) }} />
+  );
+});
+
+/** Butun yulduzli fonni chizadi. React.memo — o'yin state o'zgarganda qayta chizilmaydi. */
+const Starfield = React.memo(function Starfield() {
+  const phases = useTwinklePhases();
+  return (
+    <>
+      {STARS.map(s => (
+        <Star key={s.id} {...s} phase={phases[s.id % TWINKLE_PHASES]} />
+      ))}
+    </>
+  );
+});
 
 export default function SpaceShooterScreen({ route, navigation }: Props) {
   const insets = useSafeAreaInsets();
@@ -273,7 +326,7 @@ export default function SpaceShooterScreen({ route, navigation }: Props) {
   return (
     <View style={{ flex: 1, backgroundColor: '#02020e' }}>
       {/* Starfield */}
-      {STARS.map(s => <Star key={s.id} {...s} />)}
+      <Starfield />
 
       {/* Screen flash overlay */}
       {flashColor && (

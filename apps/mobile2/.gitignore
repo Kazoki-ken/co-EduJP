@@ -31,6 +31,7 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
 
 # typescript
@@ -41,3 +42,10 @@ example
 # generated native folders
 /ios
 /android
+
+# build artefaktlari (186 MB - repoga tushmasligi kerak)
+*.apk
+*.aab
+
+# ikonalarning asl nusxalari (mahalliy zaxira)
+_original_backup/

@@ -9,13 +9,12 @@ import {
   Animated,
   Dimensions,
   ScrollView,
-  SafeAreaView,
-  Alert,
   Linking,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { BlurView } from 'expo-blur';
-import { Ionicons } from '@expo/vector-icons';
+import { GlassView as BlurView } from '../components/GlassView';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -145,9 +144,12 @@ export default function IndexScreen() {
   }, [response]);
 
   // ── Pulse on dashboard ───────────────────────────────────────────────
+  // MUHIM: ilgari bu loop hech qachon to'xtamasdi — DASHBOARD dan chiqib
+  // ketilsa ham fonda ishlab, batareyani yeb turardi.
   useEffect(() => {
     if (screen !== 'DASHBOARD') return;
-    Animated.loop(
+
+    const loop = Animated.loop(
       Animated.parallel([
         Animated.sequence([
           Animated.timing(pulseScale,   { toValue: 1.25, duration: 1500, useNativeDriver: true }),
@@ -158,8 +160,15 @@ export default function IndexScreen() {
           Animated.timing(pulseOpacity, { toValue: 0.5,  duration: 1500, useNativeDriver: true }),
         ]),
       ])
-    ).start();
-  }, [screen]);
+    );
+    loop.start();
+
+    return () => {
+      loop.stop();
+      pulseScale.stopAnimation();
+      pulseOpacity.stopAnimation();
+    };
+  }, [screen, pulseScale, pulseOpacity]);
 
   // ── Auth ─────────────────────────────────────────────────────────────
   const checkAuthentication = async () => {
@@ -227,7 +236,20 @@ export default function IndexScreen() {
 
   const startPolling = (tokenValue: string) => {
     setIsPolling(true);
+    // Cheksiz so'rov yubormaslik uchun chegara: 3 soniyada bir marta, 3 daqiqa.
+    // Ilgari chegara yo'q edi — foydalanuvchi Telegram ni ochmasa, ekran ochiq
+    // turgancha abadiy so'rov ketaverardi (trafik + batareya).
+    let attempts = 0;
+    const MAX_ATTEMPTS = 60; // 60 x 3s = 3 daqiqa
+
     pollingInterval.current = setInterval(async () => {
+      if (++attempts > MAX_ATTEMPTS) {
+        if (pollingInterval.current) clearInterval(pollingInterval.current);
+        setIsPolling(false);
+        setPhoneToken(null);
+        setError("Tasdiqlash vaqti tugadi. Iltimos, qaytadan urinib ko'ring.");
+        return;
+      }
       try {
         const { data } = await axios.get(`${API_URL}/api/auth/phone/status/${tokenValue}`);
         if (data.status === 'VERIFIED') {
@@ -697,9 +719,16 @@ export default function IndexScreen() {
             {gameCards.map((card, index) => {
               if (index < currentIndex) return null;
 
+              // OPTIMIZATSIYA: faqat aktiv karta + 2 ta "soya" karta chiziladi.
+              // Ilgari guard yo'q edi — 3-chidan oxirgisigacha barcha kartalar
+              // aynan bir xil joyda, bir xil shaffoflikda bir-birining ustiga
+              // chizilardi (off = min(..., 2) tufayli). Ya'ni ~17 ta ko'rinmas
+              // karta har swipe da qayta render bo'lardi.
+              if (index > currentIndex + 2) return null;
+
               // Ghost cards behind
               if (index > currentIndex) {
-                const off = Math.min(index - currentIndex, 2);
+                const off = index - currentIndex;
                 return (
                   <View key={card.id} pointerEvents="none" style={[styles.cardContainer, {
                     zIndex: -off, opacity: 1 - off * 0.35,

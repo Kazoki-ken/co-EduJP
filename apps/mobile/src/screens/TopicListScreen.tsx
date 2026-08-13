@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import {
-  View, Text, ScrollView, TouchableOpacity,
+  View, Text, FlatList, TouchableOpacity,
   RefreshControl, ActivityIndicator, Alert,
 } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { GlassView as BlurView } from '../components/GlassView';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useIsFocused } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -23,11 +23,14 @@ const TOPIC_COLORS = [
 ];
 
 // ─── Topic row card (with save button) ────────────────────────────
-function TopicRow({
+// MUHIM: onPress/onToggleSave `topic` ni argument sifatida qabul qiladi.
+// Shu tufayli ota-komponent har renderda yangi arrow funksiya yaratmaydi va
+// React.memo haqiqatan ishlaydi (aks holda memo hech narsa bermaydi).
+const TopicRow = React.memo(function TopicRow({
   topic, index, onPress, saved, onToggleSave, onShowToast,
 }: {
-  topic: Topic; index: number; onPress: () => void;
-  saved: boolean; onToggleSave: () => void;
+  topic: Topic; index: number; onPress: (topic: Topic) => void;
+  saved: boolean; onToggleSave: (topicId: string) => void;
   onShowToast?: (msg: string) => void;
 }) {
   const color = TOPIC_COLORS[index % TOPIC_COLORS.length];
@@ -39,7 +42,7 @@ function TopicRow({
     setSaving(true);
     try {
       const result = await toggleSaveTopic(topic.id);
-      onToggleSave(); // update local visual state
+      onToggleSave(topic.id); // update local visual state
       if (onShowToast) {
         onShowToast(result.saved ? "Mavzu saqlandi!" : "Mavzu o'chirildi");
       }
@@ -52,7 +55,7 @@ function TopicRow({
   }, [saving, topic.id, onToggleSave, onShowToast]);
 
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.82} style={{ marginBottom: 10 }}>
+    <TouchableOpacity onPress={() => onPress(topic)} activeOpacity={0.82} style={{ marginBottom: 10 }}>
       <BlurView intensity={18} tint="dark" style={{
         borderRadius: 18, overflow: 'hidden',
         borderWidth: 1,
@@ -116,7 +119,7 @@ function TopicRow({
       </BlurView>
     </TouchableOpacity>
   );
-}
+});
 
 // ─── Topic List Screen ────────────────────────────────────────────
 export default function TopicListScreen({ route, navigation }: Props) {
@@ -160,6 +163,12 @@ export default function TopicListScreen({ route, navigation }: Props) {
     });
   }, []);
 
+  // Barqaror navigatsiya handler'i — TopicRow ning React.memo si ishlashi uchun
+  const handleOpenTopic = useCallback(
+    (t: Topic) => navigation.navigate('TopicWords', { topic: t, book }),
+    [navigation, book],
+  );
+
   return (
     <View style={{ flex: 1, backgroundColor: '#0a0a1a' }}>
       <View pointerEvents="none" style={{
@@ -168,7 +177,16 @@ export default function TopicListScreen({ route, navigation }: Props) {
         backgroundColor: 'rgba(109,40,217,0.08)',
       }} />
 
-      <ScrollView
+      {/*
+        FlatList (ScrollView emas): mavzular soni sahifalanmagan — bitta kitobda
+        50+ mavzu bo'lishi mumkin. FlatList faqat ekranda ko'rinadiganlarini
+        chizadi, qolganlarini xotiradan chiqarib yuboradi.
+      */}
+      <FlatList
+        data={topics ?? []}
+        keyExtractor={t => t.id}
+        // savedSet o'zgarganda qatorlar yangilanishi uchun kerak
+        extraData={savedSet}
         showsVerticalScrollIndicator={false}
         bounces={false}
         overScrollMode="never"
@@ -181,70 +199,75 @@ export default function TopicListScreen({ route, navigation }: Props) {
           <RefreshControl refreshing={loading} onRefresh={refetch}
             tintColor="#7c3aed" colors={['#7c3aed']} />
         }
-      >
-        {/* ── Back + Header ───────────────────────────────────── */}
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, alignSelf: 'flex-start' }}
-        >
-          <Ionicons name="arrow-back" size={20} color="#7c3aed" />
-          <Text style={{ color: '#7c3aed', marginLeft: 6, fontSize: 14, fontWeight: '500' }}>Kitoblar</Text>
-        </TouchableOpacity>
-
-        <View style={{ marginBottom: 24 }}>
-          <Text style={{ color: '#6b7280', fontSize: 13, fontWeight: '500' }}>Mavzular:</Text>
-          <Text style={{ color: '#f9fafb', fontSize: 22, fontWeight: '700', letterSpacing: -0.5 }} numberOfLines={2}>
-            {book.title}
-          </Text>
-          {topics && (
-            <Text style={{ color: '#4b5563', fontSize: 12, marginTop: 4 }}>
-              {topics.length} ta mavzu
-            </Text>
-          )}
-        </View>
-
-        {/* ── Error ──────────────────────────────────────────── */}
-        {error && (
-          <View style={{
-            padding: 16, borderRadius: 16,
-            backgroundColor: 'rgba(239,68,68,0.1)',
-            borderWidth: 1, borderColor: 'rgba(239,68,68,0.3)',
-            marginBottom: 16, flexDirection: 'row', alignItems: 'center', gap: 10,
-          }}>
-            <Ionicons name="alert-circle" size={20} color="#ef4444" />
-            <Text style={{ color: '#ef4444', fontSize: 13, flex: 1 }}>{error}</Text>
-            <TouchableOpacity onPress={refetch}>
-              <Text style={{ color: '#ef4444', fontWeight: '600' }}>Qayta urinish</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {/* ── Skeletons ──────────────────────────────────────── */}
-        {loading && !topics && (
-          [0,1,2,3,4,5].map(i => <TopicRowSkeleton key={i} />)
-        )}
-
-        {/* ── Empty state ─────────────────────────────────────── */}
-        {!loading && !error && topics?.length === 0 && (
-          <View style={{ alignItems: 'center', paddingTop: 60, gap: 12 }}>
-            <Text style={{ fontSize: 48 }}>🗂️</Text>
-            <Text style={{ color: '#6b7280', fontSize: 15 }}>Ushbu kitobda hozircha mavzular yo'q</Text>
-          </View>
-        )}
-
-        {/* ── Topic rows ──────────────────────────────────────── */}
-        {topics?.map((topic, i) => (
+        // ── Virtualizatsiya sozlamalari (budjet qurilmalar uchun) ──
+        initialNumToRender={8}      // birinchi chizishda faqat 8 ta qator
+        maxToRenderPerBatch={8}     // scroll da bir partiyada 8 ta
+        windowSize={5}              // ekran balandligining ~5 barobari saqlanadi
+        removeClippedSubviews       // ko'rinmaydigan qatorlarni native darajada uzish
+        renderItem={({ item, index }) => (
           <TopicRow
-            key={topic.id}
-            topic={topic}
-            index={i}
-            saved={savedSet.has(topic.id)}
-            onToggleSave={() => handleToggleSave(topic.id)}
+            topic={item}
+            index={index}
+            saved={savedSet.has(item.id)}
+            onToggleSave={handleToggleSave}
             onShowToast={showToast}
-            onPress={() => navigation.navigate('TopicWords', { topic, book })}
+            onPress={handleOpenTopic}
           />
-        ))}
-      </ScrollView>
+        )}
+        ListHeaderComponent={
+          <>
+            {/* ── Back + Header ───────────────────────────────────── */}
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, alignSelf: 'flex-start' }}
+            >
+              <Ionicons name="arrow-back" size={20} color="#7c3aed" />
+              <Text style={{ color: '#7c3aed', marginLeft: 6, fontSize: 14, fontWeight: '500' }}>Kitoblar</Text>
+            </TouchableOpacity>
+
+            <View style={{ marginBottom: 24 }}>
+              <Text style={{ color: '#6b7280', fontSize: 13, fontWeight: '500' }}>Mavzular:</Text>
+              <Text style={{ color: '#f9fafb', fontSize: 22, fontWeight: '700', letterSpacing: -0.5 }} numberOfLines={2}>
+                {book.title}
+              </Text>
+              {topics && (
+                <Text style={{ color: '#4b5563', fontSize: 12, marginTop: 4 }}>
+                  {topics.length} ta mavzu
+                </Text>
+              )}
+            </View>
+
+            {/* ── Error ──────────────────────────────────────────── */}
+            {error && (
+              <View style={{
+                padding: 16, borderRadius: 16,
+                backgroundColor: 'rgba(239,68,68,0.1)',
+                borderWidth: 1, borderColor: 'rgba(239,68,68,0.3)',
+                marginBottom: 16, flexDirection: 'row', alignItems: 'center', gap: 10,
+              }}>
+                <Ionicons name="alert-circle" size={20} color="#ef4444" />
+                <Text style={{ color: '#ef4444', fontSize: 13, flex: 1 }}>{error}</Text>
+                <TouchableOpacity onPress={refetch}>
+                  <Text style={{ color: '#ef4444', fontWeight: '600' }}>Qayta urinish</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {/* ── Skeletons ──────────────────────────────────────── */}
+            {loading && !topics && (
+              [0,1,2,3,4,5].map(i => <TopicRowSkeleton key={i} />)
+            )}
+          </>
+        }
+        ListEmptyComponent={
+          !loading && !error ? (
+            <View style={{ alignItems: 'center', paddingTop: 60, gap: 12 }}>
+              <Text style={{ fontSize: 48 }}>🗂️</Text>
+              <Text style={{ color: '#6b7280', fontSize: 15 }}>Ushbu kitobda hozircha mavzular yo'q</Text>
+            </View>
+          ) : null
+        }
+      />
 
       {/* Floating Top-Centered Toast Notification */}
       {toast && (

@@ -13,13 +13,20 @@ function ShimmerBar({ width = '100%', height = 14, borderRadius = 8, style }: Sh
   const anim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.loop(
+    const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(anim, { toValue: 1, duration: 900, useNativeDriver: true }),
         Animated.timing(anim, { toValue: 0, duration: 900, useNativeDriver: true }),
       ]),
-    ).start();
-  }, []);
+    );
+    loop.start();
+    // Skeleton yo'qolganda (ma'lumot kelganda) animatsiya to'xtashi shart —
+    // aks holda loop Animated.Value ni ushlab turadi va ishlayveradi.
+    return () => {
+      loop.stop();
+      anim.stopAnimation();
+    };
+  }, [anim]);
 
   const opacity = anim.interpolate({ inputRange: [0, 1], outputRange: [0.25, 0.55] });
 

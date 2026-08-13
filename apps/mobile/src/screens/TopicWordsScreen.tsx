@@ -4,9 +4,9 @@ import {
   TextInput, RefreshControl, ActivityIndicator,
   Dimensions,
 } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { GlassView as BlurView } from '../components/GlassView';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useIsFocused } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -59,7 +59,7 @@ function SrsBar({ level }: { level: SrsLevel }) {
 }
 
 // ─── Word card with save button ───────────────────────────────────
-function WordCard({ word, onToggleSave }: { word: Word; onToggleSave: (id: string) => void }) {
+const WordCard = React.memo(function WordCard({ word, onToggleSave }: { word: Word; onToggleSave: (id: string) => void }) {
   const [expanded, setExpanded] = useState(false);
   const [saving, setSaving] = useState(false);
   const srs = getSrsLabel(word);
@@ -183,7 +183,7 @@ function WordCard({ word, onToggleSave }: { word: Word; onToggleSave: (id: strin
       </BlurView>
     </TouchableOpacity>
   );
-}
+});
 
 // ─── Pagination controls ──────────────────────────────────────────
 function PaginationBar({

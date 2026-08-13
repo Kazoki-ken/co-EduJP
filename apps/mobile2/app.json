@@ -18,7 +18,7 @@
       "buildNumber": "1",
       "infoPlist": {
         "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": true
+          "NSAllowsLocalNetworking": true
         }
       }
     },
@@ -28,8 +28,7 @@
         "backgroundColor": "#0a0a1a"
       },
       "package": "com.user.cardgame",
-      "versionCode": 1,
-      "usesCleartextTraffic": true
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

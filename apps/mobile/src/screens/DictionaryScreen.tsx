@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
   TextInput, RefreshControl, ActivityIndicator,
 } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { GlassView as BlurView } from '../components/GlassView';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { DictionaryStackParamList } from '../navigation/DictionaryStack';
@@ -47,9 +47,11 @@ function ErrorBanner({ message, onRetry }: { message: string; onRetry: () => voi
 }
 
 // ─── Book card ────────────────────────────────────────────────────
-interface BookCardProps { book: Book; index: number; onPress: () => void }
+// onPress `book` ni argument sifatida oladi — ota-komponent barqaror handler
+// uzatishi va React.memo ishlashi uchun.
+interface BookCardProps { book: Book; index: number; onPress: (book: Book) => void }
 
-function BookCard({ book, index, onPress }: BookCardProps) {
+const BookCard = React.memo(function BookCard({ book, index, onPress }: BookCardProps) {
   const palette = CARD_PALETTES[index % CARD_PALETTES.length];
   const [saved, setSaved] = useState(!!(book as any).isSaved);
   const [saving, setSaving] = useState(false);
@@ -69,7 +71,7 @@ function BookCard({ book, index, onPress }: BookCardProps) {
 
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={() => onPress(book)}
       activeOpacity={0.82}
       style={{ flex: 1, margin: 6 }}
     >
@@ -156,7 +158,7 @@ function BookCard({ book, index, onPress }: BookCardProps) {
       </BlurView>
     </TouchableOpacity>
   );
-}
+});
 
 // ─── Main Screen ──────────────────────────────────────────────────
 export default function DictionaryScreen({ navigation }: Props) {
@@ -165,15 +167,25 @@ export default function DictionaryScreen({ navigation }: Props) {
   const { data, loading, error, refetch } = useBooks(1, 50);
 
   const books = data?.data ?? [];
-  const filtered = search.trim()
-    ? books.filter(b => b.title.toLowerCase().includes(search.toLowerCase()))
-    : books;
 
-  // Pair books into rows of 2 for the grid
-  const rows: Book[][] = [];
-  for (let i = 0; i < filtered.length; i += 2) {
-    rows.push(filtered.slice(i, i + 2));
-  }
+  // Qidiruv va gridga bo'lish har bosilgan harfda emas, faqat kerak bo'lganda
+  // qayta hisoblanadi.
+  const rows = useMemo(() => {
+    const filtered = search.trim()
+      ? books.filter(b => b.title.toLowerCase().includes(search.toLowerCase()))
+      : books;
+    const out: Book[][] = [];
+    for (let i = 0; i < filtered.length; i += 2) {
+      out.push(filtered.slice(i, i + 2));
+    }
+    return out;
+  }, [books, search]);
+
+  // Barqaror handler — BookCard ning React.memo si ishlashi uchun
+  const handleOpenBook = useCallback(
+    (b: Book) => navigation.navigate('TopicList', { book: b }),
+    [navigation],
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: '#0a0a1a' }}>
@@ -259,7 +271,7 @@ export default function DictionaryScreen({ navigation }: Props) {
         )}
 
         {/* ── Empty state ─────────────────────────────────────── */}
-        {!loading && !error && filtered.length === 0 && (
+        {!loading && !error && rows.length === 0 && (
           <View style={{ alignItems: 'center', paddingTop: 60, gap: 12 }}>
             <Text style={{ fontSize: 48 }}>📭</Text>
             <Text style={{ color: '#6b7280', fontSize: 15 }}>
@@ -276,7 +288,7 @@ export default function DictionaryScreen({ navigation }: Props) {
                 key={book.id}
                 book={book}
                 index={ri * 2 + bi}
-                onPress={() => navigation.navigate('TopicList', { book })}
+                onPress={handleOpenBook}
               />
             ))}
             {/* Fill empty cell if odd number of books */}

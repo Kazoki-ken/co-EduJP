@@ -3,9 +3,9 @@ import {
   View, Text, ScrollView, TouchableOpacity,
   Alert, RefreshControl, Dimensions, Vibration,
 } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { GlassView as BlurView } from '../components/GlassView';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as Speech from 'expo-speech';
@@ -99,7 +99,7 @@ function ProfileSkeleton() {
 }
 
 // ── Stat card ─────────────────────────────────────────────────────
-function StatCard({ icon, value, label, color }: {
+const StatCard = React.memo(function StatCard({ icon, value, label, color }: {
   icon: keyof typeof Ionicons.glyphMap; value: number | string; label: string; color: string;
 }) {
   return (
@@ -116,10 +116,10 @@ function StatCard({ icon, value, label, color }: {
       </View>
     </BlurView>
   );
-}
+});
 
 // ── Badge pill ────────────────────────────────────────────────────
-function BadgePill({ badge, earned }: { badge: Badge; earned: boolean }) {
+const BadgePill = React.memo(function BadgePill({ badge, earned }: { badge: Badge; earned: boolean }) {
   const col = earned ? (badge.color ?? '#7c3aed') : '#374151';
   const iconName = getIconForEmoji(earned ? (badge.icon ?? '🏅') : '🔒', 'medal');
   return (
@@ -149,7 +149,7 @@ function BadgePill({ badge, earned }: { badge: Badge; earned: boolean }) {
       </View>
     </BlurView>
   );
-}
+});
 
 // ── SRS breakdown bar ─────────────────────────────────────────────
 function SrsBreakdown({ levels, total }: { levels: LevelCount[]; total: number }) {
@@ -197,7 +197,7 @@ function SrsBreakdown({ levels, total }: { levels: LevelCount[]; total: number }
 }
 
 // ── Saved word row ────────────────────────────────────────────────
-export function SavedWordRow({ word }: { word: Word }) {
+export const SavedWordRow = React.memo(function SavedWordRow({ word }: { word: Word }) {
   const [expanded, setExpanded] = useState(false);
 
   const handleSpeak = async (e: any) => {
@@ -280,10 +280,10 @@ export function SavedWordRow({ word }: { word: Word }) {
       )}
     </TouchableOpacity>
   );
-}
+});
 
 // ── Saved book row ────────────────────────────────────────────────
-export function SavedBookRow({ book }: { book: Book }) {
+export const SavedBookRow = React.memo(function SavedBookRow({ book }: { book: Book }) {
   const navigation = useNavigation<any>();
 
   const handlePress = useCallback(() => {
@@ -325,7 +325,7 @@ export function SavedBookRow({ book }: { book: Book }) {
       <Ionicons name="bookmark" size={16} color="#f59e0b" />
     </TouchableOpacity>
   );
-}
+});
 
 // ── All-badges panel (placeholder list for locked) ────────────────
 const BADGE_SHOWCASE: Badge[] = [

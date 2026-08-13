@@ -1,18 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  View, Text, ScrollView, TouchableOpacity,
-  ActivityIndicator, StyleSheet, Dimensions
+  View, Text, FlatList, TouchableOpacity,
+  ActivityIndicator, StyleSheet,
 } from 'react-native';
-import { BlurView } from 'expo-blur';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import apiClient from '../api/client';
 import type { Word, Book, PaginatedResponse } from '@vocabjp/shared';
 import { SavedWordRow, SavedBookRow } from './ProfileScreen';
 
-const { width: SCREEN_W } = Dimensions.get('window');
 const PAGE_SIZE = 40;
 
 export default function SavedItemsScreen() {
@@ -26,14 +23,9 @@ export default function SavedItemsScreen() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
 
-  const fetchItems = useCallback(async (targetPage: number, isRefresh = false) => {
-    if (isRefresh) {
-      setRefreshing(true);
-    } else {
-      setLoading(true);
-    }
+  const fetchItems = useCallback(async (targetPage: number) => {
+    setLoading(true);
 
     try {
       const endpoint = type === 'words' ? '/users/me/saved-words' : '/users/me/saved-books';
@@ -49,7 +41,6 @@ export default function SavedItemsScreen() {
       console.log('Failed to fetch saved items', err);
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   }, [type]);
 
@@ -134,22 +125,32 @@ export default function SavedItemsScreen() {
           <Text style={styles.emptyText}>{emptyMessage}</Text>
         </View>
       ) : (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 100 }]}
-        >
-          <BlurView intensity={18} tint="dark" style={styles.cardContainer}>
-            <View style={styles.innerCard}>
-              {type === 'words'
-                ? items.map(w => <SavedWordRow key={w.id} word={w} />)
-                : items.map(b => <SavedBookRow key={b.id} book={b} />)
-              }
-            </View>
-          </BlurView>
+        <>
+          {/*
+            FlatList (ScrollView emas): sahifada 40 tagacha element bo'ladi,
+            lekin ekranda bir vaqtda 5-6 tasi ko'rinadi. FlatList qolganlarini
+            umuman chizmaydi — bu budjet qurilmada sezilarli farq.
+          */}
+          <FlatList
+            data={items}
+            keyExtractor={item => item.id}
+            showsVerticalScrollIndicator={false}
+            style={styles.listCard}
+            contentContainerStyle={styles.listCardInner}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            windowSize={5}
+            removeClippedSubviews
+            renderItem={({ item }) =>
+              type === 'words'
+                ? <SavedWordRow word={item} />
+                : <SavedBookRow book={item} />
+            }
+          />
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <View style={styles.paginationRow}>
+            <View style={[styles.paginationRow, { marginBottom: insets.bottom + 90 }]}>
               {/* Prev Button */}
               <TouchableOpacity
                 disabled={page === 1}
@@ -196,7 +197,7 @@ export default function SavedItemsScreen() {
               </TouchableOpacity>
             </View>
           )}
-        </ScrollView>
+        </>
       )}
     </View>
   );
@@ -266,19 +267,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
   },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-  },
-  cardContainer: {
+  // Ilgari BlurView + ichki View edi. Endi bu stillar to'g'ridan-to'g'ri
+  // FlatList ga beriladi — bir xil ko'rinish, lekin virtualizatsiya bilan.
+  listCard: {
+    flex: 1,
+    marginHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 16,
     borderRadius: 20,
-    overflow: 'hidden',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.07)',
-    marginBottom: 24,
-  },
-  innerCard: {
     backgroundColor: 'rgba(10,10,26,0.85)',
+  },
+  listCardInner: {
     padding: 16,
   },
   paginationRow: {

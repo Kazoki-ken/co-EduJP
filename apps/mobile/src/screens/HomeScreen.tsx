@@ -4,10 +4,11 @@ import {
   Animated, Dimensions, PanResponder, TextInput, Vibration, ActivityIndicator
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { BlurView } from 'expo-blur';
-import { Ionicons } from '@expo/vector-icons';
+import { GlassView as BlurView } from '../components/GlassView';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useFocusEffect, useIsFocused } from '@react-navigation/native';
+import { usePulse } from '../hooks/usePulse';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import * as Speech from 'expo-speech';
 import { useAuth } from '../context/AuthContext';
@@ -30,82 +31,11 @@ function useEntrance(delay = 0) {
   return { opacity, transform: [{ translateY }] };
 }
 
-// ── Glassmorphism stat card ───────────────────────────────────────
-interface StatCardProps {
-  emoji: string;
-  value: string | number;
-  label: string;
-  colors: [string, string];
-  glowColor: string;
-}
-
-function StatCard({ emoji, value, label, colors, glowColor }: StatCardProps) {
-  const pulse = useRef(new Animated.Value(1)).current;
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulse, { toValue: 1.12, duration: 1400, useNativeDriver: true }),
-        Animated.timing(pulse, { toValue: 1,    duration: 1400, useNativeDriver: true }),
-      ]),
-    ).start();
-  }, []);
-
-  return (
-    <BlurView
-      intensity={22}
-      tint="dark"
-      style={{
-        flex: 1,
-        borderRadius: 20,
-        overflow: 'hidden',
-        borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.08)',
-        marginHorizontal: 4,
-      }}
-    >
-      <LinearGradient
-        colors={['rgba(18,18,42,0.9)', 'rgba(10,10,26,0.95)']}
-        style={{ padding: 16, alignItems: 'center' }}
-      >
-        <View
-          style={{
-            width: 44, height: 44, borderRadius: 22,
-            backgroundColor: glowColor + '22',
-            alignItems: 'center', justifyContent: 'center',
-            marginBottom: 8,
-            shadowColor: glowColor,
-            shadowOffset: { width: 0, height: 0 },
-            shadowOpacity: 0.6, shadowRadius: 12, elevation: 6,
-          }}
-        >
-          <Animated.Text
-            style={{ fontSize: 22, transform: [{ scale: pulse }] }}
-          >
-            {emoji}
-          </Animated.Text>
-        </View>
-        <Text style={{ color: '#f9fafb', fontSize: 22, fontWeight: '700', letterSpacing: -0.5 }}>
-          {value}
-        </Text>
-        <Text style={{ color: '#6b7280', fontSize: 11, marginTop: 2, fontWeight: '500' }}>
-          {label}
-        </Text>
-      </LinearGradient>
-    </BlurView>
-  );
-}
-
 // ── Streak flame component ────────────────────────────────────────
 function StreakFlame({ streak }: { streak: number }) {
-  const flicker = useRef(new Animated.Value(1)).current;
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(flicker, { toValue: 1.2,  duration: 700, useNativeDriver: true }),
-        Animated.timing(flicker, { toValue: 0.95, duration: 700, useNativeDriver: true }),
-      ]),
-    ).start();
-  }, []);
+  // usePulse ekran fokusdan chiqqanda animatsiyani to'xtatadi (batareya uchun)
+  const isFocused = useIsFocused();
+  const flicker = usePulse({ from: 0.95, to: 1.2, duration: 700, enabled: isFocused });
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
@@ -324,15 +254,9 @@ export default function HomeScreen() {
   const insets   = useSafeAreaInsets();
   const navigation = useNavigation<BottomTabNavigationProp<AppTabsParamList>>();
 
-  const pulse = useRef(new Animated.Value(1)).current;
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulse, { toValue: 1.15, duration: 1400, useNativeDriver: true }),
-        Animated.timing(pulse, { toValue: 1,    duration: 1400, useNativeDriver: true }),
-      ]),
-    ).start();
-  }, []);
+  // Ekran fokusda bo'lgandagina pulsatsiya ishlaydi
+  const isFocused = useIsFocused();
+  const pulse = usePulse({ from: 1, to: 1.15, duration: 1400, enabled: isFocused });
 
   // ── Real SRS Count Fetching ──────────────────────────────────────
   const [srsCount, setSrsCount] = useState<number>(0);
