@@ -5,7 +5,8 @@ import Link from 'next/link';
 import {
   AlertCircle, ArrowRight, BookMarked, Check, Crown, Gamepad2,
   Infinity as InfinityIcon, Library, Loader2, MessageCircle, Minus, Send,
-  Share2, Sparkles, Volume2,
+  Share2,
+  GraduationCap, Sparkles, Volume2,
 } from 'lucide-react';
 import api, { errorMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -133,6 +134,10 @@ export default function PremiumPage() {
         />
       </div>
 
+      {/* JLPT — the newest thing behind the paywall, and the one a price list
+          cannot explain on its own. Shown to everyone, subscriber or not. */}
+      <JlptShowcase />
+
       {/* Buy — only when there is something to buy and someone to buy it. */}
       {anyPrice && !entitlements?.isPremium && (
         <BuyPanel prices={plans.prices} isAuthenticated={isAuthenticated} />
@@ -192,11 +197,14 @@ export default function PremiumPage() {
                   premium: <LimitValue value={premium.dailyTts} suffix="ta" />,
                 }}
               </Row>
-              <Row icon={Share2} label="Ommaga ulashish" last>
+              <Row icon={Share2} label="Ommaga ulashish">
                 {{
                   free: free.canShare ? <Yes /> : <No />,
                   premium: premium.canShare ? <Yes /> : <No />,
                 }}
+              </Row>
+              <Row icon={GraduationCap} label="JLPT sinov imtihonlari" last>
+                {{ free: <No />, premium: <Yes /> }}
               </Row>
             </tbody>
           </table>
@@ -390,6 +398,88 @@ function Row({
   );
 }
 
+/**
+ * What a subscription actually opens in the JLPT section.
+ *
+ * Deliberately concrete — the four parts, their timings, how a result is
+ * reported — because "JLPT mock exams" as a bullet point tells a learner
+ * nothing about whether it is worth paying for.
+ */
+function JlptShowcase() {
+  const parts = [
+    { jp: '文字・語彙', uz: "Iyerogliflar & So'z", min: 20, tint: 'from-emerald-500 to-teal-700' },
+    { jp: '文法',       uz: 'Grammatika',          min: 20, tint: 'from-sky-500 to-indigo-700' },
+    { jp: '読解',       uz: "O'qish",              min: 20, tint: 'from-rose-500 to-red-700' },
+    { jp: '聴解',       uz: 'Tinglash',            min: 30, tint: 'from-amber-400 to-orange-600' },
+  ];
+
+  return (
+    <div className="card-glass mt-10 max-w-3xl mx-auto overflow-hidden border-accent/30">
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-red-600 to-red-800 px-6 py-7 text-white">
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-4 -top-6 select-none text-[7rem] font-black leading-none text-white/10"
+        >
+          日本
+        </span>
+        <div className="relative">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-0.5
+                           text-[11px] font-bold ring-1 ring-inset ring-white/25">
+            <Crown size={12} /> Faqat Premium
+          </span>
+          <h2 className="mt-2 text-2xl font-extrabold tracking-tight">JLPT sinov imtihonlari</h2>
+          <p className="mt-1.5 max-w-md text-sm text-white/85">
+            Haqiqiy imtihon tuzilishida: to&rsquo;rt bo&rsquo;lim, taymer, avtomatik baholash va
+            xatolar ustida ishlash.
+          </p>
+        </div>
+      </div>
+
+      <div className="p-5 sm:p-6">
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+          {parts.map((p) => (
+            <div key={p.jp} className="rounded-2xl border border-border bg-surface-2/50 p-3 text-center">
+              <span
+                className={cn(
+                  'mx-auto mb-2 block h-1.5 w-10 rounded-full bg-gradient-to-r',
+                  p.tint,
+                )}
+              />
+              <p className="text-sm font-bold text-text-primary">{p.jp}</p>
+              <p className="text-[11px] text-text-muted">{p.uz}</p>
+              <p className="mt-1 text-[11px] font-bold text-text-secondary">{p.min} daq</p>
+            </div>
+          ))}
+        </div>
+
+        <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+          {[
+            "Bo'limlarni alohida mashq qilish yoki to'liq imtihon (90 daq)",
+            "Taymer serverda — chiqib ketib vaqt yutib bo'lmaydi",
+            "Har savolning to'g'ri javobi va o'zbekcha izohi",
+            "Bo'limlar bo'yicha ball va JLPT o'tish qoidasi",
+          ].map((t) => (
+            <li key={t} className="flex items-start gap-2.5 text-sm text-text-secondary">
+              <Check size={15} className="mt-0.5 shrink-0 text-accent" strokeWidth={2.5} />
+              {t}
+            </li>
+          ))}
+        </ul>
+
+        <Link
+          href="/jlpt"
+          className="mt-5 flex items-center justify-center gap-2 rounded-xl border border-accent/40
+                     bg-accent/10 py-3 text-sm font-bold text-accent transition-colors
+                     hover:border-accent hover:bg-accent/15"
+        >
+          <GraduationCap size={16} />
+          Bo&rsquo;limni ko&rsquo;rish
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 function PlanCard({
   title, subtitle, price, priceNote, limits, highlight, extraPrices = [],
 }: {
@@ -462,6 +552,9 @@ function PlanCard({
           {limits.dailyTts === null ? 'Cheksiz talaffuz' : `Kuniga ${limits.dailyTts} ta talaffuz`}
         </Feature>
         <Feature ok={limits.canShare}>Materialni ommaga ulashish</Feature>
+        {/* The only outright-closed feature, so it is stated plainly rather
+            than as a number. */}
+        <Feature ok={highlight}>JLPT sinov imtihonlari (N5–N1)</Feature>
       </ul>
     </div>
   );
