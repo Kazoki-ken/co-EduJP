@@ -287,39 +287,98 @@ function BuyPanel({
   }
 
   return (
-    <div className="card-glass p-6 mt-8 max-w-3xl mx-auto">
-      <h2 className="font-bold text-text-primary mb-1 flex items-center gap-2">
-        <Send size={16} className="text-primary" /> Telegram orqali to&rsquo;lash
+    <div className="card-glass mt-8 max-w-3xl mx-auto overflow-hidden p-6">
+      <h2 className="mb-1 flex items-center gap-2.5 font-bold text-text-primary">
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/15
+                         text-primary ring-1 ring-inset ring-primary/25">
+          <Send size={16} />
+        </span>
+        Telegram orqali to&rsquo;lash
       </h2>
-      <p className="text-sm text-text-muted mb-5">
+      <p className="mb-5 pl-[3rem] text-sm text-text-muted">
         {"Tarifni tanlang — bot kartani va summani ko'rsatadi. To'lab, chek rasmini botga yuborasiz."}
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {PLAN_META.filter((p) => prices[p.id] > 0).map((p) => (
-          <button
-            key={p.id}
-            onClick={() => buy(p.id)}
-            disabled={busy !== null}
-            className={cn(
-              'card-glass p-4 text-left transition-all hover:-translate-y-0.5 disabled:opacity-50',
-              p.id === 'yearly'
-                ? 'border-accent/50 hover:border-accent'
-                : 'border-border/60 hover:border-primary/50',
-            )}
-          >
-            <p className="text-xs font-bold text-text-muted uppercase tracking-wider">{p.label}</p>
-            <p className="text-xl font-black text-text-primary mt-1">
-              {som(prices[p.id])}
-              <span className="text-xs font-semibold text-text-muted ml-1">so&rsquo;m</span>
-            </p>
-            {p.note && <p className="text-[11px] text-accent font-semibold mt-1">{p.note}</p>}
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary mt-3">
-              {busy === p.id ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
-              Sotib olish
-            </span>
-          </button>
-        ))}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        {PLAN_META.filter((p) => prices[p.id] > 0).map((p) => {
+          const best = p.id === 'yearly';
+          const off =
+            p.id === 'yearly' && prices.monthly > 0
+              ? Math.round((1 - prices.yearly / (prices.monthly * 12)) * 100)
+              : 0;
+
+          return (
+            <button
+              key={p.id}
+              onClick={() => buy(p.id)}
+              disabled={busy !== null}
+              className={cn(
+                'group relative flex flex-col overflow-hidden rounded-2xl border p-4 text-left',
+                'transition-all duration-200 hover:-translate-y-1 disabled:opacity-50 disabled:hover:translate-y-0',
+                best
+                  ? 'border-accent/50 bg-accent/[0.06] hover:border-accent hover:shadow-glow-accent'
+                  : 'border-border bg-surface-2/40 hover:border-primary/50 hover:shadow-glow-sm',
+              )}
+            >
+              {/* A tinted bar along the top, the same device the level cards
+                  in the JLPT section use to separate options at a glance. */}
+              <span
+                aria-hidden
+                className={cn(
+                  'absolute inset-x-0 top-0 h-1 bg-gradient-to-r transition-opacity',
+                  best
+                    ? 'from-accent to-orange-600 opacity-100'
+                    : 'from-primary to-red-700 opacity-40 group-hover:opacity-90',
+                )}
+              />
+
+              <div className="mb-2 flex items-center gap-2">
+                <p className="text-xs font-bold uppercase tracking-wider text-text-muted">
+                  {p.label}
+                </p>
+                {best && (
+                  <span className="rounded-full bg-accent/20 px-2 py-0.5 text-[10px] font-black
+                                   uppercase tracking-wider text-accent">
+                    {off > 0 ? `−${off}%` : 'Foydali'}
+                  </span>
+                )}
+              </div>
+
+              <p className="text-2xl font-black leading-none tracking-tight text-text-primary">
+                {som(prices[p.id])}
+                <span className="ml-1 text-xs font-bold text-text-muted">so&rsquo;m</span>
+              </p>
+
+              {p.note && (
+                <p
+                  className={cn(
+                    'mt-1.5 text-[11px] font-semibold',
+                    best ? 'text-accent' : 'text-text-muted',
+                  )}
+                >
+                  {p.note}
+                </p>
+              )}
+
+              <span
+                className={cn(
+                  'mt-4 inline-flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-bold',
+                  'transition-colors',
+                  best
+                    ? 'bg-accent-gradient text-white'
+                    : 'border border-border text-text-secondary group-hover:border-primary/50 group-hover:text-primary',
+                )}
+              >
+                {busy === p.id ? (
+                  <Loader2 size={13} className="animate-spin" />
+                ) : (
+                  <Send size={13} />
+                )}
+                Sotib olish
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {err && (
@@ -348,11 +407,23 @@ function BuyPanel({
         </div>
       )}
 
-      <ol className="mt-5 space-y-1.5 text-xs text-text-muted list-decimal list-inside">
-        <li>Bot karta raqamini va aniq summani ko&rsquo;rsatadi</li>
-        <li>Kartaga pul o&rsquo;tkazasiz</li>
-        <li>Chek rasmini botga yuborasiz</li>
-        <li>Admin tasdiqlagach Premium avtomatik ulanadi</li>
+      {/* Four steps, numbered in their own chips — a plain list read as fine
+          print, and this is the part a first-time buyer actually needs. */}
+      <ol className="mt-6 grid gap-2.5 sm:grid-cols-2">
+        {[
+          'Bot karta raqamini va aniq summani koʻrsatadi',
+          'Kartaga pul oʻtkazasiz',
+          'Chek rasmini botga yuborasiz',
+          'Admin tasdiqlagach Premium avtomatik ulanadi',
+        ].map((t, i) => (
+          <li key={t} className="flex items-start gap-2.5 text-xs text-text-secondary">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full
+                             bg-surface-2 text-[10px] font-black text-text-muted">
+              {i + 1}
+            </span>
+            {t}
+          </li>
+        ))}
       </ol>
     </div>
   );
