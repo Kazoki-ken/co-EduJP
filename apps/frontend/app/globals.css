@@ -122,6 +122,10 @@
     background-image: var(--gradient-space);
     background-attachment: fixed;
     min-height: 100vh;
+    /* Full-bleed sections measure themselves in vw, which counts the vertical
+       scrollbar and so overshoots the page by a few pixels. Clipping here
+       absorbs that rather than leaving a stray horizontal scrollbar. */
+    overflow-x: clip;
   }
 
   /* Custom scrollbar — Japanese traditional theme */
