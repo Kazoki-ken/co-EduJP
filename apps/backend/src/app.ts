@@ -16,6 +16,7 @@ import utilityRoutes from './routes/utility.routes';
 import libraryRoutes from './routes/library.routes';
 import communityRoutes from './routes/community.routes';
 import premiumRoutes from './routes/premium.routes';
+import jlptRoutes from './routes/jlpt.routes';
 import { getLeaderboardHandler } from './controllers/game.controller';
 
 const app = express();
@@ -127,6 +128,7 @@ app.use('/api/games', gameRoutes);
 app.use('/api/library', libraryRoutes);
 app.use('/api/community', communityRoutes);
 app.use('/api/premium', premiumRoutes);
+app.use('/api/jlpt', jlptRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', utilityRoutes);
 app.get('/api/leaderboard', getLeaderboardHandler);

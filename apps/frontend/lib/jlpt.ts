@@ -100,7 +100,6 @@ export const SECTIONS: Section[] = [
       "Gapga mos grammatik shaklni tanlash (文の文法1)",
       "So'zlarni to'g'ri tartibda joylash (文の文法2)",
       "Matn ichidagi bo'shliqlarni to'ldirish (文章の文法)",
-      "N2 va N1 da grammatika o'qish bilan bitta blokda o'tadi",
     ],
     byLevel: {
       N5: { minutes: 20, questions: 20, tests: 24 },
@@ -171,3 +170,11 @@ export const getLevel = (id: string) => LEVELS.find((l) => l.id === id);
 /** Total minutes for a full mock exam at a level. */
 export const fullExamMinutes = (level: LevelId) =>
   SECTIONS.reduce((sum, s) => sum + s.byLevel[level].minutes, 0);
+
+/** Section id → the label shown to learners. Used by the result page. */
+export const SECTION_LABELS: Record<string, string> = {
+  MOJI_GOI: "Iyerogliflar & So'z",
+  BUNPOU: 'Grammatika',
+  DOKKAI: "O'qish",
+  CHOUKAI: 'Tinglash',
+};

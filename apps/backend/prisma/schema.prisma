@@ -105,24 +105,25 @@ model User {
   tier         Tier      @default(FREE)
   premiumUntil DateTime? @map("premium_until")
 
-  profile      Profile?
-  words        Word[]             @relation("AuthorWords")
-  savedWords   SavedWord[]
-  savedBooks   SavedBook[]
-  savedTopics  SavedTopic[]
-  wordProgress UserWordProgress[]
-  weeklyStats  WeeklyStat[]
-  badges       UserBadge[]
-  gameSessions  GameSession[]
-  authSessions  AuthSession[]
-  wordNotes     UserWordNote[]
-  refreshTokens RefreshToken[]
-  books         Book[]             @relation("AuthoredBooks")
-  topics        Topic[]            @relation("AuthoredTopics")
-  premiumGrants PremiumGrant[]     @relation("GrantRecipient")
-  grantsIssued  PremiumGrant[]     @relation("GrantIssuer")
-  payments      PaymentRequest[]   @relation("PaymentBuyer")
-  paymentsReviewed PaymentRequest[] @relation("PaymentReviewer")
+  profile          Profile?
+  words            Word[]             @relation("AuthorWords")
+  savedWords       SavedWord[]
+  savedBooks       SavedBook[]
+  savedTopics      SavedTopic[]
+  wordProgress     UserWordProgress[]
+  weeklyStats      WeeklyStat[]
+  badges           UserBadge[]
+  gameSessions     GameSession[]
+  authSessions     AuthSession[]
+  wordNotes        UserWordNote[]
+  refreshTokens    RefreshToken[]
+  books            Book[]             @relation("AuthoredBooks")
+  topics           Topic[]            @relation("AuthoredTopics")
+  premiumGrants    PremiumGrant[]     @relation("GrantRecipient")
+  grantsIssued     PremiumGrant[]     @relation("GrantIssuer")
+  payments         PaymentRequest[]   @relation("PaymentBuyer")
+  paymentsReviewed PaymentRequest[]   @relation("PaymentReviewer")
+  jlptAttempts     JlptAttempt[]
 
   @@map("users")
 }
@@ -138,15 +139,15 @@ model User {
 // That avoids ever asking the buyer to type their username into a chat, which
 // nobody gets right and anybody could fake.
 model PaymentRequest {
-  id       String        @id @default(cuid())
-  userId   String        @map("user_id")
+  id     String        @id @default(cuid())
+  userId String        @map("user_id")
   /// 'monthly' | 'yearly' | 'lifetime' — which price row was chosen.
-  plan     String
+  plan   String
   /// Whole months to grant on approval. 0 = lifetime.
-  months   Int
+  months Int
   /// Price in so'm, frozen at checkout so a later price change cannot alter it.
-  amount   Int
-  status   PaymentStatus @default(PENDING)
+  amount Int
+  status PaymentStatus @default(PENDING)
 
   linkToken      String  @unique @map("link_token")
   telegramUserId String? @map("telegram_user_id")
@@ -326,32 +327,33 @@ model Word {
   compounds          Json?
   homonyms           Json?    @map("homonyms")
 
-
   author       User?              @relation("AuthorWords", fields: [authorId], references: [id], onDelete: SetNull)
   wordTopics   WordTopic[]
   savedWords   SavedWord[]
   userProgress UserWordProgress[]
   wordNotes    UserWordNote[]
 
+  @@index([authorId])
   @@map("words")
 }
 
 model WordTopic {
-  wordId  String @map("word_id")
-  topicId String @map("topic_id")
+  wordId    String @map("word_id")
+  topicId   String @map("topic_id")
   // Position of the word inside this topic. A textbook lesson has a fixed
   // word order, and `word.createdAt` cannot express it: a word that already
   // existed in the dictionary keeps its old timestamp when a later lesson
   // links to it, so it would sort into the wrong place. The order belongs to
   // the link, not to the word — the same word can sit at a different position
   // in another topic.
-  sortOrder Int @default(0) @map("sort_order")
+  sortOrder Int    @default(0) @map("sort_order")
 
   word  Word  @relation(fields: [wordId], references: [id], onDelete: Cascade)
   topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
   @@id([wordId, topicId])
   @@index([topicId, sortOrder])
+  @@index([topicId])
   @@map("word_topics")
 }
 
@@ -366,6 +368,7 @@ model SavedWord {
   word Word @relation(fields: [wordId], references: [id], onDelete: Cascade)
 
   @@id([userId, wordId])
+  @@index([wordId])
   @@map("saved_words")
 }
 
@@ -378,6 +381,7 @@ model SavedBook {
   book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
 
   @@id([userId, bookId])
+  @@index([bookId])
   @@map("saved_books")
 }
 
@@ -390,6 +394,7 @@ model SavedTopic {
   topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
   @@id([userId, topicId])
+  @@index([topicId])
   @@map("saved_topics")
 }
 
@@ -407,6 +412,7 @@ model UserWordProgress {
   word Word @relation(fields: [wordId], references: [id], onDelete: Cascade)
 
   @@id([userId, wordId])
+  @@index([userId, nextReviewDate], map: "user_word_progress_due_idx")
   @@map("user_word_progress")
 }
 
@@ -427,6 +433,8 @@ model WeeklyStat {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([startDate])
+  @@index([userId, startDate])
   @@map("weekly_stats")
 }
 
@@ -469,6 +477,8 @@ model GameSession {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
+  @@index([createdAt])
   @@map("game_sessions")
 }
 
@@ -527,4 +537,234 @@ model UserWordNote {
 
   @@id([userId, wordId])
   @@map("user_word_notes")
+}
+
+// ─── JLPT Mock Exams ──────────────────────────────────────────────────────────
+//
+// Modelled on the real test paper: an exam holds sections, a section holds
+// question groups (もんだい), and a group holds questions. Anything several
+// questions share — a reading passage, an audio clip, a diagram — lives on the
+// group as a "stimulus" rather than being copied onto every question.
+
+enum JlptLevel {
+  N5
+  N4
+  N3
+  N2
+  N1
+}
+
+// The four parts, each independent: its own questions, its own timer, its own
+// score. A learner picks a level, then a section, and works through just that
+// section. Only "full exam" runs all four of a level back to back.
+enum JlptSection {
+  MOJI_GOI // 文字・語彙 — script and vocabulary
+  BUNPOU // 文法 — grammar
+  DOKKAI // 読解 — reading
+  CHOUKAI // 聴解 — listening
+}
+
+// Question shapes, one per もんだい type. The runner needs these because the
+// answer UI differs: SENTENCE_ORDER shows a ★ slot, listening plays audio
+// before revealing choices, and so on.
+enum JlptQuestionType {
+  KANJI_READING // 漢字読み — kanji written above, pick the reading
+  KANJI_WRITING // 表記 — kana given, pick the kanji spelling
+  CONTEXT_FILL // 文脈規定 — pick the word that fits the blank
+  PARAPHRASE // 言い換え類義 — pick the sentence with the same meaning
+  USAGE // 用法 — pick the sentence using the word correctly (N4+)
+  GRAMMAR_FILL // 文の文法1 — pick the particle or form
+  SENTENCE_ORDER // 文の文法2 — order the parts, answer what lands on ★
+  CLOZE_PASSAGE // 文章の文法 — consecutive blanks in one short text
+  READING_SHORT // 短文
+  READING_MID // 中文
+  READING_LONG // 長文
+  INFO_SEARCH // 情報検索 — find the answer in a notice or timetable
+  LISTEN_TASK // 課題理解 — what should the person do next
+  LISTEN_POINT // ポイント理解 — catch one specific detail
+  LISTEN_SPEECH // 発話表現 — pick what to say in the pictured situation
+  LISTEN_RESPONSE // 即時応答 — pick the natural reply
+}
+
+// Where a question came from. Official papers are copyright-bound, so the
+// origin is recorded on the exam and can gate whether it may be published.
+enum JlptSource {
+  OFFICIAL_SAMPLE // reproduced from a published JLPT sample paper
+  ORIGINAL // written for this app
+}
+
+/// A set of four tests — one per section — that make up one full mock exam.
+/// Sitting the whole thing runs its four tests back to back.
+model JlptExamSet {
+  id          String     @id @default(cuid())
+  level       JlptLevel
+  title       String
+  description String?
+  source      JlptSource @default(ORIGINAL)
+  sourceYear  Int?       @map("source_year")
+  isPublished Boolean    @default(false) @map("is_published")
+  sortOrder   Int        @default(0) @map("sort_order")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  tests    JlptTest[]
+  attempts JlptAttempt[]
+
+  @@index([level, isPublished])
+  @@map("jlpt_exam_sets")
+}
+
+/// One practice test inside one section of one level — "Moji · Goi — 1-test".
+///
+/// This is the unit a learner opens and works through. Sections do not share
+/// questions or clocks: a test belongs to exactly one level and one section,
+/// and carries its own timer. A test may additionally belong to an exam set,
+/// which is what the "full exam" button assembles.
+model JlptTest {
+  id          String      @id @default(cuid())
+  level       JlptLevel
+  section     JlptSection
+  /// Position within its section: 1 for "1-test", 2 for "2-test".
+  number      Int
+  title       String?
+  /// Minutes for this test on its own.
+  minutes     Int
+  source      JlptSource  @default(ORIGINAL)
+  sourceYear  Int?        @map("source_year")
+  /// Draft tests are visible to admins only.
+  isPublished Boolean     @default(false) @map("is_published")
+  setId       String?     @map("set_id")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  set      JlptExamSet?        @relation(fields: [setId], references: [id], onDelete: SetNull)
+  groups   JlptQuestionGroup[]
+  attempts JlptAttempt[]
+
+  @@unique([level, section, number])
+  @@index([level, section, isPublished])
+  @@index([setId])
+  @@map("jlpt_tests")
+}
+
+model JlptQuestionGroup {
+  id            String           @id @default(cuid())
+  testId        String           @map("test_id")
+  /// The もんだい number as printed on the paper.
+  number        Int
+  type          JlptQuestionType
+  /// The Japanese instruction line shown above the questions.
+  instruction   String           @db.Text
+  /// Uzbek translation of the instruction, for learners who cannot read it yet.
+  instructionUz String?          @db.Text
+
+  // ── Shared material ──
+  /// Reading passage, cloze text, or listening transcript.
+  passage  String? @db.Text
+  /// Diagram, notice or timetable that the questions refer to.
+  imageUrl String? @map("image_url")
+  /// Listening clip for the whole group, when the questions share one recording.
+  audioUrl String? @map("audio_url")
+
+  sortOrder Int @default(0) @map("sort_order")
+
+  test      JlptTest       @relation(fields: [testId], references: [id], onDelete: Cascade)
+  questions JlptQuestion[]
+
+  @@unique([testId, number])
+  @@map("jlpt_question_groups")
+}
+
+model JlptQuestion {
+  id            String  @id @default(cuid())
+  groupId       String  @map("group_id")
+  /// Question number as printed, unique within the exam paper.
+  number        Int
+  /// The sentence or prompt. For SENTENCE_ORDER the ★ position is marked with
+  /// the literal ★ character; for pure-audio questions it may be empty.
+  stem          String  @db.Text
+  /// The word or phrase underlined in the stem, when the question asks about it.
+  focus         String?
+  /// Illustration belonging to this question alone (common in listening).
+  imageUrl      String? @map("image_url")
+  /// Clip for this question alone.
+  audioUrl      String? @map("audio_url")
+  /// What is said in a listening item. Read aloud by the app's Japanese voice
+  /// while no recording exists, and shown in the review afterwards.
+  transcript    String? @db.Text
+  /// Points. The real test scales scores; here every question is worth 1 by
+  /// default and the report says the result is approximate.
+  points        Int     @default(1)
+  /// Why the answer is right — written in Uzbek, shown after the attempt.
+  explanationUz String? @db.Text
+
+  group   JlptQuestionGroup   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  choices JlptChoice[]
+  answers JlptAttemptAnswer[]
+
+  @@unique([groupId, number])
+  @@map("jlpt_questions")
+}
+
+model JlptChoice {
+  id         String  @id @default(cuid())
+  questionId String  @map("question_id")
+  /// 1–4 as printed.
+  number     Int
+  text       String  @db.Text
+  isCorrect  Boolean @default(false) @map("is_correct")
+
+  question JlptQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([questionId, number])
+  @@map("jlpt_choices")
+}
+
+enum JlptAttemptStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
+model JlptAttempt {
+  id            String            @id @default(cuid())
+  userId        String            @map("user_id")
+  /// Exactly one of these is set: a single test for a section drill, or an
+  /// exam set for the full mock exam.
+  testId        String?           @map("test_id")
+  setId         String?           @map("set_id")
+  status        JlptAttemptStatus @default(IN_PROGRESS)
+  startedAt     DateTime          @default(now()) @map("started_at")
+  finishedAt    DateTime?         @map("finished_at")
+  /// Filled on completion.
+  score         Int?
+  maxScore      Int?              @map("max_score")
+  /// Per-section raw scores, so the report can apply the JLPT rule that every
+  /// block needs a minimum, not just the total.
+  sectionScores Json?             @map("section_scores")
+  passed        Boolean?
+
+  user    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  test    JlptTest?           @relation(fields: [testId], references: [id], onDelete: Cascade)
+  set     JlptExamSet?        @relation(fields: [setId], references: [id], onDelete: Cascade)
+  answers JlptAttemptAnswer[]
+
+  @@index([userId, status])
+  @@map("jlpt_attempts")
+}
+
+model JlptAttemptAnswer {
+  id         String   @id @default(cuid())
+  attemptId  String   @map("attempt_id")
+  questionId String   @map("question_id")
+  /// Chosen option number, or null when the learner left it blank.
+  chosen     Int?
+  isCorrect  Boolean? @map("is_correct")
+  answeredAt DateTime @default(now()) @map("answered_at")
+
+  attempt  JlptAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question JlptQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([attemptId, questionId])
+  @@map("jlpt_attempt_answers")
 }

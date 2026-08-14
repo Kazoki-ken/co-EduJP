@@ -9,13 +9,14 @@
  * non-subscribers to /premium.
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Play, Shuffle, Sparkles, Timer, Trophy } from 'lucide-react';
 import { LEVELS, SECTIONS, fullExamMinutes, type LevelId, type Section } from '@/lib/jlpt';
 import { PremiumGateNotice, StartAction } from '@/components/jlpt/StartAction';
 import { cn } from '@/lib/utils';
+import api from '@/lib/api';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.03 } } };
 const item = { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0 } };
@@ -24,22 +25,42 @@ export default function JlptPage() {
   const [level, setLevel] = useState<LevelId>('N5');
   const [sectionId, setSectionId] = useState(SECTIONS[0].id);
 
+  // Real tests from the API. The sample counts in lib/jlpt.ts stay as the
+  // fallback for sections nobody has written questions for yet.
+  const [live, setLive] = useState<LiveTest[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .get<{ tests: LiveTest[] }>(`/jlpt/levels/${level}`)
+      .then((r) => !cancelled && setLive(r.data.tests))
+      .catch(() => !cancelled && setLive([]));
+    return () => {
+      cancelled = true;
+    };
+  }, [level]);
+
   const activeLevel = LEVELS.find((l) => l.id === level)!;
   const section = SECTIONS.find((s) => s.id === sectionId)!;
   const stats = section.byLevel[level];
+  const sectionTests = live.filter(
+    (t) => t.section === SECTION_KEYS[section.id] && t.questionCount > 0,
+  );
 
   return (
     <div className="page-container py-8 animate-fade-in">
 
-      {/* Honest up front: this is a layout, not a working exam. */}
-      <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-border bg-surface-2/60
-                      px-4 py-3 text-sm text-text-secondary">
-        <Sparkles size={16} className="mt-0.5 shrink-0 text-text-muted" />
-        <p>
-          <span className="font-bold text-text-primary">Namuna ko&rsquo;rinish.</span>{' '}
-          Testlar soni va natijalar namunaviy — savollar bazasi hali tayyorlanmagan.
-        </p>
-      </div>
+      {/* Shown only for sections nobody has written questions for yet — once a
+          section has real tests, saying it is a mock-up would be a lie. */}
+      {sectionTests.length === 0 && (
+        <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-border bg-surface-2/60
+                        px-4 py-3 text-sm text-text-secondary">
+          <Sparkles size={16} className="mt-0.5 shrink-0 text-text-muted" />
+          <p>
+            <span className="font-bold text-text-primary">Namuna ko&rsquo;rinish.</span>{' '}
+            Bu boʻlimga savollar hali qoʻshilmagan — testlar soni namunaviy.
+          </p>
+        </div>
+      )}
 
       <PremiumGateNotice className="mb-6" />
 
@@ -142,7 +163,8 @@ export default function JlptPage() {
                   active ? 'bg-primary/15 text-primary' : 'bg-surface-2 text-text-muted',
                 )}
               >
-                {s.byLevel[level].tests}
+                {live.filter((t) => t.section === SECTION_KEYS[s.id] && t.questionCount > 0)
+                  .length || s.byLevel[level].tests}
               </span>
             </button>
           );
@@ -157,7 +179,8 @@ export default function JlptPage() {
             <span className="text-text-muted font-bold text-lg">{section.jp}</span>
           </h2>
           <p className="text-sm text-text-muted mt-1">
-            {stats.tests} ta test · 0 tugallangan · {activeLevel.words}
+            {sectionTests.length || stats.tests} ta test · {activeLevel.words}
+            {sectionTests.length === 0 && ' · namunaviy'}
           </p>
         </div>
         <Link
@@ -193,11 +216,24 @@ export default function JlptPage() {
         animate="show"
         className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"
       >
-        {Array.from({ length: stats.tests }, (_, i) => (
-          <motion.div key={i} variants={item}>
-            <TestCard index={i + 1} level={level} section={section} />
-          </motion.div>
-        ))}
+        {sectionTests.length > 0
+          ? sectionTests.map((t) => (
+              <motion.div key={t.id} variants={item}>
+                <TestCard
+                  index={t.number}
+                  level={level}
+                  section={section}
+                  href={`/jlpt/test/${t.id}`}
+                  questionCount={t.questionCount}
+                  best={t.best}
+                />
+              </motion.div>
+            ))
+          : Array.from({ length: stats.tests }, (_, i) => (
+              <motion.div key={i} variants={item}>
+                <TestCard index={i + 1} level={level} section={section} />
+              </motion.div>
+            ))}
       </motion.div>
     </div>
   );
@@ -205,10 +241,43 @@ export default function JlptPage() {
 
 // ─── Test card ────────────────────────────────────────────────────────────────
 
-function TestCard({ index, level, section }: { index: number; level: LevelId; section: Section }) {
+interface LiveTest {
+  id: string;
+  section: string;
+  number: number;
+  title: string | null;
+  minutes: number;
+  questionCount: number;
+  /** The learner's own best result, once they have sat this test. */
+  best: { score: number; maxScore: number } | null;
+}
+
+/** lib/jlpt.ts ids are lowercase; the API speaks the enum. */
+const SECTION_KEYS: Record<string, string> = {
+  moji: 'MOJI_GOI',
+  bunpou: 'BUNPOU',
+  dokkai: 'DOKKAI',
+  choukai: 'CHOUKAI',
+};
+
+function TestCard({
+  index,
+  level,
+  section,
+  href,
+  questionCount,
+  best,
+}: {
+  index: number;
+  level: LevelId;
+  section: Section;
+  href?: string;
+  questionCount?: number;
+  best?: { score: number; maxScore: number } | null;
+}) {
   return (
     <Link
-      href={`/jlpt/${section.id}?level=${level}&test=${index}`}
+      href={href ?? `/jlpt/${section.id}?level=${level}&test=${index}`}
       className={cn(
         'group card-glass p-4 flex flex-col gap-3 h-full border-border',
         'transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40',
@@ -236,9 +305,21 @@ function TestCard({ index, level, section }: { index: number; level: LevelId; se
       </div>
 
       <div className="flex items-center justify-between border-t border-border/60 pt-2.5 mt-auto">
-        <span className="text-xs font-semibold text-text-muted">Boshlanmagan</span>
-        <span className="flex items-center gap-1 text-xs font-semibold text-text-muted">
-          <Trophy size={12} />—
+        <span className="text-xs font-semibold text-text-muted">
+          {best
+            ? 'Ishlangan'
+            : questionCount
+              ? `${questionCount} ta savol`
+              : 'Boshlanmagan'}
+        </span>
+        <span
+          className={cn(
+            'flex items-center gap-1 text-xs font-bold tabular-nums',
+            best ? 'text-accent' : 'text-text-muted',
+          )}
+        >
+          <Trophy size={12} />
+          {best ? `${best.score}/${best.maxScore}` : '—'}
         </span>
       </div>
     </Link>
