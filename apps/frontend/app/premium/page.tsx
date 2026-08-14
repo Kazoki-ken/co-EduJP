@@ -360,13 +360,12 @@ function BuyPanel({
                 </p>
               )}
 
+              {/* Pushed to the bottom so the three actions line up even though
+                  only two of the cards carry a note above them. */}
               <span
                 className={cn(
-                  'mt-4 inline-flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-bold',
-                  'transition-colors',
-                  best
-                    ? 'bg-accent-gradient text-white'
-                    : 'border border-border text-text-secondary group-hover:border-primary/50 group-hover:text-primary',
+                  'mt-auto inline-flex items-center gap-1.5 pt-4 text-xs font-bold transition-colors',
+                  best ? 'text-accent' : 'text-primary',
                 )}
               >
                 {busy === p.id ? (
