@@ -64,7 +64,11 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
   // Admins keep the whole app; everyone else gets the notice. The sign-in flow
   // stays reachable so an admin can still authenticate — the API allows the
   // auth routes through for the same reason.
-  if (maintenance.on === true && user?.role !== 'ADMIN' && !isAuthRoute) {
+  if (maintenance.on === true && user?.role !== 'ADMIN') {
+    // The sign-in page keeps no chrome at all during maintenance — a signed-in
+    // non-admin would otherwise still see the full sidebar behind the form,
+    // with every link leading back to the notice.
+    if (isAuthRoute) return <main className="flex-1">{children}</main>;
     return <MaintenanceScreen message={maintenance.message} />;
   }
 
