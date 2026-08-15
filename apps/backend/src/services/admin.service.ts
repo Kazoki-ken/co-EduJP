@@ -2,6 +2,7 @@ import * as XLSX from 'xlsx';
 import prisma from '../lib/prisma';
 import { createError } from '../middleware/error.middleware';
 import { Role } from '@prisma/client';
+import { invalidateMaintenanceCache } from '../middleware/maintenance.middleware';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -532,6 +533,10 @@ export const upsertConfig = async (
     ),
   );
 
+  // The gate caches its flag for a few seconds; drop it so an admin flipping
+  // maintenance mode sees the effect on the very next request.
+  invalidateMaintenanceCache();
+
   return getAllConfig();
 };
 
@@ -539,6 +544,7 @@ export const deleteConfig = async (key: string) => {
   const config = await prisma.siteConfiguration.findUnique({ where: { key } });
   if (!config) throw createError(`Config key "${key}" not found`, 404);
   await prisma.siteConfiguration.delete({ where: { key } });
+  invalidateMaintenanceCache();
 };
 
 // ─── 5. Platform Statistics ───────────────────────────────────────────────────

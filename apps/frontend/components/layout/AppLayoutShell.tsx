@@ -24,7 +24,8 @@ import {
   GraduationCap
 } from 'lucide-react';
 import { cn, leagueIcon } from '@/lib/utils';
-import { useSiteName } from '@/lib/siteConfig';
+import { useSiteName, useMaintenance } from '@/lib/siteConfig';
+import { MaintenanceScreen } from './MaintenanceScreen';
 import { ThemeToggleButton } from './ThemeToggle';
 
 export function AppLayoutShell({ children }: { children: React.ReactNode }) {
@@ -32,6 +33,7 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const siteName = useSiteName();
+  const maintenance = useMaintenance();
 
   const handleLogout = async () => {
     setProfileOpen(false);
@@ -57,6 +59,14 @@ export function AppLayoutShell({ children }: { children: React.ReactNode }) {
   // Boshlash" buttons and the footer links are exits from the one flow the
   // page is trying to finish.
   const isAuthRoute = pathname.startsWith('/auth');
+
+  // ─── Maintenance gate ──────────────────────────────────────────────────────
+  // Admins keep the whole app; everyone else gets the notice. The sign-in flow
+  // stays reachable so an admin can still authenticate — the API allows the
+  // auth routes through for the same reason.
+  if (maintenance.on === true && user?.role !== 'ADMIN' && !isAuthRoute) {
+    return <MaintenanceScreen message={maintenance.message} />;
+  }
 
   // Guest Layout (unauthenticated)
   if (!isAuthenticated || !user) {

@@ -7,6 +7,7 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 
 import { errorHandler } from './middleware/error.middleware';
+import { maintenanceGate } from './middleware/maintenance.middleware';
 import authRoutes from './routes/auth.routes';
 import healthRoutes from './routes/health.routes';
 import vocabularyRoutes from './routes/vocabulary.routes';
@@ -115,6 +116,12 @@ const limiter = rateLimit({
   message: { error: 'Too many requests, please try again later.' },
 });
 app.use(limiter);
+
+// ─── Maintenance Gate ────────────────────────────────────────────────────────
+// Sits above every route so a single admin toggle closes the whole API to
+// ordinary users. Admins, auth and the health check stay open — see the
+// middleware for the exact allowlist.
+app.use(maintenanceGate);
 
 // NOTE: auth routes are NOT wrapped in a blanket limiter here. Sign-in attempts
 // and the Telegram status-polling endpoint need very different budgets, so each

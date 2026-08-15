@@ -43,12 +43,35 @@ const processQueue = (token: string) => {
   _refreshQueue = [];
 };
 
+/**
+ * Fired when the API answers 503 with the maintenance flag. The layout shell
+ * listens for it and swaps the page for the maintenance screen, so a visitor
+ * who was already inside the app when it was switched on finds out on their
+ * next click instead of on the next poll.
+ */
+export const MAINTENANCE_EVENT = 'vocabjp:maintenance';
+
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const original = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
     };
+
+    if (
+      error.response?.status === 503 &&
+      (error.response.data as { maintenance?: boolean } | undefined)?.maintenance &&
+      typeof window !== 'undefined'
+    ) {
+      window.dispatchEvent(
+        new CustomEvent(MAINTENANCE_EVENT, {
+          detail: {
+            message: (error.response.data as { error?: string }).error,
+          },
+        }),
+      );
+      return Promise.reject(error);
+    }
 
     // Only attempt a token refresh for 401 errors that haven't been retried yet
     if (

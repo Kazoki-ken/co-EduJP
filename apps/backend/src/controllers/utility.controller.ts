@@ -252,14 +252,36 @@ export const ttsVoicesHandler = (
 };
 
 import prisma from '../lib/prisma';
+import {
+  MAINTENANCE_KEY,
+  MAINTENANCE_MESSAGE_KEY,
+  DEFAULT_MAINTENANCE_MESSAGE,
+  isMaintenanceValueOn,
+} from '../middleware/maintenance.middleware';
 
+/**
+ * The maintenance flag ships with the public config because the web app has to
+ * render its own "texnik ko'rik" screen before it makes any other request —
+ * and this endpoint stays reachable while the gate is closed.
+ */
 export const getPublicConfigHandler = async (
   _req: AuthenticatedRequest,
   res: Response,
 ): Promise<void> => {
   const configs = await prisma.siteConfiguration.findMany({
-    where: { key: { in: ['site_name'] } }
+    where: {
+      key: { in: ['site_name', MAINTENANCE_KEY, MAINTENANCE_MESSAGE_KEY] },
+    },
   });
-  const data = Object.fromEntries(configs.map((c) => [c.key, c.value]));
-  res.json(data);
+  const map = new Map(configs.map((c) => [c.key, c.value]));
+
+  // Answers must not be cached by nginx or the browser — a stale "off" would
+  // leave visitors clicking into a closed API.
+  res.setHeader('Cache-Control', 'no-store');
+  res.json({
+    ...Object.fromEntries(configs.map((c) => [c.key, c.value])),
+    maintenance_mode: isMaintenanceValueOn(map.get(MAINTENANCE_KEY)) ? 'on' : 'off',
+    maintenance_message:
+      map.get(MAINTENANCE_MESSAGE_KEY)?.trim() || DEFAULT_MAINTENANCE_MESSAGE,
+  });
 };

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Trash2, Save, Eye, EyeOff, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
+import { Plus, Trash2, Save, Eye, EyeOff, CheckCircle, AlertCircle, RefreshCw, Wrench } from 'lucide-react';
 import api from '@/lib/api';
 import { cn } from '@/lib/utils';
 
@@ -147,6 +147,137 @@ const KNOWN_KEYS: { key: string; label: string; desc: string; sensitive: boolean
     placeholder: '200',
   },
 ];
+
+// ─── Maintenance mode ─────────────────────────────────────────────────────────
+// These two keys get their own panel instead of a pair of text boxes: closing
+// the site to every visitor is the one setting here that should never be
+// flipped by mistyping a value into a generic field.
+
+const MAINTENANCE_KEY = 'maintenance_mode';
+const MAINTENANCE_MESSAGE_KEY = 'maintenance_message';
+const MAINTENANCE_KEYS = [MAINTENANCE_KEY, MAINTENANCE_MESSAGE_KEY];
+
+const DEFAULT_MAINTENANCE_MESSAGE =
+  "Saytda texnik ko'rik ketyapti. Iltimos, birozdan so'ng qayta urinib ko'ring.";
+
+function MaintenancePanel({
+  config, onSave,
+}: {
+  config: Record<string, string>;
+  onSave: (k: string, v: string) => Promise<void>;
+}) {
+  const isOn = (config[MAINTENANCE_KEY] ?? 'off').trim().toLowerCase() === 'on';
+  const savedMessage = config[MAINTENANCE_MESSAGE_KEY] ?? '';
+
+  const [message, setMessage] = useState(savedMessage);
+  const [toggling, setToggling] = useState(false);
+  const [savingMsg, setSavingMsg] = useState(false);
+  const [savedMsg, setSavedMsg] = useState(false);
+
+  // The parent refetches after every write, so the field follows the server.
+  useEffect(() => { setMessage(savedMessage); }, [savedMessage]);
+
+  const handleToggle = async () => {
+    setToggling(true);
+    await onSave(MAINTENANCE_KEY, isOn ? 'off' : 'on');
+    setToggling(false);
+  };
+
+  const handleSaveMessage = async () => {
+    setSavingMsg(true);
+    await onSave(MAINTENANCE_MESSAGE_KEY, message);
+    setSavingMsg(false);
+    setSavedMsg(true);
+    setTimeout(() => setSavedMsg(false), 2000);
+  };
+
+  return (
+    <div
+      className={cn(
+        'card-glass p-5 space-y-4 border',
+        isOn ? 'border-danger/50 bg-danger/5' : 'border-border',
+      )}
+    >
+      <div className="flex items-start gap-3">
+        <div
+          className={cn(
+            'w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border',
+            isOn
+              ? 'bg-danger/15 border-danger/30 text-danger'
+              : 'bg-surface-2 border-border text-text-muted',
+          )}
+        >
+          <Wrench size={18} />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="font-semibold text-text-primary text-sm">Texnik ko‘rik rejimi</p>
+          <p className="text-xs text-text-muted mt-1 leading-relaxed">
+            Yoqilganda saytga faqat ADMIN kira oladi. Qolgan hammaga “Texnik ko‘rik
+            ketyapti” yozuvi chiqadi va API so‘rovlari to‘xtatiladi. Kirish sahifasi
+            ochiq qoladi — o‘zingiz kirib, rejimni qayta o‘chira olasiz.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-surface-2/50 border border-border/50">
+        <span className="text-sm font-semibold">
+          Holat:{' '}
+          <span className={isOn ? 'text-danger' : 'text-success'}>
+            {isOn ? 'YOPIQ — texnik ko‘rik' : 'OCHIQ — sayt ishlayapti'}
+          </span>
+        </span>
+        <button
+          onClick={handleToggle}
+          disabled={toggling}
+          className={cn(
+            'px-4 py-2 rounded-lg text-sm font-bold border transition-all shrink-0 disabled:opacity-60',
+            isOn
+              ? 'bg-success border-success text-white hover:opacity-90'
+              : 'bg-danger border-danger text-white hover:opacity-90',
+          )}
+        >
+          {toggling
+            ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            : isOn ? 'Saytni ochish' : 'Saytni yopish'}
+        </button>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-xs text-text-muted font-semibold uppercase tracking-wider">
+          Foydalanuvchilarga chiqadigan matn
+        </label>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder={DEFAULT_MAINTENANCE_MESSAGE}
+            className="input-field text-sm flex-1"
+          />
+          <button
+            onClick={handleSaveMessage}
+            disabled={message === savedMessage || savingMsg}
+            className={cn(
+              'px-3 py-2 rounded-lg text-sm font-medium border transition-all shrink-0',
+              message !== savedMessage
+                ? 'bg-primary border-primary text-white hover:bg-primary-hover shadow-glow-sm'
+                : 'border-border text-text-muted opacity-50 cursor-not-allowed',
+            )}
+          >
+            {savingMsg
+              ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              : savedMsg
+                ? <CheckCircle size={14} className="text-success" />
+                : <Save size={14} />}
+          </button>
+        </div>
+        <p className="text-[11px] text-text-muted">
+          Bo‘sh qoldirilsa standart matn ishlatiladi.
+        </p>
+      </div>
+    </div>
+  );
+}
 
 // ─── Config Row ───────────────────────────────────────────────────────────────
 
@@ -310,9 +441,12 @@ export default function AdminConfigPage() {
     } finally { setAddingNew(false); }
   };
 
-  // Merge: show known keys first (even if not yet set), then extra keys from DB
+  // Merge: show known keys first (even if not yet set), then extra keys from DB.
+  // The maintenance keys are excluded — they have their own panel above.
   const knownKeysInDb    = KNOWN_KEYS.filter((k) => k.key in config);
-  const unknownKeysInDb  = Object.keys(config).filter((k) => !KNOWN_KEYS.find((m) => m.key === k));
+  const unknownKeysInDb  = Object.keys(config).filter(
+    (k) => !KNOWN_KEYS.find((m) => m.key === k) && !MAINTENANCE_KEYS.includes(k),
+  );
   const knownKeysNotInDb = KNOWN_KEYS.filter((k) => !(k.key in config));
 
   return (
@@ -355,6 +489,9 @@ export default function AdminConfigPage() {
         </div>
       ) : (
         <>
+          {/* Maintenance mode — its own panel, always first */}
+          <MaintenancePanel config={config} onSave={handleSave} />
+
           {/* Known keys that ARE set */}
           {knownKeysInDb.map(({ key }) => (
             <ConfigRow key={key} configKey={key} value={config[key]!} onSave={handleSave} onDelete={handleDelete} />
