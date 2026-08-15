@@ -37,6 +37,7 @@ import {
   type JlptQuestion,
 } from '@/lib/jlptApi';
 import { SECTION_LABELS } from '@/lib/jlpt';
+import { mediaUrl } from '@/lib/jlptApi';
 import { ExamGuard } from '@/components/jlpt/ExamGuard';
 import { ListenPlayer } from '@/components/jlpt/ListenPlayer';
 import { cn } from '@/lib/utils';
@@ -51,6 +52,8 @@ interface Flat {
   instruction: string;
   instructionUz: string | null;
   passage: string | null;
+  /** Diagram or notice shared by the whole もんだい. */
+  groupImage: string | null;
   /** Only set in full-exam mode, where the paper crosses section boundaries. */
   section: string | null;
 }
@@ -144,6 +147,7 @@ export function ExamRunner({
           instruction: g.instruction,
           instructionUz: g.instructionUz,
           passage: g.passage,
+          groupImage: g.imageUrl,
           section: g.section,
         })),
       ),
@@ -309,11 +313,24 @@ export function ExamRunner({
           </p>
 
           {/* Listening: the script is spoken, never shown. */}
-          {isListening(current.groupType) && current.q.transcript && (
+          {isListening(current.groupType) && (current.q.audioUrl || current.q.transcript) && (
             <ListenPlayer
               key={current.q.id}
               text={current.q.transcript}
+              audioUrl={current.q.audioUrl}
               once={mode === 'set'}
+            />
+          )}
+
+          {/* Diagrams, notices and illustrations. The group's image belongs to
+              every question in it; the question's own sits just above its
+              choices. Both were stored but never drawn until now. */}
+          {current.groupImage && (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={mediaUrl(current.groupImage)}
+              alt=""
+              className="mb-6 max-h-[420px] w-full rounded-2xl border border-border object-contain"
             />
           )}
 
@@ -341,6 +358,15 @@ export function ExamRunner({
               {renderStem(current.q.stem, current.q.focus)}
             </p>
           </div>
+
+          {current.q.imageUrl && (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={mediaUrl(current.q.imageUrl)}
+              alt=""
+              className="mb-6 max-h-[360px] w-full rounded-2xl border border-border object-contain"
+            />
+          )}
 
           {/* ── Choices ── */}
           <div className="grid gap-2.5">

@@ -148,6 +148,7 @@ export const getReview = async (userId: string, attemptId: string) => {
       instruction: true,
       instructionUz: true,
       passage: true,
+      imageUrl: true,
       test: { select: { section: true } },
       questions: {
         orderBy: { number: 'asc' },
@@ -157,6 +158,8 @@ export const getReview = async (userId: string, attemptId: string) => {
           stem: true,
           focus: true,
           transcript: true,
+          imageUrl: true,
+          audioUrl: true,
           explanationUz: true,
           choices: {
             orderBy: { number: 'asc' },

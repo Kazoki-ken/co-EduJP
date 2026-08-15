@@ -108,3 +108,21 @@ export const saveAnswers = (
 
 export const finishAttempt = (attemptId: string) =>
   api.post<JlptAttempt>(`/jlpt/attempts/${attemptId}/finish`).then((r) => r.data);
+
+/**
+ * Turns a stored media path into one the browser can fetch.
+ *
+ * Uploads are saved as `/api/jlpt-media/…`, which resolves correctly in
+ * production where nginx serves the site and the API from one origin. In
+ * development the frontend is on :3000 and the API on :4000, so the path has
+ * to be rebased onto the API origin or the image 404s.
+ */
+export const mediaUrl = (path: string | null | undefined): string => {
+  if (!path) return '';
+  if (/^https?:\/\//.test(path)) return path;
+
+  const base = process.env.NEXT_PUBLIC_API_URL ?? '/api';
+  // `base` ends in /api; the stored path starts with /api. Join without
+  // doubling it.
+  return path.startsWith('/api') ? `${base}${path.slice(4)}` : `${base}${path}`;
+};

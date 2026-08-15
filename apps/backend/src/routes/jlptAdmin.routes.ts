@@ -80,7 +80,8 @@ const mediaUpload = multer({
       cb(null, `${randomUUID()}${ext}`);
     },
   }),
-  limits: { fileSize: 25 * 1024 * 1024 },
+  // A full listening section runs long; 25 MB turned out to be tight.
+  limits: { fileSize: 50 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
     if ([...IMAGE_TYPES, ...AUDIO_TYPES].includes(file.mimetype)) return cb(null, true);
     cb(new Error(`Qoʻllab-quvvatlanmaydigan fayl turi: ${file.mimetype}`));

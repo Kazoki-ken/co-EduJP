@@ -14,6 +14,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Check, Filter, Loader2, Minus, X } from 'lucide-react';
 import api from '@/lib/api';
+import { mediaUrl } from '@/lib/jlptApi';
 import { cn } from '@/lib/utils';
 
 interface Choice {
@@ -28,6 +29,8 @@ interface Question {
   number: number;
   stem: string;
   focus: string | null;
+  imageUrl: string | null;
+  audioUrl: string | null;
   explanationUz: string | null;
   transcript: string | null;
   chosen: number | null;
@@ -41,6 +44,7 @@ interface Group {
   instruction: string;
   instructionUz: string | null;
   passage: string | null;
+  imageUrl: string | null;
   questions: Question[];
 }
 
@@ -154,6 +158,15 @@ export default function JlptReviewPage({ params }: { params: { attemptId: string
                 </p>
               </div>
 
+              {g.imageUrl && (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={mediaUrl(g.imageUrl)}
+                  alt=""
+                  className="mb-4 max-h-80 w-full rounded-xl border border-border object-contain"
+                />
+              )}
+
               {g.passage && (
                 <div className="mb-4 whitespace-pre-line rounded-xl border border-border bg-surface-2/50 p-4
                                 text-[15px] leading-loose text-text-primary">
@@ -238,6 +251,21 @@ function QuestionCard({ q }: { q: Question }) {
           {renderStem(q.stem, q.focus)}
         </p>
       </div>
+
+      {q.imageUrl && (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          src={mediaUrl(q.imageUrl)}
+          alt=""
+          className="mx-4 mt-3 max-h-64 rounded-xl border border-border object-contain"
+        />
+      )}
+
+      {q.audioUrl && (
+        <div className="mx-4 mt-3">
+          <audio controls src={mediaUrl(q.audioUrl)} className="w-full" />
+        </div>
+      )}
 
       {/* The script, now that listening is over — this is where a learner
           finds out what they actually missed. */}
