@@ -18,6 +18,7 @@ import libraryRoutes from './routes/library.routes';
 import communityRoutes from './routes/community.routes';
 import premiumRoutes from './routes/premium.routes';
 import jlptRoutes from './routes/jlpt.routes';
+import jlptAdminRoutes, { MEDIA_ROOT } from './routes/jlptAdmin.routes';
 import { getLeaderboardHandler } from './controllers/game.controller';
 
 const app = express();
@@ -136,6 +137,14 @@ app.use('/api/library', libraryRoutes);
 app.use('/api/community', communityRoutes);
 app.use('/api/premium', premiumRoutes);
 app.use('/api/jlpt', jlptRoutes);
+app.use('/api/admin/jlpt', jlptAdminRoutes);
+
+// Uploaded JLPT images and audio. Served from this process so the existing
+// /api/ proxy rule covers them and nginx needs no new location.
+app.use(
+  '/api/jlpt-media',
+  express.static(MEDIA_ROOT, { maxAge: '30d', fallthrough: false }),
+);
 app.use('/api/admin', adminRoutes);
 app.use('/api', utilityRoutes);
 app.get('/api/leaderboard', getLeaderboardHandler);

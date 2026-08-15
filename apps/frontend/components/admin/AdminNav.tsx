@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, Tag, Upload, Settings, ChevronRight, BookOpen } from 'lucide-react';
+import { LayoutDashboard, Users, Tag, Upload, Settings, ChevronRight, BookOpen, GraduationCap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NAV = [
@@ -10,6 +10,7 @@ const NAV = [
   { href: '/admin/users',   label: 'Users',        icon: Users            },
   { href: '/admin/words',   label: 'Manage Words', icon: BookOpen         },
   { href: '/admin/topics',  label: 'Manage Topics', icon: Tag             },
+  { href: '/admin/jlpt',    label: 'JLPT',         icon: GraduationCap    },
   { href: '/admin/upload',  label: 'Bulk Upload',  icon: Upload           },
   { href: '/admin/config',  label: 'Site Config',  icon: Settings         },
 ];

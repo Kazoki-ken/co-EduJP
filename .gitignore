@@ -31,3 +31,6 @@ platform-tools/
 
 .DS_Store
 Thumbs.db
+
+# Yuklangan JLPT rasm va audiolari — kodga emas, serverga tegishli
+apps/backend/uploads/
